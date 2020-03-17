@@ -2,14 +2,9 @@
 ALL_COLORS=('#fb4934' '#b8bb26' '#fabd2f' '#458588' '#b16286' '#8ec07c' '#f38019')
 declare -a MIX_COLORS
 ARR_SZ=${#ALL_COLORS[@]}
-WP_DIR=/home/simon/Pictures
+
 #only prepare wallpapers for next restart as creation takes too long and colors
 #may appear twice (UNACCEPTABLE!!!)
-rm -r $WP_DIR/CurrentWP
-mv $WP_DIR/NextWP $WP_DIR/CurrentWP
-mkdir $WP_DIR/NextWP/
-cd $WP_DIR/NextWP/
-
 for (( i=0; i != $(( ARR_SZ )); i++)); do
     NUM=$(( RANDOM % $ARR_SZ ))
     MOD=0
