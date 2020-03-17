@@ -5,19 +5,28 @@ ARR_SZ=${#ALL_COLORS[@]}
 
 #only prepare wallpapers for next restart as creation takes too long and colors
 #may appear twice (UNACCEPTABLE!!!)
-for (( i=0; i != $(( ARR_SZ )); i++)); do
-    NUM=$(( RANDOM % $ARR_SZ ))
-    MOD=0
-    #Test if color already in use, if it is increase NUM by one until valid
-    while [ -z ${ALL_COLORS[$(( NUM + MOD ))]} ]; do
-        if [ $(( $NUM+$MOD )) -eq $(( ARR_SZ-1 )) ]; then
-            NUM=-1
-            MOD=0
-        fi
-        ((MOD++))
-    done
-    MIX_COLORS[$i]="${ALL_COLORS[$(( NUM + MOD ))]}"
-    ALL_COLORS[$(( NUM+MOD ))]=""
+#for (( i=0; i != $(( ARR_SZ )); i++)); do
+#    NUM=$(( RANDOM % $ARR_SZ ))
+#    MOD=0
+#    #Test if color already in use, if it is increase NUM by one until valid
+#    while [ -z ${ALL_COLORS[$(( NUM + MOD ))]} ]; do
+#        if [ $(( $NUM+$MOD )) -eq $(( ARR_SZ-1 )) ]; then
+#            NUM=-1
+#            MOD=0
+#        fi
+#        ((MOD++))
+#    done
+#    MIX_COLORS[$i]="${ALL_COLORS[$(( NUM + MOD ))]}"
+#    ALL_COLORS[$(( NUM+MOD ))]=""
+#done 
+
+#Durstenfeld-Shuffle
+for (( i=0; i != $ARR_SZ; i++)); do
+    LAST_i=$(( $ARR_SZ-$i ))
+    NUM=$(( RANDOM % $LAST_i ))
+
+    MIX_COLORS[$i]=${ALL_COLORS[$NUM]}
+    ALL_COLORS[$NUM]=${ALL_COLORS[(( $LAST_i-1 ))]}
 done
 
 myTuxVerGen.sh "${MIX_COLORS[1]}" "${MIX_COLORS[2]}" "${MIX_COLORS[3]}" tuxBigV.svg
@@ -26,6 +35,8 @@ myTuxHorGen.sh "${MIX_COLORS[1]}" "${MIX_COLORS[2]}" "${MIX_COLORS[3]}" tuxBigH.
 myTuxVerGen.sh "${MIX_COLORS[4]}" "${MIX_COLORS[5]}" "${MIX_COLORS[6]}" tuxSmallV.svg
 myTuxHorGen.sh "${MIX_COLORS[4]}" "${MIX_COLORS[5]}" "${MIX_COLORS[6]}" tuxSmallH.svg
 
+echo ${MIX_COLORS[@]}
+echo ${ALL_COLORS[@]}
 #Redirect output to file as not to clutter console
 inkscape -z -e tuxVerSmall.png -w 1080 -h 1920 tuxSmallV.svg > out
 inkscape -z -e tuxVer.png -w 1440 -h 2560 tuxBigV.svg > out
