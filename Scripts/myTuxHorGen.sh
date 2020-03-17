@@ -4,8 +4,6 @@ FILL2=$2
 FILL3=$3
 FILENAME=$4
 
-echo "HOR: $@"
-
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
 <svg
    xmlns:dc=\"http://purl.org/dc/elements/1.1/\"
