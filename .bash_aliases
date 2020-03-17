@@ -1,0 +1,25 @@
+alias ls='ls --color=auto'
+alias reboot='sudo systemctl reboot'
+alias poweroff='sudo systemctl poweroff'
+alias mount='sudo mount'
+alias umount='sudo umount'
+alias pacman='sudo pacman'
+alias ..='cd ..'
+alias swayconf='vim ~/.config/sway/config'
+alias waybarconf='vim ~/.config/waybar/config'
+alias list-fonts='fc-list'
+alias n='nvim'
+alias v='vim'
+alias l='ls'
+alias la='ls -a'
+alias ll='ls -l'
+alias rmr='rm -rf'
+alias rotEx="myRotateDisplay.sh"
+alias za="zathura --fork"
+alias newgradle="cp -r /home/simon/Documents/Templates/GradleTemplate/* ."
+alias newluds="cp /home/simon/Documents/Templates/LUDS-ex ./ex.tex"
+alias newcmake="cp -r /home/simon/Documents/Templates/CMake/* ."
+alias jdoc="qutebrowser /home/simon/Documents/Documentation/docs/index.html"
+alias qbc="myQbtCtrl.sh"
+alias c="clear"
+alias sv="source ~/.bashrc"

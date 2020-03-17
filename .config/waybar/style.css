@@ -1,0 +1,125 @@
+* {
+    padding: 0px;
+    transition-duration: 0s;
+}
+
+window#waybar {
+    background-color: rgba(1,1,1,0);
+}
+
+#workspaces button {
+    margin: 3px 5px 0px 5px
+}
+
+#workspaces button {
+    border-radius: 2px;
+    color: #282828;
+}
+
+#workspaces button,
+#clock, 
+#battery {
+    font-family: 'Source Code Pro Semibold', 'otf-font-awesome';
+    font-size: 15px;
+}
+
+#workspaces button label {
+    color: #282828;
+    background: transparent;
+}
+
+#workspaces button:last-child {
+    border-radius: 2px 8px 8px 2px;
+}
+
+#workspaces button:first-child {
+    border-radius: 8px 2px 2px 8px;
+}
+
+#workspaces button:only-child {
+    border-radius: 8px 8px 8px 8px;
+}
+
+#workspaces button:nth-child(1) {
+    background-color: #fabd2f; 
+    border-color: #fabd2f;
+}
+
+#workspaces button:nth-child(2) {
+    background-color: #fe8019;
+    border-color: #fe8019;
+}
+
+#workspaces button:nth-child(3) {
+    background-color: #fb4934; 
+    border-color: #fb4934;
+}
+
+#workspaces button:nth-child(4) {
+    background-color: #d3869b; 
+    border-color: #d3869b;
+}
+
+#workspaces button:nth-child(5) {
+    background-color: #83a598; 
+    border-color: #83a598;
+}
+
+#workspaces button:nth-child(6) {
+    background-color: #8ec07c; 
+    border-color: #8ec07c;
+}
+
+#workspaces button:nth-child(7) {
+    background-color: #689d6a; 
+    border-color: #689d6a;
+}
+
+#workspaces button.focused {
+    padding: 0px 5px 0px 5px;
+}
+
+#workspaces button.active {
+    padding: 0px 5px 0px 5px;
+}
+
+#mode {
+    padding: 0px 0px 0px 16px;          
+    color: #ebdbb2;
+}
+
+#clock, 
+#battery {
+    margin: 3px 5px 0px 5px;
+    border-radius: 2px;
+    border-width: 0px 10px 0px 10px;
+    border-style: solid;
+}
+
+#clock,
+#battery {
+    color: #282828;
+}
+
+#battery {
+    background-color: #fe8019;
+    border-color: #fe8019;
+}
+
+#clock.1 {
+    background-color: #fabd2f;
+    border-color: #fabd2f;
+    border-radius: 2px 8px 8px 2px;
+}
+
+#clock.2 {
+    background-color: #fb4934;
+    border-color: #fb4934;
+    border-radius: 8px 2px 2px 8px;
+}
+
+#clock.3 {
+    background-color: #fe8019;
+    border-color: #fe8019;
+    border-radius: 8px 2px 2px 8px;
+}

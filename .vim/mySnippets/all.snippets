@@ -1,0 +1,37 @@
+global !p
+from my_snippet_helpers import *
+endglobal
+
+snippet ( "Quick" "not char_count_same(snip.buffer[snip.line], '(', ')')" ie
+($1${VISUAL})$0
+endsnippet
+
+snippet { "Quick" "not char_count_same(snip.buffer[snip.line], '{', '}')" ie
+{$1${VISUAL}}$0
+endsnippet
+
+snippet {+ "Quick" i
+{
+	$1${VISUAL}
+}
+endsnippet
+
+snippet [ "Quick" "not char_count_same(snip.buffer[snip.line], '[', ']')" ie
+[$1${VISUAL}]$0
+endsnippet
+
+snippet " "Quick" "expand_double_quotes(snip)" ie
+"$1${VISUAL}"$0
+endsnippet
+
+snippet < "Quick" "not char_count_same(snip.buffer[snip.line], '<', '>')" ie
+<$1${VISUAL}>$0
+endsnippet
+
+snippet ' "Quick" "expand_single_quotes(snip)" ie
+'$1${VISUAL}'$0
+endsnippet
+
+snippet ` "Quick" "expand_backticks(snip)" ie
+\`$1${VISUAL}\`$0
+endsnippet

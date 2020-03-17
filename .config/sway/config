@@ -1,0 +1,291 @@
+#start with moving wallpapers and creating those for next restart
+exec_always /home/simon/Scripts/myCreateTuxWP.sh
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+# Your preferred terminal emulator
+set $term st
+# Your preferred application launcher
+# Note: it's recommended that you pass the final command to sway
+set $menu dmenu_path | dmenu | xargs swaymsg exec --
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+output * bg /home/simon/Pictures/CurrentWP/tuxHorSmall.png fill #282828
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
+output DP-3 transform 0 mode 2560x1440@143.998993Hz position 0,0
+output DP-3 bg /home/simon/Pictures/CurrentWP/tuxHor.png fill
+output DVI-D-1 transform 90 resolution 1080x1920 position 2560,200
+output DVI-D-1 bg /home/simon/Pictures/CurrentWP/tuxVerSmall.png fill #282828
+
+
+### Idle configuration
+#
+# Example configuration:
+#
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * dpms off"' \
+#               resume 'swaymsg "output * dpms on"' \
+#          before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+#
+# Example configuration:
+#
+input "2:7:SynPS/2_Synaptics_TouchPad" {
+       	dwt enabled
+       	tap enabled
+       	natural_scroll enabled
+}
+
+input "1:1:AT_Translated_Set_2_keyboard" {
+    repeat_delay 120
+    repeat_rate 100
+    xkb_layout "de"
+    xkb_options caps:escape
+}
+
+input "65261:0:1upkeyboards_1up60hse" {
+    repeat_delay 120
+    repeat_rate 100
+    xkb_layout "us"
+    xkb_variant "altgr-intl"
+    xkb_options caps:escape
+}
+
+input "1241:5394:Lioncast_LK20_keybord_Lioncast_LK20_keybord" {
+    repeat_delay 120
+    repeat_rate 100
+    xkb_layout "de"
+    xkb_options caps:escape
+}
+#You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+
+### Key bindings
+#
+# Basics:
+#
+    # start a terminal
+    bindsym $mod+Return exec $term
+
+    # kill focused window
+    bindsym $mod+q kill
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    # exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+#
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    # or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # _move_ the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    # ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+#
+# Workspaces:
+#
+    # switch to workspace
+    bindsym $mod+1 workspace 1
+    bindsym $mod+2 workspace 2
+    bindsym $mod+3 workspace 3
+    bindsym $mod+4 workspace 4
+    bindsym $mod+5 workspace 5
+    bindsym $mod+6 workspace 6
+    bindsym $mod+7 workspace 7
+    bindsym $mod+8 workspace 8
+    bindsym $mod+9 workspace 9
+    bindsym $mod+0 workspace 10
+    # move focused container to workspace
+    bindsym $mod+Shift+1 move container to workspace 1
+    bindsym $mod+Shift+2 move container to workspace 2
+    bindsym $mod+Shift+3 move container to workspace 3
+    bindsym $mod+Shift+4 move container to workspace 4
+    bindsym $mod+Shift+5 move container to workspace 5
+    bindsym $mod+Shift+6 move container to workspace 6
+    bindsym $mod+Shift+7 move container to workspace 7
+    bindsym $mod+Shift+8 move container to workspace 8
+    bindsym $mod+Shift+9 move container to workspace 9
+    bindsym $mod+Shift+0 move container to workspace 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $mod+b splitv
+    bindsym $mod+v splith
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+space focus mode_toggle
+
+    # move focus to the parent container
+    bindsym $mod+p focus parent
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindsym $mod+minus scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    # ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    # return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+mode "apps" {
+	bindsym b exec qutebrowser
+	bindsym f exec firefox
+	bindsym n exec $term -e ncmpcpp
+	bindsym g exec gimp
+	bindsym i exec inkscape
+	bindsym t exec thunderbird
+	bindsym a exec ardour6
+    bindsym q exec qbittorrent
+    bindsym v exec vlc
+    bindsym l exec libreoffice
+    bindsym d exec desmume
+    bindsym z exec zathura
+    bindsym o exec tor-browser
+    bindsym k exec kodi
+    bindsym j exec qutebrowser /home/simon/Documents/Documentation/docs/index.html
+    bindsym s exec steam
+    bindsym c exec chromium
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+}
+bindsym $mod+a mode "apps"
+
+mode "audio" {
+    bindsym i exec mySetDefault.sh 1
+    bindsym u exec mySetDefault.sh 0
+    bindsym q exec systemctl --user stop mpd
+    bindsym s exec systemctl --user start mpd
+    bindsym j exec mySetDefaultNetJACK.sh
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+m mode "audio"
+
+mode "network" {
+    bindsym r exec sudo systemctl restart wpa_supplicant@wlo1.service
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+n mode "network"
+
+gaps inner 5
+gaps outer 2
+default_border pixel 2
+
+client.focused #ebdbb2 #282828 #ebdbb2 #ebdbb2 #ebdbb2
+client.unfocused #504945 #282828 #ebdbb2 #504945 #504945
+
+exec_always --no-startup-id xrdb -merge ~/.Xresources
+exec_always --no-startup-id xrdb -merge ~/.Xresources1
+
+bindsym XF86AudioRaiseVolume exec myVolUp.sh
+bindsym XF86AudioLowerVolume exec myVolDown.sh
+bindsym XF86AudioMute exec exec myVolMute.sh
+
+bindsym XF86MonBrightnessDown exec sudo myBacklight.sh -d 60
+bindsym XF86MonBrightnessUp exec sudo myBacklight.sh -u 60
+
+bindsym XF86AudioPlay exec mpc toggle
+bindsym XF86AudioNext exec mpc next
+bindsym XF86AudioPrev exec mpc prev
+
+exec_always gsettings set org.gnome.desktop.interface gtk-theme Adapta
+exec_always gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors
+exec_always gsettings set org.gnome.desktop.interface icon-theme Papirus
+
+exec_always myRestartWaybar.sh
+

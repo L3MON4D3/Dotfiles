@@ -1,0 +1,91 @@
+global !p
+from my_snippet_helpers import *
+endglobal
+
+snippet class "Class" b
+class $1 {
+	$0
+}
+endsnippet
+
+post_jump "func_postJump(snip)"
+snippet func "Function Declaration" b
+$7${1:public} ${2:static}`!p snip.rv = ' ' if t[2]!='' else ''`${3:void} $4($5)`!p snip.rv = '\n' + ' '*(int(vim.vars['crtFuncIndent'])) + 'throws ' if t[6]!='' else ''`$6 {
+	$0
+}
+endsnippet
+
+post_jump "if snip.tabstop == 4 : java_docstring_snip(snip.tabstops[2].current_text, 'void', snip.tabstops[3].current_text, snip)"
+snippet cons "Constructor" b
+$4${1:public} `!p snip.rv=get_classname(snip)`($2)`!p snip.rv = '\n' + ' '*(int(vim.vars['crtFuncIndent'])) + ' throws ' if t[3]!='' else ''`$3{
+	$5
+}
+endsnippet
+
+snippet test "Test-function" b
+@Test
+public void $1() {
+	$0
+}
+endsnippet
+
+snippet aseq "AssertEquals" 
+assertEquals($1, `!p matc = re.match('.*? (\w*)\(\). //(.*)', snip.buffer[get_indent_lineNr(int(vim.eval('line(".")')), True, get_current_indent()-4) - 1]); snip.rv = matc.group(2) + '.' + matc.group(1)`($2));
+endsnippet
+
+snippet psvm "public static void main" b
+public static void main(String[] args) {
+	$0
+}
+endsnippet
+
+#post_jump "if snip.tabstop == 0 : add_paras(snip)"
+#post_jump "if snip.tabstop == 0 : set_gvar('test', 1)"
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[4].current_text): add_paras(snip, 4)"
+snippet for "for-loop" b
+for ($1; $2; $3)
+	${4:${VISUAL}}$0
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[2].current_text): add_paras(snip, 2)"
+snippet while "while-loop" b
+while($1)
+	$2$0
+endsnippet
+
+snippet c "case" "inside_switch_statement(snip)" ebA
+case($1) :
+	$2
+	break;$0
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[2].current_text): add_paras(snip, 2)"
+snippet if "if" b
+if ($1)
+	$2$0
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[2].current_text): add_paras(snip, 2)"
+snippet "(}*e)i" "else if" "inside_if_statement_cpp(snip)" ebr
+`!p snip.rv = match.group(1)`lse if($1)
+	$2$0
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[1].current_text): add_paras(snip, 1)"
+snippet "(}*e)" "else" "inside_if_statement_cpp(snip)" ebr
+`!p snip.rv = match.group(1)`lse
+	$1$0
+endsnippet
+
+post_jump "add_paras_after_cpp(snip)"
+snippet parad "add paras to if,while,for,else" 
+}$0
+endsnippet
+
+snippet tryc "try-Catch-Block" b
+try {
+	$1
+} catch($2) {
+	$3
+}
+endsnippet

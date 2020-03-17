@@ -1,0 +1,32 @@
+[{
+    "layer":"top",
+    "output":["eDP-1","HDMI-A-1","DP-3"],
+    "modules-left":["sway/workspaces","sway/mode"],
+    "modules-right":["clock#2","battery","clock#1"],
+    "sway/mode": {
+        "format":"<span style=\"Italic\">{}</span>"
+    },
+    "clock#1": {
+        "format":"{:%R}"
+    },
+    "battery": {
+        "format":"{:03}%"
+    },
+    "clock#2": {
+        "format":"{:%d.%m.%Y}"
+    }
+}, {
+    "layer":"top",
+    "output":"DVI-D-1",
+    "modules-left":["sway/workspaces","sway/mode"],
+    "modules-right":["clock#3","clock#1"],
+    "sway/mode": {
+        "format":"<span style=\"Italic\">{}</span>"
+    },
+    "clock#1": {
+        "format":"{:%R}"
+    },
+    "clock#3": {
+        "format":"{:%d.%m.%Y}"
+    }
+}]

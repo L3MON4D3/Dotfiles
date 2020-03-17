@@ -1,0 +1,118 @@
+colors:
+    statusbar:
+        caret:
+            bg: "*color5"
+            fg: "*foreground"
+        command:
+            bg: "*background"
+            fg: "*foreground"
+            private:
+                bg: "*background"
+        insert:
+            bg: "*color10"
+            fg: "*foreground"
+        normal:
+            bg: "*background"
+            fg: "*foreground"
+        private:
+            bg: "*background"
+            fg: "*foreground"
+        progress:
+            bg: "*foreground"
+        url:
+            fg: "*foreground"
+            error:
+                fg: "*color1"
+            hover:
+                fg: "*color4"
+            success:
+                http:
+                    fg: "*foreground"
+                https:
+                    fg: "*foreground"
+            warn:
+                fg: "*color3"
+    tabs:
+        bar:
+            bg: "*background"
+        even:
+            fg: "*color8"
+            bg: "*background"
+        odd:
+            fg: "*color8"
+            bg: "*background"
+        selected:
+            even:
+                fg: "*foreground"
+                bg: "*background"
+            odd:
+                fg: "*foreground"
+                bg: "*background"
+    completion:
+        category:
+            bg: "*foreground"
+            fg: "*background"
+            border:
+                bottom: "*foreground"
+                top: "*foreground"
+        even:
+            bg: "*background"
+        odd:
+            bg: "*background"
+        item:
+            selected:
+                bg: "*color4"
+                fg: "*foreground"
+                border:
+                    bottom: "*color4"
+                    top: "*color4"
+        fg:
+            "*foreground"
+        match:
+            fg: "*color10"
+        scrollbar:
+            bg: "*foreground"
+            fg: "*background"
+    downloads:
+        bar:
+            bg: "*background"
+        error:
+            fg: "*foreground"
+            bg: "*color1"
+        start:
+            fg: "*foreground"
+            bg: "*color5"
+        stop:
+            fg: "*foreground"
+            bg: "*color10"
+    hints:
+        fg: "*foreground"
+        bg: "*background"
+        match:
+            fg: "*color3"
+    keyhint:
+        fg: "*foreground"
+        bg: "*background"
+        suffix:
+            fg: "*color3"
+    messages:
+        error:
+            fg: "*foreground"
+            bg: "*color1"
+            border: "*color1"
+        info:
+            fg: "*foreground"
+            bg: "*color10"
+            border: "*color10"
+        warning:
+            fg: "*foreground"
+            bg: "*color3"
+            border: "*color3"
+    prompts:
+        fg: "*foreground"
+        bg: "*background"
+        border: "*background"
+        selected:
+            bg: "*color3"
+    webpage:
+        bg: "*foreground"
