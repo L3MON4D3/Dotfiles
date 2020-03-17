@@ -38,10 +38,10 @@ myTuxHorGen.sh "${MIX_COLORS[4]}" "${MIX_COLORS[5]}" "${MIX_COLORS[6]}" tuxSmall
 echo ${MIX_COLORS[@]}
 echo ${ALL_COLORS[@]}
 #Redirect output to file as not to clutter console
-inkscape -z -e tuxVerSmall.png -w 1080 -h 1920 tuxSmallV.svg > out &
-inkscape -z -e tuxVer.png -w 1440 -h 2560 tuxBigV.svg > out &
+inkscape -z -e tuxVerSmall.png -w 1080 -h 1920 tuxSmallV.svg > out
+inkscape -z -e tuxVer.png -w 1440 -h 2560 tuxBigV.svg > out
 
-inkscape -z -e tuxHorSmall.png -w 1920 -h 1080 tuxSmallH.svg > out &
-inkscape -z -e tuxHor.png -w 2560 -h 1440 tuxBigH.svg > out &
+inkscape -z -e tuxHorSmall.png -w 1920 -h 1080 tuxSmallH.svg > out
+inkscape -z -e tuxHor.png -w 2560 -h 1440 tuxBigH.svg > out
 
 rm tuxBigV.svg tuxBigH.svg tuxSmallV.svg tuxSmallH.svg out
