@@ -1,5 +1,5 @@
 #start with moving wallpapers and creating those for next restart
-exec_always /home/simon/Scripts/myCreateTuxWP.sh
+exec_always /home/simon/Scripts/myWallpaperCreate.sh
 # Default config for sway
 #
 # Copy this to ~/.config/sway/config and edit it to your liking.
