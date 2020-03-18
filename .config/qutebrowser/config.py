@@ -42,7 +42,7 @@ c.tabs.favicons.show = 'never'
 c.tabs.indicator.width = 0
 c.tabs.show = 'switching'
 
-c.url.default_page = 'file:///home/simon/Documents/Html/Startpage/index.html'
-c.url.start_pages = 'file:///home/simon/Documents/Html/Startpage/index.html'
+c.url.default_page = 'file:///home/simon/Code/Html/Startpage/index.html'
+c.url.start_pages = 'file:///home/simon/Code/Html/Startpage/index.html'
 
 c.statusbar.hide = True
