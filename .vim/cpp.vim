@@ -1,7 +1,7 @@
 if filereadable('build.gradle')
-    source ~/.vim/gradle.vim
-elseif
-    source ~/.vim/cmake.vim
+    source /home/simon/.vim/gradle.vim
+else
+    source /home/simon/.vim/cmake.vim
 endif
 
 function! DetermineFoldMethod()
