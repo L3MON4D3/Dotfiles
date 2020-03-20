@@ -9,7 +9,7 @@ function! Task(command)
         call New_j_term()
         execute "sbuffer ".l:filename
     endif
-    execute "call term_sendkeys(\"" . t:termname . "\", \"" . a:command . "\<Cr>\")"
+    execute "call term_sendkeys(\"" . t:termname . "\", \"\<c-u>" . a:command . "\<Cr>\")"
 endfunction
 
 function! Run_java()
@@ -41,14 +41,7 @@ let t:installTask = "gradle installDebug -q"
 
 let t:args = ""
 let t:debugWait = 0
-
-nnoremap <buffer><silent> <F5> :let g:curPos = winsaveview()<Cr> :call Run_java()<Cr> :call winrestview(g:curPos)<Cr>
-
-nnoremap <buffer><silent> <S-F5> :let g:curPos = winsaveview()<Cr> :call Task(t:buildTask)<Cr> :call winrestview(g:curPos)<Cr>
-
-nnoremap <buffer><silent> <F6> :let g:curPos = winsaveview()<Cr> :call Task(t:testTask)<Cr> :call winrestview(g:curPos)<Cr>
-
-nnoremap <buffer><silent> <F7> :let g:curPos = winsaveview()<Cr> :call Task(t:installTask)<Cr> :call winrestview(g:curPos)<Cr>
+let t:srcDir = "*/src/main/java"
 
 nnoremap <buffer><silent> <F1> :JDBBreakpointOnLine<Cr>
 nnoremap <buffer><silent> <S-F1> :JDBClearBreakpointOnLine<Cr>
@@ -57,7 +50,15 @@ nnoremap <buffer><silent> <S-F2> :JDBDetach<Cr>
 nnoremap <buffer><silent> <F3> :JDBStepOver<Cr>
 nnoremap <buffer><silent> <S-F3> :JDBStepIn<Cr>
 nnoremap <buffer><silent> <F4> :JDBStepUp<Cr>
+nnoremap <buffer><silent> <F5> :let g:curPos = winsaveview()<Cr> :call Run_java()<Cr> :call winrestview(g:curPos)<Cr>
+nnoremap <buffer><silent> <S-F5> :let g:curPos = winsaveview()<Cr> :call Task(t:buildTask)<Cr> :call winrestview(g:curPos)<Cr>
+nnoremap <buffer><silent> <F6> :let g:curPos = winsaveview()<Cr> :call Task(t:testTask)<Cr> :call winrestview(g:curPos)<Cr>
+nnoremap <buffer><silent> <F7> :let g:curPos = winsaveview()<Cr> :call Task(t:installTask)<Cr> :call winrestview(g:curPos)<Cr>
+
+nnoremap <buffer> <localleader>e :execute edit
 
 if filereadable('.vProj.vim')
     source .vProj.vim
 endif
+
+cabbr <expr> %% t:srcDir
