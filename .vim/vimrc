@@ -187,13 +187,13 @@ nnoremap <silent> <Leader>sv :source $MYVIMRC<CR>
 nnoremap <silent> <Leader>l <Esc>viwu<Esc>e
 nnoremap <silent> <Leader>u <Esc>viwU<Esc>e
 
+nnoremap <silent> gb :ls<CR>:b<Space> 
+
 inoremap <C-C> <Esc>g~iwea
 inoremap <C-U> <Esc>viwU<Esc>ea
 inoremap <C-L> <Esc>viwu<Esc>ea
 
 inoremap <C-F> <C-X><C-F>
-
-nnoremap <silent> gb :ls<CR>:b<Space> 
 
 tnoremap <C-J> <C-w>j
 tnoremap <C-K> <C-w>k
