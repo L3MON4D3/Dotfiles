@@ -1,0 +1,20 @@
+priority 1
+
+snippet </ "Html-Tag" i
+<$1 $2>${3:${VISUAL}}</$1>$0
+endsnippet
+
+snippet <+ "Html-Tag" b
+<$1 $2>
+	${0:${VISUAL}}
+</$1>
+endsnippet
+
+snippet xi "XML-Tag"  b
+<$1
+	$2 />
+endsnippet
+
+snippet ai "android-item" b
+android:$1="$2"
+endsnippet

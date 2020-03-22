@@ -1,0 +1,73 @@
+priority 1
+
+global !p
+from my_snippet_helpers import *
+endglobal
+
+post_jump "cpp_func_postJump(snip)"
+snippet func "Function Declaration" b
+$5
+${1:void} $2 ($3)`!p snip.rv = '\n' + ' '*(int(vim.vars['crtFuncIndent'])) if t[4]!='' else ''`$4 {
+	$0
+}
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[4].current_text): add_paras(snip, 4)"
+snippet for "for-loop" b
+for ($1; $2; $3)
+	${4:${VISUAL}}$0
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[2].current_text): add_paras(snip, 2)"
+snippet while "while-loop" b
+while ($1)
+	$2$0
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[2].current_text): add_paras(snip, 2)"
+snippet if "if" b
+if ($1)
+	$2$0
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[2].current_text): add_paras(snip, 2)"
+snippet "(}*e)i" "else if" "inside_if_statement_cpp(snip)" ebr
+`!p snip.rv = match.group(1)`lse if ($1)
+	$2$0
+endsnippet
+
+post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[1].current_text): add_paras(snip, 1)"
+snippet "(}*e)" "else" "inside_if_statement_cpp(snip)" ebr
+`!p snip.rv = match.group(1)`lse
+	$1$0
+endsnippet
+
+post_jump "add_paras_after_cpp(snip)"
+snippet parad "add paras to if,while,for,else" 
+}$0
+endsnippet
+
+snippet #i "include" Ab
+#include ${1:<}$2`!p snip.rv = '>' if t[1]=='<' else '"'`
+endsnippet
+
+snippet def "define-guard" b
+#ifndef $1
+#define $1
+${VISUAL}
+$0
+
+#endif
+endsnippet
+
+snippet nspc "Namespace" b
+namespace $1 {
+	$0
+};
+endsnippet
+
+snippet cls "class" b
+class $1 {
+	$0
+};
+endsnippet

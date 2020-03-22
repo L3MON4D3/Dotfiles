@@ -1,0 +1,374 @@
+global !p
+from my_snippet_helpers import *
+endglobal
+
+snippet date "Date for Title" b
+\date{`date +%d.%m.%y`}
+endsnippet
+
+snippet beg "Begin Environment" b
+\begin{${1:document}}
+	${VISUAL}$0
+\end{$1}
+endsnippet
+
+snippet bindent "Begin Indent" b
+\begin{addmargin}[2em]{}
+	${VISUAL}$0
+\end{addmargin}
+endsnippet
+
+snippet newtheo "New Theorem followed by environment" b
+\newtheorem*{$1}{$2}
+\begin{$1}
+	$3
+\end{$1}$0
+endsnippet
+
+snippet sec "New Section" b
+\section{$1}
+$0
+endsnippet
+
+snippet ssec "New Subsection" b
+\subsection{$1}
+$0
+endsnippet
+
+snippet beq "Begin Equation" b
+\begin{equation*}
+	$0${VISUAL}
+\end{equation*}
+endsnippet
+
+snippet bsl "Begin Split" b
+\begin{split}
+	$0${VISUAL}
+\end{split}
+endsnippet
+
+snippet bal "Begin align" b
+\begin{alignedat}{1}
+	$0${VISUAL}
+\end{alignedat}
+endsnippet
+
+snippet docc "Set Documentclass" b
+\documentclass{$1}
+endsnippet
+
+post_jump "create_item_placeholders(snip)"
+snippet "ls(\d+)" "create List with n items" rb
+`!p set_gvar("lsC", match.group(1))`
+endsnippet
+
+snippet it "Italics" 
+\textit{${VISUAL}$1} $0
+endsnippet
+
+snippet (bg "big("
+\big($1${VISUAL}\big) 
+endsnippet
+
+snippet (bgg "bigg("
+\bigg($1${VISUAL}\bigg) 
+endsnippet
+
+snippet (Bg "Big("
+\Big($1${VISUAL}\Big) 
+endsnippet
+
+snippet (Bgg "Bigg("
+\Bigg($1${VISUAL}\Bigg) 
+endsnippet
+
+snippet sb "SuBscript" i
+_{$1}
+endsnippet
+
+snippet "sb([^s])" "SuBscript for single char" ri
+_`!p snip.rv = match.group(1)`
+endsnippet		
+
+snippet sp "SuPerscript" i
+^{$1}
+endsnippet
+
+snippet "sp(.)" "SuPerscript for single char" ri
+^`!p snip.rv = match.group(1)`
+endsnippet
+
+snippet dfr "displaystyle Fraction" i
+\displaystyle\Frac{$1}{$2} 
+endsnippet
+
+snippet tfr "textstyle Fraction" i
+\textstyle\Frac{$1}{$2} 
+endsnippet
+
+snippet sum "Sum" i
+\sum\limits_{$1}^{$2}
+endsnippet
+
+snippet pro "Product" i
+\prod\limits_{$1}^{$2} 
+endsnippet
+
+snippet eq "Equation Environment"
+\[${VISUAL}$1\]
+endsnippet
+
+snippet . "Dots"
+\dotsb 
+endsnippet
+
+snippet * "\times instead of *"
+\cdot 
+endsnippet
+
+snippet , "Inline Math" 
+\$$1${VISUAL}\$ 
+endsnippet
+
+snippet "\(," "Inline Math, no space after" r
+(\$$1${VISUAL}\$
+endsnippet
+
+snippet ,, "Inline Math" 
+\$$1${VISUAL}\$
+endsnippet
+
+snippet bin "Binomial Expression" i
+\binom{$1}{$2} $0
+endsnippet
+
+snippet neg "Negate" i
+\neg 
+endsnippet
+
+snippet fra "For All" i	
+\forall 
+endsnippet
+
+snippet ex "Exists"
+\exists 
+endsnippet
+
+snippet nex "Doesn't exist"
+\notexists 
+endsnippet
+
+snippet es "Empty Set"
+\emptyset 
+endsnippet
+
+snippet ca "Cap"
+\cap 
+endsnippet
+
+snippet cu "Cup"
+\cup 
+endsnippet
+
+snippet La "Leftarrow" 
+\Leftarrow 
+endsnippet
+
+snippet Ra "Rightarrow" 
+\Rightarrow 
+endsnippet
+
+snippet la "leftarrow"
+\leftarrow 
+endsnippet
+
+snippet ra "rightarrow"
+\rightarrow 
+endsnippet
+
+snippet rat "rightarrowtail" 
+\rightarrowtail 
+endsnippet
+
+snippet lra "Leftrightarrow"
+\leftrightarrow 
+endsnippet
+
+snippet Lra "Leftrightarrow"
+\Leftrightarrow 
+endsnippet
+
+snippet mab "Number Sets" i
+\mathbb{$1} 
+endsnippet
+
+snippet an "Logical And" 
+\land 
+endsnippet
+
+snippet or "Logical Or" 
+\lor 
+endsnippet
+
+snippet xor "Logical XOr" 
+\oplus 
+endsnippet
+
+post_jump "create_table_head(snip)"
+snippet "tab(\d+)" "Create Table" rb
+`!p set_gvar("tableC", match.group(1))`
+endsnippet
+
+post_jump "create_table_rows(snip)"
+snippet "tr(\d+)" "Create Table Row(s)" rb
+`!p set_gvar("rowC", match.group(1))`
+endsnippet
+
+snippet hli "Horizontal Line" 
+\hline
+endsnippet
+
+snippet set "Create Set" i 
+\\{$1\\} 
+endsnippet
+
+snippet mac "Calligraphic letters" i
+\mathcal{$1}
+endsnippet
+
+snippet sm "Setminus" 
+\setminus 
+endsnippet
+
+snippet tim "Times" 
+\times 
+endsnippet
+
+snippet sbs "Subset" 
+\subset 
+endsnippet
+
+snippet sbse "Equal Subset" 
+\subseteq 
+endsnippet
+
+snippet sbsne "Non-equal Subset" 
+\subsetneq 
+endsnippet
+
+snippet sps "Superset" 
+\supset 
+endsnippet
+
+snippet spse "Equal Superset" 
+\supseteq 
+endsnippet
+
+snippet spsne "Non-equal Superset" 
+\supsetneq 
+endsnippet
+
+snippet mid "Vertical Bar"
+\,\big|\, 
+endsnippet
+
+snippet in "In"
+\in 
+endsnippet
+
+snippet ni "Ni" 
+\ni 
+endsnippet
+
+snippet ubra "Underbrace"
+\underbrace{$1${VISUAL}}_\text{$2}$0
+endsnippet
+
+snippet qrt "Root" i
+\sqrt{$1}
+endsnippet
+
+snippet root "n-th root" i
+\sqrt[$1]{$2}
+endsnippet
+
+snippet le "Less or Equal"
+\le 
+endsnippet
+
+snippet ge "Greater or Equal"
+\ge 
+endsnippet
+
+snippet simeq "Equivalent" 
+\simeq 
+endsnippet
+
+snippet si "Relation" 
+\sim 
+endsnippet
+
+snippet nsi "!Relation" 
+\nsim 
+endsnippet
+
+snippet cir "Circle" 
+\circ 
+endsnippet
+
+snippet ver "Vertical Bars" i
+\vert $1 \vert 
+endsnippet
+
+snippet check "Checkmark" 
+\quad\checkmark
+endsnippet
+
+#tikz \node (start) [startstop] {Start}
+snippet node "Node" b
+\node ($1) [$2`!p snip.rv = (', ' if t[3]!="" else '')`${3:below}`!p snip.rv = ('=of ' if t[3]!="" else '')`$4] {$5};
+endsnippet
+
+snippet aupa "Automata Arrow" b 
+($1) edge `!p snip.rv = '[' if t[2]!='' else ''`${2:loop above}`!p snip.rv = '] ' if t[2]!='' else ''`node {$3} ($4)
+endsnippet
+
+snippet tarr "Arrow" b
+\draw [arrow] ($1) ${2:--} node[anchor=${3:east}] {$4} ($5);
+endsnippet
+
+snippet arr "Arrow" b
+\draw [arrow] ($1) ${2:--} ($3);
+endsnippet
+
+snippet ? "Verbatim-insert" 
+\verb|$1${VISUAL}| 
+endsnippet
+
+snippet dsq "Double-Square Brackets" i
+\sql $1 \sqr 
+endsnippet
+
+snippet del "delta" 
+\delta
+endsnippet
+
+snippet Sig "Sigma" 
+\Sigma
+endsnippet
+
+snippet bcu "BigCup" i
+\bigcup_{$1}^{$2} 
+endsnippet
+
+snippet \c "" A
+\circ 
+endsnippet
+
+snippet txt "text-Block" 
+\text{$1} 
+endsnippet
+
+snippet dsqb "Double Square Brackets" 
+\llbracket $1 \rrbracket
+endsnippet
