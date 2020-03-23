@@ -52,4 +52,4 @@ if filereadable('.vProj.vim')
 endif
 
 cabbr <expr> %% t:srcDir
-cabbr <expr> %& expand('%:h')
+cabbr <expr> && expand('%:h')

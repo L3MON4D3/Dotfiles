@@ -191,7 +191,7 @@ def cpp_func_postJump(snip) :
         
 def get_classname(snip) :
     for line in snip.buffer :
-        res = re.match('class (\w+)', line)
+        res = re.match('(?:public )?class (\w+)', line)
         if res != None :
             return res.group(1)
     return 'lel'
