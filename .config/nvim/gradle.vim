@@ -37,6 +37,7 @@ let t:debugTask = "gradle run --debug-jvm -q"
 let t:buildTask = "gradle build -q"
 let t:testTask = "gradle test -q"
 let t:installTask = "gradle installDebug -q"
+let t:cleanBuildTask = "gradle clean build -q"
 
 let t:args = ""
 let t:debugWait = 0
@@ -46,6 +47,8 @@ nnoremap <buffer><silent> <localleader>r :call Task(t:runTask)<Cr>
 nnoremap <buffer><silent> <localleader>b  :let g:curPos = winsaveview()<Cr> :call Task(t:buildTask)<Cr> :call winrestview(g:curPos)<Cr>
 nnoremap <buffer><silent> <localleader>t :let g:curPos = winsaveview()<Cr> :call Task(t:testTask)<Cr> :call winrestview(g:curPos)<Cr>
 nnoremap <buffer><silent> <localleader>i :let g:curPos = winsaveview()<Cr> :call Task(t:installTask)<Cr> :call winrestview(g:curPos)<Cr>
+nnoremap <buffer><silent> <localleader>a :let g:curPos = winsaveview()<Cr> :call Task(t:allTask)<Cr> :call winrestview(g:curPos)<Cr>
+nnoremap <buffer><silent> <localleader>c :let g:curPos = winsaveview()<Cr> :call Task(t:cleanBuildTask)<Cr> :call winrestview(g:curPos)<Cr>
 
 if filereadable('.vProj.vim')
     source .vProj.vim

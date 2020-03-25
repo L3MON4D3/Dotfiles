@@ -17,7 +17,7 @@ endsnippet
 
 post_jump "if snip.tabstop == 4 : java_docstring_snip(snip.tabstops[2].current_text, 'void', snip.tabstops[3].current_text, snip)"
 snippet cons "Constructor" b
-$4${1:public} `!p snip.rv=get_classname(snip)`($2)`!p snip.rv = '\n' + ' '*(int(vim.vars['crtFuncIndent'])) + ' throws ' if t[3]!='' else ''`$3{
+$4${1:public} `!p snip.rv=get_classname(snip.buffer)`($2)`!p snip.rv = '\n' + ' '*(int(vim.vars['crtFuncIndent'])) + ' throws ' if t[3]!='' else ''`$3 {
 	$5
 }
 endsnippet
@@ -88,4 +88,8 @@ try {
 } catch($2) {
 	$3
 }
+endsnippet
+
+snippet get "creates getter for field" b
+public `!p get_field_type(snip)`
 endsnippet

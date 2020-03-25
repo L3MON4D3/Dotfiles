@@ -189,8 +189,8 @@ def cpp_func_postJump(snip) :
     if snip.tabstop == 1 :
         set_gvar('crtFuncIndent', get_current_indent())
         
-def get_classname(snip) :
-    for line in snip.buffer :
+def get_classname(buf) :
+    for line in buf :
         res = re.match('(?:public )?class (\w+)', line)
         if res != None :
             return res.group(1)
