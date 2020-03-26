@@ -46,4 +46,5 @@ c.url.default_page = 'file:///home/simon/Code/Html/Startpage/index.html'
 c.url.start_pages = 'file:///home/simon/Code/Html/Startpage/index.html'
 
 c.statusbar.hide = True
+
 c.editor.command = ['st', '-e', 'nvim', '{}']

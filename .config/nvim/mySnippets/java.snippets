@@ -66,13 +66,13 @@ if ($1)
 endsnippet
 
 post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[2].current_text): add_paras(snip, 2)"
-snippet "(}*e)i" "else if" "inside_if_statement_cpp(snip)" ebr
+snippet "(}* e)i" "else if" "inside_if_statement_cpp(snip)" ebr
 `!p snip.rv = match.group(1)`lse if($1)
 	$2$0
 endsnippet
 
 post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[1].current_text): add_paras(snip, 1)"
-snippet "(}*e)" "else" "inside_if_statement_cpp(snip)" ebr
+snippet "(}* e)" "else" "inside_if_statement_cpp(snip)" ebr
 `!p snip.rv = match.group(1)`lse
 	$1$0
 endsnippet
@@ -82,14 +82,16 @@ snippet parad "add paras to if,while,for,else"
 }$0
 endsnippet
 
+snippet "get(\w+)" "k" rb
+public `!p snip.rv = get_field_type(snip, match.group(1))` get`!p snip.rv = ''.join(c.upper() if i==0 else c for i,c in enumerate(match.group(1)))`() {
+	return `!p snip.rv = match.group(1)`;
+}
+endsnippet
+
 snippet tryc "try-Catch-Block" b
 try {
 	$1
 } catch($2) {
 	$3
 }
-endsnippet
-
-snippet get "creates getter for field" b
-public `!p get_field_type(snip)`
 endsnippet

@@ -195,3 +195,12 @@ def get_classname(buf) :
         if res != None :
             return res.group(1)
     return 'lel'
+
+def get_field_type(snip, fieldName) :
+    for line in snip.buffer :
+        lsp = line.split(' ')
+        echo(lsp[-1])
+        if lsp[-1] == (fieldName+';') :
+            #cut off ';'
+            return lsp[-2]
+    return 'lel'

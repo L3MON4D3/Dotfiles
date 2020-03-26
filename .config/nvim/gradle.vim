@@ -48,11 +48,10 @@ nnoremap <buffer><silent> <localleader>b  :let g:curPos = winsaveview()<Cr> :cal
 nnoremap <buffer><silent> <localleader>t :let g:curPos = winsaveview()<Cr> :call Task(t:testTask)<Cr> :call winrestview(g:curPos)<Cr>
 nnoremap <buffer><silent> <localleader>i :let g:curPos = winsaveview()<Cr> :call Task(t:installTask)<Cr> :call winrestview(g:curPos)<Cr>
 nnoremap <buffer><silent> <localleader>a :let g:curPos = winsaveview()<Cr> :call Task(t:allTask)<Cr> :call winrestview(g:curPos)<Cr>
-nnoremap <buffer><silent> <localleader>c :let g:curPos = winsaveview()<Cr> :call Task(t:cleanBuildTask)<Cr> :call winrestview(g:curPos)<Cr>
+nnoremap <buffer><silent> <localleader>cb :let g:curPos = winsaveview()<Cr> :call Task(t:cleanBuildTask)<Cr> :call winrestview(g:curPos)<Cr>
 
 if filereadable('.vProj.vim')
     source .vProj.vim
 endif
 
 cabbr <expr> %% t:srcDir
-cabbr <expr> && expand('%:h')

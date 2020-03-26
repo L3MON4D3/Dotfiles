@@ -232,7 +232,7 @@ mode "apps" {
     bindsym q exec qbittorrent
     bindsym v exec vlc
     bindsym l exec libreoffice
-    bindsym d exec desmume
+    bindsym d exec discord
     bindsym z exec zathura
     bindsym o exec tor-browser
     bindsym k exec kodi

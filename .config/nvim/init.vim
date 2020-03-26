@@ -194,3 +194,5 @@ tnoremap <C-W> <C-\><C-N><C-w>
 
 tnoremap <C-N> <C-\><C-N>
 tnoremap <C-X> <C-\><C-N>:q!<Cr>
+
+cabbr <expr> && expand('%:h')
