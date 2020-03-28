@@ -49,8 +49,8 @@ endsnippet
 
 post_jump "if snip.tabstop == 0 and multiline(snip.tabstops[2].current_text): add_paras(snip, 2)"
 snippet while "while-loop" b
-while($1)
-	$2$0
+while ($1)
+	${2:${VISUAL}}$0
 endsnippet
 
 snippet c "case" "inside_switch_statement(snip)" ebA
