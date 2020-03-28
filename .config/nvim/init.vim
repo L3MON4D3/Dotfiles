@@ -166,10 +166,11 @@ nnoremap <C-L> <C-W><C-L>
 
 noremap <silent> <F11> :vnew<Cr>:term<Cr>
 noremap <silent> <F23> :new<Cr>:term<Cr>
-noremap <silent> <F9> :vert res +2<Cr>
-noremap <silent> <F24> :vert res -2<CR>
-noremap <silent> <F10> :res +2<CR>
-noremap <silent> <F22> :res -2<CR>
+
+nnoremap <silent> <F9> :vert res +2<Cr>
+nnoremap <silent> <F21> :vert res -2<CR>
+nnoremap <silent> <F10> :res +2<CR>
+nnoremap <silent> <F22> :res -2<CR>
 
 nnoremap <silent> <Leader>ev :tabedit $MYVIMRC<CR>
 nnoremap <silent> <Leader>sv :source $MYVIMRC<CR>
@@ -194,5 +195,10 @@ tnoremap <C-W> <C-\><C-N><C-w>
 
 tnoremap <C-N> <C-\><C-N>
 tnoremap <C-X> <C-\><C-N>:q!<Cr>
+
+tnoremap <silent> <F9> <C-\><C-N>:vert res +2<Cr>a
+tnoremap <silent> <F21> <C-\><C-N>:vert res -2<CR>a
+tnoremap <silent> <F10> <C-\><C-N>:res +2<CR>a
+tnoremap <silent> <F22> <C-\><C-N>:res -2<CR>a
 
 cabbr <expr> && expand('%:h')
