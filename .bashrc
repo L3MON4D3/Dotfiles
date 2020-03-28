@@ -17,6 +17,11 @@ export LS_COLORS=$LS_COLORS:'ow=01;34:'
 source /home/simon/.functions
 source /home/simon/.bash_aliases
 
+#Source Completions
+for file in /usr/share/bash-completion/completions/*; do
+    . $file
+done
+
 PS1='[\u@\h \W]\$ '
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
 	exec sway
