@@ -190,11 +190,7 @@ def cpp_func_postJump(snip) :
         set_gvar('crtFuncIndent', get_current_indent())
         
 def get_classname(buf) :
-    for line in buf :
-        res = re.match('(?:public )?class (\w+)', line)
-        if res != None :
-            return res.group(1)
-    return 'lel'
+    return vim.current.buffer.name.split('/')[-1].split('.')[0]
 
 def get_field_type(snip, fieldName) :
     for line in snip.buffer :

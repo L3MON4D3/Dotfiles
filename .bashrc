@@ -17,10 +17,11 @@ export LS_COLORS=$LS_COLORS:'ow=01;34:'
 source /home/simon/.functions
 source /home/simon/.bash_aliases
 
-#Source Completions
-for file in /usr/share/bash-completion/completions/*; do
-    . $file
-done
+#dynamically load completions
+_completion_loader() {
+     . "/usr/share/bash-completion/completions/$1" >/dev/null 2>&1 && return 124
+}
+complete -D -F _completion_loader -o bashdefault -o default
 
 PS1='[\u@\h \W]\$ '
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
