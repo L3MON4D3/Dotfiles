@@ -7,7 +7,7 @@ stty -ixon
 
 export PATH=~/Scripts:$PATH:/opt/gradle/gradle-6.0.1/bin
 export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
-export PIADDR=192.168.2.119
+export PIADDR=192.168.2.9
 export luds=~/Documents/Uni/Kurse/LUDS
 export alpr=~/Documents/Uni/Kurse/AlPro
 export ti=~/Documents/Uni/Kurse/TI 
