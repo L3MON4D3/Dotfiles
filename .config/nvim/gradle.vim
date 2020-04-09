@@ -32,12 +32,12 @@ function! Jdb_handler(channel, data, event)
     endif
 endfunction
 
-let t:runTask = "gradle run -q"
-let t:debugTask = "gradle run --debug-jvm -q"
-let t:buildTask = "gradle build -q"
-let t:testTask = "gradle test -q"
-let t:installTask = "gradle installDebug -q"
-let t:cleanBuildTask = "gradle clean build -q"
+let t:runTask = "./gradlew run -q"
+let t:debugTask = "./gradlew run --debug-jvm -q"
+let t:buildTask = "./gradlew build -q"
+let t:testTask = "./gradlew test -q"
+let t:installTask = "./gradlew installDebug -q"
+let t:cleanBuildTask = "./gradlew clean build -q"
 
 let t:args = ""
 let t:debugWait = 0
