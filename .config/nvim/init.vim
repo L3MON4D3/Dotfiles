@@ -23,6 +23,12 @@ autocmd BufNewFile,BufRead *.py
                 \let b:pyLoaded=1 | 
             \endif
 
+autocmd BufNewFile,BufRead *.xml 
+            \if !exists("b:xmlLoaded") | 
+                \source /home/simon/.config/nvim/xml.vim | 
+                \let b:xmlLoaded=1 | 
+            \endif
+
 autocmd BufNewFile,BufRead *.cpp,*.hpp,*.tpp 
             \if !exists("b:cppLoaded") | 
                 \source /home/simon/.config/nvim/cpp.vim | 
