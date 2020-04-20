@@ -8,6 +8,9 @@ setlocal fillchars=fold:\ ,vert:\|
 setlocal foldnestmax=2
 setlocal foldtext=MyFoldText()
 
+set suffixesadd=.java
+set path+=**
+
 nnoremap <buffer> <localLeader>dc :JDBCommand 
 nnoremap <buffer> <localleader>sc :so ~/.vim/java.vim<Cr>
 nnoremap <buffer> <localleader>ec :tabe ~/.vim/java.vim<Cr> :tc<Cr>
