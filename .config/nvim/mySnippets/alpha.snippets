@@ -1,0 +1,25 @@
+snippet a "alpha" A
+α$0
+endsnippet
+
+snippet r "rho"
+ρ($1)$0
+endsnippet
+
+snippet = "Assignment" bA
+$1 := $0
+endsnippet
+
+snippet = "Assignment" A
+:= $0
+endsnippet
+
+snippet loop "Loop" b
+loop: $1
+$0
+goto loop
+endsnippet
+
+snippet if "if-statement" 
+if $1 then $0
+endsnippet

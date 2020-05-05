@@ -15,11 +15,13 @@ export luds=~/Documents/Uni/Kurse/s1/LUDS
 export oose=~/Documents/Uni/Kurse/s2/OoSE
 export tdwa=~/Documents/Uni/Kurse/s2/TdwA
 export ti=~/Documents/Uni/Kurse/s1/TI 
+export si=~/Documents/Uni/Kurse/s2/SI
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export LS_COLORS=$LS_COLORS:'ow=01;34:'
 export HISTSIZE=-1
 export HISTFILESIZE=-1
 export HISTCONTROL=ignoredups
+export _JAVA_AWT_WM_NONREPARENTING=1
 
 source /home/simon/.functions
 source /home/simon/.bash_aliases
