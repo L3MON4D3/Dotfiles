@@ -82,22 +82,6 @@ snippet (Bgg "Bigg("
 \Bigg($1${VISUAL}\Bigg) 
 endsnippet
 
-snippet sb "SuBscript" i
-_{$1}
-endsnippet
-
-snippet "sb([^s])" "SuBscript for single char" ri
-_`!p snip.rv = match.group(1)`
-endsnippet		
-
-snippet sp "SuPerscript" i
-^{$1}
-endsnippet
-
-snippet "sp(.)" "SuPerscript for single char" ri
-^`!p snip.rv = match.group(1)`
-endsnippet
-
 snippet dfr "displaystyle Fraction" i
 \displaystyle\Frac{$1}{$2} 
 endsnippet
@@ -132,10 +116,6 @@ endsnippet
 
 snippet "\(," "Inline Math, no space after" r
 (\$$1${VISUAL}\$
-endsnippet
-
-snippet ,, "Inline Math" 
-\$$1${VISUAL}\$
 endsnippet
 
 snippet bin "Binomial Expression" i
@@ -359,10 +339,6 @@ endsnippet
 
 snippet bcu "BigCup" i
 \bigcup_{$1}^{$2} 
-endsnippet
-
-snippet \c "" A
-\circ 
 endsnippet
 
 snippet txt "text-Block" 

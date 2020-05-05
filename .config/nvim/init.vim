@@ -17,6 +17,18 @@ call plug#begin('~/.config/nvim/plugged')
     "Plug 'vim-scripts/OmniCppComplete'
 call plug#end()
 
+autocmd BufNewFile,BufRead * 
+            \if !exists("b:gradleLoaded") && filereadable("build.gradle") | 
+                \source /home/simon/.config/nvim/gradle.vim | 
+                \let b:gradleLoaded=1 | 
+            \endif
+
+autocmd BufNewFile,BufRead *.alpha 
+            \if !exists("b:alphaLoaded") | 
+                \source /home/simon/.config/nvim/alpha.vim | 
+                \let b:alphaLoaded=1 | 
+            \endif
+
 autocmd BufNewFile,BufRead *.py 
             \if !exists("b:pyLoaded") | 
                 \source /home/simon/.config/nvim/python.vim | 
@@ -47,12 +59,6 @@ autocmd BufNewFile,BufRead *.java
                 \let b:javaLoaded=1 | 
             \endif
 
-autocmd BufNewFile,BufRead * 
-            \if !exists("b:gradleLoaded") && filereadable("build.gradle") | 
-                \source /home/simon/.config/nvim/gradle.vim | 
-                \let b:gradleLoaded=1 | 
-            \endif
-
 autocmd BufNewFile,BufRead *.vim 
             \if !exists("b:vimLoaded") | 
                 \source /home/simon/.config/nvim/vim.vim | 
@@ -62,6 +68,7 @@ autocmd BufNewFile,BufRead *.vim
 autocmd BufWinEnter,WinEnter,TermOpen term://* startinsert | 
             \setlocal nonumber | 
             \setlocal norelativenumber
+
 autocmd BufLeave term://* stopinsert
 
 let w:stFt=""
@@ -140,6 +147,7 @@ set mouse=v
 set splitbelow
 set splitright
 set switchbuf+=useopen
+set noequalalways
 
 "Ultisnips
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"

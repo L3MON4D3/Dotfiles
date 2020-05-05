@@ -3,12 +3,12 @@ import re
 from time import sleep
 
 def set_gvar(gVarName, gvarValue) :
-    vim.vars.update({gVarName: gvarValue})
+    vim.vars[gVarName] = gvarValue
 
 def create_item_placeholders(snip) :
     itemCount = int(vim.vars['lsC'])
     snippetBody = (
-            '\\begin{${1:description}}\n' + 
+        '\begin{${1:description}}\n' + 
 	'\n'.join([
 	    '\t\item $' + str(i+2) for i in range(itemCount)
 	]) +
