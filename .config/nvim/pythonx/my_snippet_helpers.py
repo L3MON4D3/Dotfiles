@@ -8,11 +8,11 @@ def set_gvar(gVarName, gvarValue) :
 def create_item_placeholders(snip) :
     itemCount = int(vim.vars['lsC'])
     snippetBody = (
-        '\begin{${1:description}}\n' + 
+        '\\begin{${1:description}}\n' + 
 	'\n'.join([
 	    '\t\item $' + str(i+2) for i in range(itemCount)
 	]) +
-        '\n\end{${1:description}}\n' 
+        '\n\end{$1}\n' 
     )
     snip.expand_anon(snippetBody)
 

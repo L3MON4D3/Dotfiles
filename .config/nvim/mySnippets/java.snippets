@@ -90,6 +90,10 @@ snippet "get(\w+)" "k" rb
 public `!p snip.rv = get_field_type(snip, match.group(1))` get`!p snip.rv = ''.join(c.upper() if i==0 else c for i,c in enumerate(match.group(1)))`() { return `!p snip.rv = match.group(1)`; }
 endsnippet
 
+snippet "set(\w+)" "k" rb
+public void set`!p snip.rv = ''.join(c.upper() if i==0 else c for i,c in enumerate(match.group(1)))`(`!p snip.rv = get_field_type(snip, match.group(1))` `!p snip.rv = match.group(1)`) { this.`!p snip.rv = match.group(1)` = `!p snip.rv = match.group(1)` ; }
+endsnippet
+
 snippet tryc "try-Catch-Block" b
 try {
 	${1:${VISUAL}}

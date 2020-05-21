@@ -147,7 +147,6 @@ set mouse=v
 set splitbelow
 set splitright
 set switchbuf+=useopen
-set noequalalways
 
 "Ultisnips
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
