@@ -6,7 +6,6 @@ stty start undef
 stty -ixon
 
 export PATH=~/Scripts:$PATH:/opt/gradle/gradle-6.0.1/bin
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk
 export PIADDR=192.168.2.9
 export alpr=~/Documents/Uni/Kurse/s1/AlPro
 export ana=~/Documents/Uni/Kurse/s2/Ana
@@ -23,7 +22,6 @@ export HISTFILESIZE=-1
 export HISTCONTROL=ignoredups
 export _JAVA_AWT_WM_NONREPARENTING=1
 
-
 source /home/simon/.functions
 source /home/simon/.bash_aliases
 
@@ -33,8 +31,7 @@ _completion_loader() {
 }
 complete -D -F _completion_loader -o bashdefault -o default
 
-
-PS1="\[\033[0m\][\e[38;05;6m\W\[\033[0m\]]\e[38;05;14m\$ \[\033[0m\]"
+export PS1="\[\033[0m\][\[\e[38;05;6m\]\W\[\033[0m\]]\[\e[38;05;14m\]\$ \[\033[0m\]"
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
 	exec sway
 fi
