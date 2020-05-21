@@ -221,6 +221,10 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+#Window-start-setting
+for_window [class="HelloFX"] floating enable
+for_window [class="controller-JController" title="Open"] floating enable
+
 mode "apps" {
 	bindsym b exec qutebrowser
 	bindsym f exec firefox
@@ -288,4 +292,3 @@ exec_always gsettings set org.gnome.desktop.interface cursor-theme capitaine-cur
 exec_always gsettings set org.gnome.desktop.interface icon-theme Papirus
 
 exec_always myRestartWaybar.sh
-
