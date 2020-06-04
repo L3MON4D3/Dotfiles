@@ -14,8 +14,6 @@ set path+=**
 nnoremap <buffer> <localLeader>dc :JDBCommand 
 nnoremap <buffer> <localleader>sc :so ~/.vim/java.vim<Cr>
 nnoremap <buffer> <localleader>ec :tabe ~/.vim/java.vim<Cr> :tc<Cr>
-nnoremap <buffer> <localleader>cc :let g:curPos = getcurpos()<Cr> I//<Esc> :call cursor(g:curPos[1:])<Cr>2l
-nnoremap <buffer> <localleader>cu :let g:curPos = getcurpos()<Cr> ^2x :call cursor(g:curPos[1:])<Cr>2h
 nnoremap <buffer> <localLeader>u :silent! call MoveClass()<Cr>
 
 function! MoveClass()

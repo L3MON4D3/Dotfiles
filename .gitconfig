@@ -10,3 +10,4 @@
     log2 = log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph
     l = !"git log1"
     g = !"git log2"
+    s = status

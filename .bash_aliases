@@ -32,3 +32,4 @@ alias alide='java -jar /home/simon/Documents/Uni/Kurse/s2/SI/LowerAlpha/Bin/Lowe
 alias curl='curl -w "\n"'
 alias gs='git status'
 alias gti='git'
+alias g='git'

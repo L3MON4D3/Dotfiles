@@ -21,6 +21,7 @@ export HISTSIZE=-1
 export HISTFILESIZE=-1
 export HISTCONTROL=ignoredups
 export _JAVA_AWT_WM_NONREPARENTING=1
+export SUDO_EDITOR=nvim
 
 source /home/simon/.functions
 source /home/simon/.bash_aliases
