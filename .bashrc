@@ -7,6 +7,7 @@ stty -ixon
 
 export PATH=~/Scripts:$PATH:/opt/gradle/gradle-6.0.1/bin
 export PIADDR=192.168.2.9
+export PIPORT=22
 export alpr=~/Documents/Uni/Kurse/s1/AlPro
 export ana=~/Documents/Uni/Kurse/s2/Ana
 export la=~/Documents/Uni/Kurse/s2/LA
@@ -22,9 +23,13 @@ export HISTFILESIZE=-1
 export HISTCONTROL=ignoredups
 export _JAVA_AWT_WM_NONREPARENTING=1
 export SUDO_EDITOR=nvim
+export MOZ_ENABLE_WAYLAND=1
+export XDG_CURRENT_DESKTOP=sway
+export XDG_SESSION_TYPE=wayland
 
 source /home/simon/.functions
 source /home/simon/.bash_aliases
+source /home/simon/.bashrc_local
 
 #dynamically load completions
 _completion_loader() {
