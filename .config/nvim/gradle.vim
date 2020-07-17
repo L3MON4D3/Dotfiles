@@ -43,9 +43,11 @@ let t:allTask = "./gradlew clean build -q"
 let t:args = ""
 let t:debugWait = 0
 let t:srcDir = "*/src/main/java"
+let t:srcDir = "*/src/main"
+let t:layoutDir = "*/src/main/res/layout"
 
 nnoremap <buffer><silent> <localleader>r :call Task(t:runTask)<Cr>
-nnoremap <buffer><silent> <localleader>b  :let g:curPos = winsaveview()<Cr> :call Task(t:buildTask)<Cr> :call winrestview(g:curPos)<Cr>
+nnoremap <buffer><silent> <localleader>b :let g:curPos = winsaveview()<Cr> :call Task(t:buildTask)<Cr> :call winrestview(g:curPos)<Cr>
 nnoremap <buffer><silent> <localleader>t :let g:curPos = winsaveview()<Cr> :call Task(t:testTask)<Cr> :call winrestview(g:curPos)<Cr>
 nnoremap <buffer><silent> <localleader>i :let g:curPos = winsaveview()<Cr> :call Task(t:installTask)<Cr> :call winrestview(g:curPos)<Cr>
 nnoremap <buffer><silent> <localleader>a :let g:curPos = winsaveview()<Cr> :call Task(t:allTask)<Cr> :call winrestview(g:curPos)<Cr>
@@ -56,3 +58,7 @@ if filereadable('.vProj.vim')
 endif
 
 cabbr <expr> %% t:srcDir
+cabbr <expr> %$ t:mainDir
+cabbr <expr> $$ t:layoutDir
+
+let b:UltiSnipsSnippetDirectories=g:UltiSnipsSnippetDirectories+['myGradleSnippets']

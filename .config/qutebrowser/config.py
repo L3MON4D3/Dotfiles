@@ -25,7 +25,8 @@ def dict_attrs(obj, path=''):
 for k, v in dict_attrs(yaml_data):
     config.set(k, xresources[v])
 
-c.fonts.tabs = '13pt Fira Code'
+c.fonts.tabs.selected = '13pt Fira Code'
+c.fonts.tabs.unselected = '13pt Fira Code'
 c.fonts.hints = '13pt Fira Code'
 c.fonts.keyhint = '13pt Fira Code'
 c.fonts.prompts = '13pt Fira Code'
@@ -45,6 +46,6 @@ c.tabs.show = 'switching'
 c.url.default_page = 'file:///home/simon/Code/Html/Startpage/index.html'
 c.url.start_pages = 'file:///home/simon/Code/Html/Startpage/index.html'
 
-c.statusbar.hide = True
+c.statusbar.show = 'never'
 
 c.editor.command = ['st', '-e', 'nvim', '{}']

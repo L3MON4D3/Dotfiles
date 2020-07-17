@@ -18,51 +18,9 @@ call plug#begin('~/.config/nvim/plugged')
 call plug#end()
 
 autocmd BufNewFile,BufRead * 
-            \if !exists("b:gradleLoaded") && filereadable("build.gradle") | 
-                \source /home/simon/.config/nvim/gradle.vim | 
-                \let b:gradleLoaded=1 | 
-            \endif
-
-autocmd BufNewFile,BufRead *.alpha 
-            \if !exists("b:alphaLoaded") | 
-                \source /home/simon/.config/nvim/alpha.vim | 
-                \let b:alphaLoaded=1 | 
-            \endif
-
-autocmd BufNewFile,BufRead *.py 
-            \if !exists("b:pyLoaded") | 
-                \source /home/simon/.config/nvim/python.vim | 
-                \let b:pyLoaded=1 | 
-            \endif
-
-autocmd BufNewFile,BufRead *.xml 
-            \if !exists("b:xmlLoaded") | 
-                \source /home/simon/.config/nvim/xml.vim | 
-                \let b:xmlLoaded=1 | 
-            \endif
-
-autocmd BufNewFile,BufRead *.cpp,*.hpp,*.tpp 
-            \if !exists("b:cppLoaded") | 
-                \source /home/simon/.config/nvim/cpp.vim | 
-                \let b:cppLoaded=1 | 
-            \endif
-
-autocmd BufNewFile,BufRead CMakeLists.txt 
-            \if !exists("b:CMakeListsLoaded") | 
-                \source /home/simon/.config/nvim/CMakeLists.txt.vim | 
-                \let b:CMakeListsLoaded=1 | 
-            \endif
-
-autocmd BufNewFile,BufRead *.java 
-            \if !exists("b:javaLoaded") | 
-                \source /home/simon/.config/nvim/java.vim | 
-                \let b:javaLoaded=1 | 
-            \endif
-
-autocmd BufNewFile,BufRead *.vim 
-            \if !exists("b:vimLoaded") | 
-                \source /home/simon/.config/nvim/vim.vim | 
-                \let b:vimLoaded=1 | 
+            \if !exists("b:gradleLoaded") && filereadable("build.gradle") |
+                \source /home/simon/.config/nvim/gradle.vim |
+                \let b:gradleLoaded=1 |
             \endif
 
 autocmd BufWinEnter,WinEnter,TermOpen term://* startinsert | 
@@ -152,8 +110,7 @@ set switchbuf+=useopen
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 let g:UltiSnipsExpandTrigger="<Tab>"
 let g:UltiSnipsJumpForwardTrigger="<Tab>"
-let g:UltiSnipsSnippetDirectories=["mySnippets"]
-let g:UltiSnipsSnippetsDir="/home/simon/.config/nvim/mySnippets"
+let g:UltiSnipsSnippetDirectories=['mySnippets']
 
 "VimTex
 let g:tex_flavor='latex'
