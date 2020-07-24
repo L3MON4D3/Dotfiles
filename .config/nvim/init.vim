@@ -123,11 +123,8 @@ let g:tex_conceal='abdmg'
 let mapleader=","
 let maplocalleader=";"
 
-noremap <silent> <Leader>a <C-A>
-noremap <silent> <Leader>x <C-X>
 noremap <silent> <C-v> :vsp<CR>
 noremap <silent> <C-b> :sp<CR>
-noremap <silent> <C-x> :q!<CR>
 
 nnoremap <C-H> <C-W><C-H>
 nnoremap <C-J> <C-W><C-J>
@@ -164,7 +161,6 @@ tnoremap <C-H> <C-\><C-N><C-w>h
 tnoremap <C-W> <C-\><C-N><C-w>
 
 tnoremap <C-N> <C-\><C-N>
-tnoremap <C-X> <C-\><C-N>:q!<Cr>
 
 tnoremap <silent> <F9> <C-\><C-N>:vert res +2<Cr>a
 tnoremap <silent> <F21> <C-\><C-N>:vert res -2<CR>a

@@ -1,2 +1,2 @@
 set editing-mode vi
-set history-size 5000
+set history-size 5000000

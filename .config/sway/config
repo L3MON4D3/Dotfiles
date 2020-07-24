@@ -37,6 +37,7 @@ output DP-3 bg /home/simon/Pictures/CurrentWP/tuxHor.png fill
 output DVI-D-1 transform 90 resolution 1080x1920 position 2560,200
 output DVI-D-1 bg /home/simon/Pictures/CurrentWP/tuxVerSmall.png fill #282828
 
+focus output DP-3
 
 ### Idle configuration
 #
