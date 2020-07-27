@@ -1,3 +1,26 @@
+function! New_term()
+    enew
+    vertical resize 40
+    setl winfixwidth
+    "let t:termchannel=termopen('bash', {'on_exit':'Close_term','on_stdout':'Jdb_handler'})
+    let t:termchannel=termopen('bash', {'on_exit':'Close_term'})
+    call chansend(t:termchannel, ['clear', ''])
+endfunction
+
+function! Close_term(job_id, data, event)
+    unlet t:termchannel
+endfunction
+
+function! Exec_term(command)
+    wa
+    if !exists('t:termchannel')
+        let l:filename = expand('%')
+        call New_term()
+        execute "sbuffer ".l:filename
+    endif
+    call chansend(t:termchannel, [a:command, ''])
+endfunction
+
 function! MyFoldText()
     return substitute(getline(v:foldstart), "\\s\\{4\\}\\S.*", "|", "")
 endfunction
