@@ -23,6 +23,12 @@ autocmd BufNewFile,BufRead *
                 \let b:gradleLoaded=1 |
             \endif
 
+autocmd BufNewFile,BufRead * 
+            \if !exists("b:cmakeLoaded") && filereadable("CMakeLists.txt") |
+                \source /home/simon/.config/nvim/cmake.vim |
+                \let b:cmakeLoaded=1 |
+            \endif
+
 autocmd BufWinEnter,WinEnter,TermOpen term://* startinsert | 
             \setlocal nonumber | 
             \setlocal norelativenumber
