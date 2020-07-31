@@ -4,7 +4,8 @@ setlocal signcolumn=yes
 
 inoremap <silent><expr> <C-X><C-O> coc#refresh()
 
-nnoremap <leader><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+nnoremap <silent><nowait> <leader>a  :CocDiagnostics<cr>
+nnoremap <silent> <leader>f :call CocActionAsync('doQuickfix')<cr>
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -31,14 +32,5 @@ endfunction
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-"inoremap <silent><expr> <C-n>
-"      \ pumvisible() ? "\<C-n>" :
-"      \ <SID>check_back_space() ? "\<C-n>" :
-"      \ coc#refresh()
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 inoremap <silent><expr> <BS> pumvisible() ? "\<BS>".coc#refresh() : "\<BS>"
