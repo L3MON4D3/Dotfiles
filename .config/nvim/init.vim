@@ -11,10 +11,12 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'lervag/vimtex'
     Plug 'SirVer/ultisnips'
     Plug 'pietropate/vim-tex-conceal'
+    Plug 'neoclide/coc.nvim'
     "Plug 'https://gitlab.com/Dica-Developer/vim-jdb.git'
     Plug 'tpope/vim-fugitive'
     "Plug 'ycm-core/youCompleteMe'
     "Plug 'vim-scripts/OmniCppComplete'
+    "Plug 'neovim/nvim-lsp'
 call plug#end()
 
 autocmd BufNewFile,BufRead * 
@@ -38,7 +40,8 @@ autocmd BufLeave term://* stopinsert
 let w:stFt=""
 let w:stFn=""
 let w:fpRel=""
-autocmd BufWrite,BufRead,WinNew,TermOpen,SourcePost * 
+"add WinEnter for floating windows.
+autocmd BufWrite,BufRead,WinNew,TermOpen,SourcePost,WinEnter * 
             \let w:stFt=FiletypeClean() |
             \let w:stFn=FilenameClean() |
             \let w:fpRel=FilepathClean() |
