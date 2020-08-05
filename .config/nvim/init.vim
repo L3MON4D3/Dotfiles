@@ -12,6 +12,7 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'SirVer/ultisnips'
     Plug 'pietropate/vim-tex-conceal'
     Plug 'neoclide/coc.nvim'
+    Plug 'puremourning/vimspector'
     "Plug 'https://gitlab.com/Dica-Developer/vim-jdb.git'
     Plug 'tpope/vim-fugitive'
     "Plug 'ycm-core/youCompleteMe'
@@ -132,6 +133,13 @@ let g:tex_conceal='abdmg'
 let mapleader=","
 let maplocalleader=";"
 
+"Vimspector
+nnoremap <F2> :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <F3> :call vimspector#StepOver()<CR>
+nnoremap <F4> :call vimspector#StepInto()<CR>
+nnoremap <F5> :call vimspector#Continue()<CR>
+
+"Other
 noremap <silent> <C-v> :vsp<CR>
 noremap <silent> <C-b> :sp<CR>
 

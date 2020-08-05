@@ -6,6 +6,7 @@ inoremap <silent><expr> <C-X><C-O> coc#refresh()
 
 nnoremap <silent><nowait> <leader>a  :CocDiagnostics<cr>
 nnoremap <silent> <leader>f :call CocActionAsync('doQuickfix')<cr>
+nnoremap <silent> <leader>c :CocAction<Cr>
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 

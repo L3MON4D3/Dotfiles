@@ -226,6 +226,7 @@ bindsym $mod+r mode "resize"
 for_window [class="HelloFX"] floating enable
 for_window [class="controller-JController" title="Open"] floating enable
 for_window [title="Emulator$"] floating enable
+for_window [title="FML early loading progress"] floating enable
 
 mode "apps" {
 	bindsym b exec qutebrowser

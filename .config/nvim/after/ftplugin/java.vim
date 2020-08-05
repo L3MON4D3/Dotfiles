@@ -11,10 +11,8 @@ setlocal foldtext=MyFoldText()
 set suffixesadd=.java
 set path+=**
 
-nnoremap <buffer> <localLeader>dc :JDBCommand 
 nnoremap <buffer> <localleader>sc :so ~/.vim/java.vim<Cr>
 nnoremap <buffer> <localleader>ec :tabe ~/.vim/java.vim<Cr> :tc<Cr>
-nnoremap <buffer> <localLeader>u :silent! call MoveClass()<Cr>
 
 function! MoveClass()
     let l:newClassname = py3eval("get_classname(vim.current.buffer)")

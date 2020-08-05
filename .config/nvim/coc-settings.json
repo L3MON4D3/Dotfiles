@@ -1,4 +1,12 @@
 {
-    "suggest.autoTrigger": "none",
-    "suggest.floatEnable": true
+    "suggest.autoTrigger": "trigger",
+    "suggest.floatEnable": true,
+    "suggest.maxCompleteItemCount": 100,
+    "languageserver": {
+        "groovy": {
+            "command": "java",
+            "args" : ["-jar", "~/.config/coc/extensions/groovy-language-server/build/libs/groovy-language-server-all.jar"],
+            "filetypes": ["groovy"]
+        }
+    }
 }
