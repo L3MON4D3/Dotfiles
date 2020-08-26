@@ -118,8 +118,7 @@ def add_paras_after(snip) :
     snip.buffer[start] = snip.buffer[start] + '{'
     
 def add_paras_after_cpp(snip) :
-    start = get_indent_lineNr(snip.line, True, get_current_indent()) - 1
-    snip.buffer[start] = snip.buffer[start] + ' {'
+    add_paras_after(snip)
     
 def java_docstring_snip(params, returnVal, excep, snip) :
     paramLs = params.split(', ')

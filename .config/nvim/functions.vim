@@ -22,7 +22,7 @@ function! Exec_term(command)
 endfunction
 
 function! MyFoldText()
-    return substitute(getline(v:foldstart), "\\s\\{4\\}\\S.*", "|", "")
+    return substitute(getline(v:foldstart-1), "[^ ].*", "|", "")
 endfunction
 
 function! SwitchImplemetationInterface()
@@ -122,4 +122,16 @@ function! Statusline()
     let l:var .= "%="
     let l:var .= "%#Status_1#\ %03l/%L:%02c\ "
     return l:var
+endfunction
+
+"Adds paranthesis to if. Call on last line of if.
+function! ParanAdd()
+    let crtLn = line(".")
+    "assume shiftwidth of 4
+    let targetIndnt = indent(crtLn) - 4
+    call append(crtLn, repeat('	', targetIndnt/4).'}')
+    while indent(crtLn) != targetIndnt
+        let crtLn -= 1
+    endwhile
+    call setline(crtLn, getline(crtLn).' {')
 endfunction

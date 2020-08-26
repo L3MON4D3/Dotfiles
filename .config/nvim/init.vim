@@ -9,9 +9,10 @@ call plug#begin('~/.config/nvim/plugged')
     "Plug 'vim-airline/vim-airline'
     "Plug 'vim-airline/vim-airline-themes'
     Plug 'lervag/vimtex'
-    Plug 'SirVer/ultisnips'
+    "Plug 'SirVer/ultisnips'
     Plug 'pietropate/vim-tex-conceal'
     Plug 'neoclide/coc.nvim'
+    Plug 'jackguo380/vim-lsp-cxx-highlight'
     Plug 'puremourning/vimspector'
     "Plug 'https://gitlab.com/Dica-Developer/vim-jdb.git'
     Plug 'tpope/vim-fugitive'
@@ -117,10 +118,13 @@ set splitright
 set switchbuf+=useopen
 
 "Ultisnips
-let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
-let g:UltiSnipsExpandTrigger="<Tab>"
-let g:UltiSnipsJumpForwardTrigger="<Tab>"
-let g:UltiSnipsSnippetDirectories=['mySnippets']
+"let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
+"let g:UltiSnipsExpandTrigger="<Tab>"
+"let g:UltiSnipsJumpForwardTrigger="<Tab>"
+"let g:UltiSnipsSnippetDirectories=['mySnippets']
+
+let g:coc_snippet_prev = '<S-Tab>'
+imap <Tab> <Plug>(coc-snippets-expand-jump)
 
 "VimTex
 let g:tex_flavor='latex'
@@ -131,17 +135,19 @@ let g:tex_conceal='abdmg'
 
 "Keymappings
 let mapleader=","
-let maplocalleader=";"
+let maplocalleader="\<Space>"
 
 "Vimspector
-nnoremap <F2> :call vimspector#ToggleBreakpoint()<CR>
-nnoremap <F3> :call vimspector#StepOver()<CR>
-nnoremap <F4> :call vimspector#StepInto()<CR>
-nnoremap <F5> :call vimspector#Continue()<CR>
+nnoremap <F2> :call vimspector#ToggleBreakpoint()<Cr>
+nnoremap <F3> :call vimspector#StepOver()<Cr>
+nnoremap <F4> :call vimspector#StepInto()<Cr>
+nnoremap <F5> :call vimspector#Continue()<Cr>
 
 "Other
-noremap <silent> <C-v> :vsp<CR>
-noremap <silent> <C-b> :sp<CR>
+noremap <silent> <C-v> :vsp<Cr>
+noremap <silent> <C-b> :sp<Cr>
+
+nnoremap <leader>n :noh<Cr>
 
 nnoremap <C-H> <C-W><C-H>
 nnoremap <C-J> <C-W><C-J>
@@ -152,17 +158,19 @@ noremap <silent> <F11> :vnew<Cr>:term<Cr>
 noremap <silent> <F23> :new<Cr>:term<Cr>
 
 nnoremap <silent> <F9> :vert res +2<Cr>
-nnoremap <silent> <F21> :vert res -2<CR>
-nnoremap <silent> <F10> :res +2<CR>
-nnoremap <silent> <F22> :res -2<CR>
+nnoremap <silent> <F21> :vert res -2<Cr>
+nnoremap <silent> <F10> :res +2<Cr>
+nnoremap <silent> <F22> :res -2<Cr>
 
-nnoremap <silent> <Leader>ev :tabedit $MYVIMRC<CR>
-nnoremap <silent> <Leader>sv :source $MYVIMRC<CR>
+nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>
+nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
 
-nnoremap <silent> <Leader>l <Esc>viwu<Esc>e
-nnoremap <silent> <Leader>u <Esc>viwU<Esc>e
+nnoremap <silent> <leader>l viwue
+nnoremap <silent> <leader>u viwUe
 
-nnoremap <silent> gb :ls<CR>:b<Space> 
+nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
+
+nnoremap <silent> gb :ls<Cr>:b<Space> 
 
 inoremap <C-C> <Esc>g~iwea
 inoremap <C-U> <Esc>viwU<Esc>ea
@@ -180,8 +188,8 @@ tnoremap <C-W> <C-\><C-N><C-w>
 tnoremap <C-N> <C-\><C-N>
 
 tnoremap <silent> <F9> <C-\><C-N>:vert res +2<Cr>a
-tnoremap <silent> <F21> <C-\><C-N>:vert res -2<CR>a
-tnoremap <silent> <F10> <C-\><C-N>:res +2<CR>a
-tnoremap <silent> <F22> <C-\><C-N>:res -2<CR>a
+tnoremap <silent> <F21> <C-\><C-N>:vert res -2<Cr>a
+tnoremap <silent> <F10> <C-\><C-N>:res +2<Cr>a
+tnoremap <silent> <F22> <C-\><C-N>:res -2<Cr>a
 
 cabbr <expr> && expand('%:h')

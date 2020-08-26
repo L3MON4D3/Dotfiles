@@ -5,8 +5,13 @@
     "languageserver": {
         "groovy": {
             "command": "java",
-            "args" : ["-jar", "~/.config/coc/extensions/groovy-language-server/build/libs/groovy-language-server-all.jar"],
+            "args" : ["-jar",
+                "/home/simon/.config/coc/extensions/groovy-language-server/build/libs/groovy-language-server-all.jar"],
             "filetypes": ["groovy"]
         }
-    }
+    },
+    "snippets.ultisnips.directories": [
+        "mySnippets"
+    ],
+    "clangd.semanticHighlighting": true
 }

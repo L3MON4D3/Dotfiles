@@ -17,3 +17,5 @@ cabbr <expr> %% t:srcDir
 if filereadable('.vProj.vim')
     source .vProj.vim
 endif
+
+source ~/.config/nvim/coc.vim
