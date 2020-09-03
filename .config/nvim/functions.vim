@@ -22,7 +22,7 @@ function! Exec_term(command)
 endfunction
 
 function! MyFoldText()
-    return substitute(getline(v:foldstart-1), "[^ ].*", "|", "")
+    return repeat(" ", indent(v:foldstart-1))."|"
 endfunction
 
 function! SwitchImplemetationInterface()
