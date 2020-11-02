@@ -1,12 +1,11 @@
 let g:crtFuncIndent = 4
 
-"class lel
 setlocal nocindent nosmartindent indentexpr="" autoindent
 setlocal foldmethod=indent
 setlocal foldlevel=1
+setlocal foldtext=MyFoldText()
 setlocal fillchars=fold:\ ,vert:\|
 setlocal foldnestmax=2
-setlocal foldtext=MyFoldText()
 
 set suffixesadd=.java
 set path+=**

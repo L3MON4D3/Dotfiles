@@ -42,6 +42,4 @@ cabbr <expr> %% t:srcDir
 cabbr <expr> %$ t:mainDir
 cabbr <expr> $$ t:layoutDir
 
-let b:UltiSnipsSnippetDirectories=g:UltiSnipsSnippetDirectories+['myGradleSnippets']
-
 source ~/.config/nvim/coc.vim

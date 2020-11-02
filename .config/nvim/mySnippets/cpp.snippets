@@ -13,8 +13,14 @@ ${1:void} $2($3)`!p snip.rv = '\n' + ' '*(int(vim.vars['crtFuncIndent'])) if t[4
 endsnippet
 
 snippet for "for-loop" b
-for ($1; $2; $3)
+for ($1 : $2)
 	${4:${VISUAL}}$0
+endsnippet
+
+snippet "for(.)" "For loop with integer." br
+for(int `!p snip.rv = match.group(1)`{${1:0}}; `!p snip.rv = match.group(1)` ${2:!=} $3; ${4:++}`!p snip.rv = match.group(1)`)
+	$5
+$0
 endsnippet
 
 snippet while "while-loop" b
@@ -42,21 +48,23 @@ $0
 endsnippet
 
 snippet #i "include" Ab
-#include ${1:<}$2`!p snip.rv = '>' if t[1]=='<' else '"'`
+#include ${1:<}
 endsnippet
 
 snippet def "define-guard" b
 #ifndef $1
 #define $1
-${VISUAL}
-$0
+
+${VISUAL}$0
 
 #endif
 endsnippet
 
 snippet nspc "Namespace" b
 namespace $1 {
-	$0
+
+${VISUAL}$0
+
 };
 endsnippet
 
@@ -64,4 +72,20 @@ snippet cls "class" b
 class $1 {
 $0
 };
+endsnippet
+
+snippet <" "insert stream-add space" 
+<< " " 
+endsnippet
+
+snippet <", "insert stream-add ," 
+<< ", " 
+endsnippet
+
+snippet <e  "insert std::endl;" 
+<< std::endl;
+endsnippet
+
+snippet tmp "Templat" b
+template<typename ${1:T}>
 endsnippet

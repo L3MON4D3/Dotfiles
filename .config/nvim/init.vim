@@ -19,6 +19,7 @@ call plug#begin('~/.config/nvim/plugged')
     "Plug 'ycm-core/youCompleteMe'
     "Plug 'vim-scripts/OmniCppComplete'
     "Plug 'neovim/nvim-lsp'
+    Plug 'vim-scripts/DoxygenToolkit.vim'
 call plug#end()
 
 autocmd BufNewFile,BufRead * 
@@ -37,13 +38,16 @@ autocmd BufWinEnter,WinEnter,TermOpen term://* startinsert |
             \setlocal nonumber | 
             \setlocal norelativenumber
 
+autocmd BufNewFile,BufRead *.sc set ft=cpp
+
 autocmd BufLeave term://* stopinsert
 
 let w:stFt=""
 let w:stFn=""
 let w:fpRel=""
 "add WinEnter for floating windows.
-autocmd BufWrite,BufRead,WinNew,TermOpen,SourcePost,WinEnter * 
+"BufEnter for <C-O>/<C-I>
+autocmd BufRead,WinNew,TermOpen,SourcePost,WinEnter,BufEnter * 
             \let w:stFt=FiletypeClean() |
             \let w:stFn=FilenameClean() |
             \let w:fpRel=FilepathClean() |
@@ -52,6 +56,8 @@ autocmd BufWrite,BufRead,WinNew,TermOpen,SourcePost,WinEnter *
 autocmd BufWrite,BufRead,TabNew * let g:branches=BranchClean()
 
 autocmd VimEnter * let g:branches=['']
+
+setlocal foldtext=MyFoldText()
 
 "Style
 syntax enable
@@ -100,11 +106,12 @@ set showmatch
 
 "Tabstops
 set tabstop=4
+set noexpandtab
 set softtabstop=4
-set expandtab
 set shiftwidth=4
 set autoindent
 set nocindent
+set copyindent
 
 "Misc
 set relativenumber
@@ -123,8 +130,21 @@ set switchbuf+=useopen
 "let g:UltiSnipsJumpForwardTrigger="<Tab>"
 "let g:UltiSnipsSnippetDirectories=['mySnippets']
 
+let g:coc_snippet_next = '<tab>'
 let g:coc_snippet_prev = '<S-Tab>'
-imap <Tab> <Plug>(coc-snippets-expand-jump)
+xmap <Tab> <Plug>(coc-snippets-select)
+
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? coc#_select_confirm() :
+  \ coc#expandableOrJumpable() ?
+  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 "VimTex
 let g:tex_flavor='latex'
@@ -149,6 +169,36 @@ noremap <silent> <C-b> :sp<Cr>
 
 nnoremap <leader>n :noh<Cr>
 
+"end on closig paranthesis.
+vnoremap <leader>( <Esc>`>a)<Esc>`<i(<Esc>%
+vnoremap <leader>{ <Esc>`>a}<Esc>`<i{<Esc>%
+vnoremap <leader>[ <Esc>`>a]<Esc>`<i[<Esc>%
+vnoremap <leader>" <Esc>`>a"<Esc>`<i"<Esc>%
+vnoremap <leader>' <Esc>`>a'<Esc>`<i'<Esc>%
+vnoremap <leader><Space> <Esc>`>a <Esc>`<i <Esc>%
+
+vnoremap <leader>c <Esc>`>a*/<Esc>`<i/*<Esc>
+nnoremap <leader>uc ?\/\*<Cr>2x/*/\/<Cr>2x
+
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R>=&ic?'\c':'\C'<CR><C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gVzv:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R>=&ic?'\c':'\C'<CR><C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gVzv:call setreg('"', old_reg, old_regtype)<CR>
+
+nnoremap <leader>( viw<Esc>`>a)<Esc>`<i(<Esc>%
+nnoremap <leader>{ viw<Esc>`>a}<Esc>`<i{<Esc>%
+nnoremap <leader>[ viw<Esc>`>a]<Esc>`<i[<Esc>%
+nnoremap <leader>" viw<Esc>`>a"<Esc>`<i"<Esc>%
+nnoremap <leader>' viw<Esc>`>a'<Esc>`<i'<Esc>%
+nnoremap <leader>' viw<Esc>`>a <Esc>`<i <Esc>%
+
 nnoremap <C-H> <C-W><C-H>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -171,6 +221,12 @@ nnoremap <silent> <leader>u viwUe
 nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
 
 nnoremap <silent> gb :ls<Cr>:b<Space> 
+nnoremap <leader>e :e <C-R>=t:srcDir<Cr>/<C-D>
+
+nnoremap [[ ?{\n<Cr>:noh<Cr>
+nnoremap ][ /{\n<Cr>:noh<Cr>
+nnoremap ]] /}\n<Cr>:noh<Cr>
+nnoremap [] ?}\n<Cr>:noh<Cr>
 
 inoremap <C-C> <Esc>g~iwea
 inoremap <C-U> <Esc>viwU<Esc>ea

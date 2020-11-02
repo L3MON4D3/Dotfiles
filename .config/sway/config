@@ -225,8 +225,10 @@ bindsym $mod+r mode "resize"
 #Window-start-setting
 for_window [class="HelloFX"] floating enable
 for_window [class="controller-JController" title="Open"] floating enable
+for_window [title="worldWp"] floating enable
 for_window [title="Emulator$"] floating enable
 for_window [title="FML early loading progress"] floating enable
+for_window [title="unknown_noise.png"] floating enable
 
 mode "apps" {
 	bindsym b exec qutebrowser
@@ -235,16 +237,14 @@ mode "apps" {
 	bindsym g exec gimp
 	bindsym i exec inkscape
 	bindsym t exec thunderbird
-	bindsym a exec ardour6
     bindsym q exec qbittorrent
     bindsym v exec vlc
-    bindsym l exec libreoffice
-    bindsym d exec discord
+    bindsym d exec discord-canary
     bindsym z exec zathura
     bindsym o exec tor-browser
     bindsym k exec kodi
+    bindsym s exec spotify
     bindsym j exec qutebrowser /home/simon/Documents/Documentation/docs/index.html
-    bindsym s exec steam
     bindsym c exec chromium
 	bindsym Return mode "default"
 	bindsym Escape mode "default"
@@ -256,7 +256,8 @@ mode "audio" {
     bindsym u exec mySetDefault.sh 0
     bindsym q exec systemctl --user stop mpd
     bindsym s exec systemctl --user start mpd
-    bindsym j exec mySetDefaultNetJACK.sh
+    bindsym j exec systemctl --user restart JACK@0
+	bindsym p exec systemctl --user restart pulseaudio
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
@@ -269,7 +270,7 @@ mode "network" {
 }
 bindsym $mod+n mode "network"
 
-gaps inner 5
+gaps inner 4
 gaps outer 2
 default_border pixel 2
 
