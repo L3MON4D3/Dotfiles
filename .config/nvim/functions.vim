@@ -120,7 +120,7 @@ function! Statusline()
     let l:var .= "%#Status2#"."%{w:stFt}"
     let l:var .= "%1*"
     let l:var .= "%="
-    let l:var .= "%#Status_1#\ %03l/%L:%02c\ "
+    let l:var .= "%#Status_1#\ %03l/%L:%02v\ "
     return l:var
 endfunction
 

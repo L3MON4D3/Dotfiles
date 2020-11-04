@@ -57,7 +57,8 @@ autocmd BufWrite,BufRead,TabNew * let g:branches=BranchClean()
 
 autocmd VimEnter * let g:branches=['']
 
-setlocal foldtext=MyFoldText()
+set fillchars=fold:\ ,vert:\|
+set foldtext=MyFoldText()
 
 "Style
 syntax enable
@@ -138,13 +139,7 @@ inoremap <silent><expr> <TAB>
   \ pumvisible() ? coc#_select_confirm() :
   \ coc#expandableOrJumpable() ?
   \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ coc#refresh()
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+  \ "\<TAB>"
 
 "VimTex
 let g:tex_flavor='latex'
