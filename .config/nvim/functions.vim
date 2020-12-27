@@ -26,11 +26,11 @@ function! MyFoldText()
 endfunction
 
 function! SwitchImplemetationInterface()
-    if expand('%:e') == "hpp"
-        exec "edit " . substitute(expand('%'), '\.hpp', '\.cpp', '')
+    if expand('%:e')[0] == "h"
+        exec "edit " . substitute(expand('%'), '\.h', '\.c', '')
     else 
-        if expand('%:e') == "cpp"
-            exec "edit " . substitute(expand('%'), '\.cpp', '\.hpp', '')
+        if expand('%:e')[0] == "c"
+            exec "edit " . substitute(expand('%'), '\.c', '\.h', '')
         endif
     endif
 endfunction
@@ -48,13 +48,13 @@ function! MyTabLine()
     endfor
 
     "let s .= '%#Statusbg#%T'
-    let s .= '%=%{w:fpRel}'
+    let s .= '%=%{fnamemodify(expand("%"), ":~:.:s?\.*/\\ze.*/.git/??")}'
 
     return s
 endfunction
 
 function! MyTabLabel(n)
-    return fnamemodify(getcwd(-1, a:n), ":~")
+    return fnamemodify(getcwd(-1, a:n), ":t")."/"
 endfunction
 
 function! AddSpacesNonempty(string)
@@ -120,7 +120,7 @@ function! Statusline()
     let l:var .= "%#Status2#"."%{w:stFt}"
     let l:var .= "%1*"
     let l:var .= "%="
-    let l:var .= "%#Status_1#\ %03l/%L:%02v\ "
+    let l:var .= "%#Status3#\ %03l/%L:%02v\ "
     return l:var
 endfunction
 

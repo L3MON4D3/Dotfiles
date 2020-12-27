@@ -11,7 +11,7 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'lervag/vimtex'
     "Plug 'SirVer/ultisnips'
     Plug 'pietropate/vim-tex-conceal'
-    Plug 'neoclide/coc.nvim'
+    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
     Plug 'jackguo380/vim-lsp-cxx-highlight'
     Plug 'puremourning/vimspector'
     "Plug 'https://gitlab.com/Dica-Developer/vim-jdb.git'
@@ -20,18 +20,35 @@ call plug#begin('~/.config/nvim/plugged')
     "Plug 'vim-scripts/OmniCppComplete'
     "Plug 'neovim/nvim-lsp'
     Plug 'vim-scripts/DoxygenToolkit.vim'
+    Plug 'cespare/vim-toml'
+    Plug 'rust-lang/rust.vim'
+    Plug 'yous/vim-open-color'
+    Plug 'peterhoeg/vim-qml'
 call plug#end()
 
-autocmd BufNewFile,BufRead * 
-            \if !exists("b:gradleLoaded") && filereadable("build.gradle") |
+autocmd bufnewfile,bufread *.h set filetype=c
+autocmd bufnewfile,bufread * 
+            \if !exists("b:gradleloaded") && filereadable("build.gradle") |
                 \source /home/simon/.config/nvim/gradle.vim |
-                \let b:gradleLoaded=1 |
+                \let b:gradleloaded=1 |
             \endif
 
 autocmd BufNewFile,BufRead * 
             \if !exists("b:cmakeLoaded") && filereadable("CMakeLists.txt") |
                 \source /home/simon/.config/nvim/cmake.vim |
                 \let b:cmakeLoaded=1 |
+            \endif
+
+autocmd BufNewFile,BufRead * 
+            \if !exists("b:makeLoaded") && filereadable("makefile") |
+                \source /home/simon/.config/nvim/make.vim |
+                \let b:makeLoaded=1 |
+            \endif
+
+autocmd BufNewFile,BufRead * 
+            \if !exists("b:cargoLoaded") && filereadable("Cargo.toml") |
+                \source /home/simon/.config/nvim/cargo.vim |
+                \let b:cargoLoaded=1 |
             \endif
 
 autocmd BufWinEnter,WinEnter,TermOpen term://* startinsert | 
@@ -62,12 +79,10 @@ set foldtext=MyFoldText()
 
 "Style
 syntax enable
-let g:gruvbox_italic=1
+let g:gruvbox_italic='1'
+let g:gruvbox_contrast_dark='hard'
 set background=dark
 colorscheme gruvbox
-
-"on kitty, fixes Backlight bleed
-let &t_ut=''
 
 ""airline
 "let g:airline_powerline_fonts=1
@@ -81,18 +96,19 @@ let &t_ut=''
 "let g:airline#extensions#tabline#show_splits = 0
 "let g:airline#extensions#tabline#show_tab_count = 0
 
-"Statusline
-hi StatusLine ctermbg=239 ctermfg=239 cterm=inverse
-hi StatusLineNC ctermbg=237 ctermfg=239 cterm=inverse
-
-hi StatusLineTerm ctermbg=239 ctermfg=239 cterm=inverse
-hi StatusLineTermNC ctermbg=237 ctermfg=239 cterm=inverse
-
-hi User1 ctermbg=239 ctermfg=255
-
 "Tabline
-hi TabLine ctermbg=235 ctermfg=245 cterm=none
-hi TabLineSel ctermbg=235 ctermfg=229 cterm=none
+hi TabLine ctermbg=0 ctermfg=245 cterm=none
+hi TabLineSel ctermbg=0 ctermfg=229 cterm=none
+
+"Statusline
+hi Status1 ctermbg=3 ctermfg=0 cterm=bold
+hi Status2 ctermbg=208 ctermfg=0 cterm=bold
+hi Status3 ctermbg=109 ctermfg=0 cterm=bold
+
+hi User1 ctermbg=237 ctermfg=0
+
+hi StatusLine ctermbg=237 ctermfg=0
+hi StatusLineNC ctermbg=235 ctermfg=0
 
 set laststatus=2
 set showtabline=2

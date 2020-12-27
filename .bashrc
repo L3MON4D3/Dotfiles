@@ -37,17 +37,24 @@ export MOZ_ENABLE_WAYLAND=1
 export XDG_CURRENT_DESKTOP=sway
 export XDG_SESSION_TYPE=wayland
 
+export MANPAGER='nvim +Man!'
+
+export SYSTEMD_EDITOR=nvim
+
 source /home/simon/.functions
 source /home/simon/.bash_aliases
 source /home/simon/.bashrc_local
 
-#dynamically load completions
-_completion_loader() {
-     . "/usr/share/bash-completion/completions/$1" >/dev/null 2>&1 && return 124
-}
+shopt -s direxpand
+
+##dynamically load completions
+#_completion_loader() {
+#     . "/usr/share/bash-completion/completions/$1" >/dev/null 2>&1 && return 124
+#}
 complete -D -F _completion_loader -o bashdefault -o default
+source /home/simon/Scripts/complete/*
 
 export PS1="\[\033[0m\][\[\e[38;05;6m\]\W\[\033[0m\]]\[\e[38;05;14m\]\$ \[\033[0m\]"
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-	exec sway
+	exec systemd-cat --identifier=sway sway
 fi

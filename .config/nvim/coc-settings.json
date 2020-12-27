@@ -13,5 +13,19 @@
     "snippets.ultisnips.directories": [
         "mySnippets"
     ],
-    "clangd.semanticHighlighting": true
+    "clangd.semanticHighlighting": true,
+    "java.home": "/usr/lib64/jvm/java-14-openjdk",
+    "java.import.gradle.wrapper.enabled": true,
+    "java.configuration.runtimes": [
+    	{
+    		"name": "JavaSE-1.8",
+			"path": "/usr/lib64/jvm/java-8-openjdk/",
+			"default": true
+		},
+    	{
+    		"name": "JavaSE-14",
+			"path": "/usr/lib64/jvm/java-14-openjdk/"
+		}
+    ],
+    "rust-client.disableRustup": true
 }

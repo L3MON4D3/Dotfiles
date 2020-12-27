@@ -1,6 +1,6 @@
 [{
     "layer":"top",
-    "output":["eDP-1","HDMI-A-1","DP-3"],
+    "output":["eDP-1","DP-1"],
     "modules-left":["sway/workspaces","sway/mode"],
     "modules-right":["clock#2","battery","clock#1"],
     "sway/mode": {
@@ -17,7 +17,7 @@
     }
 }, {
     "layer":"top",
-    "output":"DVI-D-1",
+    "output":"HDMI-A-1",
     "modules-left":["sway/workspaces","sway/mode"],
     "modules-right":["clock#3","clock#1"],
     "sway/mode": {

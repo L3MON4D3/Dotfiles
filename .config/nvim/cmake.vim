@@ -15,10 +15,11 @@ let t:srcDir = "src"
 "nnoremap <buffer><silent> <localleader>m :let g:curPos = winsaveview()<Cr> :call Exec_term(t:make)<Cr> :call winrestview(g:curPos)<Cr>
 "nnoremap <buffer><silent> <localleader>c :execute "edit ".expand("%:h")."/CMakeLists.txt"<Cr>
 
-nnoremap <buffer><silent> <localleader>r :execute "!".t:run<Cr>
+nnoremap <buffer><silent> <localleader>r :execute "!".t:run." ".t:args<Cr>
 nnoremap <buffer><silent> <localleader>b :make! --build build<Cr>
 nnoremap <buffer><silent> <localleader>m :make! -B build<Cr>
 nnoremap <buffer><silent> <localleader>c :execute "edit ".expand("%:h")."/CMakeLists.txt"<Cr>
+nnoremap <buffer><silent> <localleader>i :CocCommand clangd.switchSourceHeader<Cr>
 
 
 cabbr <expr> %% t:srcDir

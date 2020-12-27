@@ -120,24 +120,19 @@ def add_paras_after(snip) :
 def add_paras_after_cpp(snip) :
     add_paras_after(snip)
     
-def java_docstring_snip(params, returnVal, excep, snip) :
+def java_docstring(params, returnVal) :
     paramLs = params.split(', ')
-    excepLs = excep.split(', ')
     docString = (
         '/**\n' +
         ' * $1\n' +
         (('\n'.join([
-            ' *' + ' @param ' + paramLs[i].split(' ')[1] + ' $' + str(i + 2)
+            ' *' + ' @param ' + paramLs[i].split(' ')[1]
             for i in range(0, len(paramLs))
         ]) + '\n') if params!='' else '') +
-        (('\n'.join([
-            ' *' + ' @exception ' + excepLs[i] + ' $' + str(i + 2)
-            for i in range(0, len(excepLs))
-        ]) + '\n') if excep!='' else '') +
-        (' * @return $' + str(len(paramLs) + 2) + '\n' if returnVal != 'void' else '') +
+        (' * @return ' + '\n' if returnVal != 'void' else '') +
         ' */\n'
     )
-    snip.expand_anon(docString)
+    return docString
 
 def cpp_docstring_snip(params, returnVal, snip) :
     params = remove_para(params)
@@ -178,9 +173,8 @@ def remove_char(line) :
         line = line[:start] + line[end+1:]
     return line
 
-def func_postJump(snip) :
-    if snip.tabstop == 7 :
-        java_docstring_snip(snip.tabstops[5].current_text, snip.tabstops[3].current_text, snip.tabstops[6].current_text, snip)
+def func_postJump(snip, t) :
+    java_docstring_snip(t[5], t[3], t[6], snip)
 
 def cpp_func_postJump(snip) :
     if snip.tabstop == 5 :
