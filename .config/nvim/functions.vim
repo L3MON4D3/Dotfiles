@@ -48,7 +48,7 @@ function! MyTabLine()
     endfor
 
     "let s .= '%#Statusbg#%T'
-    let s .= '%=%{fnamemodify(expand("%"), ":~:.:s?\.*/\\ze.*/.git/??")}'
+    let s .= '%=%{pathshorten(fnamemodify(expand("%"), ":~:.:s?\.*/\\ze.*/.git/??"))}'
 
     return s
 endfunction

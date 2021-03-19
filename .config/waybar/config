@@ -19,14 +19,14 @@
     "layer":"top",
     "output":"HDMI-A-1",
     "modules-left":["sway/workspaces","sway/mode"],
-    "modules-right":["clock#3","clock#1"],
+    "modules-right":["clock#2","clock#1"],
     "sway/mode": {
         "format":"<span style=\"Italic\">{}</span>"
     },
     "clock#1": {
         "format":"{:%R}"
     },
-    "clock#3": {
+    "clock#2": {
         "format":"{:%d.%m.%Y}"
     }
 }]

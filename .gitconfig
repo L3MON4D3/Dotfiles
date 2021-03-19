@@ -11,3 +11,7 @@
     l = !"git log1"
     g = !"git log2"
     s = status
+[init]
+	defaultBranch = master
+[core]
+	editor = nvim

@@ -1,5 +1,5 @@
-#start with moving wallpapers and creating those for next restart
-#exec_always /home/simon/Scripts/myWallpaperCreate.sh
+#start with moving wallpapers and creating those for next restart   
+#exec_always /home/simon/Scripts/myWallpaperCreate.sh  
 # Default config for sway
 #
 # Copy this to ~/.config/sway/config and edit it to your liking.
@@ -16,7 +16,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term st
+set $term foot
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
 set $menu dmenu_path | dmenu | xargs swaymsg exec --
@@ -40,7 +40,7 @@ output DP-1 subpixel rgb
 
 output HDMI-A-1 transform 90 resolution 1080x1920 position 2560,200
 
-exec_always /home/simon/Scripts/myDarkLightWP.sh &
+exec_always /home/simon/Scripts/myDarkLightWP.sh 0 &
 
 ### Idle configuration
 #
@@ -100,7 +100,7 @@ input "1133:49277:Logitech_Gaming_Mouse_G502" {
 # Basics:
 #
     # start a terminal
-    bindsym $mod+Return exec $term
+    bindsym $mod+Return exec 'foot 2> /dev/null'
 
     # kill focused window
     bindsym $mod+q kill
@@ -154,7 +154,8 @@ input "1133:49277:Logitech_Gaming_Mouse_G502" {
     bindsym $mod+7 workspace 7
     bindsym $mod+8 workspace 8
     bindsym $mod+9 workspace 9
-    bindsym $mod+0 workspace 10
+    #bindsym $mod+0 workspace 10
+
     # move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace 1
     bindsym $mod+Shift+2 move container to workspace 2
@@ -165,7 +166,8 @@ input "1133:49277:Logitech_Gaming_Mouse_G502" {
     bindsym $mod+Shift+7 move container to workspace 7
     bindsym $mod+Shift+8 move container to workspace 8
     bindsym $mod+Shift+9 move container to workspace 9
-    bindsym $mod+Shift+0 move container to workspace 10
+    #bindsym $mod+Shift+0 move container to workspace 10
+
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
 #
@@ -240,21 +242,22 @@ for_window [title="worldWp"] floating enable
 for_window [title="Emulator$"] floating enable
 for_window [title="FML early loading progress"] floating enable
 for_window [title="unknown_noise.png"] floating enable
-#for_window [title=".*"]
+for_window [title="Firefox — Sharing Indicator"] kill
+for_window [title="Kodi"] fullscreen enable
 
 mode "apps" {
 	bindsym b exec qutebrowser
 	bindsym f exec firefox
-	bindsym n exec $term -e ncmpcpp
+	bindsym n exec foot ncmpcpp
 	bindsym g exec gimp
 	bindsym i exec inkscape
 	bindsym t exec thunderbird
     bindsym q exec qbittorrent
     bindsym v exec vlc
-    bindsym d exec discord-canary
+    bindsym d exec discord
     bindsym z exec zathura
     bindsym o exec tor-browser
-    bindsym k exec kodi
+    bindsym k exec /usr/lib/kodi/kodi-wayland
     bindsym s exec spotify
     bindsym j exec qutebrowser /home/simon/Documents/Documentation/docs/index.html
     bindsym c exec chromium
@@ -264,9 +267,10 @@ mode "apps" {
 bindsym $mod+a mode "apps"
 
 mode "torrent" {
-	bindsym a exec /home/simon/Scripts/myQbtCtrl.py --add
-	bindsym s exec makoctl dismiss -a && /home/simon/Scripts/myQbtCtrl.py --status
+	bindsym a exec '/home/simon/Scripts/myQbtCtrl.py --add'
+	bindsym s exec 'makoctl dismiss -a && /home/simon/Scripts/myQbtCtrl.py --status'
 	bindsym c exec makoctl dismiss -a
+	bindsym b exec qutebrowser pi:8080
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
@@ -306,18 +310,14 @@ mode "network" {
 bindsym $mod+n mode "network"
 
 gaps inner 4
-gaps outer 2
+gaps outer 1
 default_border pixel 2
 
-client.focused #ebdbb2 #282828 #ebdbb2 #ebdbb2 #ebdbb2
-client.unfocused #504945 #282828 #ebdbb2 #504945 #504945
+client.focused #fbf1c7 #1d2021 #fbf1c7 #fbf1c7 #fbf1c7
+client.unfocused #504945 #1d2021 #fbf1c7 #504945 #504945
 
 exec_always --no-startup-id xrdb -merge ~/.Xresources
 exec_always --no-startup-id xrdb -merge ~/.Xresources1
-
-bindsym XF86AudioRaiseVolume exec myVolUp.sh
-bindsym XF86AudioLowerVolume exec myVolDown.sh
-bindsym XF86AudioMute exec exec myVolMute.sh
 
 bindsym XF86MonBrightnessDown exec sudo myBacklight.sh -d 60
 bindsym XF86MonBrightnessUp exec sudo myBacklight.sh -u 60
@@ -332,3 +332,4 @@ exec_always gsettings set org.gnome.desktop.interface icon-theme Papirus
 
 exec_always myRestartWaybar.sh
 exec "systemctl --user import-environment; systemctl --user start sway-session.target"
+exec bluetoothctl power on

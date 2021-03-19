@@ -1,17 +1,15 @@
-import subprocess
 import yaml
-
-def read_xresources(prefix):
-    props = {}
-    x = subprocess.run(['xrdb', '-query'], stdout=subprocess.PIPE)
-    lines = x.stdout.decode().split('\n')
-    for line in filter(lambda l : l.startswith(prefix), lines):
-        prop, _, value = line.partition(':\t')
-        props[prop] = value
-    return props
-
-xresources = read_xresources('*')
-
+#def read_xresources(prefix):
+#    props = {}
+#    x = subprocess.run(['xrdb', '-query'], stdout=subprocess.PIPE)
+#    lines = x.stdout.decode().split('\n')
+#    for line in filter(lambda l : l.startswith(prefix), lines):
+#        prop, _, value = line.partition(':\t')
+#        props[prop] = value
+#    return props
+#
+#xresources = read_xresources('*')
+#
 with (config.configdir / 'colors.yml').open() as f:
     yaml_data = yaml.safe_load(f)
 
@@ -23,7 +21,7 @@ def dict_attrs(obj, path=''):
         yield path, obj
 
 for k, v in dict_attrs(yaml_data):
-    config.set(k, xresources[v])
+    config.set(k, v)
 
 c.fonts.tabs.selected = '13pt Fira Code'
 c.fonts.tabs.unselected = '13pt Fira Code'
@@ -48,4 +46,7 @@ c.url.start_pages = 'file:///home/simon/Code/Html/Startpage/index.html'
 
 c.statusbar.show = 'never'
 
-c.editor.command = ['st', '-e', 'nvim', '{}']
+c.editor.command = ['foot', 'nvim', '{}']
+
+config.load_autoconfig(False)
+c.url.searchengines = {'DEFAULT': 'https://google.com/search?q={}'}

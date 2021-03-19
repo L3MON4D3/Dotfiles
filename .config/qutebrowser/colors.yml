@@ -1,118 +1,118 @@
 colors:
     statusbar:
         caret:
-            bg: "*color5"
-            fg: "*foreground"
+            bg: "#b16286"
+            fg: "#fbf1c7"
         command:
-            bg: "*background"
-            fg: "*foreground"
+            bg: "#1d2021"
+            fg: "#fbf1c7"
             private:
-                bg: "*background"
+                bg: "#1d2021"
         insert:
-            bg: "*color10"
-            fg: "*foreground"
+            bg: "#b8bb26"
+            fg: "#fbf1c7"
         normal:
-            bg: "*background"
-            fg: "*foreground"
+            bg: "#1d2021"
+            fg: "#fbf1c7"
         private:
-            bg: "*background"
-            fg: "*foreground"
+            bg: "#1d2021"
+            fg: "#fbf1c7"
         progress:
-            bg: "*foreground"
+            bg: "#fbf1c7"
         url:
-            fg: "*foreground"
+            fg: "#fbf1c7"
             error:
-                fg: "*color1"
+                fg: "#cc241d"
             hover:
-                fg: "*color4"
+                fg: "#458588"
             success:
                 http:
-                    fg: "*foreground"
+                    fg: "#fbf1c7"
                 https:
-                    fg: "*foreground"
+                    fg: "#fbf1c7"
             warn:
-                fg: "*color3"
+                fg: "#d79921"
     tabs:
         bar:
-            bg: "*background"
+            bg: "#1d2021"
         even:
-            fg: "*color8"
-            bg: "*background"
+            fg: "#928374"
+            bg: "#1d2021"
         odd:
-            fg: "*color8"
-            bg: "*background"
+            fg: "#928374"
+            bg: "#1d2021"
         selected:
             even:
-                fg: "*foreground"
-                bg: "*background"
+                fg: "#fbf1c7"
+                bg: "#1d2021"
             odd:
-                fg: "*foreground"
-                bg: "*background"
+                fg: "#fbf1c7"
+                bg: "#1d2021"
     completion:
         category:
-            bg: "*foreground"
-            fg: "*background"
+            bg: "#fbf1c7"
+            fg: "#1d2021"
             border:
-                bottom: "*foreground"
-                top: "*foreground"
+                bottom: "#fbf1c7"
+                top: "#fbf1c7"
         even:
-            bg: "*background"
+            bg: "#1d2021"
         odd:
-            bg: "*background"
+            bg: "#1d2021"
         item:
             selected:
-                bg: "*color4"
-                fg: "*foreground"
+                bg: "#458588"
+                fg: "#fbf1c7"
                 border:
-                    bottom: "*color4"
-                    top: "*color4"
+                    bottom: "#458588"
+                    top: "#458588"
         fg:
-            "*foreground"
+            "#fbf1c7"
         match:
-            fg: "*color10"
+            fg: "#b8bb26"
         scrollbar:
-            bg: "*foreground"
-            fg: "*background"
+            bg: "#fbf1c7"
+            fg: "#1d2021"
     downloads:
         bar:
-            bg: "*background"
+            bg: "#1d2021"
         error:
-            fg: "*foreground"
-            bg: "*color1"
+            fg: "#fbf1c7"
+            bg: "#cc241d"
         start:
-            fg: "*foreground"
-            bg: "*color5"
+            fg: "#fbf1c7"
+            bg: "#b16286"
         stop:
-            fg: "*foreground"
-            bg: "*color10"
+            fg: "#fbf1c7"
+            bg: "#b8bb26"
     hints:
-        fg: "*foreground"
-        bg: "*background"
+        fg: "#fbf1c7"
+        bg: "#1d2021"
         match:
-            fg: "*color3"
+            fg: "#d79921"
     keyhint:
-        fg: "*foreground"
-        bg: "*background"
+        fg: "#fbf1c7"
+        bg: "#1d2021"
         suffix:
-            fg: "*color3"
+            fg: "#d79921"
     messages:
         error:
-            fg: "*foreground"
-            bg: "*color1"
-            border: "*color1"
+            fg: "#fbf1c7"
+            bg: "#cc241d"
+            border: "#cc241d"
         info:
-            fg: "*foreground"
-            bg: "*color10"
-            border: "*color10"
+            fg: "#fbf1c7"
+            bg: "#b8bb26"
+            border: "#b8bb26"
         warning:
-            fg: "*foreground"
-            bg: "*color3"
-            border: "*color3"
+            fg: "#fbf1c7"
+            bg: "#d79921"
+            border: "#d79921"
     prompts:
-        fg: "*foreground"
-        bg: "*background"
-        border: "*background"
+        fg: "#fbf1c7"
+        bg: "#1d2021"
+        border: "#1d2021"
         selected:
-            bg: "*color3"
+            bg: "#d79921"
     webpage:
-        bg: "*foreground"
+        bg: "#fbf1c7"

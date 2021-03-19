@@ -1,10 +1,16 @@
 font=monospace 10
+
 background-color=#1d2021
-text-color=#ebdbb2
-border-size=4
-border-color=#ebdbb2
+text-color=#fbf1c7
+
+border-size=3
+border-color=#fbf1c7
+border-radius=1
+
 markup=1
-margin=3
+
+margin=5
+
 height=2000
 
 [category="torr"]

@@ -5,25 +5,38 @@ source ~/.config/nvim/functions.vim
 py3 from my_snippet_helpers import *
 "Plugins
 call plug#begin('~/.config/nvim/plugged')
+    Plug 'cespare/vim-toml'
+    Plug 'jackguo380/vim-lsp-cxx-highlight',
+    Plug 'lervag/vimtex', {'for' : 'latex'}
     Plug 'morhetz/gruvbox'
+    Plug 'pietropate/vim-tex-conceal', {'for' : 'latex'}
+    Plug 'tpope/vim-dispatch'
+    Plug 'tpope/vim-fugitive'
+    Plug 'vim-scripts/DoxygenToolkit.vim', {'for' : 'cpp'}
+
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'norcalli/snippets.nvim'
+    Plug 'anott03/nvim-lspinstall'
+    "Plug 'nvim-lua/completion-nvim'
+	"Plug 'norcalli/snippets.nvim'
+	"Plug 'phazoon/hop.nvim'
+
+	Plug 'hrsh7th/vim-vsnip'
+	Plug 'hrsh7th/vim-vsnip-integ'
+	Plug 'hrsh7th/nvim-compe'
+	Plug '/home/simon/.config/nvim/plugged/luasnip/'
+    "Plug 'nvim-lua/lsp_extensions.nvim'
+	"Plug 'rust-lang/rust.vim'
+    "Plug 'SirVer/ultisnips'
+    "Plug 'https://gitlab.com/Dica-Developer/vim-jdb.git'
+    "Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+    "Plug 'neovim/nvim-lsp'
+    "Plug 'peterhoeg/vim-qml'
     "Plug 'vim-airline/vim-airline'
     "Plug 'vim-airline/vim-airline-themes'
-    Plug 'lervag/vimtex'
-    "Plug 'SirVer/ultisnips'
-    Plug 'pietropate/vim-tex-conceal'
-    Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-    Plug 'jackguo380/vim-lsp-cxx-highlight'
-    Plug 'puremourning/vimspector'
-    "Plug 'https://gitlab.com/Dica-Developer/vim-jdb.git'
-    Plug 'tpope/vim-fugitive'
-    "Plug 'ycm-core/youCompleteMe'
     "Plug 'vim-scripts/OmniCppComplete'
-    "Plug 'neovim/nvim-lsp'
-    Plug 'vim-scripts/DoxygenToolkit.vim'
-    Plug 'cespare/vim-toml'
-    Plug 'rust-lang/rust.vim'
-    Plug 'yous/vim-open-color'
-    Plug 'peterhoeg/vim-qml'
+    "Plug 'ycm-core/youCompleteMe'
+    "Plug 'yous/vim-open-color'
 call plug#end()
 
 autocmd bufnewfile,bufread *.h set filetype=c
@@ -33,6 +46,12 @@ autocmd bufnewfile,bufread *
                 \let b:gradleloaded=1 |
             \endif
 
+"augroup CompletionTriggerCharacter
+"    autocmd!
+"    autocmd BufEnter * let g:completion_trigger_character = ['.']
+"    autocmd BufEnter *.c,*.cpp,*.rs let g:completion_trigger_character = ['.', '::']
+"augroup end
+
 autocmd BufNewFile,BufRead * 
             \if !exists("b:cmakeLoaded") && filereadable("CMakeLists.txt") |
                 \source /home/simon/.config/nvim/cmake.vim |
@@ -40,7 +59,7 @@ autocmd BufNewFile,BufRead *
             \endif
 
 autocmd BufNewFile,BufRead * 
-            \if !exists("b:makeLoaded") && filereadable("makefile") |
+            \if !exists("b:makeLoaded") && (filereadable("makefile") || filereadable("Makefile") ) |
                 \source /home/simon/.config/nvim/make.vim |
                 \let b:makeLoaded=1 |
             \endif
@@ -101,7 +120,7 @@ hi TabLine ctermbg=0 ctermfg=245 cterm=none
 hi TabLineSel ctermbg=0 ctermfg=229 cterm=none
 
 "Statusline
-hi Status1 ctermbg=3 ctermfg=0 cterm=bold
+hi Status1 ctermbg=11 ctermfg=0 cterm=bold
 hi Status2 ctermbg=208 ctermfg=0 cterm=bold
 hi Status3 ctermbg=109 ctermfg=0 cterm=bold
 
@@ -141,22 +160,68 @@ set splitbelow
 set splitright
 set switchbuf+=useopen
 
+"lsp
+"set completeopt=menuone,noinsert,noselect
+set shortmess+=c
+
+hi link LspDiagnosticsVirtualTextError CocErrorSign
+hi link LspDiagnosticsVirtualTextWarning CocWarningSign
+hi link LspDiagnosticsVirtualTextInformation CocInfoSign
+hi link LspDiagnosticsVirtualTextHint CocHintSign
+
+hi link LspDiagnosticsSignError CocErrorSign
+hi link LspDiagnosticsSignWarning CocWarningSign
+hi link LspDiagnosticsSignInformation CocInfoSign
+hi link LspDiagnosticsSignHint CocHintSign
+
+sign define LspDiagnosticsSignError text=» texthl=LspDiagnosticsSignError linehl= numhl=
+sign define LspDiagnosticsSignWarning text=» texthl=LspDiagnosticsSignWarning linehl= numhl=
+sign define LspDiagnosticsSignInformation text=» texthl=LspDiagnosticsSignInformation linehl= numhl=
+sign define LspDiagnosticsSignHint text=» texthl=LspDiagnosticsSignHint linehl= numhl=
+
+lua require('init')
+lua ls = require('luasnip')
+set completeopt=menuone
+
+"inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
+"inoremap <S-Tab> <cmd>lua return require'snippets'.advance_snippet(-1)<CR>
+
+
+let g:vsnip_snippet_dir = '/home/simon/.config/nvim/vsnip/'
+xmap <Tab> <Plug>(vsnip-select-text)
+xmap <Tab> <Plug>(vsnip-cut-text)
+
+smap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
+imap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
+
+imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
+
+inoremap <silent><expr> <C-X><C-O> compe#complete()
+inoremap <silent><expr> <C-Y>      compe#confirm('<CR>')
+
+imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
+inoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
+
+"cannot set in lua or stupid
+"let g:completion_confirm_key = "\<C-y>"
+"imap <silent> <C-X><C-O> <Plug>(completion_trigger)
+
 "Ultisnips
 "let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 "let g:UltiSnipsExpandTrigger="<Tab>"
 "let g:UltiSnipsJumpForwardTrigger="<Tab>"
 "let g:UltiSnipsSnippetDirectories=['mySnippets']
 
-let g:coc_snippet_next = '<tab>'
-let g:coc_snippet_prev = '<S-Tab>'
-xmap <Tab> <Plug>(coc-snippets-select)
-
-inoremap <silent><expr> <TAB>
-  \ pumvisible() ? coc#_select_confirm() :
-  \ coc#expandableOrJumpable() ?
-  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-  \ "\<TAB>"
-
+"let g:coc_snippet_next = '<tab>'
+"let g:coc_snippet_prev = '<S-Tab>'
+"xmap <Tab> <Plug>(coc-snippets-select)
+"
+"inoremap <silent><expr> <TAB>
+"  \ coc#expandableOrJumpable() ?
+"  \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"  \ "\<TAB>"
+"
 "VimTex
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
@@ -260,3 +325,7 @@ tnoremap <silent> <F10> <C-\><C-N>:res +2<Cr>a
 tnoremap <silent> <F22> <C-\><C-N>:res -2<Cr>a
 
 cabbr <expr> && expand('%:h')
+
+if filereadable('.vProj.vim')
+    source .vProj.vim
+endif
