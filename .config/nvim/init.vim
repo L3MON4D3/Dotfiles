@@ -2,7 +2,7 @@ set nocompatible
 set viminfo='100,<50,s10,h,n~/.config/nvim/info
 
 source ~/.config/nvim/functions.vim 
-py3 from my_snippet_helpers import *
+
 "Plugins
 call plug#begin('~/.config/nvim/plugged')
     Plug 'cespare/vim-toml'
