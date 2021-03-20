@@ -24,7 +24,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'hrsh7th/vim-vsnip'
 	Plug 'hrsh7th/vim-vsnip-integ'
 	Plug 'hrsh7th/nvim-compe'
-	Plug '/home/simon/.config/nvim/plugged/luasnip/'
+	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
     "Plug 'nvim-lua/lsp_extensions.nvim'
 	"Plug 'rust-lang/rust.vim'
     "Plug 'SirVer/ultisnips'
@@ -188,8 +188,6 @@ set completeopt=menuone
 
 
 let g:vsnip_snippet_dir = '/home/simon/.config/nvim/vsnip/'
-xmap <Tab> <Plug>(vsnip-select-text)
-xmap <Tab> <Plug>(vsnip-cut-text)
 
 smap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
 imap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
@@ -202,6 +200,9 @@ inoremap <silent><expr> <C-Y>      compe#confirm('<CR>')
 
 imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
 inoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
+
+snoremap <silent> <Tab> <cmd>lua ls.jump(1)<Cr>
+snoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
 
 "cannot set in lua or stupid
 "let g:completion_confirm_key = "\<C-y>"
