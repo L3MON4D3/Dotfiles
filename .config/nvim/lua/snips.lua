@@ -5,6 +5,7 @@ local t = ls.t
 local i = ls.i
 local f = ls.f
 local c = ls.c
+local d = ls.d
 
 local function no(arg)
 	return arg
@@ -27,6 +28,19 @@ local function even_count(c)
 	return ct % 2 == 0
 end
 
+local function just_fn(args)
+	return sn(nil, {
+		t(args[1]),
+		i(1),
+		t({"("}),
+		i(2, args[2]),
+		t({") {", "\t"}),
+		f(copy, {2}),
+		i(0),
+		t({"", "}"})
+	})
+end
+
 local function neg(fn, ...)
 	return not fn(...)
 end
@@ -41,12 +55,13 @@ ls.snippets = {
 		s("\"", { t({"\""}), i(1), t({"\""}), i(0) }, neg, even_count, '"'),
 		s("{+", { t({"{","\t"}), i(1), t({"", "}"}), i(0) }),
 		s("fn", {
-			t({"function "}),
+			t({"//Parameters: "}),
+			f(copy, {2}),
+			t({"", "function "}),
 			i(1),
 			t({"("}),
 			i(2, {"int foo"}),
 			t({") {", "\t"}),
-			f(copy, {2}),
 			i(0),
 			t({"", "}"})
 		}),
@@ -70,7 +85,8 @@ ls.snippets = {
 		}),
 		s("ctest", {
 			t({"lel "}),
-			c(1, {
+			i(1),
+			c(2, {
 				sn(nil, {
 					t({"function "}),
 					i(1),
@@ -111,6 +127,15 @@ ls.snippets = {
 			i(0),
 			t({"", "}"})
 		}),
+		s("dtest", {
+			i(1),
+			t({"aaa "}),
+			i(2),
+			t({"bbb"}),
+			d(3, just_fn, {1, 2}),
+			t({" ccc "}),
+			i(0)
+		})
 	},
 	sh = {
 		s("test2", {t({"SUCCESS"}), i(0)})

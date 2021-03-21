@@ -202,7 +202,6 @@ imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-o
 inoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
 
 imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
-imap <silent><expr> <C-W> luasnip#choice_active() ? '<Plug>luasnip-confirm-choice' : '<C-W>'
 
 snoremap <silent> <Tab> <cmd>lua ls.jump(1)<Cr>
 snoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
