@@ -4,6 +4,7 @@ local sn = ls.sn
 local t = ls.t
 local i = ls.i
 local f = ls.f
+local c = ls.c
 
 local function no(arg)
 	return arg
@@ -66,7 +67,50 @@ ls.snippets = {
 			i(3),
 			t({"asdf"}),
 			i(0)
-		})
+		}),
+		s("ctest", {
+			t({"lel "}),
+			c(1, {
+				sn(nil, {
+					t({"function "}),
+					i(1),
+					t({"("}),
+					i(2, {"int foo"}),
+					t({") {", "\t"}),
+					f(copy, {2}),
+					i(0),
+					t({"", "}"})
+				}),
+				t({"2"}),
+				t({"3"}),
+			}),
+			i(0)
+		}),
+		s("class", {
+			c(1, {
+				t({"public "}),
+				t({"private "})
+			}),
+			t({"class "}),
+			i(2),
+			t({" "}),
+			c(3, {
+				t({"{"}),
+				sn(nil, {
+					t({"extends "}),
+					i(0),
+					t({" {"})
+				}),
+				sn(nil, {
+					t({"implements "}),
+					i(0),
+					t({" {"})
+				})
+			}),
+			t({"","\t"}),
+			i(0),
+			t({"", "}"})
+		}),
 	},
 	sh = {
 		s("test2", {t({"SUCCESS"}), i(0)})
