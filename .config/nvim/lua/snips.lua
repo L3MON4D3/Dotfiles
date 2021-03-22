@@ -45,6 +45,77 @@ local function neg(fn, ...)
 	return not fn(...)
 end
 
+local function jdocsnip(args, old_snip)
+	local nodes = {
+		t({"/**"," * "}),
+		i(0, {"A short Description"}),
+		t({"", ""})
+	}
+
+	-- These will be merged with the snippet; that way, should the snippet be updated,
+	-- some user input eg. text can be kept and not be destroyed.
+	local param_nodes = {}
+
+	-- At least one param.
+	if string.find(args[2][1], ", ") then
+		vim.list_extend(nodes, {t({" * ", ""})})
+	end
+
+	local insert = 1
+	for indx, arg in ipairs(vim.split(args[2][1], ", ", true)) do
+		-- Get actual name parameter.
+		arg = vim.split(arg, " ", true)[2]
+		if arg then
+			local inode
+			-- if there was some text in this parameter, use it as static_text for this new snippet.
+			if old_snip and old_snip[arg] then
+				inode = i(insert, old_snip[arg]:get_text())
+			else
+				inode = i(insert)
+			end
+			vim.list_extend(nodes, {t({" * @param "..arg.." "}), inode, t({"", ""})})
+			param_nodes[arg] = inode
+
+			insert = insert + 1
+		end
+	end
+
+	if args[1][1] ~= "void" then
+		local inode
+		if old_snip and old_snip[args[1][1]] then
+			inode = i(insert, old_snip[args[1][1]]:get_text())
+		else
+			inode = i(insert)
+		end
+
+		vim.list_extend(nodes, {t({" * ", " * @return "}), inode, t({"", ""})})
+		param_nodes[args[1][1]] = inode
+		insert = insert + 1
+	end
+
+	if vim.tbl_count(args[3]) ~= 1 then
+		local exc = string.gsub(args[3][2], " throws ", "")
+		vim.list_extend(nodes, {t({" * ", " * @throws "..exc.." "}), i(insert), t({"", ""})})
+		insert = insert + 1
+	end
+
+	vim.list_extend(nodes, {t({" */"})})
+
+	local snip = sn(nil, nodes)
+	-- Error on attempting overwrite.
+	add_values(snip, param_nodes)
+	return snip
+end
+
+function add_values(tbl1, tbl2)
+	for k,v in pairs(tbl2) do
+		if tbl1[k] then
+			error("table already in table!!")
+		end
+		tbl1[k] = v
+	end
+end
+
 ls.snippets = {
 	all = {
 		s("(", { t({"("}), i(1), t({")"}), i(0) }, neg, char_count_same, '%(', '%)'),
@@ -135,9 +206,49 @@ ls.snippets = {
 			d(3, just_fn, {1, 2}),
 			t({" ccc "}),
 			i(0)
-		})
+		}),
+		s("nxt", {
+			sn(1, {
+				t({" aaa "}),
+				i(1, {" bbb "}),
+				i(0)
+			}),
+			t({" ccc ", "ddd"}),
+			i(0)
+		}),
 	},
 	sh = {
 		s("test2", {t({"SUCCESS"}), i(0)})
+	},
+	java = {
+		s("fn", {
+			d(6, jdocsnip, {2, 4, 5}), t({"", ""}),
+			c(1, {
+				t({"public "}),
+				t({"private "})
+			}),
+			c(2, {
+				t({"void"}),
+				t({"String"}),
+				t({"char"}),
+				t({"int"}),
+				t({"double"}),
+				t({"boolean"}),
+				i(nil, {""}),
+			}),
+			t({" "}),
+			i(3, {"myFunc"}),
+			t({"("}), i(4), t({")"}),
+			c(5, {
+				t({""}),
+				sn(nil, {
+					t({""," throws "}),
+					i(0)
+				})
+			}),
+			t({" {", "\t"}),
+			i(0),
+			t({"", "}"})
+		})
 	}
 }
