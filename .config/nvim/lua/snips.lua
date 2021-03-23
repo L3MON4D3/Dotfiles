@@ -45,7 +45,7 @@ local function neg(fn, ...)
 	return not fn(...)
 end
 
-local function jdocsnip(args, old_snip)
+local function jdocsnip(args, old_state)
 	local nodes = {
 		t({"/**"," * "}),
 		i(0, {"A short Description"}),
@@ -68,8 +68,8 @@ local function jdocsnip(args, old_snip)
 		if arg then
 			local inode
 			-- if there was some text in this parameter, use it as static_text for this new snippet.
-			if old_snip and old_snip[arg] then
-				inode = i(insert, old_snip[arg]:get_text())
+			if old_state and old_state[arg] then
+				inode = i(insert, old_state[arg]:get_text())
 			else
 				inode = i(insert)
 			end
@@ -82,8 +82,8 @@ local function jdocsnip(args, old_snip)
 
 	if args[1][1] ~= "void" then
 		local inode
-		if old_snip and old_snip[args[1][1]] then
-			inode = i(insert, old_snip[args[1][1]]:get_text())
+		if old_state and old_state[args[1][1]] then
+			inode = i(insert, old_state[args[1][1]]:get_text())
 		else
 			inode = i(insert)
 		end
@@ -103,7 +103,7 @@ local function jdocsnip(args, old_snip)
 
 	local snip = sn(nil, nodes)
 	-- Error on attempting overwrite.
-	add_values(snip, param_nodes)
+	snip.old_state = param_nodes
 	return snip
 end
 
