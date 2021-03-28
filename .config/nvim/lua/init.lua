@@ -122,6 +122,10 @@ nvim_lsp.sumneko_lua.setup {
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, Diag_params)
 
+function Remove_mt(item, path)
+  if path[#path] ~= vim.inspect.METATABLE and path[#path] ~= "parent" and path[#path] ~= "choices" and path[#path] ~= "dependents" then return item end
+end
+
 require'snips'
 -- snippets
 -- local snips = require'snippets'

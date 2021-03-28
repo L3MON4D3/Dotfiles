@@ -254,7 +254,7 @@ mode "apps" {
 	bindsym t exec thunderbird
     bindsym q exec qbittorrent
     bindsym v exec vlc
-    bindsym d exec discord
+    bindsym d exec "electron12 /usr/lib/discord/app.asar --enable-features=UseOzonePlatform --ozone-platform=wayland"
     bindsym z exec zathura
     bindsym o exec tor-browser
     bindsym k exec /usr/lib/kodi/kodi-wayland
