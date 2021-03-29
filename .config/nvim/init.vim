@@ -15,16 +15,15 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'vim-scripts/DoxygenToolkit.vim', {'for' : 'cpp'}
 
     Plug 'neovim/nvim-lspconfig'
-    Plug 'norcalli/snippets.nvim'
     Plug 'anott03/nvim-lspinstall'
+	Plug 'hrsh7th/nvim-compe'
+	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
+    "Plug 'norcalli/snippets.nvim'
     "Plug 'nvim-lua/completion-nvim'
 	"Plug 'norcalli/snippets.nvim'
 	"Plug 'phazoon/hop.nvim'
-
-	Plug 'hrsh7th/vim-vsnip'
-	Plug 'hrsh7th/vim-vsnip-integ'
-	Plug 'hrsh7th/nvim-compe'
-	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
+	"Plug 'hrsh7th/vim-vsnip'
+	"Plug 'hrsh7th/vim-vsnip-integ'
     "Plug 'nvim-lua/lsp_extensions.nvim'
 	"Plug 'rust-lang/rust.vim'
     "Plug 'SirVer/ultisnips'
