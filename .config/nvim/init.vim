@@ -15,12 +15,11 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'vim-scripts/DoxygenToolkit.vim', {'for' : 'cpp'}
 
     Plug 'neovim/nvim-lspconfig'
-    Plug 'anott03/nvim-lspinstall'
+    Plug 'kabouzeid/nvim-lspinstall'
 	Plug 'hrsh7th/nvim-compe'
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
     "Plug 'norcalli/snippets.nvim'
     "Plug 'nvim-lua/completion-nvim'
-	"Plug 'norcalli/snippets.nvim'
 	"Plug 'phazoon/hop.nvim'
 	"Plug 'hrsh7th/vim-vsnip'
 	"Plug 'hrsh7th/vim-vsnip-integ'
@@ -180,22 +179,12 @@ sign define LspDiagnosticsSignHint text=» texthl=LspDiagnosticsSignHint linehl=
 
 lua require('init')
 lua ls = require('luasnip')
-set completeopt=menuone
-
-"inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
+set completeopt=menuone "inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
 "inoremap <S-Tab> <cmd>lua return require'snippets'.advance_snippet(-1)<CR>
 
 
-let g:vsnip_snippet_dir = '/home/simon/.config/nvim/vsnip/'
-
-smap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
-imap <expr> <Tab>   vsnip#available(1)  ? '<Plug>(vsnip-expand-or-jump)' : '<Tab>'
-
-imap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-smap <expr> <S-Tab> vsnip#jumpable(-1)  ? '<Plug>(vsnip-jump-prev)'      : '<S-Tab>'
-
-inoremap <silent><expr> <C-X><C-O> compe#complete()
-inoremap <silent><expr> <C-Y>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-O> compe#complete()
+inoremap <silent><expr> <C-Y> compe#confirm('<CR>')
 
 imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
 inoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
@@ -207,7 +196,7 @@ snoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
 
 "cannot set in lua or stupid
 "let g:completion_confirm_key = "\<C-y>"
-"imap <silent> <C-X><C-O> <Plug>(completion_trigger)
+"imap <silent> <C-I> <Plug>(completion_trigger)
 
 "Ultisnips
 "let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"

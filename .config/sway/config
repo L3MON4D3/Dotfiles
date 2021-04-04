@@ -73,12 +73,20 @@ input "1:1:AT_Translated_Set_2_keyboard" {
     xkb_options caps:escape
 }
 
+
 input "65261:0:1upkeyboards_1up60hse" {
     repeat_delay 120
     repeat_rate 100
     xkb_layout "us"
     xkb_variant "altgr-intl"
     xkb_options caps:escape
+}
+
+input "1240:60205:liliums_Lily58" {
+    repeat_delay 120
+    repeat_rate 100
+    xkb_layout "us"
+    xkb_variant "altgr-intl"
 }
 
 input "1241:5394:Lioncast_LK20_keybord_Lioncast_LK20_keybord" {
@@ -325,6 +333,8 @@ bindsym XF86MonBrightnessUp exec sudo myBacklight.sh -u 60
 bindsym XF86AudioPlay exec mpc toggle
 bindsym XF86AudioNext exec mpc next
 bindsym XF86AudioPrev exec mpc prev
+bindsym XF86AudioRaiseVolume exec mpc volume +5
+bindsym XF86AudioLowerVolume exec mpc volume -5
 
 exec_always gsettings set org.gnome.desktop.interface gtk-theme Adapta
 exec_always gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors

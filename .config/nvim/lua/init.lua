@@ -1,5 +1,4 @@
 -- lsp
-
 vim.lsp.set_log_level("debug")
 
 local nvim_lsp = require'lspconfig'
@@ -15,9 +14,6 @@ function Toggle_virtual_text()
 end
 
 local lsp_attach = function(_)
-	-- vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-	-- require'completion'.on_attach()
-
 	vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
@@ -25,20 +21,13 @@ local lsp_attach = function(_)
 	vim.api.nvim_buf_set_keymap(0, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'i', '<Bs>', 'pumvisible() ? "<Bs><C-X><C-O>":"<Bs>"', {noremap = false, expr = true})
-
-	vim.g.completion_trigger_on_delete = 0
-	vim.g.completion_enable_auto_hover = 0
-
-	vim.g.completion_enable_auto_popup = 1
-	vim.g.completion_enable_server_trigger = 0
 
 	require'compe'.setup {
 	 	enabled = true;
 	 	autocomplete = false;
 	 	debug = false;
 	 	min_length = 1;
-	 	preselect = 'disable';
+	 	preselect = 'enable';
 	 	throttle_time = 80;
 	 	source_timeout = 200;
 	 	incomplete_delay = 400;
@@ -57,6 +46,7 @@ local lsp_attach = function(_)
 			spell = false;
 			tags = false;
 			snippets_nvim = false;
+			luasnip = true;
 			treesitter = false;
 		};
 	}
@@ -78,6 +68,7 @@ nvim_lsp.ccls.setup {
 		};
 	};
 	on_attach = lsp_attach;
+	capabilities = capabilities
 }
 
 -- nvim_lsp.clangd.setup {
@@ -87,6 +78,7 @@ nvim_lsp.ccls.setup {
 -- 		};
 -- 	};
 -- 	on_attach = lsp_attach;
+-- 	capabilities = capabilities;
 -- }
 
 local sumneko_root_path = '/home/simon/.local/share/nvim/lspinstall/lua-language-server/'

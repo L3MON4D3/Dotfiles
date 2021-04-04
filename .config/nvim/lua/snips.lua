@@ -121,14 +121,14 @@ end
 
 ls.snippets = {
 	all = {
-		s("(", { t({"("}), i(1), t({")"}), i(0) }, neg, char_count_same, '%(', '%)'),
-		s("{", { t({"{"}), i(1), t({"}"}), i(0) }, neg, char_count_same, '%{', '%}'),
-		s("[", { t({"["}), i(1), t({"]"}), i(0) }, neg, char_count_same, '%[', '%]') ,
-		s("<", { t({"<"}), i(1), t({">"}), i(0) }, neg, char_count_same, '<', '>'),
-		s("'", { t({"'"}), i(1), t({"'"}), i(0) }, neg, even_count, '\''),
-		s("\"", { t({"\""}), i(1), t({"\""}), i(0) }, neg, even_count, '"'),
-		s("{+", { t({"{","\t"}), i(1), t({"", "}"}), i(0) }),
-		s("fn", {
+		s({trig="(",dscr="test", name="test"}, { t({"("}), i(1), t({")"}), i(0) }, neg, char_count_same, '%(', '%)'),
+		s({trig="{"}, { t({"{"}), i(1), t({"}"}), i(0) }, neg, char_count_same, '%{', '%}'),
+		s({trig="["}, { t({"["}), i(1), t({"]"}), i(0) }, neg, char_count_same, '%[', '%]') ,
+		s({trig="<"}, { t({"<"}), i(1), t({">"}), i(0) }, neg, char_count_same, '<', '>'),
+		s({trig="'"}, { t({"'"}), i(1), t({"'"}), i(0) }, neg, even_count, '\''),
+		s({trig="\""}, { t({"\""}), i(1), t({"\""}), i(0) }, neg, even_count, '"'),
+		s({trig="{+"}, { t({"{","\t"}), i(1), t({"", "}"}), i(0) }),
+		s({trig="fn"}, {
 			t({"//Parameters: "}),
 			f(copy, {2}),
 			t({"", "function "}),
@@ -139,7 +139,7 @@ ls.snippets = {
 			i(0),
 			t({"", "}"})
 		}),
-		s("test1", {
+		s({trig="test1"}, {
 			i(1),
 			t({"lol"}),
 			sn(2, {
@@ -157,7 +157,7 @@ ls.snippets = {
 			t({"asdf"}),
 			i(0)
 		}),
-		s("ctest", {
+		s({trig="ctest"}, {
 			t({"lel "}),
 			i(1),
 			c(2, {
@@ -176,7 +176,7 @@ ls.snippets = {
 			}),
 			i(0)
 		}),
-		s("class", {
+		s({trig="class"}, {
 			c(1, {
 				t({"public "}),
 				t({"private "})
@@ -201,7 +201,7 @@ ls.snippets = {
 			i(0),
 			t({"", "}"})
 		}),
-		s("dtest", {
+		s({trig="dtest"}, {
 			i(1),
 			t({"aaa "}),
 			i(2),
@@ -210,7 +210,7 @@ ls.snippets = {
 			t({" ccc "}),
 			i(0)
 		}),
-		s("nxt", {
+		s({trig="nxt"}, {
 			sn(1, {
 				t({" aaa "}),
 				i(1, {" bbb "}),
@@ -219,7 +219,7 @@ ls.snippets = {
 			t({" ccc ", "ddd"}),
 			i(0)
 		}),
-		s("t2", {
+		s({trig="t2"}, {
 			c(1, {
 				t({"lel"}),
 				t({"lol"})
@@ -227,15 +227,16 @@ ls.snippets = {
 			f(copy, {1}),
 			i(0)
 		}),
-		s("t3", {
+		s({trig="t3"}, {
 			i(1), t({"aaa "}), sn(2, {t({" bbb "})}), i(0)
-		})
+		}),
+		ls.parser.parse_snippet({trig = "te", wordTrig = true}, "${1:cond} ? ${2:true} : ${3:false}"),
 	},
 	sh = {
-		s("test2", {t({"SUCCESS"}), i(1)})
+		s({trig="test2"}, {t({"SUCCESS"}), i(1)})
 	},
 	java = {
-		s("fn", {
+		s({trig="fn"}, {
 			d(6, jdocsnip, {2, 4, 5}), t({"", ""}),
 			c(1, {
 				t({"public "}),
