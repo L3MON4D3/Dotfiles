@@ -18,6 +18,8 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'kabouzeid/nvim-lspinstall'
 	Plug 'hrsh7th/nvim-compe'
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
+
+	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     "Plug 'norcalli/snippets.nvim'
     "Plug 'nvim-lua/completion-nvim'
 	"Plug 'phazoon/hop.nvim'

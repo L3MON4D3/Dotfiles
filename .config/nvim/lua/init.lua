@@ -85,31 +85,31 @@ local sumneko_root_path = '/home/simon/.local/share/nvim/lspinstall/lua-language
 local sumneko_binary = sumneko_root_path.."/bin/".."Linux".."/lua-language-server"
 
 nvim_lsp.sumneko_lua.setup {
-  cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
-  settings = {
-    Lua = {
-      capabilities = capabilities,
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT',
-        -- Setup your lua path
-        path = vim.split(package.path, ';'),
-      },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = {'vim'},
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = {
-          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-        },
-      },
-    },
-  },
-  on_attach = lsp_attach,
-  capabilities = capabilities
+	cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
+	settings = {
+	  Lua = {
+	    capabilities = capabilities,
+	    runtime = {
+	      -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+	      version = 'LuaJIT',
+	      -- Setup your lua path
+	      path = vim.split(package.path, ';'),
+	    },
+	    diagnostics = {
+	      -- Get the language server to recognize the `vim` global
+	      globals = {'vim'},
+	    },
+	    workspace = {
+	      -- Make the server aware of Neovim runtime files
+	      library = {
+	        [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+	        [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+	      },
+	    },
+	  },
+	},
+	on_attach = lsp_attach,
+	capabilities = capabilities
 }
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, Diag_params)
@@ -119,17 +119,18 @@ function Remove_mt(item, path)
 end
 
 require'snips'
--- snippets
--- local snips = require'snippets'
--- snips.snippets = {
--- 	_global = {
--- 		["("] = "($1)$0",
--- 		["{"] = "{$1}$0",
--- 		["{+"] = "{$1}$0",
--- 		["["] = "[$1]$0",
--- 		["\""] = "\"$1\"$0",
--- 		["'"] = "'$1'$0",
--- 		["test"] = "$1: $2, $3, $2"
--- 	};
--- };
--- snips.set_ux(require'snippets.inserters.floaty')
+
+require'nvim-treesitter.configs'.setup {
+	highlight = {
+		enable = true
+	},
+    incremental_selection = {
+		enable = true,
+    	keymaps = {
+			init_selection = "gnn",
+			node_incremental = "grn",
+			scope_incremental = "grc",
+			node_decremental = "grm",
+    	},
+    },
+}
