@@ -7,11 +7,7 @@ local f = ls.f
 local c = ls.c
 local d = ls.d
 
-local function no(arg)
-	return arg
-end
-
-local function copy(args, a1, a2)
+local function copy(args)
 	return args[1]
 end
 
@@ -26,19 +22,6 @@ local function even_count(c)
 	local line = vim.api.nvim_get_current_line()
 	local _, ct = string.gsub(line, c, '')
 	return ct % 2 == 0
-end
-
-local function just_fn(args)
-	return sn(nil, {
-		t(args[1]),
-		i(1),
-		t({"("}),
-		i(2, args[2]),
-		t({") {", "\t"}),
-		f(copy, {2}),
-		i(0),
-		t({"", "}"})
-	})
 end
 
 local function neg(fn, ...)
@@ -121,119 +104,13 @@ end
 
 ls.snippets = {
 	all = {
-		s({trig="(",dscr="test", name="test"}, { t({"("}), i(1), t({")"}), i(0) }, neg, char_count_same, '%(', '%)'),
+		s({trig="("}, { t({"("}), i(1), t({")"}), i(0) }, neg, char_count_same, '%(', '%)'),
 		s({trig="{"}, { t({"{"}), i(1), t({"}"}), i(0) }, neg, char_count_same, '%{', '%}'),
 		s({trig="["}, { t({"["}), i(1), t({"]"}), i(0) }, neg, char_count_same, '%[', '%]') ,
 		s({trig="<"}, { t({"<"}), i(1), t({">"}), i(0) }, neg, char_count_same, '<', '>'),
 		s({trig="'"}, { t({"'"}), i(1), t({"'"}), i(0) }, neg, even_count, '\''),
 		s({trig="\""}, { t({"\""}), i(1), t({"\""}), i(0) }, neg, even_count, '"'),
-		s({trig="{+"}, { t({"{","\t"}), i(1), t({"", "}"}), i(0) }),
-		s({trig="fn"}, {
-			t({"//Parameters: "}),
-			f(copy, {2}),
-			t({"", "function "}),
-			i(1),
-			t({"("}),
-			i(2, {"int foo"}),
-			t({") {", "\t"}),
-			i(0),
-			t({"", "}"})
-		}),
-		s({trig="test1"}, {
-			i(1),
-			t({"lol"}),
-			sn(2, {
-				t({"function "}),
-				i(1),
-				t({"("}),
-				i(2, {"int foo"}),
-				t({") {", "\t"}),
-				f(copy, {2}),
-				i(0),
-				t({"", "}"})
-			}),
-			t({"lal"}),
-			i(3),
-			t({"asdf"}),
-			i(0)
-		}),
-		s({trig="ctest"}, {
-			t({"lel "}),
-			i(1),
-			c(2, {
-				sn(nil, {
-					t({"function "}),
-					i(1),
-					t({"("}),
-					i(2, {"int foo"}),
-					t({") {", "\t"}),
-					f(copy, {2}),
-					i(3),
-					t({"", "}"})
-				}),
-				t({"2"}),
-				t({"3"}),
-			}),
-			i(0)
-		}),
-		s({trig="class"}, {
-			c(1, {
-				t({"public "}),
-				t({"private "})
-			}),
-			t({"class "}),
-			i(2),
-			t({" "}),
-			c(3, {
-				t({"{"}),
-				sn(nil, {
-					t({"extends "}),
-					i(0),
-					t({" {"})
-				}),
-				sn(nil, {
-					t({"implements "}),
-					i(0),
-					t({" {"})
-				})
-			}),
-			t({"","\t"}),
-			i(0),
-			t({"", "}"})
-		}),
-		s({trig="dtest"}, {
-			i(1),
-			t({"aaa "}),
-			i(2),
-			t({"bbb"}),
-			d(3, just_fn, {1, 2}),
-			t({" ccc "}),
-			i(0)
-		}),
-		s({trig="nxt"}, {
-			sn(1, {
-				t({" aaa "}),
-				i(1, {" bbb "}),
-				i(0)
-			}),
-			t({" ccc ", "ddd"}),
-			i(0)
-		}),
-		s({trig="t2"}, {
-			c(1, {
-				t({"lel"}),
-				t({"lol"})
-			}),
-			f(copy, {1}),
-			i(0)
-		}),
-		s({trig="t3"}, {
-			i(1), t({"aaa "}), sn(2, {t({" bbb "})}), i(0)
-		}),
-		ls.parser.parse_snippet({trig = "te", wordTrig = true}, "${1:cond} ? ${2:true} : ${3:false}"),
-	},
-	sh = {
-		s({trig="test2"}, {t({"SUCCESS"}), i(1)})
+		s({trig="{;"}, { t({"{","\t"}), i(1), t({"", "}"}), i(0) }),
 	},
 	java = {
 		s({trig="fn"}, {
@@ -265,5 +142,8 @@ ls.snippets = {
 			i(0),
 			t({"", "}"})
 		})
+	},
+	rust = {
+		ls.parser.parse_snippet({trig = "fn"}, "/// $1\nfn $2($3) ${4:-> $5 }\\{\n\t$0\n\\}")
 	}
 }

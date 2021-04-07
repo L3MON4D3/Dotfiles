@@ -20,6 +20,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
 
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+	Plug 'phaazon/hop.nvim'
     "Plug 'norcalli/snippets.nvim'
     "Plug 'nvim-lua/completion-nvim'
 	"Plug 'phazoon/hop.nvim'
@@ -174,6 +175,12 @@ hi link LspDiagnosticsSignWarning CocWarningSign
 hi link LspDiagnosticsSignInformation CocInfoSign
 hi link LspDiagnosticsSignHint CocHintSign
 
+hi link HopNextKey GruvboxRedBold
+hi link HopNextKey1 GruvboxBlueBold
+hi link HopNextKey2 GruvboxBlue
+hi link HopUnmatched NonText
+hi link EndOfBuffer NonText
+
 sign define LspDiagnosticsSignError text=» texthl=LspDiagnosticsSignError linehl= numhl=
 sign define LspDiagnosticsSignWarning text=» texthl=LspDiagnosticsSignWarning linehl= numhl=
 sign define LspDiagnosticsSignInformation text=» texthl=LspDiagnosticsSignInformation linehl= numhl=
@@ -181,7 +188,9 @@ sign define LspDiagnosticsSignHint text=» texthl=LspDiagnosticsSignHint linehl=
 
 lua require('init')
 lua ls = require('luasnip')
-set completeopt=menuone "inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
+lua hop = require('hop')
+set completeopt=menuone
+"inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
 "inoremap <S-Tab> <cmd>lua return require'snippets'.advance_snippet(-1)<CR>
 
 
@@ -195,6 +204,9 @@ imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' 
 
 snoremap <silent> <Tab> <cmd>lua ls.jump(1)<Cr>
 snoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
+
+nnoremap <silent> \ <cmd>lua hop.hint_words()<Cr>
+nnoremap <silent> \| <cmd>lua hop.hint_char1()<Cr>
 
 "cannot set in lua or stupid
 "let g:completion_confirm_key = "\<C-y>"
