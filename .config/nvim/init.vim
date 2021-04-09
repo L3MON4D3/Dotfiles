@@ -179,7 +179,6 @@ hi link HopNextKey GruvboxRedBold
 hi link HopNextKey1 GruvboxBlueBold
 hi link HopNextKey2 GruvboxBlue
 hi link HopUnmatched NonText
-hi link EndOfBuffer NonText
 
 sign define LspDiagnosticsSignError text=» texthl=LspDiagnosticsSignError linehl= numhl=
 sign define LspDiagnosticsSignWarning text=» texthl=LspDiagnosticsSignWarning linehl= numhl=

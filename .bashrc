@@ -1,8 +1,6 @@
 stty start undef
 stty -ixon
 
-
-
 export PATH=~/.cargo/bin/:~/.local/bin/:~/Scripts:$PATH
 export num=~/Documents/Uni/Kurse/s3/Num
 export swt=~/Documents/Uni/Kurse/s3/Swt

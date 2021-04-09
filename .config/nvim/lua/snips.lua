@@ -110,7 +110,8 @@ ls.snippets = {
 		s({trig="<"}, { t({"<"}), i(1), t({">"}), i(0) }, neg, char_count_same, '<', '>'),
 		s({trig="'"}, { t({"'"}), i(1), t({"'"}), i(0) }, neg, even_count, '\''),
 		s({trig="\""}, { t({"\""}), i(1), t({"\""}), i(0) }, neg, even_count, '"'),
-		s({trig="{;"}, { t({"{","\t"}), i(1), t({"", "}"}), i(0) }),
+		s({trig="`"}, { t({"`"}), i(1), t({"`"}), i(0) }, neg, even_count, '`'),
+		s({trig="{,"}, { t({"{","\t"}), i(1), t({"", "}"}), i(0) }),
 	},
 	java = {
 		s({trig="fn"}, {
@@ -145,5 +146,34 @@ ls.snippets = {
 	},
 	rust = {
 		ls.parser.parse_snippet({trig = "fn"}, "/// $1\nfn $2($3) ${4:-> $5 }\\{\n\t$0\n\\}")
+	},
+	help = {
+		s({trig="con", wordTrig=true}, {
+			i(1),
+			f(function(args) return {" "..string.rep(".", 80-(#args[1][1]+#args[2][1]+2+2)).." "} end, {1, 2}),
+			t({"|"}),
+			i(2),
+			t({"|"}),
+			i(0)
+		}),
+		s({trig="*", wordTrig=true}, {
+			t({"*"}),
+			i(1),
+			t({"*"}),
+			i(0)
+		}, neg, even_count, '%*'),
+	},
+	lua = {
+		s({trig="if", wordTrig=true}, {
+			t({"if "}),
+			i(1),
+			t({" then", "\t"}),
+			i(0),
+			t({"", "end"})
+		}),
+		s({trig="ee", wordTrig=true}, {
+			t({"else", "\t"}),
+			i(0),
+		})
 	}
 }
