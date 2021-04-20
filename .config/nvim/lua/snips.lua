@@ -7,6 +7,10 @@ local f = ls.f
 local c = ls.c
 local d = ls.d
 
+require'luasnip.config'.set_config({
+	history = true
+})
+
 local function copy(args)
 	return args[1]
 end

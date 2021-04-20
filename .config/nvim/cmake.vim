@@ -19,7 +19,6 @@ nnoremap <buffer><silent> <localleader>r :execute "!".t:run." ".t:args<Cr>
 nnoremap <buffer><silent> <localleader>b :Make --build build<Cr>
 nnoremap <buffer><silent> <localleader>m :Make -B build<Cr>
 nnoremap <buffer><silent> <localleader>c :execute "edit ".expand("%:h")."/CMakeLists.txt"<Cr>
-nnoremap <buffer><silent> <localleader>i :CocCommand clangd.switchSourceHeader<Cr>
 
 cabbr <expr> %% t:srcDir
 cabbr <expr> %m t:srcDir."/main.cpp"

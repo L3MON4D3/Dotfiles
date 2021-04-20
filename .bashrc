@@ -2,13 +2,12 @@ stty start undef
 stty -ixon
 
 export PATH=~/.cargo/bin/:~/.local/bin/:~/Scripts:$PATH
-export num=~/Documents/Uni/Kurse/s3/Num
-export swt=~/Documents/Uni/Kurse/s3/Swt
-export algo=~/Documents/Uni/Kurse/s3/Algo
-export datinf=~/Documents/Uni/Kurse/s3/DatInf
-export sys=~/Documents/Uni/Kurse/s3/SysProg
+export a2=~/Documents/Uni/Kurse/s4/AlgoII
+export cg=~/Documents/Uni/Kurse/s4/CGVis
+export ro=~/Documents/Uni/Kurse/s4/RO
+export l2=~/Documents/Uni/Kurse/s4/LAII
 
-export s3=~/Documents/Uni/Kurse/s3/online
+export s4=~/Documents/Uni/Kurse/s4/online
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export LS_COLORS=$LS_COLORS:'ow=01;34:'
 export HISTSIZE=-1

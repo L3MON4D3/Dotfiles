@@ -8,17 +8,18 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'cespare/vim-toml'
     Plug 'jackguo380/vim-lsp-cxx-highlight',
     Plug 'lervag/vimtex', {'for' : 'latex'}
-    Plug 'morhetz/gruvbox'
+    "Plug 'morhetz/gruvbox'
+    Plug 'gruvbox-community/gruvbox'
     Plug 'pietropate/vim-tex-conceal', {'for' : 'latex'}
     Plug 'tpope/vim-dispatch'
     Plug 'tpope/vim-fugitive'
     Plug 'vim-scripts/DoxygenToolkit.vim', {'for' : 'cpp'}
 
     Plug 'neovim/nvim-lspconfig'
-    Plug 'kabouzeid/nvim-lspinstall'
+    Plug 'kabouzeid/nvim-lspinstall', {'branch' : 'main'}
 	Plug 'hrsh7th/nvim-compe'
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
-
+	"Plug 'leiserfg/luasnip', {'branch':'reorder-folders'}
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 	Plug 'phaazon/hop.nvim'
     "Plug 'norcalli/snippets.nvim'
@@ -101,6 +102,7 @@ set foldtext=MyFoldText()
 syntax enable
 let g:gruvbox_italic='1'
 let g:gruvbox_contrast_dark='hard'
+let g:gruvbox_sign_column='bg0'
 set background=dark
 colorscheme gruvbox
 
@@ -117,7 +119,7 @@ colorscheme gruvbox
 "let g:airline#extensions#tabline#show_tab_count = 0
 
 "Tabline
-hi TabLine ctermbg=0 ctermfg=245 cterm=none
+hi TabLine ctermbg=0 ctermfg=234 cterm=none
 hi TabLineSel ctermbg=0 ctermfg=229 cterm=none
 
 "Statusline
@@ -129,6 +131,8 @@ hi User1 ctermbg=237 ctermfg=0
 
 hi StatusLine ctermbg=237 ctermfg=0
 hi StatusLineNC ctermbg=235 ctermfg=0
+
+hi Folded ctermbg=0 cterm=none
 
 set laststatus=2
 set showtabline=2
@@ -165,15 +169,20 @@ set switchbuf+=useopen
 "set completeopt=menuone,noinsert,noselect
 set shortmess+=c
 
-hi link LspDiagnosticsVirtualTextError CocErrorSign
-hi link LspDiagnosticsVirtualTextWarning CocWarningSign
-hi link LspDiagnosticsVirtualTextInformation CocInfoSign
-hi link LspDiagnosticsVirtualTextHint CocHintSign
-
-hi link LspDiagnosticsSignError CocErrorSign
-hi link LspDiagnosticsSignWarning CocWarningSign
-hi link LspDiagnosticsSignInformation CocInfoSign
-hi link LspDiagnosticsSignHint CocHintSign
+"hi link LspDiagnosticsVirtualTextError CocErrorSign
+"hi link LspDiagnosticsVirtualTextWarning CocWarningSign
+"hi link LspDiagnosticsVirtualTextInformation CocInfoSign
+"hi link LspDiagnosticsVirtualTextHint CocHintSign
+"
+"hi link LspDiagnosticsDefaultError Error
+"hi link LspDiagnosticsDefaultWarning Warning
+"hi link LspDiagnosticsDefaultInformation Info
+"hi link LspDiagnosticsDefaultHint Hint
+"
+"hi link LspDiagnosticsSignError CocErrorSign
+"hi link LspDiagnosticsSignWarning CocWarningSign
+"hi link LspDiagnosticsSignInformation CocInfoSign
+"hi link LspDiagnosticsSignHint CocHintSign
 
 hi link HopNextKey GruvboxRedBold
 hi link HopNextKey1 GruvboxBlueBold

@@ -71,15 +71,15 @@ nvim_lsp.ccls.setup {
 	capabilities = capabilities
 }
 
--- nvim_lsp.clangd.setup {
--- 	init_options = {
--- 		highlight = {
--- 			lsRanges = true;
--- 		};
--- 	};
--- 	on_attach = lsp_attach;
--- 	capabilities = capabilities;
--- }
+--nvim_lsp.clangd.setup {
+--	init_options = {
+--		highlight = {
+--			lsRanges = true;
+--		};
+--	};
+--	on_attach = lsp_attach;
+--	capabilities = capabilities;
+--}
 
 local sumneko_root_path = '/home/simon/.local/share/nvim/lspinstall/lua-language-server/'
 local sumneko_binary = sumneko_root_path.."/bin/".."Linux".."/lua-language-server"
