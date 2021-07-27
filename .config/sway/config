@@ -16,7 +16,7 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term foot
+set $term footclient
 # Your preferred application launcher
 # Note: it's recommended that you pass the final command to sway
 set $menu dmenu_path | dmenu | xargs swaymsg exec --
@@ -38,7 +38,7 @@ output eDP-1 transform 0 mode 1920x1080@60.000Hz position 0,0
 output DP-1 transform 0 mode 2560x1440@143.999Hz position 0,0
 output DP-1 subpixel rgb
 
-output HDMI-A-1 transform 90 resolution 1080x1920 position 2560,200
+output HDMI-A-1 transform 90 resolution 1080x1920 position 2560,0
 
 exec_always /home/simon/Scripts/myDarkLightWP.sh 0 &
 
@@ -108,7 +108,7 @@ input "1133:49277:Logitech_Gaming_Mouse_G502" {
 # Basics:
 #
     # start a terminal
-    bindsym $mod+Return exec 'foot 2> /dev/null'
+    bindsym $mod+Return exec "$term 2> /dev/null"
 
     # kill focused window
     bindsym $mod+q kill
@@ -251,19 +251,20 @@ for_window [title="Emulator$"] floating enable
 for_window [title="FML early loading progress"] floating enable
 for_window [title="unknown_noise.png"] floating enable
 for_window [title="glfw"] floating enable
-for_window [title="Firefox — Sharing Indicator"] kill
-for_window [title="Kodi"] fullscreen enable
+for_window [title="Discord Updater"] floating enable
+for_window [title="^Firefox — Sharing Indicator$"] kill
+for_window [title="^Kodi$"] fullscreen enable
 
 mode "apps" {
 	bindsym b exec qutebrowser
 	bindsym f exec firefox
-	bindsym n exec foot ncmpcpp
+	bindsym n exec $term ncmpcpp
 	bindsym g exec gimp
 	bindsym i exec inkscape
 	bindsym t exec thunderbird
     bindsym q exec qbittorrent
     bindsym v exec vlc
-    bindsym d exec discord
+    bindsym d exec "electron --enable-features=UseOzonePlatform --ozone-platform=wayland /lib/discord/app.asar"
     bindsym z exec zathura
     bindsym o exec tor-browser
     bindsym k exec /usr/lib/kodi/kodi-wayland
@@ -314,6 +315,8 @@ bindsym XF86AudioNext exec mpc next
 bindsym XF86AudioPrev exec mpc prev
 bindsym XF86AudioRaiseVolume exec mpc volume +5
 bindsym XF86AudioLowerVolume exec mpc volume -5
+
+bindsym $mod+g exec myScreenRec.sh
 
 exec_always gsettings set org.gnome.desktop.interface gtk-theme Adapta
 exec_always gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors

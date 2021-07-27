@@ -8,5 +8,3 @@ nnoremap <buffer><silent> <localleader>r :call Exec_term(t:run." ".t:args)<Cr>
 if filereadable('.vProj.vim')
     source .vProj.vim
 endif
-
-source ~/.config/nvim/coc.vim

@@ -6,20 +6,24 @@ local nvim_lsp = require'lspconfig'
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true;
 
-Diag_params = {signs = true, virtual_text = false}
+Diag_params = {signs = true, virtual_text = true}
 
 function Toggle_virtual_text()
-	Diag_params["virtual_text"] = not Diag_params["virtual_text"]
+	Diag_params.virtual_text = not Diag_params.virtual_text
 	vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, Diag_params)
 end
 
 local lsp_attach = function(_)
 	vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', 'gD', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>n', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
 
 	require'compe'.setup {
@@ -27,7 +31,7 @@ local lsp_attach = function(_)
 	 	autocomplete = false;
 	 	debug = false;
 	 	min_length = 1;
-	 	preselect = 'enable';
+	 	preselect = 'always';
 	 	throttle_time = 80;
 	 	source_timeout = 200;
 	 	incomplete_delay = 400;
@@ -46,7 +50,7 @@ local lsp_attach = function(_)
 			spell = false;
 			tags = false;
 			snippets_nvim = false;
-			luasnip = true;
+			luasnip = false;
 			treesitter = false;
 		};
 	}
@@ -55,9 +59,14 @@ end
 nvim_lsp.rust_analyzer.setup({
 	on_attach = lsp_attach,
 	capabilities = capabilities,
+	settings = {
+		["rust-analyzer"] = {
+				linksInHover = false
+		}
+	}
 })
 
-nvim_lsp.ccls.setup {
+nvim_lsp.ccls.setup{
 	init_options = {
 	    compilationDatabaseDirectory = "build";
 	    highlight = {
@@ -68,6 +77,36 @@ nvim_lsp.ccls.setup {
 		};
 	};
 	on_attach = lsp_attach;
+	capabilities = capabilities
+}
+
+nvim_lsp.texlab.setup{
+	cmd = { "texlab" },
+    filetypes = { "tex", "bib" },
+    settings = {
+      bibtex = {
+        formatting = {
+          lineLength = 120
+        }
+      },
+      latex = {
+        build = {
+          args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+          executable = "latexmk",
+          onSave = true,
+          onChange = true
+        },
+        forwardSearch = {
+          args = {},
+          onSave = false
+        },
+        lint = {
+          onChange = false,
+          onSave = true
+        }
+      }
+    },
+	on_attach = lsp_attach,
 	capabilities = capabilities
 }
 
@@ -119,6 +158,7 @@ function Remove_mt(item, path)
 end
 
 require'snips'
+require'functions'
 
 require'nvim-treesitter.configs'.setup {
 	highlight = {
@@ -133,4 +173,32 @@ require'nvim-treesitter.configs'.setup {
 			node_decremental = "grm",
     	},
     },
+}
+
+require'trouble'.setup({
+	icons = false,
+	auto_preview = false
+})
+
+
+local dap = require('dap')
+dap.adapters.lldb = {
+	type = 'executable',
+	command = '/usr/bin/lldb-vscode',
+	name = "lldb"
+}
+
+dap.configurations.cpp = {
+  {
+    name = "Launch",
+    type = "lldb",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+    runInTerminal = false,
+  },
 }

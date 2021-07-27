@@ -1,11 +1,12 @@
 stty start undef
 stty -ixon
 
-export PATH=~/.cargo/bin/:~/.local/bin/:~/Scripts:$PATH
+export PATH=~/.cargo/bin/:~/.local/bin/:~/Scripts:/usr/bin/ccache/bin/:$PATH
 export a2=~/Documents/Uni/Kurse/s4/AlgoII
 export cg=~/Documents/Uni/Kurse/s4/CGVis
 export ro=~/Documents/Uni/Kurse/s4/RO
 export l2=~/Documents/Uni/Kurse/s4/LAII
+export lsn=~/.config/nvim/plugged/luasnip-dev/
 
 export s4=~/Documents/Uni/Kurse/s4/online
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
@@ -24,6 +25,12 @@ export RUST_SRC_PATH=/home/simon/.rustup/toolchains/stable-x86_64-unknown-linux-
 export BAT_THEME="mine"
 export QT_QPA_PLATFORM=wayland
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+export WLR_DRM_NO_MODIFIERS=1
+
+export CXX=clang++
+export CC=clang
+
+export EDITOR=nvim
 
 source /home/simon/.functions
 source /home/simon/.bash_aliases

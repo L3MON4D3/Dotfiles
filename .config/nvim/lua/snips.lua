@@ -6,9 +6,13 @@ local i = ls.i
 local f = ls.f
 local c = ls.c
 local d = ls.d
+local l = require'luasnip.extras'.l
+local r = require'luasnip.util.functions'.rep
+local p = require("luasnip.util.functions").partial
 
 require'luasnip.config'.set_config({
-	history = true
+	history = true,
+	updateevents = 'TextChangedI'
 })
 
 local function copy(args)
@@ -35,21 +39,18 @@ end
 local function jdocsnip(args, old_state)
 	local nodes = {
 		t({"/**"," * "}),
-		i(1, {"A short Description"}),
+		old_state and i(1, old_state.descr:get_text()) or i(1, {"A short Description"}),
 		t({"", ""})
 	}
 
 	-- These will be merged with the snippet; that way, should the snippet be updated,
 	-- some user input eg. text can be referred to in the new snippet.
-	local param_nodes = {}
-
-	if old_state then
-		nodes[2] = i(1, old_state.descr:get_text())
-	end
-	param_nodes.descr = nodes[2]
+	local param_nodes = {
+		descr = nodes[2]
+	}
 
 	-- At least one param.
-	if string.find(args[2][1], ", ") then
+	if string.find(args[2][1], " ") then
 		vim.list_extend(nodes, {t({" * ", ""})})
 	end
 
@@ -58,6 +59,7 @@ local function jdocsnip(args, old_state)
 		-- Get actual name parameter.
 		arg = vim.split(arg, " ", true)[2]
 		if arg then
+			arg = arg:gsub(",", "")
 			local inode
 			-- if there was some text in this parameter, use it as static_text for this new snippet.
 			if old_state and old_state["arg"..arg] then
@@ -106,16 +108,39 @@ local function jdocsnip(args, old_state)
 	return snip
 end
 
+local rec_ls
+rec_ls = function()
+	return sn(nil, {
+		c(1, {
+			t({""}),
+			sn(nil, {t({"", "\t\\item "}), i(1), d(2, rec_ls, {})}),
+		}),
+	});
+end
+
+local function capture_insert(args, _, capture_indx, pre_text, post_text)
+	print(capture_indx)
+	return sn(nil, {i(1, {(pre_text or "") .. args[1].captures[capture_indx] .. (post_text or "")})})
+end
+
+local function copy_insert(args, _, indx, pre_text, post_text)
+	return sn(nil, {i(1, {(pre_text or "") .. args[indx][1] .. (post_text or "")})})
+end
+
 ls.snippets = {
 	all = {
-		s({trig="("}, { t({"("}), i(1), t({")"}), i(0) }, neg, char_count_same, '%(', '%)'),
-		s({trig="{"}, { t({"{"}), i(1), t({"}"}), i(0) }, neg, char_count_same, '%{', '%}'),
-		s({trig="["}, { t({"["}), i(1), t({"]"}), i(0) }, neg, char_count_same, '%[', '%]') ,
-		s({trig="<"}, { t({"<"}), i(1), t({">"}), i(0) }, neg, char_count_same, '<', '>'),
-		s({trig="'"}, { t({"'"}), i(1), t({"'"}), i(0) }, neg, even_count, '\''),
-		s({trig="\""}, { t({"\""}), i(1), t({"\""}), i(0) }, neg, even_count, '"'),
-		s({trig="`"}, { t({"`"}), i(1), t({"`"}), i(0) }, neg, even_count, '`'),
-		s({trig="{,"}, { t({"{","\t"}), i(1), t({"", "}"}), i(0) }),
+		s({trig="(", wordTrig=false}, { t({"("}), i(1), t({")"}), i(0) }, neg, char_count_same, '%(', '%)'),
+		s({trig="{", wordTrig=false}, { t({"{"}), i(1), t({"}"}), i(0) }, neg, char_count_same, '%{', '%}'),
+		s({trig="[", wordTrig=false}, { t({"["}), i(1), t({"]"}), i(0) }, neg, char_count_same, '%[', '%]'),
+		s({trig="<", wordTrig=false}, { t({"<"}), i(1), t({">"}), i(0) }, neg, char_count_same, '<', '>'),
+		s({trig="'", wordTrig=false}, { t({"'"}), i(1), t({"'"}), i(0) }, neg, even_count, '\''),
+		s({trig="\"", wordTrig=false}, { t({"\""}), i(1), t({"\""}), i(0) }, neg, even_count, '"'),
+		s({trig="`", wordTrig=false}, { t({"`"}), i(1), t({"`"}), i(0) }, neg, even_count, '`'),
+		s({trig="{,", wordTrig=false}, { t({"{","\t"}), i(1), t({"", "}"}) }),
+		s({trig = "trig"}, {
+			i(1, "lele"), i(2, "lolo"),
+			l(l._1..l._2, {1,2})
+		})
 	},
 	java = {
 		s({trig="fn"}, {
@@ -178,6 +203,36 @@ ls.snippets = {
 		s({trig="ee", wordTrig=true}, {
 			t({"else", "\t"}),
 			i(0),
+		})
+	},
+	tex = {
+		ls.parser.parse_snippet({trig = ";"}, "\\$$1\\$$0"),
+		s({trig = "(s*)sec", wordTrig = true, regTrig = true}, {
+			f(function(args) return {"\\"..string.rep("sub", string.len(args[1].captures[1]))} end, {}),
+			t({"section{"}), i(1), t({"}", ""}), i(0)
+		}),
+		ls.parser.parse_snippet({trig = "beg", wordTrig = true}, "\\begin{$1}\n\t$2\n\\end{$1}"),
+		ls.parser.parse_snippet({trig = "beq", wordTrig = true}, "\\begin{equation*}\n\t$1\n\\end{equation*}"),
+		ls.parser.parse_snippet({trig = "bal", wordTrig = true}, "\\begin{aligned}\n\t$1\n\\end{aligned}"),
+		ls.parser.parse_snippet({trig = "ab", wordTrig = true}, "\\langle $1 \\rangle"),
+		ls.parser.parse_snippet({trig = "lra", wordTrig = true}, "\\leftrightarrow"),
+		ls.parser.parse_snippet({trig = "Lra", wordTrig = true}, "\\Leftrightarrow"),
+		ls.parser.parse_snippet({trig = "fr", wordTrig = true}, "\\frac{$1}{$2}"),
+		ls.parser.parse_snippet({trig = "tr", wordTrig = true}, "\\item $1"),
+		ls.parser.parse_snippet({trig = "abs", wordTrig = true}, "\\|$1\\|"),
+		s({trig = "ls"}, {
+			t({"\\begin{itemize}",
+			"\t\\item "}), i(1), d(2, rec_ls, {}),
+			t({"", "\\end{itemize}"}), i(0)
+		})
+	},
+	cpp = {
+		ls.parser.parse_snippet({trig = "if", wordTrig = true}, "if ($1)\n\t$2\n$0"),
+		ls.parser.parse_snippet({trig = "for", wordTrig = true}, "for ($1 : $2)\n\t$3\n$0"),
+		s({trig = "for(%w+)", wordTrig = true, regTrig = true}, {
+			t({"for ("}), d(1, capture_insert, {}, 1, "int ", " = 0"), t({"; "}),
+			f(function(args) return {args[1].captures[1]} end, {}), c(2, {sn(nil, {t({" != "}), i(1)}), i(nil)}), t({"; "}),
+			d(3, capture_insert, {}, 1, "++"), t({")", "\t"}), i(4), t({"", ""}), i(0)
 		})
 	}
 }

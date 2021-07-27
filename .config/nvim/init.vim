@@ -5,23 +5,28 @@ source ~/.config/nvim/functions.vim
 
 "Plugins
 call plug#begin('~/.config/nvim/plugged')
-    Plug 'cespare/vim-toml'
-    Plug 'jackguo380/vim-lsp-cxx-highlight',
-    Plug 'lervag/vimtex', {'for' : 'latex'}
-    "Plug 'morhetz/gruvbox'
     Plug 'gruvbox-community/gruvbox'
-    Plug 'pietropate/vim-tex-conceal', {'for' : 'latex'}
     Plug 'tpope/vim-dispatch'
     Plug 'tpope/vim-fugitive'
-    Plug 'vim-scripts/DoxygenToolkit.vim', {'for' : 'cpp'}
-
     Plug 'neovim/nvim-lspconfig'
     Plug 'kabouzeid/nvim-lspinstall', {'branch' : 'main'}
 	Plug 'hrsh7th/nvim-compe'
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
-	"Plug 'leiserfg/luasnip', {'branch':'reorder-folders'}
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 	Plug 'phaazon/hop.nvim'
+	Plug 'tikhomirov/vim-glsl'	
+	Plug 'folke/lsp-trouble.nvim', {'branch' : 'main'}
+	Plug 'mfussenegger/nvim-dap'
+	Plug 'rafamadriz/friendly-snippets', {'branch' : 'main'}
+	Plug 'nvim-telescope/telescope.nvim'
+	Plug 'nvim-lua/popup.nvim'
+	Plug 'nvim-lua/plenary.nvim'
+
+    "Plug 'cespare/vim-toml'
+    "Plug 'lervag/vimtex', {'for' : 'latex'}
+    "Plug 'pietropate/vim-tex-conceal', {'for' : 'latex'}
+    "Plug 'vim-scripts/DoxygenToolkit.vim', {'for' : 'cpp'}
+	"Plug 'nvim-lua/lsp_extensions.nvim'
     "Plug 'norcalli/snippets.nvim'
     "Plug 'nvim-lua/completion-nvim'
 	"Plug 'phazoon/hop.nvim'
@@ -41,11 +46,14 @@ call plug#begin('~/.config/nvim/plugged')
     "Plug 'yous/vim-open-color'
 call plug#end()
 
-autocmd bufnewfile,bufread *.h set filetype=c
-autocmd bufnewfile,bufread * 
-            \if !exists("b:gradleloaded") && filereadable("build.gradle") |
+augroup mine
+au!
+
+autocmd mine bufnewfile,bufread *.h set filetype=c
+autocmd mine bufnewfile,bufread * 
+            \if !exists("b:gradleLoaded") && filereadable("build.gradle") |
                 \source /home/simon/.config/nvim/gradle.vim |
-                \let b:gradleloaded=1 |
+                \let b:gradleLoaded=1 |
             \endif
 
 "augroup CompletionTriggerCharacter
@@ -54,46 +62,46 @@ autocmd bufnewfile,bufread *
 "    autocmd BufEnter *.c,*.cpp,*.rs let g:completion_trigger_character = ['.', '::']
 "augroup end
 
-autocmd BufNewFile,BufRead * 
+autocmd mine BufNewFile,BufRead * 
             \if !exists("b:cmakeLoaded") && filereadable("CMakeLists.txt") |
                 \source /home/simon/.config/nvim/cmake.vim |
                 \let b:cmakeLoaded=1 |
             \endif
 
-autocmd BufNewFile,BufRead * 
+autocmd mine BufNewFile,BufRead * 
             \if !exists("b:makeLoaded") && (filereadable("makefile") || filereadable("Makefile") ) |
                 \source /home/simon/.config/nvim/make.vim |
                 \let b:makeLoaded=1 |
             \endif
 
-autocmd BufNewFile,BufRead * 
+autocmd mine BufNewFile,BufRead * 
             \if !exists("b:cargoLoaded") && filereadable("Cargo.toml") |
                 \source /home/simon/.config/nvim/cargo.vim |
                 \let b:cargoLoaded=1 |
             \endif
 
-autocmd BufWinEnter,WinEnter,TermOpen term://* startinsert | 
+autocmd mine BufWinEnter,WinEnter,TermOpen term://* startinsert | 
             \setlocal nonumber | 
             \setlocal norelativenumber
 
-autocmd BufNewFile,BufRead *.sc set ft=cpp
-
-autocmd BufLeave term://* stopinsert
+autocmd mine BufLeave term://* stopinsert
 
 let w:stFt=""
 let w:stFn=""
 let w:fpRel=""
 "add WinEnter for floating windows.
 "BufEnter for <C-O>/<C-I>
-autocmd BufRead,WinNew,TermOpen,SourcePost,WinEnter,BufEnter * 
+autocmd mine BufRead,WinNew,TermOpen,SourcePost,WinEnter,BufEnter * 
             \let w:stFt=FiletypeClean() |
             \let w:stFn=FilenameClean() |
             \let w:fpRel=FilepathClean() |
             \setlocal statusline=%!Statusline()
 
-autocmd BufWrite,BufRead,TabNew * let g:branches=BranchClean()
+autocmd mine BufWrite,BufRead,TabNew * let g:branches=BranchClean()
 
-autocmd VimEnter * let g:branches=['']
+autocmd mine VimEnter * let g:branches=['']
+
+augroup END
 
 set fillchars=fold:\ ,vert:\|
 set foldtext=MyFoldText()
@@ -119,7 +127,7 @@ colorscheme gruvbox
 "let g:airline#extensions#tabline#show_tab_count = 0
 
 "Tabline
-hi TabLine ctermbg=0 ctermfg=234 cterm=none
+hi TabLine ctermbg=0 ctermfg=239 cterm=none
 hi TabLineSel ctermbg=0 ctermfg=229 cterm=none
 
 "Statusline
@@ -153,6 +161,8 @@ set shiftwidth=4
 set autoindent
 set nocindent
 set copyindent
+
+set listchars+=tab:→\ ,trail:␣,space:·
 
 "Misc
 set relativenumber
@@ -189,10 +199,10 @@ hi link HopNextKey1 GruvboxBlueBold
 hi link HopNextKey2 GruvboxBlue
 hi link HopUnmatched NonText
 
-sign define LspDiagnosticsSignError text=» texthl=LspDiagnosticsSignError linehl= numhl=
-sign define LspDiagnosticsSignWarning text=» texthl=LspDiagnosticsSignWarning linehl= numhl=
-sign define LspDiagnosticsSignInformation text=» texthl=LspDiagnosticsSignInformation linehl= numhl=
-sign define LspDiagnosticsSignHint text=» texthl=LspDiagnosticsSignHint linehl= numhl=
+sign define LspDiagnosticsSignError text= texthl=LspDiagnosticsSignError linehl= numhl=
+sign define LspDiagnosticsSignWarning text= texthl=LspDiagnosticsSignWarning linehl= numhl=
+sign define LspDiagnosticsSignInformation text= texthl=LspDiagnosticsSignInformation linehl= numhl=
+sign define LspDiagnosticsSignHint text= texthl=LspDiagnosticsSignHint linehl= numhl=
 
 lua require('init')
 lua ls = require('luasnip')
@@ -201,7 +211,6 @@ set completeopt=menuone
 "inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
 "inoremap <S-Tab> <cmd>lua return require'snippets'.advance_snippet(-1)<CR>
 
-
 inoremap <silent><expr> <C-O> compe#complete()
 inoremap <silent><expr> <C-Y> compe#confirm('<CR>')
 
@@ -209,6 +218,7 @@ imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-o
 inoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
 
 imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
 
 snoremap <silent> <Tab> <cmd>lua ls.jump(1)<Cr>
 snoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
@@ -237,20 +247,23 @@ nnoremap <silent> \| <cmd>lua hop.hint_char1()<Cr>
 "
 "VimTex
 let g:tex_flavor='latex'
-let g:vimtex_view_method='zathura'
-let g:vimtex_quickfix_mode=0
-set conceallevel=1
-let g:tex_conceal='abdmg'
+set conceallevel=2
+let g:tex_conceal='abdmgs'
 
 "Keymappings
 let mapleader=","
 let maplocalleader="\<Space>"
 
 "Vimspector
-nnoremap <F2> :call vimspector#ToggleBreakpoint()<Cr>
-nnoremap <F3> :call vimspector#StepOver()<Cr>
-nnoremap <F4> :call vimspector#StepInto()<Cr>
-nnoremap <F5> :call vimspector#Continue()<Cr>
+"nnoremap <F2> :call vimspector#ToggleBreakpoint()<Cr>
+"nnoremap <F3> :call vimspector#StepOver()<Cr>
+"nnoremap <F4> :call vimspector#StepInto()<Cr>
+"nnoremap <F5> :call vimspector#Continue()<Cr>
+" nvim-dap
+noremap <F2> :lua require"dap".toggle_breakpoint()<Cr>
+noremap <F3> :lua require"dap".step_over()<Cr>
+noremap <F4> :lua require"dap".step_into()<Cr>
+noremap <F5> :lua require"dap".continue()<Cr>
 
 "Other
 noremap <silent> <C-v> :vsp<Cr>
