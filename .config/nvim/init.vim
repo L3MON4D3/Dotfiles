@@ -10,9 +10,14 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'tpope/vim-fugitive'
     Plug 'neovim/nvim-lspconfig'
     Plug 'kabouzeid/nvim-lspinstall', {'branch' : 'main'}
-	Plug 'hrsh7th/nvim-compe'
-	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/'
+
+	Plug 'hrsh7th/nvim-cmp', {'branch' : 'main'} 
+	Plug 'hrsh7th/cmp-nvim-lsp', {'branch' : 'main'} 
+	Plug 'saadparwaiz1/cmp_luasnip', {'branch' : 'master'} 
+
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+	Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+
 	Plug 'phaazon/hop.nvim'
 	Plug 'tikhomirov/vim-glsl'	
 	Plug 'folke/lsp-trouble.nvim', {'branch' : 'main'}
@@ -21,6 +26,10 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'nvim-telescope/telescope.nvim'
 	Plug 'nvim-lua/popup.nvim'
 	Plug 'nvim-lua/plenary.nvim'
+	"Plug 'nvim-treesitter/playground'
+
+	"Plug 'leiserfg/luasnip', {'branch' : 'use-named-register'}
+	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/' "luasnip-dev-plug
 
     "Plug 'cespare/vim-toml'
     "Plug 'lervag/vimtex', {'for' : 'latex'}
@@ -101,16 +110,19 @@ autocmd mine BufWrite,BufRead,TabNew * let g:branches=BranchClean()
 
 autocmd mine VimEnter * let g:branches=['']
 
+autocmd mine TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, higroup="Visual"}
+
 augroup END
 
 set fillchars=fold:\ ,vert:\|
 set foldtext=MyFoldText()
 
 "Style
-syntax enable
+syntax on
 let g:gruvbox_italic='1'
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_sign_column='bg0'
+let g:gruvbox_invert_selection=0
 set background=dark
 colorscheme gruvbox
 
@@ -174,6 +186,10 @@ set mouse=v
 set splitbelow
 set splitright
 set switchbuf+=useopen
+set virtualedit=block
+
+set signcolumn=auto
+set updatetime=1000
 
 "lsp
 "set completeopt=menuone,noinsert,noselect
@@ -199,10 +215,10 @@ hi link HopNextKey1 GruvboxBlueBold
 hi link HopNextKey2 GruvboxBlue
 hi link HopUnmatched NonText
 
-sign define LspDiagnosticsSignError text= texthl=LspDiagnosticsSignError linehl= numhl=
-sign define LspDiagnosticsSignWarning text= texthl=LspDiagnosticsSignWarning linehl= numhl=
-sign define LspDiagnosticsSignInformation text= texthl=LspDiagnosticsSignInformation linehl= numhl=
-sign define LspDiagnosticsSignHint text= texthl=LspDiagnosticsSignHint linehl= numhl=
+sign define LspDiagnosticsSignError text= texthl=LspDiagnosticsSignError linehl= numhl=
+sign define LspDiagnosticsSignWarning text= texthl=LspDiagnosticsSignWarning linehl= numhl=
+sign define LspDiagnosticsSignInformation text= texthl=LspDiagnosticsSignInformation linehl= numhl=
+sign define LspDiagnosticsSignHint text= texthl=LspDiagnosticsSignHint linehl= numhl=
 
 lua require('init')
 lua ls = require('luasnip')
@@ -211,14 +227,14 @@ set completeopt=menuone
 "inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
 "inoremap <S-Tab> <cmd>lua return require'snippets'.advance_snippet(-1)<CR>
 
-inoremap <silent><expr> <C-O> compe#complete()
-inoremap <silent><expr> <C-Y> compe#confirm('<CR>')
-
 imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
 inoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
 
-imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
-smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : '<C-E>'
+imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''
+smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''
+
+imap <silent><expr> <C-T> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
+smap <silent><expr> <C-T> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
 
 snoremap <silent> <Tab> <cmd>lua ls.jump(1)<Cr>
 snoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
@@ -264,12 +280,15 @@ noremap <F2> :lua require"dap".toggle_breakpoint()<Cr>
 noremap <F3> :lua require"dap".step_over()<Cr>
 noremap <F4> :lua require"dap".step_into()<Cr>
 noremap <F5> :lua require"dap".continue()<Cr>
+noremap <F6> :lua require"dap.ui.variables".hover()<Cr>
 
 "Other
 noremap <silent> <C-v> :vsp<Cr>
 noremap <silent> <C-b> :sp<Cr>
 
-nnoremap <leader>n :noh<Cr>
+noremap <leader>n :noh<Cr>
+noremap <silent> <leader>l :set invlist<Cr>
+noremap <silent> <leader>t :tabedit ~/.todo<Cr>
 
 "end on closig paranthesis.
 vnoremap <leader>( <Esc>`>a)<Esc>`<i(<Esc>%
@@ -314,11 +333,8 @@ nnoremap <silent> <F21> :vert res -2<Cr>
 nnoremap <silent> <F10> :res +2<Cr>
 nnoremap <silent> <F22> :res -2<Cr>
 
-nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>
+nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
-
-nnoremap <silent> <leader>l viwue
-nnoremap <silent> <leader>u viwUe
 
 nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
 

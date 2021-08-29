@@ -254,6 +254,7 @@ for_window [title="glfw"] floating enable
 for_window [title="Discord Updater"] floating enable
 for_window [title="^Firefox — Sharing Indicator$"] kill
 for_window [title="^Kodi$"] fullscreen enable
+for_window [title="^floatwindow$"] floating enable
 
 mode "apps" {
 	bindsym b exec qutebrowser
