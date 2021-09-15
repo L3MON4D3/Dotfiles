@@ -26,66 +26,32 @@ local lsp_attach = function(_)
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>n', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
-
-	local WIDE_HEIGHT = 40
-	local cmp = require'cmp'
-	cmp.setup {
-		completion = {
-			autocomplete = false,
-			completeopt = "menu,menuone,noselect"
-		},
-		snippet = {
-			expand = function(args)
-				print(args.body)
-				return require("luasnip").lsp_expand(args.body)
-			end,
-		},
-		mapping = {
-			['<C-p>'] = cmp.mapping.select_prev_item(),
-			['<C-n>'] = cmp.mapping.select_next_item(),
-			['<C-d>'] = cmp.mapping.scroll_docs(-4),
-			['<C-f>'] = cmp.mapping.scroll_docs(4),
-			['<C-o>'] = cmp.mapping.complete(),
-			['<C-y>'] = cmp.mapping.confirm()
-		},
-		sources = {
-			{ name = 'nvim_lsp' },
-			{ name = 'luasnip' }
-		},
-		documentation = {
-      border = { '', '', '', ' ', '', '', '', ' ' },
-      winhighlight = 'NormalFloat:CmpDocumentation,FloatBorder:CmpDocumentationBorder',
-      maxwidth = math.floor((WIDE_HEIGHT * 2) * (vim.o.columns / (WIDE_HEIGHT * 2 * 16 / 9))),
-      maxheight = math.floor(WIDE_HEIGHT * (WIDE_HEIGHT / vim.o.lines)),
-    },
-	}
 end
 
-	local cmp = require'cmp'
-	cmp.setup {
-		completion = {
-			autocomplete = false,
-			completeopt = "menu,menuone,noselect"
-		},
-		snippet = {
-			expand = function(args)
-				print(args.body)
-				return require("luasnip").lsp_expand(args.body)
-			end,
-		},
-		mapping = {
-			['<C-p>'] = cmp.mapping.select_prev_item(),
-			['<C-n>'] = cmp.mapping.select_next_item(),
-			['<C-d>'] = cmp.mapping.scroll_docs(-4),
-			['<C-f>'] = cmp.mapping.scroll_docs(4),
-			['<C-o>'] = cmp.mapping.complete(),
-			['<C-y>'] = cmp.mapping.confirm()
-		},
-		sources = {
-			{ name = 'nvim_lsp' },
-			{ name = 'luasnip' }
-		},
-	}
+
+local cmp = require'cmp'
+cmp.setup {
+	completion = {
+		autocomplete = false,
+		completeopt = "menu,menuone,noselect"
+	},
+	snippet = {
+		expand = function(args)
+			return require("luasnip").lsp_expand(args.body)
+		end,
+	},
+	mapping = {
+		['<C-d>'] = cmp.mapping.scroll_docs(-4),
+		['<C-f>'] = cmp.mapping.scroll_docs(4),
+		['<C-o>'] = cmp.mapping.complete(),
+		['<C-y>'] = cmp.mapping.confirm()
+	},
+	sources = {
+		{ name = 'nvim_lsp' },
+		{ name = 'luasnip' }
+	},
+	documentation = false,
+}
 
 nvim_lsp.rust_analyzer.setup({
 	on_attach = lsp_attach,
@@ -97,17 +63,20 @@ nvim_lsp.rust_analyzer.setup({
 	}
 })
 
-nvim_lsp.ccls.setup{
-	init_options = {
-		compilationDatabaseDirectory = "build";
-		highlight = {
-			lsRanges = true;
-		};
-		index = {
-			threads = 0;
-		};
-	};
-	on_attach = lsp_attach;
+-- nvim_lsp.ccls.setup{
+-- 	init_options = {
+-- 		compilationDatabaseDirectory = "build";
+-- 		highlight = {
+-- 			lsRanges = true;
+-- 		};
+-- 		index = {
+-- 			threads = 0;
+-- 		};
+-- 	};
+-- 	on_attach = lsp_attach;
+-- 	capabilities = capabilities
+-- }
+nvim_lsp.clangd.setup{
 	capabilities = capabilities
 }
 
@@ -247,11 +216,6 @@ require'nvim-treesitter.configs'.setup {
 -- 	}
 -- }
 
-require'trouble'.setup({
-	icons = false,
-	auto_preview = false
-})
-
 dap.defaults.fallback.external_terminal = {
 	command = '/usr/bin/footclient';
 	-- footclient executes first argument.
@@ -273,7 +237,7 @@ dap.adapters.cppdbg = {
 dap.set_log_level("DEBUG")
 
 vim.fn.sign_define('DapBreakpoint', {text='⛔', texthl='GruvboxRed', linehl='', numhl=''})
-vim.fn.sign_define('DapStopped', {text='', texthl='GruvboxYellow', linehl='', numhl=''})
+vim.fn.sign_define('DapStopped', {text=' ', texthl='GruvboxYellow', linehl='', numhl=''})
 
 dap.configurations.cpp = {
 	{

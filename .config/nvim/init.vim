@@ -20,10 +20,10 @@ call plug#begin('~/.config/nvim/plugged')
 
 	Plug 'phaazon/hop.nvim'
 	Plug 'tikhomirov/vim-glsl'	
-	Plug 'folke/lsp-trouble.nvim', {'branch' : 'main'}
+	"Plug 'folke/lsp-trouble.nvim', {'branch' : 'main'}
 	Plug 'mfussenegger/nvim-dap'
-	Plug 'rafamadriz/friendly-snippets', {'branch' : 'main'}
-	Plug 'nvim-telescope/telescope.nvim'
+	"Plug 'rafamadriz/friendly-snippets', {'branch' : 'main'}
+	"Plug 'nvim-telescope/telescope.nvim'
 	Plug 'nvim-lua/popup.nvim'
 	Plug 'nvim-lua/plenary.nvim'
 	"Plug 'nvim-treesitter/playground'
@@ -288,6 +288,7 @@ noremap <silent> <C-b> :sp<Cr>
 
 noremap <leader>n :noh<Cr>
 noremap <silent> <leader>l :set invlist<Cr>
+noremap <silent> <leader>r :set invrelativenumber<Cr>
 noremap <silent> <leader>t :tabedit ~/.todo<Cr>
 
 "end on closig paranthesis.
