@@ -268,7 +268,7 @@ mode "apps" {
     bindsym d exec "electron --enable-features=UseOzonePlatform --ozone-platform=wayland /lib/discord/app.asar"
     bindsym z exec zathura
     bindsym o exec tor-browser
-    bindsym k exec /usr/lib/kodi/kodi-wayland
+    bindsym k exec /usr/bin/kodi --windowing=wayland
     bindsym s exec spotify
     bindsym j exec qutebrowser /home/simon/Documents/Documentation/docs/index.html
     bindsym c exec chromium
