@@ -17,7 +17,3 @@ nnoremap <buffer><silent> <localleader>c :execute "edit ".expand("%:h")."/CMakeL
 
 cabbr <expr> %% b:srcDir
 cabbr <expr> %m b:srcDir."/main.cpp"
-
-if filereadable('.vProj.vim')
-    source .vProj.vim
-endif

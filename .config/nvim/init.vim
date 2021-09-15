@@ -59,35 +59,29 @@ augroup mine
 au!
 
 autocmd mine bufnewfile,bufread *.h set filetype=c
-autocmd mine bufnewfile,bufread * 
-            \if !exists("b:gradleLoaded") && filereadable("build.gradle") |
-                \source /home/simon/.config/nvim/gradle.vim |
-                \let b:gradleLoaded=1 |
-            \endif
-
-"augroup CompletionTriggerCharacter
-"    autocmd!
-"    autocmd BufEnter * let g:completion_trigger_character = ['.']
-"    autocmd BufEnter *.c,*.cpp,*.rs let g:completion_trigger_character = ['.', '::']
-"augroup end
-
-autocmd mine BufNewFile,BufRead * 
-            \if !exists("b:cmakeLoaded") && filereadable("CMakeLists.txt") |
-                \source /home/simon/.config/nvim/cmake.vim |
-                \let b:cmakeLoaded=1 |
-            \endif
-
-autocmd mine BufNewFile,BufRead * 
-            \if !exists("b:makeLoaded") && (filereadable("makefile") || filereadable("Makefile") ) |
-                \source /home/simon/.config/nvim/make.vim |
-                \let b:makeLoaded=1 |
-            \endif
-
-autocmd mine BufNewFile,BufRead * 
-            \if !exists("b:cargoLoaded") && filereadable("Cargo.toml") |
-                \source /home/simon/.config/nvim/cargo.vim |
-                \let b:cargoLoaded=1 |
-            \endif
+" autocmd mine bufnewfile,bufread * 
+"             \if !exists("b:gradleLoaded") && filereadable("build.gradle") |
+"                 \source /home/simon/.config/nvim/gradle.vim |
+"                 \let b:gradleLoaded=1 |
+"             \endif
+" 
+" autocmd mine BufNewFile,BufRead * 
+"             \if !exists("b:cmakeLoaded") && filereadable("CMakeLists.txt") |
+"                 \source /home/simon/.config/nvim/cmake.vim |
+"                 \let b:cmakeLoaded=1 |
+"             \endif
+" 
+" autocmd mine BufNewFile,BufRead * 
+"             \if !exists("b:makeLoaded") && (filereadable("makefile") || filereadable("Makefile") ) |
+"                 \source /home/simon/.config/nvim/make.vim |
+"                 \let b:makeLoaded=1 |
+"             \endif
+" 
+" autocmd mine BufNewFile,BufRead * 
+"             \if !exists("b:cargoLoaded") && filereadable("Cargo.toml") |
+"                 \source /home/simon/.config/nvim/cargo.vim |
+"                 \let b:cargoLoaded=1 |
+"             \endif
 
 autocmd mine BufWinEnter,WinEnter,TermOpen term://* startinsert | 
             \setlocal nonumber | 

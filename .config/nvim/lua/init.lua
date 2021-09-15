@@ -2,6 +2,11 @@
 vim.lsp.set_log_level("debug")
 dap = require('dap')
 
+local function prequire(name)
+	local module_found, res = pcall(require, name)
+	return module_found and res or nil
+end
+
 local nvim_lsp = require'lspconfig'
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -217,10 +222,11 @@ require'nvim-treesitter.configs'.setup {
 -- }
 
 dap.defaults.fallback.external_terminal = {
-	command = '/usr/bin/footclient';
+	command = '/usr/bin/foot';
 	-- footclient executes first argument.
-	args = {'-T floatwindow '};
+	args = {'-Tfloatwindow'};
 }
+
 dap.defaults.fallback.force_external_terminal = true
 
 dap.adapters.lldb = {
@@ -247,10 +253,8 @@ dap.configurations.cpp = {
 		program = function()
 			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
 		end,
-		env = {"VIMRUNTIME=/home/simon/Packages/neovim/runtime"},
 		cwd = '${workspaceFolder}',
 		stopOnEntry = false,
-		runInTerminal = true,
 	},
 	{
 		name = "Attach",
@@ -260,7 +264,8 @@ dap.configurations.cpp = {
 		pid = require('dap.utils').pick_process,
 		stopOnEntry = false,
 		args = {},
-	}
+	},
+	prequire("dap_local")
 }
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
