@@ -7,6 +7,11 @@ local function prequire(name)
 	return module_found and res or nil
 end
 
+local function pdofile(name)
+	local module_found, res = pcall(dofile, name)
+	return module_found and res or {}
+end
+
 local nvim_lsp = require'lspconfig'
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -265,7 +270,7 @@ dap.configurations.cpp = {
 		stopOnEntry = false,
 		args = {},
 	},
-	prequire("dap_local")
+	unpack(pdofile(".nvim_local.lua").dap or {})
 }
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
