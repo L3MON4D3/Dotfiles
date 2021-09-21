@@ -10,6 +10,7 @@ call plug#begin('~/.config/nvim/plugged')
     Plug 'tpope/vim-fugitive'
     Plug 'neovim/nvim-lspconfig'
     Plug 'kabouzeid/nvim-lspinstall', {'branch' : 'main'}
+    Plug 'RRethy/vim-illuminate'
 
 	Plug 'hrsh7th/nvim-cmp', {'branch' : 'main'} 
 	Plug 'hrsh7th/cmp-nvim-lsp', {'branch' : 'main'} 
@@ -148,6 +149,10 @@ hi StatusLineNC ctermbg=235 ctermfg=0
 
 hi Folded ctermbg=0 cterm=none
 
+hi link LspReferenceText CursorLine
+hi link LspReferenceRead CursorLine
+hi link LspReferenceWrite CursorLine
+
 set laststatus=2
 set showtabline=2
 
@@ -209,10 +214,35 @@ hi link HopNextKey1 GruvboxBlueBold
 hi link HopNextKey2 GruvboxBlue
 hi link HopUnmatched NonText
 
-sign define LspDiagnosticsSignError text= texthl=LspDiagnosticsSignError linehl= numhl=
-sign define LspDiagnosticsSignWarning text= texthl=LspDiagnosticsSignWarning linehl= numhl=
-sign define LspDiagnosticsSignInformation text= texthl=LspDiagnosticsSignInformation linehl= numhl=
-sign define LspDiagnosticsSignHint text= texthl=LspDiagnosticsSignHint linehl= numhl=
+
+hi! link DiagnosticDefaultError GruvboxRed
+hi! link DiagnosticSignError GruvboxRedSign
+hi! link DiagnosticUnderlineError GruvboxRedUnderline
+hi! link DiagnosticVirtualTextError DiagnosticDefaultError
+hi! link DiagnosticFloatingError DiagnosticDefaultError
+
+hi! link DiagnosticDefaultWarn GruvboxYellow
+hi! link DiagnosticSignWarn GruvboxYellowSign
+hi! link DiagnosticUnderlineWarn GruvboxYellowUnderline
+hi! link DiagnosticVirtualTextWarn DiagnosticDefaultWarn
+hi! link DiagnosticFloatingWarn DiagnosticDefaultWarn
+
+hi! link DiagnosticDefaultInfo GruvboxBlue
+hi! link DiagnosticSignInfo GruvboxBlueSign
+hi! link DiagnosticUnderlineInfo GruvboxBlueUnderline
+hi! link DiagnosticVirtualTextInfo DiagnosticDefaultInfo
+hi! link DiagnosticFloatingInfo DiagnosticDefaultInfo
+
+hi! link DiagnosticDefaultHint GruvboxAqua
+hi! link DiagnosticSignHint GruvboxAquaSign
+hi! link DiagnosticUnderlineHint GruvboxAquaUnderline
+hi! link DiagnosticVirtualTextHint DiagnosticDefaultHint
+hi! link DiagnosticFloatingHint DiagnosticDefaultHint
+
+sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=
+sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=
+sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=
+sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=
 
 lua require('init')
 lua ls = require('luasnip')
@@ -235,6 +265,8 @@ snoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
 
 nnoremap <silent> \ <cmd>lua hop.hint_words()<Cr>
 nnoremap <silent> \| <cmd>lua hop.hint_char1()<Cr>
+
+let g:Illuminate_delay = 800
 
 "cannot set in lua or stupid
 "let g:completion_confirm_key = "\<C-y>"
@@ -271,9 +303,14 @@ let maplocalleader="\<Space>"
 "nnoremap <F5> :call vimspector#Continue()<Cr>
 " nvim-dap
 noremap <F2> :lua require"dap".toggle_breakpoint()<Cr>
+" S-F2
+noremap <F14> :lua require"dap".set_breakpoint(vim.fn.input("Breakpoint condition: "))<CR>
+noremap <F18> :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
 noremap <F3> :lua require"dap".step_over()<Cr>
 noremap <F4> :lua require"dap".step_into()<Cr>
+noremap <F16> :lua require"dap".step_out()<Cr>
 noremap <F5> :lua require"dap".continue()<Cr>
+noremap <F17> :lua require"dap".run_last()<Cr>
 noremap <F6> :lua require"dap.ui.variables".hover()<Cr>
 
 "Other
@@ -284,6 +321,8 @@ noremap <leader>n :noh<Cr>
 noremap <silent> <leader>l :set invlist<Cr>
 noremap <silent> <leader>r :set invrelativenumber<Cr>
 noremap <silent> <leader>t :tabedit ~/.todo<Cr>
+noremap <silent> <leader>fw :set invwinfixwidth<Cr>
+noremap <silent> <leader>fh :set invwinfixheight<Cr>
 
 "end on closig paranthesis.
 vnoremap <leader>( <Esc>`>a)<Esc>`<i(<Esc>%
