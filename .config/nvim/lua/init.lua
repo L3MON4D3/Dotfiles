@@ -24,7 +24,7 @@ function Toggle_virtual_text()
 	vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, Diag_params)
 end
 
-local lsp_attach = function(_)
+local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gD', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
@@ -36,6 +36,8 @@ local lsp_attach = function(_)
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>n', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
+
+	 require 'illuminate'.on_attach(client)
 end
 
 
@@ -87,6 +89,7 @@ nvim_lsp.rust_analyzer.setup({
 -- 	capabilities = capabilities
 -- }
 nvim_lsp.clangd.setup{
+	on_attach = lsp_attach,
 	capabilities = capabilities
 }
 
