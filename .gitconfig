@@ -11,6 +11,7 @@
     l = !"git log1"
     g = !"git log2"
     s = status
+	rc = rebase --continue
 [init]
 	defaultBranch = master
 [core]

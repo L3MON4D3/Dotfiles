@@ -23,7 +23,8 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'tikhomirov/vim-glsl'	
 	"Plug 'folke/lsp-trouble.nvim', {'branch' : 'main'}
 	Plug 'mfussenegger/nvim-dap'
-	"Plug 'rafamadriz/friendly-snippets', {'branch' : 'main'}
+	Plug 'rcarriga/nvim-dap-ui'
+	Plug 'rafamadriz/friendly-snippets', {'branch' : 'main'}
 	"Plug 'nvim-telescope/telescope.nvim'
 	Plug 'nvim-lua/popup.nvim'
 	Plug 'nvim-lua/plenary.nvim'
@@ -31,6 +32,8 @@ call plug#begin('~/.config/nvim/plugged')
 
 	"Plug 'leiserfg/luasnip', {'branch' : 'use-named-register'}
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/' "luasnip-dev-plug
+	Plug 'knsh14/vim-github-link'
+	Plug 'hoob3rt/lualine.nvim'
 
     "Plug 'cespare/vim-toml'
     "Plug 'lervag/vimtex', {'for' : 'latex'}
@@ -59,7 +62,7 @@ call plug#end()
 augroup mine
 au!
 
-autocmd mine bufnewfile,bufread *.h set filetype=c
+"autocmd mine bufnewfile,bufread *.h set filetype=c
 " autocmd mine bufnewfile,bufread * 
 "             \if !exists("b:gradleLoaded") && filereadable("build.gradle") |
 "                 \source /home/simon/.config/nvim/gradle.vim |
@@ -86,7 +89,8 @@ autocmd mine bufnewfile,bufread *.h set filetype=c
 
 autocmd mine BufWinEnter,WinEnter,TermOpen term://* startinsert | 
             \setlocal nonumber | 
-            \setlocal norelativenumber
+            \setlocal norelativenumber |
+			\setlocal ft=term
 
 autocmd mine BufLeave term://* stopinsert
 
@@ -99,6 +103,10 @@ autocmd mine BufRead,WinNew,TermOpen,SourcePost,WinEnter,BufEnter *
             \let w:stFt=FiletypeClean() |
             \let w:stFn=FilenameClean() |
             \let w:fpRel=FilepathClean() |
+            \setlocal statusline=%!Statusline()
+
+autocmd mine FileType * 
+            \let w:stFt=FiletypeClean() |
             \setlocal statusline=%!Statusline()
 
 autocmd mine BufWrite,BufRead,TabNew * let g:branches=BranchClean()
@@ -312,6 +320,7 @@ noremap <F16> :lua require"dap".step_out()<Cr>
 noremap <F5> :lua require"dap".continue()<Cr>
 noremap <F17> :lua require"dap".run_last()<Cr>
 noremap <F6> :lua require"dap.ui.variables".hover()<Cr>
+noremap <leader>dws :lua require"dapui".open("sidebar")<Cr>
 
 "Other
 noremap <silent> <C-v> :vsp<Cr>

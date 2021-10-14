@@ -65,13 +65,10 @@ function! AddSpacesNonempty(string)
 endfunction
 
 function! FilenameClean()
-    if mode()=='t'
-        return 'Bash'
-    endif
     let l:fn=expand('%:t')
-    if l:fn==''
-        return ''
-    endif
+	if &buftype == "terminal"
+		let l:fn = substitute(l:fn, "\\d\\+:", "", "")
+	endif
     return l:fn
 endfunction
 

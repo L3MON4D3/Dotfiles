@@ -28,7 +28,3 @@ nnoremap <buffer><silent> <localleader>e :e src/
 
 cabbr <expr> %% t:srcDir
 cabbr <expr> %m t:srcDir."/main.rs"
-
-if filereadable('.vProj.vim')
-    source .vProj.vim
-endif

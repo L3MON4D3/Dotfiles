@@ -1,19 +1,19 @@
-let b:execName=system("grep project CMakeLists.txt | perl -pe 's/project\\((.*)\\)\\n/$1/g'")
-let b:run = "\./build/src/".b:execName
-let b:make = "cmake -B build"
-let b:build = "cmake --build build"
+let t:execName=system("grep project CMakeLists.txt | perl -pe 's/project\\((.*)\\)\\n/$1/g'")
+let t:run = "\./build/src/".t:execName
+let t:make = "cmake -B build"
+let t:build = "cmake --build build"
 
 set makeprg=cmake
 set autowrite
 set errorformat+=,%ECMake\ Error\ at\ %f:%l\ (%.%#):,%C\ \ %m
 
-let b:args = ""
-let b:srcDir = "src"
+let t:args = ""
+let t:srcDir = "src"
 
-nnoremap <buffer><silent> <localleader>r :execute "!".(exists('t:run') ? t:run : b:run)." ".(exists('t:args') ? t:args : b:args) <Cr>
-nnoremap <buffer><silent> <localleader>b :Make --build build<Cr>
-nnoremap <buffer><silent> <localleader>m :Make -B build<Cr>
-nnoremap <buffer><silent> <localleader>c :execute "edit ".expand("%:h")."/CMakeLists.txt"<Cr>
+nnoremap <silent> <localleader>r :execute "!".(exists('t:run') ? t:run : t:run)." ".(exists('t:args') ? t:args : b:args) <Cr>
+nnoremap <silent> <localleader>b :Make --build build<Cr>
+nnoremap <silent> <localleader>m :Make -B build<Cr>
+nnoremap <silent> <localleader>c :execute "edit ".expand("%:h")."/CMakeLists.txt"<Cr>
 
-cabbr <expr> %% b:srcDir
-cabbr <expr> %m b:srcDir."/main.cpp"
+cabbr <expr> %% t:srcDir
+cabbr <expr> %m t:srcDir."/main.cpp"

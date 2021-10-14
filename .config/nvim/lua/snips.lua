@@ -10,10 +10,11 @@ local pi = ls.parent_indexer
 local isn = require("luasnip.nodes.snippet").ISN
 local psn = require("luasnip.nodes.snippet").PSN
 local l = require'luasnip.extras'.l
-local r = require'luasnip.util.functions'.rep
-local p = require("luasnip.util.functions").partial
+local r = require'luasnip.extras'.rep
+local p = require("luasnip.extras").partial
 local types = require("luasnip.util.types")
 local events = require("luasnip.util.events")
+local util = require("luasnip.util.util")
 
 ls.config.setup({
 	history = true,
@@ -28,13 +29,68 @@ ls.config.setup({
 			active = {
 				virt_text = {{"●", "GruvboxOrange"}},
 			}
-		},
-		[types.insertNode] = {
-			active = {
-				virt_text = {{"●", "GruvboxBlue"}},
-			}
-		},
+		}
 	},
+	-- parser_nested_assembler = function(_, snippet)
+	-- 	local select = function(snip, no_move)
+	-- 		snip.parent:enter_node(snip.indx)
+	-- 		-- upon deletion, inner extmarks should shift to end of
+	-- 		-- placeholder-text.
+	-- 		for _, node in ipairs(snip.nodes) do
+	-- 			node:set_mark_rgrav(true, true)
+	-- 		end
+
+	-- 		if not no_move then
+	-- 			vim.api.nvim_feedkeys(
+	-- 				vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
+	-- 				"n",
+	-- 				true
+	-- 			)
+	-- 			local pos_begin, pos_end = snip.mark:pos_begin_end()
+	-- 			util.normal_move_on(pos_begin)
+	-- 			vim.api.nvim_feedkeys(
+	-- 				vim.api.nvim_replace_termcodes("v", true, false, true),
+	-- 				"n",
+	-- 				true
+	-- 			)
+	-- 			util.normal_move_before(pos_end)
+	-- 			vim.api.nvim_feedkeys(
+	-- 				vim.api.nvim_replace_termcodes("o<C-G>", true, false, true),
+	-- 				"n",
+	-- 				true
+	-- 			)
+	-- 		end
+	-- 	end
+	-- 	function snippet:jump_into(dir, no_move)
+	-- 		if self.active then
+	-- 			if dir == 1 then
+	-- 				self:input_leave()
+	-- 				return self.next:jump_into(dir, no_move)
+	-- 			else
+	-- 				select(self, no_move)
+	-- 				return self
+	-- 			end
+	-- 		else
+	-- 			self:input_enter()
+	-- 			if dir == 1 then
+	-- 				select(self, no_move)
+	-- 				return self
+	-- 			else
+	-- 				return self.inner_last:jump_into(dir, no_move)
+	-- 			end
+	-- 		end
+	-- 	end
+	-- 	-- this is called only if the snippet is currently selected.
+	-- 	function snippet:jump_from(dir, no_move)
+	-- 		if dir == 1 then
+	-- 			return self.inner_first:jump_into(dir, no_move)
+	-- 		else
+	-- 			self:input_leave()
+	-- 			return self.prev:jump_into(dir, no_move)
+	-- 		end
+	-- 	end
+	-- 	return snippet
+	-- end
 })
 
 function insert_popup(snippet)
@@ -100,7 +156,7 @@ local function neg(fn, ...)
 	return not fn(...)
 end
 
-local function jdocsnip(args, old_state)
+local function jdocsnip(args, _, old_state)
 	local nodes = {
 		t({"/**"," * "}),
 		old_state and i(1, old_state.descr:get_text()) or i(1, {"A short Description"}),
@@ -182,8 +238,8 @@ rec_ls = function()
 	})
 end
 
-local function capture_insert(args, _, capture_indx, pre_text, post_text)
-	return sn(nil, {i(1, {(pre_text or "") .. args[1].captures[capture_indx] .. (post_text or "")})})
+local function capture_insert(args, snip, _, capture_indx, pre_text, post_text)
+	return sn(nil, {i(1, {(pre_text or "") .. snip.captures[capture_indx] .. (post_text or "")})})
 end
 
 local function part(func, ...)
@@ -195,6 +251,10 @@ local function pair(pair_begin, pair_end, expand_func, ...)
 	return s({trig = pair_begin, wordTrig=false}, {t({pair_begin}), i(1), t({pair_end})}, {condition = part(expand_func, part(..., pair_begin, pair_end))})
 end
 
+local function get_prefix()
+    return tostring(vim.fn.line("."))
+end
+
 ls.snippets = {
 	all = {
 		pair("(", ")", neg, char_count_same),
@@ -204,7 +264,10 @@ ls.snippets = {
 		pair("'", "'", neg, even_count),
 		pair('"', '"', neg, even_count),
 		pair("`", "`", neg, even_count),
-		s({trig="{,", wordTrig=false}, { t({"{","\t"}), i(1), t({"", "}"}) }),
+		s({ trig = "ymd", name = "Current date", dscr = "Insert the current date" }, {
+			p(os.date, "%Y-%m-%d"),
+		}),
+		s({trig="{,", wordTrig=false, hidden=true}, { t({"{","\t"}), i(1), t({"", "}"}) }),
 		ls.parser.parse_snippet({trig = "tr"}, "if ${1:[[ ${2:word} -eq ${3:word2} ]]}; then\n\t$4\nfi"),
 		s({trig = "trig"}, {
 			t{"lel", "\t"},
@@ -215,7 +278,12 @@ ls.snippets = {
 				[events.enter] = function() print("1!!") end
 			},
 			[0] = {
-				[events.enter] = function(node) vim.schedule(function()	node.parent.snippet:exit() Luasnip_current_nodes[vim.api.nvim_get_current_buf()] = nil end) end
+				[events.enter] = function(node)
+					vim.schedule(function()
+						node.parent.snippet:exit()
+						ls.session.current_nodes[vim.api.nvim_get_current_buf()] = nil
+					end)
+				end
 			}
 		}}),
 		s("test1", {
@@ -255,7 +323,27 @@ ls.snippets = {
 			t({" {", "\t"}),
 			i(0),
 			t({"", "}"})
-		})
+		}),
+		s({ trig = "stmt", name = "stmt", dscr = "Statement" }, {
+  t("res = self.stmt"),
+  c(1, {
+    t({ "_fetch(", "" }),
+    t({ "_execute(", "" }),
+    t({ "(", "" }),
+  }),
+  c(2, {
+    t({ "    \"a\",", "" }),
+    t({ "    \"b\",", "" }),
+  }),
+  t({ "    \"\"\"", "    " }),
+  i(0),
+  t({ "", "    \"\"\"", "" }),
+  t(")"),
+  c(3, {
+    t(""),
+    p(get_prefix),
+  }),
+}),
 	},
 	rust = {
 		ls.parser.parse_snippet({trig = "fn"}, [[
@@ -326,10 +414,10 @@ fn $2($3) ${4:-> ${5:i32}} \{
 		ls.parser.parse_snippet({trig = "for", wordTrig = true}, "for ($1 : $2)\n\t$3\n$0"),
 		s({trig = "for(%w+)", wordTrig = true, regTrig = true}, {
 			t({"for ("}), d(1, capture_insert, {}, 1, "int ", " = 0"), t({"; "}),
-			f(function(args) return {args[1].captures[1]} end, {}), c(2, {sn(nil, {t({" != "}), i(1)}), i(nil)}), t({"; "}),
+			f(function(args, snip) return {snip.captures[1]} end, {}), c(2, {sn(nil, {t({" != "}), i(1)}), i(nil)}), t({"; "}),
 			d(3, capture_insert, {}, 1, "++"), t({")", "\t"}), i(4), t({"", ""}), i(0)
 		})
 	}
 }
 
-require("luasnip.loaders.from_vscode").load()
+require("luasnip.loaders.from_vscode").lazy_load()

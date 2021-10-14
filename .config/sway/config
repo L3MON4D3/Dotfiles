@@ -253,7 +253,6 @@ for_window [title="unknown_noise.png"] floating enable
 for_window [title="glfw"] floating enable
 for_window [title="Discord Updater"] floating enable
 for_window [title="^Firefox — Sharing Indicator$"] kill
-for_window [title="^Kodi$"] fullscreen enable
 for_window [title="^floatwindow$"] floating enable
 
 mode "apps" {
@@ -268,7 +267,7 @@ mode "apps" {
     bindsym d exec "electron --enable-features=UseOzonePlatform --ozone-platform=wayland /lib/discord/app.asar"
     bindsym z exec zathura
     bindsym o exec tor-browser
-    bindsym k exec /usr/bin/kodi --windowing=wayland
+    bindsym k exec "/usr/bin/kodi --windowing=wayland & sleep 0.5; swaymsg '[app_id="Kodi"]' fullscreen toggle; sleep 0.5; swaymsg '[app_id="Kodi"]' fullscreen toggle; fg;"
     bindsym s exec spotify
     bindsym j exec qutebrowser /home/simon/Documents/Documentation/docs/index.html
     bindsym c exec chromium

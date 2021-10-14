@@ -307,3 +307,10 @@ for e_k, e_v in pairs(widget_entities) do
 			{noremap=true, silent = true})
 	end
 end
+
+require("dapui").setup({
+	sidebar = {
+		elements = { "watches" },
+		position = "right"
+	},
+})
