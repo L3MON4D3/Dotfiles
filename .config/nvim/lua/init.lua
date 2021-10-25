@@ -63,10 +63,16 @@ cmp.setup {
 		{ name = 'luasnip' }
 	},
 	documentation = false,
+	experimental = {
+		native_menu = false,
+	}
 }
 
 nvim_lsp.rust_analyzer.setup({
-	on_attach = lsp_attach,
+	on_attach = function()
+		lsp_attach()
+		vim.cmd("autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()")
+	end,
 	capabilities = capabilities,
 	settings = {
 		["rust-analyzer"] = {
@@ -89,7 +95,10 @@ nvim_lsp.rust_analyzer.setup({
 -- 	capabilities = capabilities
 -- }
 nvim_lsp.clangd.setup{
-	on_attach = lsp_attach,
+	on_attach = function()
+		lsp_attach()
+		vim.cmd("autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()")
+	end,
 	capabilities = capabilities
 }
 
@@ -314,3 +323,11 @@ require("dapui").setup({
 		position = "right"
 	},
 })
+
+-- require("lualine").setup({
+-- 	options = { section_separators = {""} },
+-- 	sections = {
+-- 		lualine_a = {"filename"},
+-- 		lualine_b = {"filetype"},
+-- 	}
+-- })

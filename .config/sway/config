@@ -36,9 +36,9 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec --
 output eDP-1 transform 0 mode 1920x1080@60.000Hz position 0,0
 
 output DP-1 transform 0 mode 2560x1440@143.999Hz position 0,0
-output DP-1 subpixel rgb
+#output DP-3 subpixel rgb
 
-output HDMI-A-1 transform 90 resolution 1080x1920 position 2560,0
+output HDMI-A-1 transform 90 resolution 1080x1920@60.000Hz position 2560,0
 
 exec_always /home/simon/Scripts/myDarkLightWP.sh 0 &
 
@@ -202,7 +202,7 @@ input "1133:49277:Logitech_Gaming_Mouse_G502" {
     bindsym $mod+m focus mode_toggle
 
     # move focus to the parent container
-    bindsym $mod+p focus parent
+    bindsym $mod+u focus parent
 #
 # Scratchpad:
 #
@@ -250,13 +250,14 @@ for_window [title="worldWp"] floating enable
 for_window [title="Emulator$"] floating enable
 for_window [title="FML early loading progress"] floating enable
 for_window [title="unknown_noise.png"] floating enable
-for_window [title="glfw"] floating enable
+for_window [title="^glfw$"] floating enable
 for_window [title="Discord Updater"] floating enable
 for_window [title="^Firefox — Sharing Indicator$"] kill
 for_window [title="^floatwindow$"] floating enable
+for_window [title="^Kodi$"] move container output DP-1
 
 mode "apps" {
-	bindsym b exec qutebrowser
+	bindsym b exec QT_QPA_PLATFORM=xcb qutebrowser
 	bindsym f exec firefox
 	bindsym n exec $term ncmpcpp
 	bindsym g exec gimp
@@ -267,7 +268,7 @@ mode "apps" {
     bindsym d exec "electron --enable-features=UseOzonePlatform --ozone-platform=wayland /lib/discord/app.asar"
     bindsym z exec zathura
     bindsym o exec tor-browser
-    bindsym k exec "/usr/bin/kodi --windowing=wayland & sleep 0.5; swaymsg '[app_id="Kodi"]' fullscreen toggle; sleep 0.5; swaymsg '[app_id="Kodi"]' fullscreen toggle; fg;"
+    bindsym k exec /usr/bin/kodi --windowing=wayland
     bindsym s exec spotify
     bindsym j exec qutebrowser /home/simon/Documents/Documentation/docs/index.html
     bindsym c exec chromium
@@ -300,6 +301,16 @@ mode "browser" {
 }
 bindsym $mod+y mode "browser"
 
+mode "power" {
+    bindsym h exec /home/simon/Scripts/myDPMSToggle.sh HDMI-A-1
+    bindsym d exec /home/simon/Scripts/myDPMSToggle.sh DP-1
+    bindsym b exec /bin/bash -c "/home/simon/Scripts/myDPMSToggle.sh DP-1 && /home/simon/Scripts/myDPMSToggle.sh HDMI-A-1"
+    bindsym s exec 'sudo systemctl suspend'
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+p mode "power"
+
 gaps inner 4
 gaps outer 1
 default_border pixel 2
@@ -324,4 +335,5 @@ exec_always gsettings set org.gnome.desktop.interface icon-theme Papirus
 
 exec_always myRestartWaybar.sh
 exec "systemctl --user import-environment; systemctl --user start sway-session.target"
+exec "swayidle -w timeout 600 /home/simon/Scripts/myIdle.sh"
 exec bluetoothctl power on

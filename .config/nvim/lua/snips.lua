@@ -22,7 +22,7 @@ ls.config.setup({
 	updateevents = "InsertLeave",
 	enable_autosnippets = true,
 	region_check_events = "CursorHold",
-	delete_check_events = "TextChanged",
+	delete_check_events = "TextChanged,InsertEnter",
 	store_selection_keys = "<Tab>",
 	ext_opts = {
 		[types.choiceNode] = {
@@ -324,26 +324,10 @@ ls.snippets = {
 			i(0),
 			t({"", "}"})
 		}),
-		s({ trig = "stmt", name = "stmt", dscr = "Statement" }, {
-  t("res = self.stmt"),
-  c(1, {
-    t({ "_fetch(", "" }),
-    t({ "_execute(", "" }),
-    t({ "(", "" }),
-  }),
-  c(2, {
-    t({ "    \"a\",", "" }),
-    t({ "    \"b\",", "" }),
-  }),
-  t({ "    \"\"\"", "    " }),
-  i(0),
-  t({ "", "    \"\"\"", "" }),
-  t(")"),
-  c(3, {
-    t(""),
-    p(get_prefix),
-  }),
-}),
+		s('#if', {
+			t('#if '), i(1, '1'), t({'', ''}),
+			i(0), t({'', '#endif // '}), f(function(args) return args[1] end, 1),
+		}),
 	},
 	rust = {
 		ls.parser.parse_snippet({trig = "fn"}, [[

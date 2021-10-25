@@ -1,5 +1,6 @@
 set nocompatible
 set viminfo='100,<50,s10,h,n~/.config/nvim/info
+set noswapfile
 
 source ~/.config/nvim/functions.vim 
 
@@ -28,13 +29,16 @@ call plug#begin('~/.config/nvim/plugged')
 	"Plug 'nvim-telescope/telescope.nvim'
 	Plug 'nvim-lua/popup.nvim'
 	Plug 'nvim-lua/plenary.nvim'
-	"Plug 'nvim-treesitter/playground'
+	Plug 'nvim-treesitter/playground'
 
 	"Plug 'leiserfg/luasnip', {'branch' : 'use-named-register'}
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/' "luasnip-dev-plug
 	Plug 'knsh14/vim-github-link'
-	Plug 'hoob3rt/lualine.nvim'
+	Plug 'onsails/lspkind-nvim'
+	"Plug 'eddyekofo94/gruvbox-flat.nvim'
+	"Plug 'nvim-lualine/lualine.nvim'
 
+	
     "Plug 'cespare/vim-toml'
     "Plug 'lervag/vimtex', {'for' : 'latex'}
     "Plug 'pietropate/vim-tex-conceal', {'for' : 'latex'}
@@ -94,12 +98,18 @@ autocmd mine BufWinEnter,WinEnter,TermOpen term://* startinsert |
 
 autocmd mine BufLeave term://* stopinsert
 
+augroup autoquickfix
+    autocmd!
+    autocmd QuickFixCmdPost [^l]* cwindow
+    autocmd QuickFixCmdPost    l* lwindow
+augroup END
+
 let w:stFt=""
 let w:stFn=""
 let w:fpRel=""
 "add WinEnter for floating windows.
 "BufEnter for <C-O>/<C-I>
-autocmd mine BufRead,WinNew,TermOpen,SourcePost,WinEnter,BufEnter * 
+autocmd mine QuickFixCmdPost,BufRead,WinNew,TermOpen,SourcePost,WinEnter,BufWinEnter * 
             \let w:stFt=FiletypeClean() |
             \let w:stFn=FilenameClean() |
             \let w:fpRel=FilepathClean() |
@@ -120,12 +130,20 @@ augroup END
 set fillchars=fold:\ ,vert:\|
 set foldtext=MyFoldText()
 
+set grepprg=rg\ --vimgrep
+set grepformat^=%f:%l:%c:%m
+
 "Style
+
+set termguicolors
+set pumblend=15
 syntax on
 let g:gruvbox_italic='1'
 let g:gruvbox_contrast_dark='hard'
 let g:gruvbox_sign_column='bg0'
 let g:gruvbox_invert_selection=0
+let g:gruvbox_termcolors=256
+
 set background=dark
 colorscheme gruvbox
 
@@ -142,24 +160,43 @@ colorscheme gruvbox
 "let g:airline#extensions#tabline#show_tab_count = 0
 
 "Tabline
-hi TabLine ctermbg=0 ctermfg=239 cterm=none
-hi TabLineSel ctermbg=0 ctermfg=229 cterm=none
+hi TabLine guibg=#1d2021 guifg=#504945 gui=none
+hi TabLineSel guibg=0 guifg=229 gui=none
 
 "Statusline
-hi Status1 ctermbg=11 ctermfg=0 cterm=bold
-hi Status2 ctermbg=208 ctermfg=0 cterm=bold
-hi Status3 ctermbg=109 ctermfg=0 cterm=bold
+hi Status1 guibg=#fabd2f guifg=#1d2021 gui=bold
+hi Status2 guibg=#fe8019 guifg=#1d2021 gui=bold
+hi Status3 guibg=#83a598 guifg=#1d2021 gui=bold
 
-hi User1 ctermbg=237 ctermfg=0
+hi User1 guibg=#3c3836 guifg=#1d2021
 
-hi StatusLine ctermbg=237 ctermfg=0
-hi StatusLineNC ctermbg=235 ctermfg=0
+hi StatusLine guibg=#3c3836 guifg=#1d2021
+hi StatusLineNC guibg=#282828 guifg=#1d2021
 
-hi Folded ctermbg=0 cterm=none
+hi Folded guibg=#1d2021 gui=none
+
+hi! link TSVariable Normal
+"hi! link TSParameter Normal
+hi! link TSField Normal
+
+hi GruvboxRed guifg=#d75151
 
 hi link LspReferenceText CursorLine
 hi link LspReferenceRead CursorLine
 hi link LspReferenceWrite CursorLine
+
+hi link LspProperty GruvboxBlue
+hi link LspFunction GruvboxGreenBold
+hi link LspMethod GruvboxBlueBold
+hi link LspEnumMember GruvboxPurple
+hi link LspNamespace GruvboxAqua
+hi link LspType GruvboxYellow
+hi link LspString GruvboxYellow
+hi link LspClass LspType
+hi link LspVariable GruvboxFg1
+
+"hi! TSParameter guifg=#ebdbb2 gui=bold
+hi link TSParameter GruvboxFg1
 
 set laststatus=2
 set showtabline=2
@@ -332,6 +369,7 @@ noremap <silent> <leader>r :set invrelativenumber<Cr>
 noremap <silent> <leader>t :tabedit ~/.todo<Cr>
 noremap <silent> <leader>fw :set invwinfixwidth<Cr>
 noremap <silent> <leader>fh :set invwinfixheight<Cr>
+noremap <leader>g :silent grep 
 
 "end on closig paranthesis.
 vnoremap <leader>( <Esc>`>a)<Esc>`<i(<Esc>%

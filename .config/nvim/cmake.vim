@@ -1,7 +1,5 @@
 let t:execName=system("grep project CMakeLists.txt | perl -pe 's/project\\((.*)\\)\\n/$1/g'")
 let t:run = "\./build/src/".t:execName
-let t:make = "cmake -B build"
-let t:build = "cmake --build build"
 
 set makeprg=cmake
 set autowrite
