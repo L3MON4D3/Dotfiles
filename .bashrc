@@ -24,15 +24,20 @@ export SYSTEMD_EDITOR=nvim
 export RUST_SRC_PATH=/home/simon/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/
 
 export BAT_THEME="mine"
-export QT_QPA_PLATFORM=xcb
+
+export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
+export QT_QPA_PLATFORM=wayland
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export WLR_NO_HARDWARE_CURSORS=1
 export BLOCK_SIZE=4096
 
 export CXX=clang++
 export CC=clang
+export CMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake
 
 export EDITOR=nvim
+
+export SUDO_ASKPASS=/home/simon/Scripts/myAskPass.sh
 
 source /home/simon/.functions
 source /home/simon/.bash_aliases

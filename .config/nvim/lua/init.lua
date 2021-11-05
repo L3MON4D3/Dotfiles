@@ -37,7 +37,9 @@ local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
 
-	 require 'illuminate'.on_attach(client)
+	require 'illuminate'.on_attach(client)
+
+	-- local tokens = require("vim.lsp.semantic_tokens")
 end
 
 
@@ -97,7 +99,7 @@ nvim_lsp.rust_analyzer.setup({
 nvim_lsp.clangd.setup{
 	on_attach = function()
 		lsp_attach()
-		vim.cmd("autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()")
+		vim.cmd("autocmd CursorHold,InsertLeave,BufWinEnter <buffer> lua vim.lsp.buf.semantic_tokens_full()")
 	end,
 	capabilities = capabilities
 }
@@ -106,15 +108,10 @@ nvim_lsp.texlab.setup{
 	cmd = { "texlab" },
 	filetypes = { "tex", "bib" },
 	settings = {
-		bibtex = {
-			formatting = {
-				lineLength = 120
-			}
-		},
-		latex = {
+		texlab = {
 			build = {
-				args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
 				executable = "latexmk",
+				args = { "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f" },
 				onSave = true,
 				onChange = true
 			},
@@ -124,12 +121,18 @@ nvim_lsp.texlab.setup{
 			},
 			lint = {
 				onChange = false,
-				onSave = true
-			}
-		}
+				onSave = false
+			},
+			latexFormatter = "texlab"
+		},
 	},
 	on_attach = lsp_attach,
 	capabilities = capabilities
+}
+
+require'lspconfig'.pyright.setup{
+	capabilities = capabilities,
+	on_attach = lsp_attach
 }
 
 local sumneko_root_path = '/home/simon/.local/share/nvim/lspinstall/lua-language-server/'
@@ -323,6 +326,8 @@ require("dapui").setup({
 		position = "right"
 	},
 })
+
+require("hop").setup()
 
 -- require("lualine").setup({
 -- 	options = { section_separators = {""} },

@@ -255,6 +255,9 @@ for_window [title="Discord Updater"] floating enable
 for_window [title="^Firefox — Sharing Indicator$"] kill
 for_window [title="^floatwindow$"] floating enable
 for_window [title="^Kodi$"] move container output DP-1
+for_window [title="^SkyRenderer$"] floating enable
+for_window [title="^zenity$"] floating enable
+for_window [class="^gnuplot_qt$"] floating enable
 
 mode "apps" {
 	bindsym b exec QT_QPA_PLATFORM=xcb qutebrowser
@@ -314,6 +317,7 @@ bindsym $mod+p mode "power"
 gaps inner 4
 gaps outer 1
 default_border pixel 2
+default_floating_border pixel 2
 
 client.focused #fbf1c7 #1d2021 #fbf1c7 #fbf1c7 #fbf1c7
 client.unfocused #504945 #1d2021 #fbf1c7 #504945 #504945

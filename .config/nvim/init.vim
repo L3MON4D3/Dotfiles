@@ -34,7 +34,6 @@ call plug#begin('~/.config/nvim/plugged')
 	"Plug 'leiserfg/luasnip', {'branch' : 'use-named-register'}
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/' "luasnip-dev-plug
 	Plug 'knsh14/vim-github-link'
-	Plug 'onsails/lspkind-nvim'
 	"Plug 'eddyekofo94/gruvbox-flat.nvim'
 	"Plug 'nvim-lualine/lualine.nvim'
 
@@ -98,11 +97,11 @@ autocmd mine BufWinEnter,WinEnter,TermOpen term://* startinsert |
 
 autocmd mine BufLeave term://* stopinsert
 
-augroup autoquickfix
-    autocmd!
-    autocmd QuickFixCmdPost [^l]* cwindow
-    autocmd QuickFixCmdPost    l* lwindow
-augroup END
+" augroup autoquickfix
+"     autocmd!
+"     autocmd QuickFixCmdPost [^l]* cwindow
+"     autocmd QuickFixCmdPost    l* lwindow
+" augroup END
 
 let w:stFt=""
 let w:stFn=""
@@ -186,17 +185,22 @@ hi link LspReferenceRead CursorLine
 hi link LspReferenceWrite CursorLine
 
 hi link LspProperty GruvboxBlue
-hi link LspFunction GruvboxGreenBold
+hi link LspFunction GruvboxOrangeBold
 hi link LspMethod GruvboxBlueBold
-hi link LspEnumMember GruvboxPurple
-hi link LspNamespace GruvboxAqua
+hi link LspNamespace GruvboxYellow
 hi link LspType GruvboxYellow
 hi link LspString GruvboxYellow
 hi link LspClass LspType
 hi link LspVariable GruvboxFg1
 
+hi link LspStatic GruvboxAqua
+hi link LspEnumMember GruvboxPurple
+
 "hi! TSParameter guifg=#ebdbb2 gui=bold
-hi link TSParameter GruvboxFg1
+hi! link TSParameter GruvboxFg1
+hi! link TSFunction GruvboxOrangeBold
+
+hi! TSStringEscape gui=bold
 
 set laststatus=2
 set showtabline=2
@@ -363,13 +367,22 @@ noremap <leader>dws :lua require"dapui".open("sidebar")<Cr>
 noremap <silent> <C-v> :vsp<Cr>
 noremap <silent> <C-b> :sp<Cr>
 
-noremap <leader>n :noh<Cr>
-noremap <silent> <leader>l :set invlist<Cr>
-noremap <silent> <leader>r :set invrelativenumber<Cr>
-noremap <silent> <leader>t :tabedit ~/.todo<Cr>
-noremap <silent> <leader>fw :set invwinfixwidth<Cr>
-noremap <silent> <leader>fh :set invwinfixheight<Cr>
+function! CToggle()
+    if empty(filter(getwininfo(), 'v:val.quickfix'))
+        copen
+    else
+        cclose
+    endif
+endfunction
+
+noremap <silent><leader>n :noh<Cr>
+noremap <silent><leader>l :set invlist<Cr>
+noremap <silent><leader>r :set invrelativenumber<Cr>
+noremap <silent><leader>t :tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>
+noremap <silent><leader>fw :set invwinfixwidth<Cr>
+noremap <silent><leader>fh :set invwinfixheight<Cr>
 noremap <leader>g :silent grep 
+noremap <silent><leader>c :call CToggle()<Cr>
 
 "end on closig paranthesis.
 vnoremap <leader>( <Esc>`>a)<Esc>`<i(<Esc>%

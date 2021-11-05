@@ -15,6 +15,7 @@ local p = require("luasnip.extras").partial
 local types = require("luasnip.util.types")
 local events = require("luasnip.util.events")
 local util = require("luasnip.util.util")
+local fmt = require("luasnip.extras.fmt").fmt
 
 ls.config.setup({
 	history = true,
@@ -269,6 +270,7 @@ ls.snippets = {
 		}),
 		s({trig="{,", wordTrig=false, hidden=true}, { t({"{","\t"}), i(1), t({"", "}"}) }),
 		ls.parser.parse_snippet({trig = "tr"}, "if ${1:[[ ${2:word} -eq ${3:word2} ]]}; then\n\t$4\nfi"),
+		ls.parser.parse_snippet({trig = "pint"}, "printf(\"${0:asdf} :>> %d\\n\", $0);"),
 		s({trig = "trig"}, {
 			t{"lel", "\t"},
 			i(1, "lol"), t{"lel", "\t"},
@@ -328,6 +330,7 @@ ls.snippets = {
 			t('#if '), i(1, '1'), t({'', ''}),
 			i(0), t({'', '#endif // '}), f(function(args) return args[1] end, 1),
 		}),
+
 	},
 	rust = {
 		ls.parser.parse_snippet({trig = "fn"}, [[
@@ -375,7 +378,7 @@ fn $2($3) ${4:-> ${5:i32}} \{
 	tex = {
 		ls.parser.parse_snippet({trig = ";"}, "\\$$1\\$$0"),
 		s({trig = "(s*)sec", wordTrig = true, regTrig = true}, {
-			f(function(args) return {"\\"..string.rep("sub", string.len(args[1].captures[1]))} end, {}),
+			f(function(args, snip) return {"\\"..string.rep("sub", string.len(snip.captures[1]))} end, {}),
 			t({"section{"}), i(1), t({"}", ""}), i(0)
 		}),
 		ls.parser.parse_snippet({trig = "beg", wordTrig = true}, "\\begin{$1}\n\t$2\n\\end{$1}"),
@@ -400,8 +403,7 @@ fn $2($3) ${4:-> ${5:i32}} \{
 			t({"for ("}), d(1, capture_insert, {}, 1, "int ", " = 0"), t({"; "}),
 			f(function(args, snip) return {snip.captures[1]} end, {}), c(2, {sn(nil, {t({" != "}), i(1)}), i(nil)}), t({"; "}),
 			d(3, capture_insert, {}, 1, "++"), t({")", "\t"}), i(4), t({"", ""}), i(0)
-		})
+		}),
+		s("iferr", fmt("if ({})\n\tthrow std::runtime_error(\"failed to {}\")", {i(1), i(2)}))
 	}
 }
-
-require("luasnip.loaders.from_vscode").lazy_load()
