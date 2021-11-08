@@ -188,7 +188,7 @@ input "1133:49277:Logitech_Gaming_Mouse_G502" {
     bindsym $mod+v splith
 
     # Switch the current container between different layout styles
-    bindsym $mod+s layout stacking
+    #bindsym $mod+s layout stacking
     bindsym $mod+w layout tabbed
     bindsym $mod+e layout toggle split
 
@@ -258,9 +258,10 @@ for_window [title="^Kodi$"] move container output DP-1
 for_window [title="^SkyRenderer$"] floating enable
 for_window [title="^zenity$"] floating enable
 for_window [class="^gnuplot_qt$"] floating enable
+# for_window [title="^imv .*\/tmp\/popout_"] floating enable
 
 mode "apps" {
-	bindsym b exec QT_QPA_PLATFORM=xcb qutebrowser
+	bindsym b exec QT_QPA_PLATFORM=wayland __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json qutebrowser
 	bindsym f exec firefox
 	bindsym n exec $term ncmpcpp
 	bindsym g exec gimp
@@ -284,7 +285,7 @@ mode "torrent" {
 	bindsym a exec '/home/simon/Scripts/myQbtCtrl.py --add'
 	bindsym s exec 'makoctl dismiss -a && /home/simon/Scripts/myQbtCtrl.py --status'
 	bindsym c exec makoctl dismiss -a
-	bindsym b exec qutebrowser pi:8080
+	bindsym b exec QT_QPA_PLATFORM=wayland __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json qutebrowser pi:8080
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
@@ -314,6 +315,15 @@ mode "power" {
 }
 bindsym $mod+p mode "power"
 
+mode "screen" {
+	bindsym p exec /home/simon/Scripts/myPopOut.sh
+	bindsym r exec /home/simon/Scripts/myScreenRec.sh
+	bindsym s exec /home/simon/Scripts/myScreenRec.sh
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+s mode "screen"
+
 gaps inner 4
 gaps outer 1
 default_border pixel 2
@@ -331,13 +341,11 @@ bindsym XF86AudioPrev exec mpc prev
 bindsym XF86AudioRaiseVolume exec mpc volume +5
 bindsym XF86AudioLowerVolume exec mpc volume -5
 
-bindsym $mod+g exec myScreenRec.sh
-
 exec_always gsettings set org.gnome.desktop.interface gtk-theme Adapta
 exec_always gsettings set org.gnome.desktop.interface cursor-theme capitaine-cursors
 exec_always gsettings set org.gnome.desktop.interface icon-theme Papirus
 
 exec_always myRestartWaybar.sh
 exec "systemctl --user import-environment; systemctl --user start sway-session.target"
-exec "swayidle -w timeout 600 /home/simon/Scripts/myIdle.sh"
+exec "swayidle -w timeout 1200 /home/simon/Scripts/myIdle.sh"
 exec bluetoothctl power on
