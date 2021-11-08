@@ -318,7 +318,8 @@ bindsym $mod+p mode "power"
 mode "screen" {
 	bindsym p exec /home/simon/Scripts/myPopOut.sh
 	bindsym r exec /home/simon/Scripts/myScreenRec.sh
-	bindsym s exec /home/simon/Scripts/myScreenRec.sh
+	bindsym s exec bash -c 'grim -g "$(slurp)" screen.png'
+	bindsym w exec /home/simon/Scripts/myWindowShot.sh
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
