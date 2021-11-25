@@ -52,3 +52,4 @@ config.load_autoconfig(False)
 c.url.searchengines = {'DEFAULT': 'https://google.com/search?q={}'}
 
 config.bind("pf", "spawn --userscript password_fill")
+config.bind("e", "edit-url")

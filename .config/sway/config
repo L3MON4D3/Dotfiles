@@ -36,9 +36,11 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec --
 output eDP-1 transform 0 mode 1920x1080@60.000Hz position 0,0
 
 output DP-1 transform 0 mode 2560x1440@143.999Hz position 0,0
+output HDMI-A-1 subpixel rgb
 #output DP-3 subpixel rgb
 
 output HDMI-A-1 transform 90 resolution 1080x1920@60.000Hz position 2560,0
+output HDMI-A-1 subpixel vbgr
 
 exec_always /home/simon/Scripts/myDarkLightWP.sh 0 &
 
@@ -257,6 +259,7 @@ for_window [title="^floatwindow$"] floating enable
 for_window [title="^Kodi$"] move container output DP-1
 for_window [title="^SkyRenderer$"] floating enable
 for_window [title="^zenity$"] floating enable
+for_window [app_id="^com.github.wwmm.easyeffects$"] floating enable
 for_window [class="^gnuplot_qt$"] floating enable
 # for_window [title="^imv .*\/tmp\/popout_"] floating enable
 
@@ -269,13 +272,14 @@ mode "apps" {
 	bindsym t exec thunderbird
     bindsym q exec qbittorrent
     bindsym v exec vlc
-    bindsym d exec "electron --enable-features=UseOzonePlatform --ozone-platform=wayland /lib/discord/app.asar"
+    bindsym d exec firefox https://discord.com/channels/@me
     bindsym z exec zathura
     bindsym o exec tor-browser
     bindsym k exec /usr/bin/kodi --windowing=wayland
     bindsym s exec spotify
     bindsym j exec qutebrowser /home/simon/Documents/Documentation/docs/index.html
     bindsym c exec chromium
+    bindsym e exec easyeffects
 	bindsym Return mode "default"
 	bindsym Escape mode "default"
 }
@@ -348,5 +352,5 @@ exec_always gsettings set org.gnome.desktop.interface icon-theme Papirus
 
 exec_always myRestartWaybar.sh
 exec "systemctl --user import-environment; systemctl --user start sway-session.target"
-exec "swayidle -w timeout 1200 /home/simon/Scripts/myIdle.sh"
+# exec "swayidle -w timeout 1200 /home/simon/Scripts/myIdle.sh"
 exec bluetoothctl power on

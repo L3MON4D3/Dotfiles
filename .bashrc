@@ -34,7 +34,7 @@ export BLOCK_SIZE=4096
 export CXX=clang++
 export CC=clang
 export INCLUDE=/usr/include/stb/
-export CMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake
+export CMAKE_TOOLCHAIN_FILE=/home/simon/.local/share/mold.cmake
 
 export EDITOR=nvim
 

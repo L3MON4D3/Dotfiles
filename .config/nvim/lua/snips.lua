@@ -331,7 +331,24 @@ ls.snippets = {
 			t('#if '), i(1, '1'), t({'', ''}),
 			i(0), t({'', '#endif // '}), f(function(args) return args[1] end, 1),
 		}),
+		s('component',
+        fmt(
+            [[
+            import React from 'react';
+            const {filename} = () => {{
+              {insert}
+            }}
 
+            export default {filename};
+        ]],
+            {
+                insert = i(0),
+                filename = f(function()
+                    return vim.fn.expand('%:t:r')
+                end, {}),
+            }
+        )
+    ),
 	},
 	rust = {
 		ls.parser.parse_snippet({trig = "fn"}, [[
@@ -398,12 +415,12 @@ fn $2($3) ${4:-> ${5:i32}} \{
 		})
 	},
 	cpp = {
-		ls.parser.parse_snippet({trig = "if", wordTrig = true}, "if ($1)\n\t$2\n$0"),
-		ls.parser.parse_snippet({trig = "for", wordTrig = true}, "for ($1 : $2)\n\t$3\n$0"),
+		ls.parser.parse_snippet({trig = "if", wordTrig = true}, "if ($1)\n\t$0"),
+		ls.parser.parse_snippet({trig = "for", wordTrig = true}, "for ($1 : $2)\n\t$0"),
 		s({trig = "for(%w+)", wordTrig = true, regTrig = true}, {
 			t({"for ("}), d(1, capture_insert, {}, 1, "int ", " = 0"), t({"; "}),
 			f(function(args, snip) return {snip.captures[1]} end, {}), c(2, {sn(nil, {t({" != "}), i(1)}), i(nil)}), t({"; "}),
-			d(3, capture_insert, {}, 1, "++"), t({")", "\t"}), i(4), t({"", ""}), i(0)
+			d(3, capture_insert, {}, 1, "++"), t({")", "\t"}), i(0)
 		}),
 		s("iferr", fmt("if ({})\n\tthrow std::runtime_error(\"failed to {}\")", {i(1), i(2)}))
 	}

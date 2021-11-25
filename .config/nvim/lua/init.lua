@@ -336,3 +336,5 @@ require("hop").setup()
 -- 		lualine_b = {"filetype"},
 -- 	}
 -- })
+
+require("neogen").setup{enabled=true}

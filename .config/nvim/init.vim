@@ -34,6 +34,7 @@ call plug#begin('~/.config/nvim/plugged')
 	"Plug 'leiserfg/luasnip', {'branch' : 'use-named-register'}
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/' "luasnip-dev-plug
 	Plug 'knsh14/vim-github-link'
+	Plug 'danymat/neogen'
 	"Plug 'eddyekofo94/gruvbox-flat.nvim'
 	"Plug 'nvim-lualine/lualine.nvim'
 
@@ -128,6 +129,7 @@ augroup END
 
 set fillchars=fold:\ ,vert:\|
 set foldtext=MyFoldText()
+set foldmethod=indent
 
 set grepprg=rg\ --vimgrep
 set grepformat^=%f:%l:%c:%m
