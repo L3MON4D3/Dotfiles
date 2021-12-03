@@ -62,19 +62,16 @@ cmp.setup {
 	},
 	sources = {
 		{ name = 'nvim_lsp' },
-		{ name = 'luasnip' }
+		{ name = 'luasnip' },
+		{ name = 'cmp_git' },
 	},
 	documentation = false,
 	experimental = {
 		native_menu = false,
-	}
+	},
 }
 
 nvim_lsp.rust_analyzer.setup({
-	on_attach = function()
-		lsp_attach()
-		vim.cmd("autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()")
-	end,
 	capabilities = capabilities,
 	settings = {
 		["rust-analyzer"] = {
@@ -337,4 +334,10 @@ require("hop").setup()
 -- 	}
 -- })
 
-require("neogen").setup{enabled=true}
+-- require("neogen").setup{enabled=true}
+
+require("nvim-semantic-tokens").setup({preset = "default"})
+vim.cmd([[
+if &filetype == "cpp" || &filetype == "c" || &filetype == "python" || &filetype == "rust"
+	autocmd BufEnter,CursorHold,InsertLeave <buffer> lua require 'vim.lsp.buf'.semantic_tokens_full()
+endif]])

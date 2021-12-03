@@ -69,3 +69,4 @@ alias et='exa --tree'
 alias etl='exa --tree -l'
 alias etla='exa --tree -la'
 alias ch='cht.sh'
+alias paste="curl -F 'sprunge=<-' http://sprunge.us"

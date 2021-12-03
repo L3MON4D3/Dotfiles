@@ -2,6 +2,8 @@ set nocompatible
 set viminfo='100,<50,s10,h,n~/.config/nvim/info
 set noswapfile
 
+"let g:did_load_filetypes=1
+
 source ~/.config/nvim/functions.vim 
 
 "Plugins
@@ -30,11 +32,13 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'nvim-lua/popup.nvim'
 	Plug 'nvim-lua/plenary.nvim'
 	Plug 'nvim-treesitter/playground'
+	Plug 'petertriho/cmp-git'
 
-	"Plug 'leiserfg/luasnip', {'branch' : 'use-named-register'}
 	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/' "luasnip-dev-plug
 	Plug 'knsh14/vim-github-link'
-	Plug 'danymat/neogen'
+	"Plug 'danymat/neogen'
+	Plug 'thehamsta/nvim-semantic-tokens'
+	"Plug 'nvim-lua/plenary.nvim'
 	"Plug 'eddyekofo94/gruvbox-flat.nvim'
 	"Plug 'nvim-lualine/lualine.nvim'
 
@@ -383,6 +387,7 @@ noremap <silent><leader>r :set invrelativenumber<Cr>
 noremap <silent><leader>t :tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>
 noremap <silent><leader>fw :set invwinfixwidth<Cr>
 noremap <silent><leader>fh :set invwinfixheight<Cr>
+noremap <silent><leader><leader>f :luafile %<Cr>
 noremap <leader>g :silent grep 
 noremap <silent><leader>c :call CToggle()<Cr>
 
