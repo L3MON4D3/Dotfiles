@@ -265,12 +265,12 @@ ls.snippets = {
 		pair("'", "'", neg, even_count),
 		pair('"', '"', neg, even_count),
 		pair("`", "`", neg, even_count),
-		s({ trig = "ymd", name = "Current date", dscr = "Insert the current date" }, {
+		s({ trig = "ÿ", name = "Current date", dscr = "Insert the current date" }, {
 			p(os.date, "%Y-%m-%d"),
 		}),
 		s({trig="{,", wordTrig=false, hidden=true}, { t({"{","\t"}), i(1), t({"", "}"}) }),
 		ls.parser.parse_snippet({trig = "tr"}, "if ${1:[[ ${2:word} -eq ${3:word2} ]]}; then\n\t$4\nfi"),
-		ls.parser.parse_snippet({trig = "utf"}, "${1:$TM_SELECTED_TEXT}"),
+		ls.parser.parse_snippet({trig = "utf"}, "${1:$TM_CURRENT_LINE}"),
 		ls.parser.parse_snippet({trig = "pint"}, "printf(\"${0:asdf} :>> %d\\n\", $0);"),
 		s({trig = "trig"}, {
 			t{"lel", "\t"},

@@ -38,6 +38,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'knsh14/vim-github-link'
 	"Plug 'danymat/neogen'
 	Plug 'thehamsta/nvim-semantic-tokens'
+	Plug 'numToStr/Comment.nvim'
 	"Plug 'nvim-lua/plenary.nvim'
 	"Plug 'eddyekofo94/gruvbox-flat.nvim'
 	"Plug 'nvim-lualine/lualine.nvim'
@@ -299,6 +300,11 @@ sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=
 sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=
 sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=
 
+"Keymappings
+let mapleader=","
+let maplocalleader="\<Space>"
+
+
 lua require('init')
 lua ls = require('luasnip')
 lua hop = require('hop')
@@ -347,10 +353,6 @@ let g:tex_flavor='latex'
 set conceallevel=2
 let g:tex_conceal='abdmgs'
 
-"Keymappings
-let mapleader=","
-let maplocalleader="\<Space>"
-
 "Vimspector
 "nnoremap <F2> :call vimspector#ToggleBreakpoint()<Cr>
 "nnoremap <F3> :call vimspector#StepOver()<Cr>
@@ -384,12 +386,12 @@ endfunction
 noremap <silent><leader>n :noh<Cr>
 noremap <silent><leader>l :set invlist<Cr>
 noremap <silent><leader>r :set invrelativenumber<Cr>
-noremap <silent><leader>t :tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>
+noremap <silent><leader>o :tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>
 noremap <silent><leader>fw :set invwinfixwidth<Cr>
 noremap <silent><leader>fh :set invwinfixheight<Cr>
 noremap <silent><leader><leader>f :luafile %<Cr>
 noremap <leader>g :silent grep 
-noremap <silent><leader>c :call CToggle()<Cr>
+noremap <silent><leader>t :call CToggle()<Cr>
 
 "end on closig paranthesis.
 vnoremap <leader>( <Esc>`>a)<Esc>`<i(<Esc>%

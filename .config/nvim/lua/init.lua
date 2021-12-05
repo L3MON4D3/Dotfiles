@@ -1,3 +1,11 @@
+local ls = require("luasnip")
+local s = ls.snippet
+local r = ls.restore_node
+local i = ls.insert_node
+local t = ls.text_node
+local c = ls.choice_node
+
+lspsnips = {}
 -- lsp
 vim.lsp.set_log_level("debug")
 dap = require('dap')
@@ -39,6 +47,43 @@ local lsp_attach = function(client)
 
 	require 'illuminate'.on_attach(client)
 
+	local orig_rpc_request = client.rpc.request
+	function client.rpc.request(method, params, handler, ...)
+		local orig_handler = handler
+		if method == 'textDocument/completion' then
+			-- Idiotic take on <https://github.com/fannheyward/coc-pyright/blob/6a091180a076ec80b23d5fc46e4bc27d4e6b59fb/src/index.ts#L90-L107>.
+			handler = function(...)
+				local err, result = ...
+				if not err and result then
+					local items = result.items or result
+					for _, item in ipairs(items) do
+						if item.textEdit.newText:match("^[%w_]+%(.*%)$") then
+
+							local snip_text = item.textEdit.newText
+							local name = snip_text:match("^[%w_]+")
+							local content = snip_text:match("%((.*)%)$")
+							if content:match("$0") then
+								content = "$1"
+							elseif content:match("${0") then
+								content = "${1:" .. content:sub(5, #content)
+							end
+
+							lspsnips[snip_text] = s("", {
+								t(name),
+								c(1, {
+									{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
+									{t"{", r(1, "type"), t"}"},
+								}, {restore_cursor = true})
+							})
+						end
+						item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
+					end
+				end
+				return orig_handler(...)
+			end
+		end
+		return orig_rpc_request(method, params, handler, ...)
+	end
 	-- local tokens = require("vim.lsp.semantic_tokens")
 end
 
@@ -47,11 +92,15 @@ local cmp = require'cmp'
 cmp.setup {
 	completion = {
 		autocomplete = false,
-		completeopt = "menu,menuone,noselect"
+		completeopt = "menu,menuone,select"
 	},
 	snippet = {
 		expand = function(args)
-			return require("luasnip").lsp_expand(args.body)
+			if lspsnips[args.body] then
+				require("luasnip").snip_expand(lspsnips[args.body])
+			else
+				require("luasnip").lsp_expand(args.body)
+			end
 		end,
 	},
 	mapping = {
@@ -94,8 +143,8 @@ nvim_lsp.rust_analyzer.setup({
 -- 	capabilities = capabilities
 -- }
 nvim_lsp.clangd.setup{
-	on_attach = function()
-		lsp_attach()
+	on_attach = function(client)
+		lsp_attach(client)
 		vim.cmd("autocmd CursorHold,InsertLeave,BufWinEnter <buffer> lua vim.lsp.buf.semantic_tokens_full()")
 	end,
 	capabilities = capabilities
@@ -341,3 +390,16 @@ vim.cmd([[
 if &filetype == "cpp" || &filetype == "c" || &filetype == "python" || &filetype == "rust"
 	autocmd BufEnter,CursorHold,InsertLeave <buffer> lua require 'vim.lsp.buf'.semantic_tokens_full()
 endif]])
+
+require("Comment").setup{
+	toggler = {
+		block = '<leader>bb',
+		line = '<leader>cc'
+	},
+	opleader = {
+		line = '<leader>c',
+		block = '<leader>b'
+	},
+}
+vim.api.nvim_set_keymap('n', '<leader>co', '<cmd>lua require("Comment.api").gco()<Cr>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>cO', '<cmd>lua require("Comment.api").gcO()<Cr>', {noremap = true})
