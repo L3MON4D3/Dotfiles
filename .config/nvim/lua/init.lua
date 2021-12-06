@@ -46,44 +46,6 @@ local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
 
 	require 'illuminate'.on_attach(client)
-
-	local orig_rpc_request = client.rpc.request
-	function client.rpc.request(method, params, handler, ...)
-		local orig_handler = handler
-		if method == 'textDocument/completion' then
-			-- Idiotic take on <https://github.com/fannheyward/coc-pyright/blob/6a091180a076ec80b23d5fc46e4bc27d4e6b59fb/src/index.ts#L90-L107>.
-			handler = function(...)
-				local err, result = ...
-				if not err and result then
-					local items = result.items or result
-					for _, item in ipairs(items) do
-						if item.textEdit.newText:match("^[%w_]+%(.*%)$") then
-
-							local snip_text = item.textEdit.newText
-							local name = snip_text:match("^[%w_]+")
-							local content = snip_text:match("%((.*)%)$")
-							if content:match("$0") then
-								content = "$1"
-							elseif content:match("${0") then
-								content = "${1:" .. content:sub(5, #content)
-							end
-
-							lspsnips[snip_text] = s("", {
-								t(name),
-								c(1, {
-									{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
-									{t"{", r(1, "type"), t"}"},
-								}, {restore_cursor = true})
-							})
-						end
-						item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
-					end
-				end
-				return orig_handler(...)
-			end
-		end
-		return orig_rpc_request(method, params, handler, ...)
-	end
 	-- local tokens = require("vim.lsp.semantic_tokens")
 end
 
@@ -146,6 +108,44 @@ nvim_lsp.clangd.setup{
 	on_attach = function(client)
 		lsp_attach(client)
 		vim.cmd("autocmd CursorHold,InsertLeave,BufWinEnter <buffer> lua vim.lsp.buf.semantic_tokens_full()")
+
+		local orig_rpc_request = client.rpc.request
+		function client.rpc.request(method, params, handler, ...)
+			local orig_handler = handler
+			if method == 'textDocument/completion' then
+				-- Idiotic take on <https://github.com/fannheyward/coc-pyright/blob/6a091180a076ec80b23d5fc46e4bc27d4e6b59fb/src/index.ts#L90-L107>.
+				handler = function(...)
+					local err, result = ...
+					if not err and result then
+						local items = result.items or result
+						for _, item in ipairs(items) do
+							if item.textEdit.newText:match("^[%w_]+%(.*%)$") then
+
+								local snip_text = item.textEdit.newText
+								local name = snip_text:match("^[%w_]+")
+								local content = snip_text:match("%((.*)%)$")
+								if content:match("$0") then
+									content = content:gsub("$0", "$1000")
+								elseif content:match("${0") then
+									content = content:gsub("${0", "${1000")
+								end
+
+								lspsnips[snip_text] = s("", {
+									t(name),
+									c(1, {
+										{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
+										{t"{", r(1, "type"), t"}"},
+									}, {restore_cursor = true})
+								})
+							end
+							item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
+						end
+					end
+					return orig_handler(...)
+				end
+			end
+			return orig_rpc_request(method, params, handler, ...)
+		end
 	end,
 	capabilities = capabilities
 }
