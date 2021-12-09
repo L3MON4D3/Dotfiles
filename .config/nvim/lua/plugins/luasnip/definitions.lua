@@ -1,6 +1,6 @@
 local ls = require("luasnip")
 
-local snip_const = {
+local snip_defs = {
 	s = ls.s,
 	sn = ls.sn,
 	t = ls.t,
@@ -20,13 +20,21 @@ local snip_const = {
 }
 
 local function setup_snip_env()
-	setfenv(2, setmetatable(_G, {
-		__index = setmetatable(snip_const, getmetatable(_G))
-	} ))
+	-- change index in new metatable to first go through snip_defs and then
+	-- into the original __index (not the other way around, as __index might
+	-- have been a function).
+	local mt = getmetatable(_G) or {}
+	mt.__index = setmetatable(vim.deepcopy(snip_defs), {
+		__index = mt.__index
+	})
+	setfenv(2, setmetatable(_G, mt))
 end
 
 local function remove_snip_env()
-	setfenv(2, setmetatable(_G, getmetatable(getmetatable(_G).__index)))
+	-- undo modifications from setup_snip_env.
+	local mt = getmetatable(_G) or {}
+	mt.__index = getmetatable(mt.__index).__index
+	setfenv(2, setmetatable(_G, mt))
 end
 
 return {
