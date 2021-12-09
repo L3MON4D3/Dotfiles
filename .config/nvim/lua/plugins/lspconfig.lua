@@ -30,8 +30,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
-local ls = require("plugins.luasnip.definitions")
-ls.setup_snip_env()
+local ls_helper = require("plugins.luasnip.helpers")
+ls_helper.setup_snip_env()
 
 nvim_lsp.clangd.setup{
 	on_attach = function(client)
@@ -144,4 +144,4 @@ nvim_lsp.sumneko_lua.setup {
 	capabilities = capabilities
 }
 
-ls.remove_snip_env()
+ls_helper.remove_snip_env()
