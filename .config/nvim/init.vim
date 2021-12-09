@@ -6,67 +6,12 @@ set noswapfile
 
 source ~/.config/nvim/functions.vim 
 
-"Plugins
-call plug#begin('~/.config/nvim/plugged')
-    Plug 'gruvbox-community/gruvbox'
-    Plug 'tpope/vim-dispatch'
-    Plug 'tpope/vim-fugitive'
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'kabouzeid/nvim-lspinstall', {'branch' : 'main'}
-    Plug 'RRethy/vim-illuminate'
+augroup packer_user_config
+  autocmd!
+  autocmd BufWritePost ~/.config/nvim/lua/plugins/init.lua source <afile> | PackerCompile
+augroup end
 
-	Plug 'hrsh7th/nvim-cmp', {'branch' : 'main'} 
-	Plug 'hrsh7th/cmp-nvim-lsp', {'branch' : 'main'} 
-	Plug 'saadparwaiz1/cmp_luasnip', {'branch' : 'master'} 
-
-	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-	Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-
-	Plug 'phaazon/hop.nvim'
-	Plug 'tikhomirov/vim-glsl'	
-	"Plug 'folke/lsp-trouble.nvim', {'branch' : 'main'}
-	Plug 'mfussenegger/nvim-dap'
-	Plug 'rcarriga/nvim-dap-ui'
-	Plug 'rafamadriz/friendly-snippets', {'branch' : 'main'}
-	"Plug 'nvim-telescope/telescope.nvim'
-	Plug 'nvim-lua/popup.nvim'
-	Plug 'nvim-lua/plenary.nvim'
-	Plug 'nvim-treesitter/playground'
-	Plug 'petertriho/cmp-git'
-
-	Plug '/home/simon/.config/nvim/plugged/luasnip-dev/' "luasnip-dev-plug
-	Plug 'knsh14/vim-github-link'
-	"Plug 'danymat/neogen'
-	Plug 'thehamsta/nvim-semantic-tokens'
-	Plug 'numToStr/Comment.nvim'
-	"Plug 'nvim-lua/plenary.nvim'
-	"Plug 'eddyekofo94/gruvbox-flat.nvim'
-	"Plug 'nvim-lualine/lualine.nvim'
-
-	
-    "Plug 'cespare/vim-toml'
-    "Plug 'lervag/vimtex', {'for' : 'latex'}
-    "Plug 'pietropate/vim-tex-conceal', {'for' : 'latex'}
-    "Plug 'vim-scripts/DoxygenToolkit.vim', {'for' : 'cpp'}
-	"Plug 'nvim-lua/lsp_extensions.nvim'
-    "Plug 'norcalli/snippets.nvim'
-    "Plug 'nvim-lua/completion-nvim'
-	"Plug 'phazoon/hop.nvim'
-	"Plug 'hrsh7th/vim-vsnip'
-	"Plug 'hrsh7th/vim-vsnip-integ'
-    "Plug 'nvim-lua/lsp_extensions.nvim'
-	"Plug 'rust-lang/rust.vim'
-    "Plug 'SirVer/ultisnips'
-    "Plug 'https://gitlab.com/Dica-Developer/vim-jdb.git'
-    "Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-    "Plug 'neovim/nvim-lsp'
-    "Plug 'peterhoeg/vim-qml'
-    "Plug 'vim-airline/vim-airline'
-    "Plug 'vim-airline/vim-airline-themes'
-    "Plug 'vim-scripts/OmniCppComplete'
-    "Plug 'ycm-core/youCompleteMe'
-    "Plug 'yous/vim-open-color'
-call plug#end()
+lua require('plugins')
 
 augroup mine
 au!
@@ -179,7 +124,7 @@ hi User1 guibg=#3c3836 guifg=#1d2021
 hi StatusLine guibg=#3c3836 guifg=#1d2021
 hi StatusLineNC guibg=#282828 guifg=#1d2021
 
-hi Folded guibg=#1d2021 gui=none
+hi Folded guibg= cterm=none gui=none
 
 hi! link TSVariable Normal
 "hi! link TSParameter Normal
@@ -303,7 +248,6 @@ sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=
 "Keymappings
 let mapleader=","
 let maplocalleader="\<Space>"
-
 
 lua require('init')
 lua ls = require('luasnip')
@@ -437,12 +381,13 @@ nnoremap <silent> <F10> :res +2<Cr>
 nnoremap <silent> <F22> :res -2<Cr>
 
 nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
+nnoremap <silent> <leader>e :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
+noremap <silent><leader>ep :tabnew<Cr>:e /home/simon/.config/nvim/lua/plugins/<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/lua/plugins/<Cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
 
 nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
 
 nnoremap <silent> gb :ls<Cr>:b<Space> 
-nnoremap <leader>e :e <C-R>=t:srcDir<Cr>/<C-D>
 
 nnoremap [[ ?{\n<Cr>:noh<Cr>
 nnoremap ][ /{\n<Cr>:noh<Cr>
@@ -470,6 +415,8 @@ tnoremap <silent> <F10> <C-\><C-N>:res +2<Cr>a
 tnoremap <silent> <F22> <C-\><C-N>:res -2<Cr>a
 
 cabbr <expr> && expand('%:h')
+cabbr invim /home/simon/.config/nvim/init.vim
+cabbr pacconf /home/simon/.config/nvim/lua/plugins/init.lua
 
 if filereadable('.vProj.vim')
     source .vProj.vim

@@ -6,15 +6,9 @@ local i = ls.i
 local f = ls.f
 local c = ls.c
 local d = ls.d
-local pi = ls.parent_indexer
-local isn = require("luasnip.nodes.snippet").ISN
-local psn = require("luasnip.nodes.snippet").PSN
-local l = require'luasnip.extras'.l
-local r = require'luasnip.extras'.rep
 local p = require("luasnip.extras").partial
 local types = require("luasnip.util.types")
 local events = require("luasnip.util.events")
-local util = require("luasnip.util.util")
 local fmt = require("luasnip.extras.fmt").fmt
 
 ls.config.setup({
@@ -93,52 +87,6 @@ ls.config.setup({
 	-- 	return snippet
 	-- end
 })
-
-function insert_popup(snippet)
-	local buf = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_buf_set_text(buf, 0,0,0,0, {"˯"})
-	for _, node in ipairs(snippet.insert_nodes) do
-		local win = vim.api.nvim_open_win(buf, false, {anchor = "SW", relative = "win", width=1, height=1, bufpos=node.mark:pos_begin(), style="minimal"})
-		vim.api.nvim_win_set_option(win, "winhighlight", "Normal:Normal")
-	end
-end
-
-local current_win
-function choice_popup(choiceNode)
-	vim.schedule(function()
-		local buf = vim.api.nvim_create_buf(false, true)
-		local buf_text = {}
-		for _, node in ipairs(choiceNode.choices) do
-			vim.list_extend(buf_text, node:get_docstring())
-		end	
-		vim.api.nvim_buf_set_text(buf, 0,0,0,0, buf_text)
-		local w, h = vim.lsp.util._make_floating_popup_size(buf_text)
-		local r, c = unpack(choiceNode.mark:pos_begin())
-		current_win = vim.api.nvim_open_win(buf, false, {
-			relative = "cursor", width=w, height=h, row = 1, col = 0, style="minimal"})
-		-- vim.api.nvim_win_set_option(win, "winhighlight", "Normal:Normal")
-	end)
-end
-
-function choice_popup_close()
-	if current_win then
-		-- force-close current choice popup.
-		vim.api.nvim_win_close(current_win, true)
-	end
-end
-
--- vim.cmd([[
--- augroup choice_popup
--- au!
--- au User LuasnipChoiceNodeEnter lua choice_popup(require("luasnip").session.event_node)
--- au User LuasnipChoiceNodeLeave lua choice_popup_close()
--- au User LuasnipChangeChoice lua choice_popup_close() choice_popup(require("luasnip").session.event_node)
--- augroup END
--- ]])
-
-local function copy(args)
-	return args[1]
-end
 
 local function char_count_same(c1, c2)
 	local line = vim.api.nvim_get_current_line()
@@ -239,7 +187,7 @@ rec_ls = function()
 	})
 end
 
-local function capture_insert(args, snip, _, capture_indx, pre_text, post_text)
+local function capture_insert(_, snip, _, capture_indx, pre_text, post_text)
 	return sn(nil, {i(1, {(pre_text or "") .. snip.captures[capture_indx] .. (post_text or "")})})
 end
 
@@ -250,10 +198,6 @@ end
 
 local function pair(pair_begin, pair_end, expand_func, ...)
 	return s({trig = pair_begin, wordTrig=false}, {t({pair_begin}), i(1), t({pair_end})}, {condition = part(expand_func, part(..., pair_begin, pair_end))})
-end
-
-local function get_prefix()
-    return tostring(vim.fn.line("."))
 end
 
 ls.snippets = {

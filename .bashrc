@@ -7,7 +7,7 @@ export p1=~/Documents/Uni/Kurse/s5/PhysikI
 export it=~/Documents/Uni/Kurse/s5/ITSec
 export ks=~/Documents/Uni/Kurse/s5/KivS
 export pg=~/Documents/Uni/Kurse/s5/PG
-export lsn=~/.config/nvim/plugged/luasnip-dev/
+export lsn=~/Code/Lua/luasnip
 export nc=~/.config/nvim/
 
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
