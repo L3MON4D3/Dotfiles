@@ -9,6 +9,7 @@ export ks=~/Documents/Uni/Kurse/s5/KivS
 export pg=~/Documents/Uni/Kurse/s5/PG
 export lsn=~/Code/Lua/luasnip
 export nc=~/.config/nvim/
+export np=~/.local/share/nvim/site/pack/packer/start/
 
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export LS_COLORS=$LS_COLORS:'ow=01;34:'
