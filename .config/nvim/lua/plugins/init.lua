@@ -32,9 +32,7 @@ end
 
 
 return require("packer").startup(function(use)
-	setfenv(1, setmetatable(plugins, {
-		__index = _G
-	}))
+	setfenv(1, vim.tbl_extend("force", _G or {}, plugins))
 
 	local function conf_use(arg)
 		if type(arg) == "string" then
@@ -51,7 +49,8 @@ return require("packer").startup(function(use)
 	use(gruvbox)
 	use(dispatch)
 	use(fugitive)
-	conf_use { lspconfig,
+	conf_use {
+		lspconfig,
 		requires = {
 			luasnip,
 			illuminate,
@@ -60,13 +59,22 @@ return require("packer").startup(function(use)
 	}
 	use(lspinstall)
 	use(illuminate)
-	
-	use(cmp)
-	use {
-		cmp_lsp,
-		requires = cmp
+
+	conf_use {
+		cmp,
+		requires = {
+			cmp_lsp,
+			cmp_luasnip,
+			cmp_git,
+			-- lsp-expand
+			luasnip
+		}
 	}
-	use(cmp_luasnip)
+	use(cmp_lsp)
+	use {
+		cmp_luasnip,
+		requires = luasnip
+	}
 	use {
 		treesitter,
 		run = ":TSUpdate",

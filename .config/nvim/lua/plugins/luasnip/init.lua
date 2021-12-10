@@ -10,6 +10,7 @@ local p = require("luasnip.extras").partial
 local types = require("luasnip.util.types")
 local events = require("luasnip.util.events")
 local fmt = require("luasnip.extras.fmt").fmt
+local r = ls.restore_node
 
 ls.config.setup({
 	history = true,

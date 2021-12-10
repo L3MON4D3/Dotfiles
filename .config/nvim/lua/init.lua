@@ -20,65 +20,6 @@ local function pdofile(name)
 	return module_found and res or {}
 end
 
-local nvim_lsp = require'lspconfig'
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
-
-local cmp = require'cmp'
-cmp.setup {
-	completion = {
-		autocomplete = false,
-		completeopt = "menu,menuone,select"
-	},
-	snippet = {
-		expand = function(args)
-			if lspsnips[args.body] then
-				require("luasnip").snip_expand(lspsnips[args.body])
-			else
-				require("luasnip").lsp_expand(args.body)
-			end
-		end,
-	},
-	mapping = {
-		['<C-d>'] = cmp.mapping.scroll_docs(-4),
-		['<C-f>'] = cmp.mapping.scroll_docs(4),
-		['<C-o>'] = cmp.mapping.complete(),
-		['<C-y>'] = cmp.mapping.confirm()
-	},
-	sources = {
-		{ name = 'nvim_lsp' },
-		{ name = 'luasnip' },
-		{ name = 'cmp_git' },
-	},
-	documentation = false,
-	experimental = {
-		native_menu = false,
-	},
-}
-
-nvim_lsp.rust_analyzer.setup({
-	capabilities = capabilities,
-	settings = {
-		["rust-analyzer"] = {
-			linksInHover = false
-		}
-	}
-})
-
--- nvim_lsp.ccls.setup{
--- 	init_options = {
--- 		compilationDatabaseDirectory = "build";
--- 		highlight = {
--- 			lsRanges = true;
--- 		};
--- 		index = {
--- 			threads = 0;
--- 		};
--- 	};
--- 	on_attach = lsp_attach;
--- 	capabilities = capabilities
--- }
 require'functions'
 require'nvim-treesitter.configs'.setup {
 	highlight = {

@@ -31,6 +31,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
 local ls_helper = require("plugins.luasnip.helpers")
+local session = require("session")
 
 nvim_lsp.clangd.setup{
 	on_attach = function(client)
@@ -60,12 +61,12 @@ nvim_lsp.clangd.setup{
 									content = content:gsub("${0", "${1000")
 								end
 
-								lspsnips[snip_text] = s("", {
+								session.lsp_override_snips[snip_text] = s("", {
 									t(name),
 									c(1, {
 										{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
 										{t"{", r(1, "type"), t"}"},
-									}, {restore_cursor = true})
+									})
 								})
 							end
 							item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
@@ -144,3 +145,12 @@ nvim_lsp.sumneko_lua.setup {
 	on_attach = lsp_attach,
 	capabilities = capabilities
 }
+
+nvim_lsp.rust_analyzer.setup({
+	capabilities = capabilities,
+	settings = {
+		["rust-analyzer"] = {
+			linksInHover = false
+		}
+	}
+})
