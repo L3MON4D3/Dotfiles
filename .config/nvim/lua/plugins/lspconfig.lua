@@ -31,7 +31,6 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
 local ls_helper = require("plugins.luasnip.helpers")
-ls_helper.setup_snip_env()
 
 nvim_lsp.clangd.setup{
 	on_attach = function(client)
@@ -40,10 +39,12 @@ nvim_lsp.clangd.setup{
 
 		local orig_rpc_request = client.rpc.request
 		function client.rpc.request(method, params, handler, ...)
+
 			local orig_handler = handler
 			if method == 'textDocument/completion' then
 				-- Idiotic take on <https://github.com/fannheyward/coc-pyright/blob/6a091180a076ec80b23d5fc46e4bc27d4e6b59fb/src/index.ts#L90-L107>.
 				handler = function(...)
+					ls_helper.setup_snip_env()
 					local err, result = ...
 					if not err and result then
 						local items = result.items or result
@@ -143,5 +144,3 @@ nvim_lsp.sumneko_lua.setup {
 	on_attach = lsp_attach,
 	capabilities = capabilities
 }
-
-ls_helper.remove_snip_env()
