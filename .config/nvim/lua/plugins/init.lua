@@ -25,9 +25,9 @@ local plugins = {
 	comment = "numToStr/Comment.nvim",
 }
 
-local plugins_reverse = {}
+local plugins_inverse = {}
 for k, v in pairs(plugins) do
-	plugins_reverse[v] = k
+	plugins_inverse[v] = k
 end
 
 
@@ -40,7 +40,7 @@ return require("packer").startup(function(use)
 				[1] = arg,
 			}
 		end
-		arg.config = "require \"plugins/"..plugins_reverse[arg[1]].."\""
+		arg.config = "require \"plugins/"..plugins_inverse[arg[1]].."\""
 		use(arg)
 	end
 
