@@ -10,6 +10,33 @@ rec_ls = function()
 	})
 end
 
+
+local function column_count_from_string(descr)
+	return #(descr:gsub("[^c]", ""))
+end
+
+local tab = function(args, snip)
+	local cols = column_count_from_string(args[1][1])
+	if not snip.rows then
+		snip.rows = 1
+	end
+	local nodes = {}
+	local ins_indx = 1
+	for j = 1, snip.rows do
+		table.insert(nodes, r(ins_indx, tostring(j).."x1", i(1)))
+		ins_indx = ins_indx+1
+		for k = 2, cols do
+			table.insert(nodes, t" & ")
+			table.insert(nodes, r(ins_indx, tostring(j).."x"..tostring(k), i(1)))
+			ins_indx = ins_indx+1
+		end
+		table.insert(nodes, t{"\\\\", ""})
+	end
+	-- fix last node.
+	nodes[#nodes] = t""
+	return sn(nil, nodes)
+end
+
 return {
 	ls.parser.parse_snippet({trig = ";"}, "\\$$1\\$$0"),
 	s({trig = "(s*)sec", wordTrig = true, regTrig = true}, {
@@ -29,5 +56,13 @@ return {
 		t({"\\begin{itemize}",
 		"\t\\item "}), i(1), d(2, rec_ls, {}),
 		t({"", "\\end{itemize}"}), i(0)
-	})
+	}),
+	s("tab", fmt([[
+	\begin{{tabular}}{{{}}}
+	{}
+	\end{{tabular}}
+	]], {i(1, "c"), d(2, tab, {1},
+		function(snip) snip.rows = snip.rows + 1 end,
+		-- don't drop below one.
+		function(snip) snip.rows = math.max(snip.rows - 1, 1) end)}))
 }

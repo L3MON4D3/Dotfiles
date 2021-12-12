@@ -51,3 +51,5 @@ au!
 au BufWritePost *lua/snippets/*.lua :execute 'lua require("luasnip").snippets[string.match("'.expand("<afile>").'", "/([^/]*)%.lua$")] = nil'
 augroup END
 ]]
+
+require("plugins.luasnip.external_update_dynamic_node")
