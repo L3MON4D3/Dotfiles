@@ -1,5 +1,3 @@
-require("plugins.luasnip.helpers").setup_snip_env()
-
 return {
 	s({trig="if", wordTrig=true}, {
 		t({"if "}),

@@ -24,12 +24,36 @@ local snip_defs = {
 	util = require("luasnip.util.util"),
 	fmt = require("luasnip.extras.fmt").fmt,
 	ls = ls,
+	ins_generate = function(nodes)
+		return setmetatable(nodes or {}, {
+		__index = function(table, key)
+			local indx = tonumber(key)
+			if indx then
+				local val = ls.i(indx)
+				rawset(table, key, val)
+				return val
+			end
+		end
+	})
+	end
 }
 
 local function setup_snip_env()
 	setfenv(2, vim.tbl_extend("force", _G, snip_defs))
 end
 
+local function edit_ft()
+	local fts = require("luasnip.util.util").get_snippet_filetypes()
+	vim.ui.select(fts, {
+		prompt = "Select which filetype to edit:"
+	}, function(item, idx)
+		if idx then
+			vim.cmd("edit /home/simon/.config/nvim/lua/snippets/"..item..".lua")
+		end
+	end)
+end
+
 return {
 	setup_snip_env = setup_snip_env,
+	edit_ft = edit_ft
 }

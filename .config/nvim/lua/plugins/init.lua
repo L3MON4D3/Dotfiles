@@ -54,7 +54,7 @@ return require("packer").startup(function(use)
 		requires = {
 			luasnip,
 			illuminate,
-			cmp_lsp
+			cmp_lsp,
 		}
 	}
 	use(lspinstall)
@@ -75,20 +75,24 @@ return require("packer").startup(function(use)
 		cmp_luasnip,
 		requires = luasnip
 	}
-	use {
+	conf_use {
 		treesitter,
 		run = ":TSUpdate",
+		requires = treesitter_textobjects
 	}
 	use(treesitter_textobjects)
 
-	use(hop)
+	conf_use(hop)
 	use(vim_glsl)
-	use(dap)
-	use(dap_ui)
+	conf_use(dap)
+	conf_use{
+		dap_ui,
+		requires = dap
+	}
 	use(playground)
 	use(cmp_git)
 
 	use(github_link)
 	conf_use(semantic_tokens)
-	use(comment)
+	conf_use(comment)
 end)

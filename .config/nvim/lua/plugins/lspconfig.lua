@@ -1,7 +1,6 @@
 local nvim_lsp = require("lspconfig")
 
 local lsp_attach = function(client)
-
 	vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gD', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
@@ -26,7 +25,6 @@ end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, Diag_params)
 
-
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
@@ -36,7 +34,6 @@ local session = require("session")
 nvim_lsp.clangd.setup{
 	on_attach = function(client)
 		lsp_attach(client)
-		vim.cmd("autocmd CursorHold,InsertLeave,BufWinEnter <buffer> lua vim.lsp.buf.semantic_tokens_full()")
 
 		local orig_rpc_request = client.rpc.request
 		function client.rpc.request(method, params, handler, ...)
@@ -149,6 +146,7 @@ nvim_lsp.sumneko_lua.setup {
 					"util",
 					"fmt",
 					"ls",
+					"ins_generate"
 				},
 			},
 			workspace = {

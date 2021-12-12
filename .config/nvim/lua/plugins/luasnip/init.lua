@@ -44,8 +44,7 @@ ls.snippets = setmetatable({}, {
 	end
 })
 
-vim.cmd [[command! LuaSnipEdit :exec 'edit ~/.config/nvim/lua/snippets/'.&filetype.'.lua']]
-
+vim.cmd [[command! LuaSnipEdit :lua Do_nvim_relative("plugins/luasnip/helpers.lua").edit_ft()]]
 vim.cmd [[
 augroup snippets_clear
 au!
