@@ -12,7 +12,7 @@ end
 
 
 local function column_count_from_string(descr)
-	return #(descr:gsub("[^c]", ""))
+	return #(descr:gsub("[^clm]", ""))
 end
 
 local tab = function(args, snip)
