@@ -36,7 +36,7 @@ local function dynamic_node_external_update(func_indx)
 	if func then
 		-- the same snippet passed to the dynamicNode-function. Any output from func
 		-- should be stored in it under some unused key.
-		func(dynamic_node.parent)
+		func(dynamic_node.parent.snippet)
 	end
 
 	dynamic_node:update()

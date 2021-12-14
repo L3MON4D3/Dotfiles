@@ -5,14 +5,22 @@ local snip_defs = {
 	sn = ls.sn,
 	t = ls.t,
 	i = ls.i,
-	f = ls.f,
+	f = function(func, argnodes, ...)
+		return ls.f(function(args, imm_parent, user_args)
+			return func(args, imm_parent.snippet, user_args)
+		end, argnodes, ...)
+	end,
 	-- override to enable restore_cursor.
 	c = function(pos, nodes, opts)
 		opts = opts or {}
 		opts.restore_cursor = true
 		return ls.c(pos, nodes, opts)
 	end,
-	d = ls.d,
+	d = function(pos, func, argnodes, ...)
+		return ls.d(pos, function(args, imm_parent, user_args)
+			return func(args, imm_parent.snippet, user_args)
+		end, argnodes, ...)
+	end,
 	isn = require("luasnip.nodes.snippet").ISN,
 	psn = require("luasnip.nodes.snippet").PSN,
 	l = require'luasnip.extras'.l,
