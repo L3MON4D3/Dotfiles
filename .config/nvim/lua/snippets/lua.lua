@@ -15,5 +15,10 @@ return {
 			sn(nil, {i(1, "k"), t", ", i(2, "v"), t" in ", c(3, {t"pairs", t"ipairs"}), t"(", i(4), t")"}),
 			sn(nil, {i(1, "i"), t" = ", i(2), t", ", i(3), })
 		}), t{" do", "\t"}, i(0), t{"", "end"}
-	})
+	}),
+	s("while", fmt([[
+	while {} do
+		{}
+	end
+	]], ins_generate()))
 }

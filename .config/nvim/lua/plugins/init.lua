@@ -16,7 +16,7 @@ local plugins = {
 	dap = "mfussenegger/nvim-dap",
 	dap_ui = "rcarriga/nvim-dap-ui",
 	-- friendly_snippets = "rafamadriz/friendly-snippets",
-	-- plenary = "nvim-lua/plenary.nvim",
+	plenary = "nvim-lua/plenary.nvim",
 	-- popup = "nvim-lua/popup.nvim",
 	playground = "nvim-treesitter/playground",
 	cmp_git = "petertriho/cmp-git",
@@ -95,4 +95,5 @@ return require("packer").startup(function(use)
 	use(github_link)
 	conf_use(semantic_tokens)
 	conf_use(comment)
+	use(plenary)
 end)

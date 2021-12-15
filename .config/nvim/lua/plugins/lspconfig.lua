@@ -146,7 +146,8 @@ nvim_lsp.sumneko_lua.setup {
 					"util",
 					"fmt",
 					"ls",
-					"ins_generate"
+					"ins_generate",
+					"parse"
 				},
 			},
 			workspace = {

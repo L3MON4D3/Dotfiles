@@ -41,9 +41,9 @@ local snip_defs = {
 				rawset(table, key, val)
 				return val
 			end
-		end
-	})
-	end
+		end})
+	end,
+	parse = ls.parser.parse_snippet
 }
 
 local function setup_snip_env()
