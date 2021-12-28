@@ -1,5 +1,6 @@
 local ls = require("luasnip")
 local util = require("luasnip.util.util")
+local node_util = require("luasnip.nodes.util")
 
 local function find_dynamic_node(node)
 	while not node.dynamicNode do
@@ -29,7 +30,7 @@ local function dynamic_node_external_update(func_indx)
 
 	-- store and leave current generated snippet.
 	dynamic_node.snip:store()
-	dynamic_node.snip:input_leave()
+	node_util.leave_nodes_between(dynamic_node.snip, current_node)
 
 	-- call update-function.
 	local func = dynamic_node.user_args[func_indx]
@@ -39,6 +40,7 @@ local function dynamic_node_external_update(func_indx)
 		func(dynamic_node.parent.snippet)
 	end
 
+	dynamic_node.last_args = nil
 	dynamic_node:update()
 
 	-- everything below here isn't strictly necessary, but it's pretty nice to have.
@@ -51,29 +53,22 @@ local function dynamic_node_external_update(func_indx)
 
 	if target_node then
 		-- the node that the cursor was in when changeChoice was called exists
-		-- in the new snippet! jump_into it!
-		--
-		-- if in INSERT before call, don't actually move into the node.
-		-- The new cursor will be set to the actual edit-position later.
-		local jump_node = dynamic_node.snip:jump_into(1, insert_pre_call)
+		-- in the active choice! Enter it and all nodes between it and this choiceNode,
+		-- then set the cursor.
+		node_util.enter_nodes_between(dynamic_node, target_node)
 
-		-- jump until the target_node was jump_into'ed.
-		-- It isn't as clean to just jump into the target_node, as all the events
-		-- wouldn't be triggered.
-		while jump_node ~= target_node do
-			jump_node = jump_node:jump_from(1, insert_pre_call)
-		end
 		if insert_pre_call then
-			-- we were in INSERT before the call, set the cursor to the correct position.
 			util.set_cursor_0ind(
 				util.pos_add(
 					target_node.mark:pos_begin_raw(),
 					cursor_pos_pre_relative
 				)
 			)
+		else
+			node_util.select_node(target_node)
 		end
 		-- set the new current node correctly.
-		ls.session.current_nodes[vim.api.nvim_get_current_buf()] = jump_node
+		ls.session.current_nodes[vim.api.nvim_get_current_buf()] = target_node
 	else
 		-- the marked node wasn't found, just jump into the new snippet noremally.
 		ls.session.current_nodes[vim.api.nvim_get_current_buf()] = dynamic_node.snip:jump_into(1)

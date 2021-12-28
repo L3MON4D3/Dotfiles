@@ -12,7 +12,7 @@ end
 
 
 local function column_count_from_string(descr)
-	return #(descr:gsub("[^clm]", ""))
+	return #(descr:gsub("[^clmr]", ""))
 end
 
 local tab = function(args, snip)
@@ -43,8 +43,8 @@ return {
 		f(function(args, snip) return {"\\"..string.rep("sub", string.len(snip.captures[1]))} end, {}),
 		t({"section{"}), i(1), t({"}", ""}), i(0)
 	}),
-	ls.parser.parse_snippet({trig = "beg", wordTrig = true}, "\\begin{$1}\n\t$2\n\\end{$1}"),
-	ls.parser.parse_snippet({trig = "beq", wordTrig = true}, "\\begin{equation*}\n\t$1\n\\end{equation*}"),
+	ls.parser.parse_snippet({trig = "beg", wordTrig = true}, "\\begin{$1}\n${2:\t$TM_SELECTED_TEXT}\n\\end{$1}"),
+	ls.parser.parse_snippet({trig = "beq", wordTrig = true}, "\\begin{equation*}\n${1:\t$TM_SELECTED_TEXT}\n\\end{equation*}"),
 	ls.parser.parse_snippet({trig = "bal", wordTrig = true}, "\\begin{aligned}\n\t$1\n\\end{aligned}"),
 	ls.parser.parse_snippet({trig = "ab", wordTrig = true}, "\\langle $1 \\rangle"),
 	ls.parser.parse_snippet({trig = "lra", wordTrig = true}, "\\leftrightarrow"),
@@ -52,6 +52,8 @@ return {
 	ls.parser.parse_snippet({trig = "fr", wordTrig = true}, "\\frac{$1}{$2}"),
 	ls.parser.parse_snippet({trig = "tr", wordTrig = true}, "\\item $1"),
 	ls.parser.parse_snippet({trig = "abs", wordTrig = true}, "\\|$1\\|"),
+	ls.parser.parse_snippet({trig = "*", wordTrig = true}, "\\cdot "),
+	ls.parser.parse_snippet({trig = "sum", wordTrig = true}, [[\sum^{$1}_{$2}]]),
 	s("ls", {
 		t({"\\begin{itemize}",
 		"\t\\item "}), i(1), d(2, rec_ls, {}),
@@ -64,5 +66,8 @@ return {
 	]], {i(1, "c"), d(2, tab, {1},
 		function(snip) snip.rows = snip.rows + 1 end,
 		-- don't drop below one.
-		function(snip) snip.rows = math.max(snip.rows - 1, 1) end)}))
+		function(snip) snip.rows = math.max(snip.rows - 1, 1) end)})),
+	parse(",", [[\$$1\$]]),
+	parse("it", [[\textit{$1}]]),
+	parse("tx", [[\text{$1}]]),
 }

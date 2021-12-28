@@ -23,7 +23,8 @@ local snip_defs = {
 	end,
 	isn = require("luasnip.nodes.snippet").ISN,
 	psn = require("luasnip.nodes.snippet").PSN,
-	l = require'luasnip.extras'.l,
+	l = require'luasnip.extras'.lambda,
+	dl = require'luasnip.extras'.dynamic_lambda,
 	rep = require'luasnip.extras'.rep,
 	r = ls.restore_node,
 	p = require("luasnip.extras").partial,
@@ -31,6 +32,7 @@ local snip_defs = {
 	events = require("luasnip.util.events"),
 	util = require("luasnip.util.util"),
 	fmt = require("luasnip.extras.fmt").fmt,
+	fmta = require("luasnip.extras.fmt").fmta,
 	ls = ls,
 	ins_generate = function(nodes)
 		return setmetatable(nodes or {}, {
@@ -43,7 +45,10 @@ local snip_defs = {
 			end
 		end})
 	end,
-	parse = ls.parser.parse_snippet
+	parse = ls.parser.parse_snippet,
+	n = require("luasnip.extras").nonempty,
+	m = require("luasnip.extras").match,
+	-- ai = require("luasnip.nodes.absolute_indexer")
 }
 
 local function setup_snip_env()

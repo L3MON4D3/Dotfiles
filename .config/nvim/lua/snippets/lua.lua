@@ -20,5 +20,11 @@ return {
 	while {} do
 		{}
 	end
-	]], ins_generate()))
+	]], ins_generate())),
+	s("fn", fmt([[
+		function({})
+			{}
+		end
+	]], ins_generate())),
+	s("str", fmt("[[\n\t{}\n]]", ins_generate()))
 }

@@ -55,14 +55,14 @@ dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 
 local widget_entities = {
-	scopes = "s",
-	frames = "f",
+	scopes = "Scope",
+	frames = "Frame",
 	-- expression = "e"
 }
 
 local widget_views = {
-	sidebar = "s",
-	centered_float = "f",
+	sidebar = "Sidebar",
+	centered_float = "Float",
 }
 
 dap_widgets = {}
@@ -75,12 +75,7 @@ for e_k, e_v in pairs(widget_entities) do
 		-- is opened in constructor :\
 		widget.close()
 		dap_widgets[e_k][v_k] = widget
-
-		-- eg. <leader>dsf
-		vim.api.nvim_set_keymap("n",
-			",d"..e_v..v_v,
-			"<cmd>lua dap_widgets."..e_k.."."..v_k..".toggle()<Cr>",
-			{noremap=true, silent = true})
+		vim.cmd(string.format([[command! Dap%s%s :lua dap_widgets.%s.%s.toggle()]], e_v, v_v, e_k, v_k))
 	end
 end
 

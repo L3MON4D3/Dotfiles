@@ -1,5 +1,4 @@
 local types = require("luasnip.util.types")
-local helpers = require("plugins.luasnip.helpers")
 local ls = require("luasnip")
 
 ls.config.setup({
@@ -46,10 +45,24 @@ ls.snippets = setmetatable({}, {
 
 vim.cmd [[command! LuaSnipEdit :lua Do_nvim_relative("plugins/luasnip/helpers.lua").edit_ft()]]
 vim.cmd [[
+	imap <silent><expr> <C-L> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
+	inoremap <silent> <C-J> <cmd>lua ls.jump(1)<Cr>
+	inoremap <silent> <C-K> <cmd>lua ls.jump(-1)<Cr>
+	snoremap <silent> <C-L> <cmd>lua ls.jump(1)<Cr>
+	snoremap <silent> <C-K> <cmd>lua ls.jump(-1)<Cr>
+
+	imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''
+	smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''
+
+	imap <silent><expr> <C-T> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
+	smap <silent><expr> <C-T> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
+]]
+vim.cmd [[
 augroup snippets_clear
 au!
 au BufWritePost *lua/snippets/*.lua :execute 'lua require("luasnip").snippets[string.match("'.expand("<afile>").'", "/([^/]*)%.lua$")] = nil'
 augroup END
 ]]
 
-require("plugins.luasnip.external_update_dynamic_node")
+-- require("plugins.luasnip.external_update_dynamic_node")
+-- require("plugins.luasnip.repeat_integration")

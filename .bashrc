@@ -31,6 +31,7 @@ export BAT_THEME="mine"
 export QT_QPA_PLATFORM=xcb
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export WLR_NO_HARDWARE_CURSORS=1
+
 export BLOCK_SIZE=4096
 
 export CXX=clang++
@@ -58,7 +59,6 @@ export PS1="\[\033[0m\][\[\e[38;05;6m\]\W\[\033[0m\]]\[\e[38;05;14m\]\$ \[\033[0
 source /home/simon/.bashrc_local
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
 	exec systemd-cat --identifier=sway sway --unsupported-gpu
-	systemctl --user import-environment SWAYSOCK
 fi
 #export swaysock for ssh'd headless users.
 if [[ -z ${SWAYSOCK} ]]; then

@@ -70,71 +70,90 @@ local function jdocsnip(args, _, old_state)
 	return snip
 end
 
-local function column_count_from_string(descr)
-	return #(descr:gsub("[^clm]", ""))
-end
-
-local tab = function(args, snip)
-	local cols = column_count_from_string(args[1][1])
-	if not snip.rows then
-		snip.rows = 1
-	end
-	local nodes = {}
-	local ins_indx = 1
-	for j = 1, snip.rows do
-		table.insert(nodes, r(ins_indx, tostring(j).."x1", i(1)))
-		ins_indx = ins_indx+1
-		for k = 2, cols do
-			table.insert(nodes, t" & ")
-			table.insert(nodes, r(ins_indx, tostring(j).."x"..tostring(k), i(1)))
-			ins_indx = ins_indx+1
-		end
-		table.insert(nodes, t{"\\\\", ""})
-	end
-	-- fix last node.
-	nodes[#nodes] = t""
-	return sn(nil, nodes)
-end
-
 return {
-	s("tab", fmt([[
-	\begin{{tabular}}{{{}}}
-	{}
-	\end{{tabular}}
-	]], {i(1, "c"), d(2, tab, {1},
-		function(snip) snip.rows = snip.rows + 1 end,
-		-- don't drop below one.
-		function(snip) snip.rows = math.max(snip.rows - 1, 1) end)})),
 	s("lel", i(1, "lal")),
-	parse("lol", "${1:$TM_CURRENT_LINE}"),
-	s({trig="fn"}, {
-		d(6, jdocsnip, {2, 4, 5}), t({"", ""}),
-		c(1, {
-			t({"public "}),
-			t({"private "})
-		}),
+	parse("lol", "a${1:$TM_CURRENT_LINE}"),
+	-- s({trig="fn"}, {
+	-- 	d(6, jdocsnip, {ai[2], ai[4], ai[5]}), t({"", ""}),
+	-- 	c(1, {
+	-- 		t({"public "}),
+	-- 		t({"private "})
+	-- 	}),
+	-- 	c(2, {
+	-- 		t({"void"}),
+	-- 		i(nil, {""}),
+	-- 		t({"String"}),
+	-- 		t({"char"}),
+	-- 		t({"int"}),
+	-- 		t({"double"}),
+	-- 		t({"boolean"}),
+	-- 	}),
+	-- 	t({" "}),
+	-- 	i(3, {"myFunc"}),
+	-- 	t({"("}), i(4), t({")"}),
+	-- 	c(5, {
+	-- 		t({""}),
+	-- 		sn(nil, {
+	-- 			t({""," throws "}),
+	-- 			i(1)
+	-- 		})
+	-- 	}),
+	-- 	t({" {", "\t"}),
+	-- 	i(0),
+	-- 	t({"", "}"})
+	-- }),
+	s("test", {
+		t"b",
+		i(1),
 		c(2, {
-			t({"void"}),
-			i(nil, {""}),
-			t({"String"}),
-			t({"char"}),
-			t({"int"}),
-			t({"double"}),
-			t({"boolean"}),
-		}),
-		t({" "}),
-		i(3, {"myFunc"}),
-		t({"("}), i(4), t({")"}),
-		c(5, {
-			t({""}),
-			sn(nil, {
-				t({""," throws "}),
-				i(1)
-			})
-		}),
-		t({" {", "\t"}),
-		i(0),
-		t({"", "}"})
+			t"aaa",
+			f(function(args) return args[1] end, 1)
+		}), t" : ",
+		rep(1)
 	}),
-	ls.parser.parse_snippet("test", "$3$1${2:lel}$0$4")
+	-- s("test2", {
+	-- 	i(1),
+	-- 	t" : ",
+	-- 	f(function(args) return args[1][1]..args[2][1] end, {
+	-- 		ai{2, 1},
+	-- 		1,
+	-- 	}),
+	-- 	t" : ",
+	-- 	c(2, {
+	-- 		r(nil, "key", i(nil, "and that's me")),
+	-- 		{
+	-- 			t"::::", r(1, "key"), t"::::"
+	-- 		}
+	-- 	})
+	-- }),
+	s("t2", {
+		i(1), t" : ",
+	}),
+	-- s("class", fmta([[
+	-- 	---@class <>
+	-- 	local <> = {<>}
+
+	-- 	<>
+	-- ]], {
+	-- 	rep(1),
+	-- 	i(1, 'MyClass'),
+	-- 	i(2),
+	-- 	c(3, {
+	-- 		sn(1, fmta([[
+	-- 			<>function <>:new(o)
+	-- 				o = o or {}
+	-- 				setmetatable(o, self)
+	-- 				self.__index = self
+	-- 				return o
+	-- 			end
+	-- 		]], {
+	-- 			i(1),
+	-- 			rep(ai[1])
+	-- 		})),
+	-- 		t''
+	-- 	}),
+	-- })),
+	s("trig", {
+		t"a[", i(1), t"]a", i(2), t"b"
+	})
 }

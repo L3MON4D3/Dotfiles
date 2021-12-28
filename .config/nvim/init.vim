@@ -41,12 +41,14 @@ au!
 "                 \let b:cargoLoaded=1 |
 "             \endif
 
-autocmd mine BufWinEnter,WinEnter,TermOpen term://* startinsert | 
-            \setlocal nonumber | 
+autocmd mine TermOpen term://* startinsert |
+			\setlocal nonumber | 
             \setlocal norelativenumber |
 			\setlocal ft=term
 
-autocmd mine BufLeave term://* stopinsert
+autocmd mine BufEnter term://* if b:mode == 'i' | startinsert | endif
+"autocmd mine BufWinEnter,WinEnter term://* startinsert
+"autocmd mine BufLeave term://* stopinsert
 
 " augroup autoquickfix
 "     autocmd!
@@ -256,18 +258,6 @@ set completeopt=menuone
 "inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
 "inoremap <S-Tab> <cmd>lua return require'snippets'.advance_snippet(-1)<CR>
 
-imap <silent><expr> <Tab> luasnip#expand_or_jumpable() ? '<Plug>luasnip-expand-or-jump' : '<Tab>'
-inoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
-
-imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''
-smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''
-
-imap <silent><expr> <C-T> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
-smap <silent><expr> <C-T> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
-
-snoremap <silent> <Tab> <cmd>lua ls.jump(1)<Cr>
-snoremap <silent> <S-Tab> <cmd>lua ls.jump(-1)<Cr>
-
 nnoremap <silent> \ <cmd>lua hop.hint_words()<Cr>
 nnoremap <silent> \| <cmd>lua hop.hint_char1()<Cr>
 
@@ -381,8 +371,8 @@ nnoremap <silent> <F10> :res +2<Cr>
 nnoremap <silent> <F22> :res -2<Cr>
 
 nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
-nnoremap <silent> <leader>e :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
 noremap <silent><leader>ep :tabnew<Cr>:e /home/simon/.config/nvim/lua/plugins/<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/lua/plugins/<Cr>
+noremap <silent><leader>es :tabnew<Cr>:e /home/simon/.config/nvim/lua/snippets/<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/lua/snippets/<Cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
 
 nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
@@ -400,14 +390,14 @@ inoremap <C-L> <Esc>viwu<Esc>ea
 
 inoremap <C-F> <C-X><C-F>
 
-tnoremap <C-J> <C-\><C-N><C-w>j
-tnoremap <C-K> <C-\><C-N><C-w>k
-tnoremap <C-L> <C-\><C-N><C-w>l
-tnoremap <C-H> <C-\><C-N><C-w>h
+tnoremap <silent> <C-J> <C-\><C-N>:let b:mode="i"<Cr><C-w>j
+tnoremap <silent> <C-K> <C-\><C-N>:let b:mode="i"<Cr><C-w>k
+tnoremap <silent> <C-L> <C-\><C-N>:let b:mode="i"<Cr><C-w>l
+tnoremap <silent> <C-H> <C-\><C-N>:let b:mode="i"<Cr><C-w>h
 
 tnoremap <C-W> <C-\><C-N><C-w>
 
-tnoremap <C-N> <C-\><C-N>
+tnoremap <silent> <C-N> <C-\><C-N>:let b:mode="n"<Cr>
 
 tnoremap <silent> <F9> <C-\><C-N>:vert res +2<Cr>a
 tnoremap <silent> <F21> <C-\><C-N>:vert res -2<Cr>a

@@ -15,7 +15,7 @@ local plugins = {
 	vim_glsl = "tikhomirov/vim-glsl",
 	dap = "mfussenegger/nvim-dap",
 	dap_ui = "rcarriga/nvim-dap-ui",
-	-- friendly_snippets = "rafamadriz/friendly-snippets",
+	friendly_snippets = "rafamadriz/friendly-snippets",
 	plenary = "nvim-lua/plenary.nvim",
 	-- popup = "nvim-lua/popup.nvim",
 	playground = "nvim-treesitter/playground",
@@ -23,6 +23,9 @@ local plugins = {
 	github_link = "knsh14/vim-github-link",
 	semantic_tokens = "thehamsta/nvim-semantic-tokens",
 	comment = "numToStr/Comment.nvim",
+	vim_snippets = "uga-rosa/vim-snippets",
+	da_lua = "jbyuki/one-small-step-for-vimkind",
+	vrepeat = "tpope/vim-repeat"
 }
 
 local plugins_inverse = {}
@@ -96,4 +99,17 @@ return require("packer").startup(function(use)
 	conf_use(semantic_tokens)
 	conf_use(comment)
 	use(plenary)
+	conf_use{
+		da_lua,
+		requires = dap
+	}
+	use(vrepeat)
+	-- conf_use({
+	-- 	friendly_snippets,
+	-- 	requires = luasnip
+	-- })
+	-- conf_use({
+	-- 	vim_snippets,
+	-- 	requires = luasnip
+	-- })
 end)
