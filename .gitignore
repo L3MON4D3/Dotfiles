@@ -10,3 +10,5 @@
 !.gitignore
 !.config/sway
 !.config/sway/config
+!.bashrc.d
+!.bashrc.d/*

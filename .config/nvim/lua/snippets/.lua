@@ -73,35 +73,35 @@ end
 return {
 	s("lel", i(1, "lal")),
 	parse("lol", "a${1:$TM_CURRENT_LINE}"),
-	-- s({trig="fn"}, {
-	-- 	d(6, jdocsnip, {ai[2], ai[4], ai[5]}), t({"", ""}),
-	-- 	c(1, {
-	-- 		t({"public "}),
-	-- 		t({"private "})
-	-- 	}),
-	-- 	c(2, {
-	-- 		t({"void"}),
-	-- 		i(nil, {""}),
-	-- 		t({"String"}),
-	-- 		t({"char"}),
-	-- 		t({"int"}),
-	-- 		t({"double"}),
-	-- 		t({"boolean"}),
-	-- 	}),
-	-- 	t({" "}),
-	-- 	i(3, {"myFunc"}),
-	-- 	t({"("}), i(4), t({")"}),
-	-- 	c(5, {
-	-- 		t({""}),
-	-- 		sn(nil, {
-	-- 			t({""," throws "}),
-	-- 			i(1)
-	-- 		})
-	-- 	}),
-	-- 	t({" {", "\t"}),
-	-- 	i(0),
-	-- 	t({"", "}"})
-	-- }),
+	s({trig="fn"}, {
+		d(6, jdocsnip, {ai[2], ai[4], ai[5]}), t({"", ""}),
+		c(1, {
+			t({"public "}),
+			t({"private "})
+		}),
+		c(2, {
+			t({"void"}),
+			i(nil, {""}),
+			t({"String"}),
+			t({"char"}),
+			t({"int"}),
+			t({"double"}),
+			t({"boolean"}),
+		}),
+		t({" "}),
+		i(3, {"myFunc"}),
+		t({"("}), i(4), t({")"}),
+		c(5, {
+			t({""}),
+			sn(nil, {
+				t({""," throws "}),
+				i(1)
+			})
+		}),
+		t({" {", "\t"}),
+		i(0),
+		t({"", "}"})
+	}),
 	s("test", {
 		t"b",
 		i(1),
@@ -153,7 +153,5 @@ return {
 	-- 		t''
 	-- 	}),
 	-- })),
-	s("trig", {
-		t"a[", i(1), t"]a", i(2), t"b"
-	})
+	parse("trig", "{\n\t$SELECT_DEDENT\n}")
 }

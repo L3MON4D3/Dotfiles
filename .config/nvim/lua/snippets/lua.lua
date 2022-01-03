@@ -22,9 +22,21 @@ return {
 	end
 	]], ins_generate())),
 	s("fn", fmt([[
-		function({})
+		function{}({})
 			{}
 		end
 	]], ins_generate())),
-	s("str", fmt("[[\n\t{}\n]]", ins_generate()))
+	s("str", fmt("[[\n\t{}\n]]", ins_generate())),
+	s("sdt", fmt(
+		[[ls_helpers.static_docstring_test({}, {}, {})]],
+		{ i(1, "snip"), c(2, {{t"{\"", i(1), t"\"}"}, i(1)}), c(3, {{t"{\"", i(1), t"$0\"}"}, i(1)}) } )
+	),
+	s("lar", fmt(
+		"${{{}}}",
+		{ i(1) }
+	)),
+	s({trig = "lar(%d)", regTrig = true, wordTrig = false}, fmt(
+		"${{{}:{}}}",
+		{ f(function(_, snip) return snip.captures[1] end, {}), i(1) }
+	))
 }

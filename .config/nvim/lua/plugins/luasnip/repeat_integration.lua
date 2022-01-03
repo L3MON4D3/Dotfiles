@@ -14,11 +14,11 @@ _G.repeatable_expand = function()
 	-- prevent clearing text on repeated calls.
 	_G.expand_opts.clear_region = nil
 	_G.expand_opts.pos = nil
+
+	vim.cmd[[silent! call repeat#set("\<Plug>repeatable-snip-expand", -1)]]
 end
 
 vim.cmd[[
 	noremap <silent> <Plug>repeatable-snip-expand <cmd>lua _G.repeatable_expand()<Cr>
 	noremap! <silent> <Plug>repeatable-snip-expand <cmd>lua _G.repeatable_expand()<Cr>
-
-	silent! call repeat#set("\<Plug>repeatable-snip-expand", v:count)
 ]]
