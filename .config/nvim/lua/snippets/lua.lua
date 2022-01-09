@@ -38,5 +38,9 @@ return {
 	s({trig = "lar(%d)", regTrig = true, wordTrig = false}, fmt(
 		"${{{}:{}}}",
 		{ f(function(_, snip) return snip.captures[1] end, {}), i(1) }
+	)),
+	s({trig = "([%w_])%+%+", regTrig = true, wordTrig = false}, fmt(
+		"{} = {} + 1",
+		{ l(l.CAPTURE1, {}), l(l.CAPTURE1, {}) }
 	))
 }

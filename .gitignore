@@ -12,3 +12,5 @@
 !.config/sway/config
 !.bashrc.d
 !.bashrc.d/*
+!.config/qutebrowser/
+!.config/qutebrowser/config.py

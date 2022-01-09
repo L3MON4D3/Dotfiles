@@ -4,3 +4,5 @@ shopt -s extglob
 for file in ~/.bashrc.d/!(wm.sh); do
 	source "$file"
 done
+
+[[ -f ~/.bashrc.d/wm.sh ]] && source ~/.bashrc.d/wm.sh

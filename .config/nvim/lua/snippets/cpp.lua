@@ -1,6 +1,8 @@
 require("plugins.luasnip.helpers").setup_snip_env()
 
 local function capture_insert(_, snip, _, capture_indx, pre_text, post_text)
+	Insp(capture_indx)
+	Insp(pre_text)
 	return sn(nil, {i(1, {(pre_text or "") .. snip.captures[capture_indx] .. (post_text or "")})})
 end
 

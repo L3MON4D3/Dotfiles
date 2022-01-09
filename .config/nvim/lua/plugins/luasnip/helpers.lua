@@ -17,8 +17,8 @@ local snip_defs = {
 		return ls.c(pos, nodes, opts)
 	end,
 	d = function(pos, func, argnodes, ...)
-		return ls.d(pos, function(args, imm_parent, user_args)
-			return func(args, imm_parent.snippet, user_args)
+		return ls.d(pos, function(args, imm_parent, old_state, ...)
+			return func(args, imm_parent.snippet, old_state, ...)
 		end, argnodes, ...)
 	end,
 	isn = require("luasnip.nodes.snippet").ISN,

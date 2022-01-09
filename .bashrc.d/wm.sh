@@ -1,3 +1,8 @@
+alias swayconf='vim ~/.config/sway/config'
+alias waybarconf='vim ~/.config/waybar/config'
+alias winsel='swaymsg -t get_tree | jq -r '\''.. | (.nodes? // empty)[] | select(.pid and .visible) | .rect | "\(.x),\(.y) \(.width)x\(.height)"'\'' | slurp'
+alias rotEx='myRotateDisplay.sh'
+
 export _JAVA_AWT_WM_NONREPARENTING=1
 export MOZ_ENABLE_WAYLAND=1
 export XDG_CURRENT_DESKTOP=sway
