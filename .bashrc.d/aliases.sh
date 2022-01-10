@@ -16,7 +16,7 @@ alias emustop='killall qemu-system-x86_64'
 alias cf='/home/simon/Scripts/myStartConf.sh'
 alias scsh='grim -g "$(slurp)" screen.png'
 alias sued='/home/simon/Scripts/mySudoEdit.sh'
-alias p='paru'
+alias p='paru -Syu; myUpdateRemote.sh'
 source /usr/share/bash-completion/completions/paru.bash
 complete -F _paru p
 alias myRemoteDelBackup.sh='myRemoteBackup.sh --delete'
