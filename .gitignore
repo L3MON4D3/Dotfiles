@@ -14,3 +14,5 @@
 !.bashrc.d/*
 !.config/qutebrowser/
 !.config/qutebrowser/config.py
+!Scripts/
+!Scripts/*
