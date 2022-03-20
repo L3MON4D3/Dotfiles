@@ -23,9 +23,13 @@ local plugins = {
 	github_link = "knsh14/vim-github-link",
 	semantic_tokens = "thehamsta/nvim-semantic-tokens",
 	comment = "numToStr/Comment.nvim",
-	vim_snippets = "uga-rosa/vim-snippets",
+	vim_snippets = "honza/vim-snippets",
 	da_lua = "jbyuki/one-small-step-for-vimkind",
-	vrepeat = "tpope/vim-repeat"
+	vrepeat = "tpope/vim-repeat",
+	vscode_react = "dsznajder/vscode-react-javascript-snippets",
+	neogen = "danymat/neogen",
+	dressing = "stevearc/dressing.nvim",
+	telescope = "nvim-telescope/telescope.nvim"
 }
 
 local plugins_inverse = {}
@@ -56,12 +60,12 @@ return require("packer").startup(function(use)
 		lspconfig,
 		requires = {
 			luasnip,
-			illuminate,
+			-- illuminate,
 			cmp_lsp,
 		}
 	}
 	use(lspinstall)
-	use(illuminate)
+	-- use(illuminate)
 
 	conf_use {
 		cmp,
@@ -104,12 +108,19 @@ return require("packer").startup(function(use)
 		requires = dap
 	}
 	use(vrepeat)
-	-- conf_use({
-	-- 	friendly_snippets,
-	-- 	requires = luasnip
-	-- })
-	-- conf_use({
-	-- 	vim_snippets,
-	-- 	requires = luasnip
-	-- })
+	conf_use({
+		friendly_snippets,
+		requires = luasnip
+	})
+	conf_use({
+		vim_snippets,
+		requires = luasnip
+	})
+	use {
+		vscode_react,
+		run = 'yarn install --frozen-lockfile && yarn compile'
+	}
+	conf_use(neogen)
+	use(dressing)
+	use(telescope)
 end)

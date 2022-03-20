@@ -65,7 +65,8 @@ local function dynamic_node_external_update(func_indx)
 		-- the node that the cursor was in when changeChoice was called exists
 		-- in the active choice! Enter it and all nodes between it and this choiceNode,
 		-- then set the cursor.
-		node_util.enter_nodes_between(dynamic_node, target_node)
+		-- no_move=true, we move the cursor later on.
+		node_util.enter_nodes_between(dynamic_node, target_node, true)
 
 		if insert_pre_call then
 			util.set_cursor_0ind(

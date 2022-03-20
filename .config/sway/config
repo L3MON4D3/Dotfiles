@@ -4,4 +4,3 @@ exec_always myRestartWaybar.sh
 exec systemctl --user import-environment SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE WAYLAND_DISPLAY DISPLAY
 exec systemctl --user start sway-session.target
 # exec "swayidle -w timeout 1200 /home/simon/Scripts/myIdle.sh"
-exec bluetoothctl power on

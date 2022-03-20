@@ -22,3 +22,5 @@
 	editor = nvim
 [pull]
 	rebase = false
+#[url "git@gitlab.freedesktop.org:"]
+#	insteadOf = https://gitlab.freedesktop.org/

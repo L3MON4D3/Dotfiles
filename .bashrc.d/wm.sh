@@ -7,14 +7,13 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export MOZ_ENABLE_WAYLAND=1
 export XDG_CURRENT_DESKTOP=sway
 export XDG_SESSION_TYPE=wayland
-
-#export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
-export QT_QPA_PLATFORM=xcb
-export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export WLR_NO_HARDWARE_CURSORS=1
 
+export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-	exec systemd-cat --identifier=sway sway --unsupported-gpu
+	exec systemd-cat --identifier=sway sway
 fi
 #export swaysock for ssh'd headless users.
 if [[ -z ${SWAYSOCK} ]]; then

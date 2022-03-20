@@ -79,7 +79,7 @@ autocmd mine TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, h
 
 augroup END
 
-set fillchars=fold:\ ,vert:\|
+set fillchars=fold:\ ,vert:\│
 set foldtext=MyFoldText()
 set foldmethod=indent
 
@@ -252,14 +252,9 @@ let mapleader=","
 let maplocalleader="\<Space>"
 
 lua require('init')
-lua ls = require('luasnip')
-lua hop = require('hop')
 set completeopt=menuone
 "inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
 "inoremap <S-Tab> <cmd>lua return require'snippets'.advance_snippet(-1)<CR>
-
-nnoremap <silent> \ <cmd>lua hop.hint_words()<Cr>
-nnoremap <silent> \| <cmd>lua hop.hint_char1()<Cr>
 
 let g:Illuminate_delay = 800
 
@@ -293,18 +288,6 @@ let g:tex_conceal='abdmgs'
 "nnoremap <F4> :call vimspector#StepInto()<Cr>
 "nnoremap <F5> :call vimspector#Continue()<Cr>
 " nvim-dap
-noremap <F2> :lua require"dap".toggle_breakpoint()<Cr>
-" S-F2
-noremap <F14> :lua require"dap".set_breakpoint(vim.fn.input("Breakpoint condition: "))<CR>
-noremap <F18> :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
-noremap <F3> :lua require"dap".step_over()<Cr>
-noremap <F4> :lua require"dap".step_into()<Cr>
-noremap <F16> :lua require"dap".step_out()<Cr>
-noremap <F5> :lua require"dap".continue()<Cr>
-noremap <F17> :lua require"dap".run_last()<Cr>
-noremap <F6> :lua require"dap.ui.variables".hover()<Cr>
-noremap <leader>dws :lua require"dapui".open("sidebar")<Cr>
-
 "Other
 noremap <silent> <C-v> :vsp<Cr>
 noremap <silent> <C-b> :sp<Cr>
@@ -321,8 +304,8 @@ noremap <silent><leader>n :noh<Cr>
 noremap <silent><leader>l :set invlist<Cr>
 noremap <silent><leader>r :set invrelativenumber<Cr>
 noremap <silent><leader>o :tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>
-noremap <silent><leader>fw :set invwinfixwidth<Cr>
-noremap <silent><leader>fh :set invwinfixheight<Cr>
+noremap <leader>fw :set invwinfixwidth<Cr>
+noremap <leader>fh :set invwinfixheight<Cr>
 noremap <silent><leader><leader>f :luafile %<Cr>
 noremap <leader>g :silent grep 
 noremap <silent><leader>t :call CToggle()<Cr>
@@ -386,7 +369,6 @@ nnoremap [] ?}\n<Cr>:noh<Cr>
 
 inoremap <C-C> <Esc>g~iwea
 inoremap <C-U> <Esc>viwU<Esc>ea
-inoremap <C-L> <Esc>viwu<Esc>ea
 
 inoremap <C-F> <C-X><C-F>
 

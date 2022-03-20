@@ -22,7 +22,6 @@ local snip_defs = {
 		end, argnodes, ...)
 	end,
 	isn = require("luasnip.nodes.snippet").ISN,
-	psn = require("luasnip.nodes.snippet").PSN,
 	l = require'luasnip.extras'.lambda,
 	dl = require'luasnip.extras'.dynamic_lambda,
 	rep = require'luasnip.extras'.rep,

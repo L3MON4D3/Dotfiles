@@ -5,6 +5,7 @@
 !.config/nvim/lua
 !.config/nvim/init.vim
 !.config/nvim/lua/**/*
+!.config/nvim/luasnippets/*
 !.bash_aliases
 !.config/nvim/init.vim
 !.gitignore
@@ -16,3 +17,4 @@
 !.config/qutebrowser/config.py
 !Scripts/
 !Scripts/*
+/.config/nvim/lua/plugins/friendly_snippets.lua

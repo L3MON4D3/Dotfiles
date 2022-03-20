@@ -1,3 +1,5 @@
+local types = require("luasnip.util.types")
+
 local function jdocsnip(args, _, old_state)
 	local nodes = {
 		t({"/**"," * "}),
@@ -70,6 +72,44 @@ local function jdocsnip(args, _, old_state)
 	return snip
 end
 
+local pyinit = function(args, parent)
+	-- this could also be outside the dynamicNode.
+	local nodes = {t"def __init__(self"}
+
+	-- snip.argc is controlled via c-t/c-g
+	local argc = parent.argc
+	-- snip.argc is not set on the first call.
+	if not argc then
+		parent.argc = 1
+		argc = 1
+	end
+
+	-- store jump_indx separately and increase for each insertNode.
+	local jump_indx = 1
+	-- generate args
+	for _ = 1, argc do
+		vim.list_extend(nodes, {t", ", i(jump_indx, "arg"..jump_indx)})
+		jump_indx = jump_indx + 1
+	end
+	nodes[#nodes + 1] = t{")", ""}
+	-- generate assignments
+	for j = 1, argc do
+		vim.list_extend(nodes, {
+			t"\t self.",
+			i(jump_indx, "arg"..j),
+			t" = ",
+			-- repeat argj
+			rep(j),
+			t{"", ""}})
+		jump_indx = jump_indx + 1
+	end
+
+	-- remove last linebreak.
+	nodes[#nodes] = nil
+
+	return sn(nil, nodes)
+end
+
 return {
 	s("lel", i(1, "lal")),
 	parse("lol", "a${1:$TM_CURRENT_LINE}"),
@@ -102,56 +142,8 @@ return {
 		i(0),
 		t({"", "}"})
 	}),
-	s("test", {
-		t"b",
-		i(1),
-		c(2, {
-			t"aaa",
-			f(function(args) return args[1] end, 1)
-		}), t" : ",
-		rep(1)
-	}),
-	-- s("test2", {
-	-- 	i(1),
-	-- 	t" : ",
-	-- 	f(function(args) return args[1][1]..args[2][1] end, {
-	-- 		ai{2, 1},
-	-- 		1,
-	-- 	}),
-	-- 	t" : ",
-	-- 	c(2, {
-	-- 		r(nil, "key", i(nil, "and that's me")),
-	-- 		{
-	-- 			t"::::", r(1, "key"), t"::::"
-	-- 		}
-	-- 	})
-	-- }),
-	s("t2", {
-		i(1), t" : ",
-	}),
-	-- s("class", fmta([[
-	-- 	---@class <>
-	-- 	local <> = {<>}
-
-	-- 	<>
-	-- ]], {
-	-- 	rep(1),
-	-- 	i(1, 'MyClass'),
-	-- 	i(2),
-	-- 	c(3, {
-	-- 		sn(1, fmta([[
-	-- 			<>function <>:new(o)
-	-- 				o = o or {}
-	-- 				setmetatable(o, self)
-	-- 				self.__index = self
-	-- 				return o
-	-- 			end
-	-- 		]], {
-	-- 			i(1),
-	-- 			rep(ai[1])
-	-- 		})),
-	-- 		t''
-	-- 	}),
-	-- })),
-	parse("trig", "{\n\t$SELECT_DEDENT\n}")
+	s("pyinit", d(1, pyinit, {}, { user_args = {
+		function(parent) vim.ui.input({prompt = "Number of args: "}, function(argc)
+			parent.argc = math.max(argc, 1)
+		end) end }}))
 }

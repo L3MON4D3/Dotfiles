@@ -1,5 +1,13 @@
 local nvim_lsp = require("lspconfig")
 
+
+local function sem_token_attach(client)
+	if client.resolved_capabilities.semantic_tokens_full then
+		vim.lsp.buf.semantic_tokens_full()
+		vim.cmd [[autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()]]
+	end
+end
+
 local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', {noremap = true})
@@ -13,7 +21,8 @@ local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
 
-	require 'illuminate'.on_attach(client)
+
+	-- require 'illuminate'.on_attach(client)
 end
 
 Diag_params = {signs = true, virtual_text = true}
@@ -34,6 +43,7 @@ local session = require("session")
 nvim_lsp.clangd.setup{
 	on_attach = function(client)
 		lsp_attach(client)
+		sem_token_attach(client)
 
 		local orig_rpc_request = client.rpc.request
 		function client.rpc.request(method, params, handler, ...)
@@ -85,9 +95,9 @@ nvim_lsp.texlab.setup{
 		texlab = {
 			build = {
 				executable = "latexmk",
-				args = { "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f" },
+				args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f" },
 				onSave = true,
-				onChange = true
+				onChange = false
 			},
 			forwardSearch = {
 				args = {},
@@ -100,13 +110,19 @@ nvim_lsp.texlab.setup{
 			latexFormatter = "texlab"
 		},
 	},
-	on_attach = lsp_attach,
+	on_attach = function(client)
+		lsp_attach(client)
+		sem_token_attach(client)
+	end,
 	capabilities = capabilities
 }
 
 require'lspconfig'.pyright.setup{
 	capabilities = capabilities,
-	on_attach = lsp_attach
+	on_attach = function(client)
+		lsp_attach(client)
+		sem_token_attach(client)
+	end,
 }
 
 local sumneko_root_path = '/home/simon/.local/share/nvim/lspinstall/lua-language-server/'
@@ -172,5 +188,9 @@ nvim_lsp.rust_analyzer.setup({
 		["rust-analyzer"] = {
 			linksInHover = false
 		}
-	}
+	},
+	on_attach = function(client)
+		lsp_attach(client)
+		sem_token_attach(client)
+	end,
 })

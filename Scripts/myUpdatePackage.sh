@@ -18,7 +18,7 @@ p2name=$(mktemp)
 # printing stdout (>/dev/null to not clutter output with failed builds).
 # unbuffer for colors in output, remove later using ansi-codes.
 # log all output to view with journalctl, may be useful.
-unbuffer makepkg -d 2>&1 | tee "$pname" "$p2name" systemd-cat -t myUpdatePackage.sh &
+unbuffer makepkg -d 2>&1 | tee "$pname" "$p2name" | ansifilter | systemd-cat -t myUpdatePackage.sh &
 
 packagename=$(grep "Finished making" "$pname" | \
 	# ansifilter to remove ansi-codes, perl needs plain text.

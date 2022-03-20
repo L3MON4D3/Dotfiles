@@ -31,6 +31,14 @@ alias dbupd='rm *.zst; makepkg -fd && cp *.zst /mnt/repo/x86_64/ && repo-add /mn
 stty start undef
 stty -ixon
 
+function p() {
+	paru $@
+	# update own packages only if called without args.
+	if [[ $# -eq 0 ]]; then
+		myUpdateRemote.sh
+	fi
+}
+
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export LS_COLORS=$LS_COLORS:'ow=01;34:'
 
@@ -48,7 +56,7 @@ export CC=clang
 export INCLUDE=/usr/include/stb/
 export CMAKE_TOOLCHAIN_FILE=/home/simon/.local/share/cmake/toolchain.cmake
 
-export PATH=~/.cargo/bin/:~/Scripts:/usr/bin/ccache/bin/:$PATH
+export PATH=~/.cargo/bin/:~/Scripts:/usr/bin/ccache/bin/:~/.local/bin/:/usr/bin/vendor_perl/:$PATH
 export online=~/Documents/Uni/Kurse/s5/.online
 export p1=~/Documents/Uni/Kurse/s5/PhysikI
 export it=~/Documents/Uni/Kurse/s5/ITSec

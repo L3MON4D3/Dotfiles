@@ -12,7 +12,7 @@ return {
 	}),
 	s("for", {
 		t"for ", c(1, {
-			sn(nil, {i(1, "k"), t", ", i(2, "v"), t" in ", c(3, {t"pairs", t"ipairs"}), t"(", i(4), t")"}),
+			sn(nil, {i(1, "k"), t", ", i(2, "v"), t" in ", c(3, {t"pairs", t"ipairs", i(nil)}), t"(", i(4), t")"}),
 			sn(nil, {i(1, "i"), t" = ", i(2), t", ", i(3), })
 		}), t{" do", "\t"}, i(0), t{"", "end"}
 	}),
@@ -39,7 +39,7 @@ return {
 		"${{{}:{}}}",
 		{ f(function(_, snip) return snip.captures[1] end, {}), i(1) }
 	)),
-	s({trig = "([%w_])%+%+", regTrig = true, wordTrig = false}, fmt(
+	s({trig = "([%w_]+)%+%+", regTrig = true, wordTrig = false}, fmt(
 		"{} = {} + 1",
 		{ l(l.CAPTURE1, {}), l(l.CAPTURE1, {}) }
 	))

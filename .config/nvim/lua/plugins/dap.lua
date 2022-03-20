@@ -27,6 +27,7 @@ dap.adapters.cppdbg = {
 dap.set_log_level("DEBUG")
 
 vim.fn.sign_define('DapBreakpoint', {text='⛔', texthl='GruvboxRed', linehl='', numhl=''})
+vim.fn.sign_define('DapBreakpointCondition', {text='⛔', texthl='GruvboxBlue', linehl='', numhl=''})
 vim.fn.sign_define('DapStopped', {text=' ', texthl='GruvboxYellow', linehl='', numhl=''})
 
 dap.configurations.cpp = {
@@ -79,3 +80,18 @@ for e_k, e_v in pairs(widget_entities) do
 	end
 end
 
+vim.cmd[[
+command! DapREPL :lua require("dap").repl.toggle()
+
+noremap <F2> :lua require"dap".toggle_breakpoint()<Cr>
+" S-F2
+noremap <F14> :lua require"dap".set_breakpoint(vim.fn.input("Breakpoint condition: "))<CR>
+noremap <F18> :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
+noremap <F3> :lua require"dap".step_over()<Cr>
+noremap <F4> :lua require"dap".step_into()<Cr>
+noremap <F16> :lua require"dap".step_out()<Cr>
+noremap <F5> :lua require"dap".continue()<Cr>
+noremap <F17> :lua require"dap".run_last()<Cr>
+noremap <F6> :lua require"dap.ui.widgets".hover()<Cr>
+noremap <leader>dws :lua require"dapui".open("sidebar")<Cr>
+]]
