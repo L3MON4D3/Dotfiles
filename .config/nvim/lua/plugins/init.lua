@@ -29,7 +29,9 @@ local plugins = {
 	vscode_react = "dsznajder/vscode-react-javascript-snippets",
 	neogen = "danymat/neogen",
 	dressing = "stevearc/dressing.nvim",
-	telescope = "nvim-telescope/telescope.nvim"
+	telescope = "nvim-telescope/telescope.nvim",
+	iron = "hkupty/iron.nvim",
+	lualine = "nvim-lualine/lualine.nvim"
 }
 
 local plugins_inverse = {}
@@ -123,4 +125,6 @@ return require("packer").startup(function(use)
 	conf_use(neogen)
 	use(dressing)
 	use(telescope)
+	-- conf_use(iron)
+	conf_use(lualine)
 end)

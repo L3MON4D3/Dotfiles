@@ -15,11 +15,11 @@ local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>n', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '<localleader>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>n', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
 
 
 	-- require 'illuminate'.on_attach(client)
@@ -118,6 +118,15 @@ nvim_lsp.texlab.setup{
 }
 
 require'lspconfig'.pyright.setup{
+	capabilities = capabilities,
+	on_attach = function(client)
+		lsp_attach(client)
+		sem_token_attach(client)
+	end,
+}
+
+require'lspconfig'.julials.setup{
+	cmd = {"julia", "--startup-file=no", "-e using LanguageServer; runserver()", "-J/home/simon/.julia/sysimages/GLMakieImage.so"},
 	capabilities = capabilities,
 	on_attach = function(client)
 		lsp_attach(client)

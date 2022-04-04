@@ -42,5 +42,9 @@ return {
 	s({trig = "([%w_]+)%+%+", regTrig = true, wordTrig = false}, fmt(
 		"{} = {} + 1",
 		{ l(l.CAPTURE1, {}), l(l.CAPTURE1, {}) }
-	))
+	)),
+	s("req", fmt("local {} = require(\"{}\")", {
+		dl(2, l._1:match("%.([%w_]+)$"), {1}),
+		i(1)
+	}))
 }

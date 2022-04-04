@@ -41,12 +41,11 @@ au!
 "                 \let b:cargoLoaded=1 |
 "             \endif
 
-autocmd mine TermOpen term://* startinsert |
-			\setlocal nonumber | 
-            \setlocal norelativenumber |
-			\setlocal ft=term
+" autocmd mine TermOpen term://* startinsert |
+" 			\setlocal nonumber | 
+"             \setlocal norelativenumber |
+" 			\setlocal ft=term
 
-autocmd mine BufEnter term://* if b:mode == 'i' | startinsert | endif
 "autocmd mine BufWinEnter,WinEnter term://* startinsert
 "autocmd mine BufLeave term://* stopinsert
 
@@ -249,7 +248,7 @@ sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=
 
 "Keymappings
 let mapleader=","
-let maplocalleader="\<Space>"
+let maplocalleader="<Space>"
 
 lua require('init')
 set completeopt=menuone

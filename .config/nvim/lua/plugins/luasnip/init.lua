@@ -4,7 +4,7 @@ ls = require("luasnip")
 --vim.cmd("hi link LuasnipSnippetActive GruvboxRed")
 ls.config.setup({
 	history = true,
-	updateevents = "InsertLeave",
+	update_events = "InsertLeave",
 	enable_autosnippets = true,
 	region_check_events = "CursorHold,InsertLeave",
 	delete_check_events = "TextChanged,InsertEnter",
@@ -121,7 +121,7 @@ au BufWritePost *lua/snippets/*.lua :execute 'lua require("luasnip").snippets[st
 augroup END
 ]]
 
-require("luasnip.loaders.from_lua").lazy_load()
+require("luasnip.loaders.from_lua").load()
 
 require("plugins.luasnip.external_update_dynamic_node")
 -- require("luasnip/loaders/from_vscode").load()

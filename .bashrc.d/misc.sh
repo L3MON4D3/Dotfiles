@@ -57,11 +57,8 @@ export INCLUDE=/usr/include/stb/
 export CMAKE_TOOLCHAIN_FILE=/home/simon/.local/share/cmake/toolchain.cmake
 
 export PATH=~/.cargo/bin/:~/Scripts:/usr/bin/ccache/bin/:~/.local/bin/:/usr/bin/vendor_perl/:$PATH
-export online=~/Documents/Uni/Kurse/s5/.online
-export p1=~/Documents/Uni/Kurse/s5/PhysikI
-export it=~/Documents/Uni/Kurse/s5/ITSec
-export ks=~/Documents/Uni/Kurse/s5/KivS
-export pg=~/Documents/Uni/Kurse/s5/PG
+export online=~/Documents/Uni/Kurse/s6/.online
+export ba=~/Documents/Uni/Kurse/s6/ba
 export lsn=~/Code/Lua/luasnip
 
 export RUST_SRC_PATH=/home/simon/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/

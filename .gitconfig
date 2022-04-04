@@ -24,3 +24,5 @@
 	rebase = false
 #[url "git@gitlab.freedesktop.org:"]
 #	insteadOf = https://gitlab.freedesktop.org/
+[github]
+	user = L3MON4D3
