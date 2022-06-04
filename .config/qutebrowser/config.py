@@ -43,6 +43,7 @@ c.tabs.show = 'switching'
 
 c.url.default_page = 'file:///home/simon/.local/share/Startpage/index.html'
 c.url.start_pages = 'file:///home/simon/.local/share/Startpage/index.html'
+c.downloads.prevent_mixed_content = False
 
 c.statusbar.show = 'never'
 
@@ -53,3 +54,5 @@ c.url.searchengines = {'DEFAULT': 'https://google.com/search?q={}'}
 
 config.bind("pf", "spawn --userscript password_fill")
 config.bind("e", "edit-url")
+
+config.bind("<Ctrl-p>", "spawn --userscript remPrint")

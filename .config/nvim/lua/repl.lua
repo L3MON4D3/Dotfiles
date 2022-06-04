@@ -32,18 +32,25 @@ local windows = setmetatable({}, {
 
 local function nop(_) end
 function M.ensure_enabled(term_id)
-	nop(terminals[term_id])
+	if not api.nvim_buf_is_valid(terminals[term_id].buf) then
+		-- restart.
+		terminals[term_id] = nil
+		nop(terminals[term_id])
+	end
 end
 
 function M.send(term_id, cmd)
+	M.ensure_enabled(term_id)
 	api.nvim_chan_send(terminals[term_id].channel, cmd .. "\n")
 end
 
 function M.show(term_id)
+	M.ensure_enabled(term_id)
 	api.nvim_set_current_buf(terminals[term_id].buf)
 end
 
 function M.toggle(term_id, split_command, focus)
+	M.ensure_enabled(term_id)
 	local tabpage = vim.fn.tabpagenr()
 	local win = windows[term_id][tabpage]
 	if win and api.nvim_win_is_valid(win) then
@@ -54,7 +61,7 @@ function M.toggle(term_id, split_command, focus)
 		vim.cmd(split_command)
 		local split_win = api.nvim_tabpage_get_win(tabpage)
 
-		if not focus then
+		if not focus  then
 			_G._insert_term_skip = true
 			api.nvim_set_current_win(current_win)
 			api.nvim_win_set_buf(split_win, terminals[term_id].buf)
@@ -64,6 +71,10 @@ function M.toggle(term_id, split_command, focus)
 		end
 		windows[term_id][tabpage] = split_win
 	end
+end
+
+function M.restart(term_id)
+	terminals[term_id] = nil
 end
 
 return M

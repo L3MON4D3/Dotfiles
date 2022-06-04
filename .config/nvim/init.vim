@@ -6,12 +6,12 @@ set noswapfile
 
 source ~/.config/nvim/functions.vim 
 
+lua require("plugins")
+
 augroup packer_user_config
   autocmd!
   autocmd BufWritePost ~/.config/nvim/lua/plugins/init.lua source <afile> | PackerCompile
 augroup end
-
-lua require('plugins')
 
 augroup mine
 au!
@@ -127,11 +127,16 @@ hi StatusLineNC guibg=#282828 guifg=#1d2021
 
 hi Folded guibg= cterm=none gui=none
 
-hi! link TSVariable Normal
+hi FloatBorder guibg=#1d2021 guifg=#504945
+
+
+hi! TSVariable guifg=#ebdbb2
 "hi! link TSParameter Normal
-hi! link TSField Normal
+hi! TSField guifg=#ebdbb2
 
 hi GruvboxRed guifg=#d75151
+
+hi UnderlineTransparent gui=underline
 
 hi link LspReferenceText CursorLine
 hi link LspReferenceRead CursorLine
@@ -183,7 +188,7 @@ set number
 set numberwidth=2
 set wildmode=longest,list
 set lazyredraw
-set mouse=v
+set mouse=a
 set splitbelow
 set splitright
 set switchbuf+=useopen

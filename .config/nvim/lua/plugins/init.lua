@@ -17,7 +17,6 @@ local plugins = {
 	dap_ui = "rcarriga/nvim-dap-ui",
 	friendly_snippets = "rafamadriz/friendly-snippets",
 	plenary = "nvim-lua/plenary.nvim",
-	-- popup = "nvim-lua/popup.nvim",
 	playground = "nvim-treesitter/playground",
 	cmp_git = "petertriho/cmp-git",
 	github_link = "knsh14/vim-github-link",
@@ -30,8 +29,10 @@ local plugins = {
 	neogen = "danymat/neogen",
 	dressing = "stevearc/dressing.nvim",
 	telescope = "nvim-telescope/telescope.nvim",
-	iron = "hkupty/iron.nvim",
-	lualine = "nvim-lualine/lualine.nvim"
+	lualine = "nvim-lualine/lualine.nvim",
+	clangd = "p00f/clangd_extensions.nvim",
+	lspsig = "ray-x/lsp_signature.nvim",
+	cmp_sig = "hrsh7th/cmp-nvim-lsp-signature-help",
 }
 
 local plugins_inverse = {}
@@ -39,8 +40,9 @@ for k, v in pairs(plugins) do
 	plugins_inverse[v] = k
 end
 
+local packer = require("packer")
 
-return require("packer").startup(function(use)
+return packer.startup(function(use)
 	setfenv(1, vim.tbl_extend("force", _G or {}, plugins))
 
 	local function conf_use(arg)
@@ -53,7 +55,9 @@ return require("packer").startup(function(use)
 		use(arg)
 	end
 
-	conf_use(luasnip)
+	conf_use{
+		luasnip,
+	}
 
 	use(gruvbox)
 	use(dispatch)
@@ -64,6 +68,8 @@ return require("packer").startup(function(use)
 			luasnip,
 			-- illuminate,
 			cmp_lsp,
+			clangd,
+			--lspsig
 		}
 	}
 	use(lspinstall)
@@ -75,11 +81,13 @@ return require("packer").startup(function(use)
 			cmp_lsp,
 			cmp_luasnip,
 			cmp_git,
+			-- cmp_sig,
 			-- lsp-expand
 			luasnip
 		}
 	}
 	use(cmp_lsp)
+	-- use(cmp_sig)
 	use {
 		cmp_luasnip,
 		requires = luasnip
@@ -125,6 +133,6 @@ return require("packer").startup(function(use)
 	conf_use(neogen)
 	use(dressing)
 	use(telescope)
-	-- conf_use(iron)
 	conf_use(lualine)
+	use(clangd)
 end)

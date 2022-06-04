@@ -1,8 +1,7 @@
 local nvim_lsp = require("lspconfig")
 
-
 local function sem_token_attach(client)
-	if client.resolved_capabilities.semantic_tokens_full then
+	if client.server_capabilities.semantic_tokens_full then
 		vim.lsp.buf.semantic_tokens_full()
 		vim.cmd [[autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()]]
 	end
@@ -16,13 +15,17 @@ local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '<space>d', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>d', '<cmd>lua vim.diagnostic.open_float()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>n', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '<space>v', '<cmd>lua Toggle_virtual_text()<CR>:w<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>v', '<cmd>lua Toggle_virtual_text()<CR>:e<CR>', {noremap = true})
 
-
-	-- require 'illuminate'.on_attach(client)
+	-- require("lsp_signature").on_attach({
+	-- 	always_trigger = false,
+	-- 	toggle_key = "<C-S>",
+	-- 	hint_enable = false,
+	-- 	hi_parameter = "UnderlineTransparent"
+	-- })
 end
 
 Diag_params = {signs = true, virtual_text = true}
@@ -37,56 +40,63 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
-local ls_helper = require("plugins.luasnip.helpers")
 local session = require("session")
 
-nvim_lsp.clangd.setup{
-	on_attach = function(client)
-		lsp_attach(client)
-		sem_token_attach(client)
+local function completion_intercept(client, cb)
+	local orig_rpc_request = client.rpc.request
+	client.rpc.request = function(method, params, handler, ...)
+		local orig_handler = handler
+		if method == 'textDocument/completion' then
+			-- Idiotic take on <https://github.com/fannheyward/coc-pyright/blob/6a091180a076ec80b23d5fc46e4bc27d4e6b59fb/src/index.ts#L90-L107>.
+			handler = function(...)
+				local err, result = ...
 
-		local orig_rpc_request = client.rpc.request
-		function client.rpc.request(method, params, handler, ...)
-
-			local orig_handler = handler
-			if method == 'textDocument/completion' then
-				-- Idiotic take on <https://github.com/fannheyward/coc-pyright/blob/6a091180a076ec80b23d5fc46e4bc27d4e6b59fb/src/index.ts#L90-L107>.
-				handler = function(...)
-					ls_helper.setup_snip_env()
-					local err, result = ...
-					if not err and result then
-						local items = result.items or result
-						for _, item in ipairs(items) do
-							if item.textEdit.newText:match("^[%w_]+%(.*%)$") then
-
-								local snip_text = item.textEdit.newText
-								local name = snip_text:match("^[%w_]+")
-								local content = snip_text:match("%((.*)%)$")
-								if content:match("$0") then
-									content = content:gsub("$0", "$1000")
-								elseif content:match("${0") then
-									content = content:gsub("${0", "${1000")
-								end
-
-								session.lsp_override_snips[snip_text] = s("", {
-									t(name),
-									c(1, {
-										{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
-										{t"{", r(1, "type"), t"}"},
-									})
-								})
-							end
-							item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
-						end
-					end
-					return orig_handler(...)
+				if not err and result then
+					cb(result)
 				end
+				return orig_handler(...)
 			end
-			return orig_rpc_request(method, params, handler, ...)
 		end
-	end,
-	capabilities = capabilities
-}
+		return orig_rpc_request(method, params, handler, ...)
+	end
+end
+
+require("clangd_extensions").setup({
+	server = {
+		on_attach = function(client)
+			completion_intercept(client, function(result)
+				local items = result.items or result
+				for _, item in ipairs(items) do
+					local item_text = item.textEdit.newText
+					if item_text:match("^[%w_]+%(.*%)$") then
+						local name = item_text:match("^[%w_]+")
+						local content = item_text:match("%((.*)%)$")
+						if content:match("$0") then
+							content = content:gsub("$0", "$1000")
+						elseif content:match("${0") then
+							content = content:gsub("${0", "${1000")
+						end
+
+						ls.setup_snip_env()
+						session.lsp_override_snips[item_text] = s("", {
+							t(name),
+							c(1, {
+								{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
+								{t"{", r(1, "type"), t"}"},
+							})
+						})
+						item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
+					elseif item.insertTextFormat == vim.lsp.protocol.InsertTextFormat.Snippet then
+						item.textEdit.newText = item_text:gsub("${0", "${100")
+					end
+				end
+			end)
+			lsp_attach(client)
+			sem_token_attach(client)
+		end,
+		capabilities = capabilities
+	}
+})
 
 nvim_lsp.texlab.setup{
 	cmd = { "texlab" },
@@ -117,7 +127,7 @@ nvim_lsp.texlab.setup{
 	capabilities = capabilities
 }
 
-require'lspconfig'.pyright.setup{
+nvim_lsp.pyright.setup{
 	capabilities = capabilities,
 	on_attach = function(client)
 		lsp_attach(client)
@@ -125,7 +135,7 @@ require'lspconfig'.pyright.setup{
 	end,
 }
 
-require'lspconfig'.julials.setup{
+nvim_lsp.julials.setup{
 	cmd = {"julia", "--startup-file=no", "-e using LanguageServer; runserver()", "-J/home/simon/.julia/sysimages/GLMakieImage.so"},
 	capabilities = capabilities,
 	on_attach = function(client)
@@ -133,6 +143,8 @@ require'lspconfig'.julials.setup{
 		sem_token_attach(client)
 	end,
 }
+
+nvim_lsp.cmake.setup{}
 
 local sumneko_root_path = '/home/simon/.local/share/nvim/lspinstall/lua-language-server/'
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"

@@ -16,7 +16,7 @@ cmp.setup {
 			end
 		end,
 	},
-	mapping = {
+	mapping = cmp.mapping.preset.insert{
 		['<C-d>'] = cmp.mapping.scroll_docs(-4),
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
 		['<C-o>'] = cmp.mapping.complete(),
@@ -24,11 +24,16 @@ cmp.setup {
 	},
 	sources = {
 		{ name = 'nvim_lsp' },
+		-- { name = 'nvim_lsp_signature_help' },
 		{ name = 'luasnip' },
+		{ name = 'luasnip_choice' },
 		{ name = 'cmp_git' },
 	},
-	documentation = false,
+	window = {
+		documentation = false,
+	},
 	experimental = {
 		native_menu = false,
+		ghost_text = true
 	},
 }

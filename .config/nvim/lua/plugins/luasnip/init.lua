@@ -18,6 +18,9 @@ ls.config.setup({
 		},
 	},
 	ft_func = require("luasnip.extras.filetype_functions").from_pos_or_filetype,
+	load_ft_func = require("luasnip.extras.filetype_functions").extend_load_ft({
+		markdown = {"lua", "json"}
+	}),
 	snip_env = {
 		s = ls.s,
 		sn = ls.sn,
@@ -71,35 +74,7 @@ ls.config.setup({
 
 ls.filetype_extend("latex", {"tex"})
 
--- local function load_snippet_file(filename)
--- 	-- 420 = 0644
--- 	local fd = vim.loop.fs_open(filename, "r", 420)
---
--- 	if not fd then
--- 		return nil
--- 	end
---
--- 	local size = vim.loop.fs_fstat(fd).size
--- 	local func_string = vim.loop.fs_read(fd, size)
--- 	-- don't use require, we know where the file resides.
--- 	func_string = 'dofile("/home/simon/.config/nvim/lua/plugins/luasnip/helpers.lua").setup_snip_env() ' .. func_string
--- 	return loadstring(func_string)()
--- end
-
--- ls.snippets = setmetatable({}, {
--- 	__index = function(t, k)
--- 		-- absolute path!!!
--- 		-- adds snip_env to the file before generating the function.
--- 		local snippets = load_snippet_file("/home/simon/.config/nvim/lua/snippets/"..k..".lua")
--- 		-- set to empty table if no snippets found, prevents loading the file again on the next expand.
--- 		t[k] = snippets or {}
--- 		return t[k]
--- 	end
--- })
-
-
-
-vim.cmd [[command! LuaSnipEdit :lua require("luasnip.loaders.from_lua").edit_snippet_files()]]
+vim.cmd [[command! LuaSnipEdit :lua require("luasnip.loaders").edit_snippet_files()]]
 vim.cmd [[
 	inoremap <silent> <C-K> <cmd>lua ls.expand()<Cr>
 	inoremap <silent> <C-L> <cmd>lua ls.jump(1)<Cr>
@@ -121,8 +96,7 @@ au BufWritePost *lua/snippets/*.lua :execute 'lua require("luasnip").snippets[st
 augroup END
 ]]
 
-require("luasnip.loaders.from_lua").load()
+require("luasnip.loaders.from_lua").lazy_load()
 
 require("plugins.luasnip.external_update_dynamic_node")
--- require("luasnip/loaders/from_vscode").load()
--- require("plugins.luasnip.repeat_integration")
+-- require("luasnip/loaders/from_vscode").lazy_load()

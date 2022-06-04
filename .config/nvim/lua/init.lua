@@ -36,3 +36,8 @@ vim.api.nvim_create_autocmd("TermOpen", {
 		]])
 	end
 })
+
+-- set EDITOR to open files in this session. Prevents nested nvim-instance.
+vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
+
+require("sighelp")

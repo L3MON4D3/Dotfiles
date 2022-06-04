@@ -24,34 +24,34 @@ dap.adapters.cppdbg = {
 	command = '/usr/lib/nvim-dap-cpptools/debugAdapters/OpenDebugAD7',
 	name = "vscode-cpptools",
 }
-dap.set_log_level("DEBUG")
 
 vim.fn.sign_define('DapBreakpoint', {text='⛔', texthl='GruvboxRed', linehl='', numhl=''})
 vim.fn.sign_define('DapBreakpointCondition', {text='⛔', texthl='GruvboxBlue', linehl='', numhl=''})
 vim.fn.sign_define('DapStopped', {text=' ', texthl='GruvboxYellow', linehl='', numhl=''})
 
-dap.configurations.cpp = {
-	{
-		name = "Launch",
-		type = "lldb",
-		request = "launch",
-		program = function()
-			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-		end,
-		cwd = '${workspaceFolder}',
-		stopOnEntry = false,
+dap.configurations.cpp = vim.list_extend({
+		{
+			name = "Launch",
+			type = "lldb",
+			request = "launch",
+			program = function()
+				return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+			end,
+			cwd = '${workspaceFolder}',
+			stopOnEntry = false,
+		},
+		{
+			name = "Attach",
+			type = "lldb",
+			request = "attach",
+			cwd = '${workspaceFolder}',
+			pid = require('dap.utils').pick_process,
+			stopOnEntry = false,
+			args = {},
+		}
 	},
-	{
-		name = "Attach",
-		type = "lldb",
-		request = "attach",
-		cwd = '${workspaceFolder}',
-		pid = require('dap.utils').pick_process,
-		stopOnEntry = false,
-		args = {},
-	},
-	unpack(pdofile(".nvim_local.lua").dap or {})
-}
+	pdofile(".nvim_local.lua").dap or {} )
+
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
 

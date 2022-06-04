@@ -110,7 +110,62 @@ local pyinit = function(args, parent)
 	return sn(nil, nodes)
 end
 
+local case_node
+local function get_case_node(index)
+  return d(index, function()
+    return sn(
+      nil,
+      fmta('<keyword><condition>:\n\t<body>\n\tbreak;\n\n<continuation>', {
+        keyword = t({'case '}),
+        condition = i(1, 'condition'),
+        body = i(2, '// TODO'),
+        continuation = c(3, {
+            sn(
+              nil,
+              fmta('\ndefault:\n\t<body>\n', { body = i(1, '// TODO') }, {dedent = false})
+            ),
+            vim.deepcopy(case_node),
+          }),
+        })
+    )
+  end, {})
+end
+
+case_node = get_case_node(1)
+
+local switch_case_node = fmta('<keyword><expression>) {\n<case>\n}', {
+  keyword = t({'switch ', '('}),
+  expression = i(1, 'expression'),
+  case = isn(2, { t"\t", get_case_node(1) }, "$PARENT_INDENT\t")
+})
+
 return {
+	s('github',
+      fmt([[https://github.com/{}/{}/archive/{}/$name-$version.tar.gz]],
+        {
+          i(1, "author"),
+          i(2, "project"),
+          -- TODO: choiceNode
+          --c(3, { i(1, "$version"), i(1, "v$version") }),
+          c(3, {
+            t"$version",
+            t"v$version",
+          }),
+        }
+      )
+    ),
+	s("trig", {
+		t("SECTION(\""), i(1, "default"), t("\")"),
+		t({"", "{"}),
+		-- isn only applies indent at newlines, so a `    ` is still needed to indent the first line.
+		t({"", "    "}), isn(2,
+			f(function (_, snip) return snip.env.SELECT_DEDENT end, {}),
+			-- indent with four spaces.
+			"$PARENT_INDENT    "),
+		t({"", "}"})
+	}),
+	s("trig", switch_case_node),
+	s("trig", {i(1, "text"), dl(2, l._1, {1})}),
 	s("lel", i(1, "lal")),
 	parse("lol", "a${1:$TM_CURRENT_LINE}"),
 	s({trig="fn"}, {
