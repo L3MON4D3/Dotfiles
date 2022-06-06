@@ -33,6 +33,7 @@ local plugins = {
 	clangd = "p00f/clangd_extensions.nvim",
 	lspsig = "ray-x/lsp_signature.nvim",
 	cmp_sig = "hrsh7th/cmp-nvim-lsp-signature-help",
+	jsregexp = "jsregexp"
 }
 
 local plugins_inverse = {}
@@ -41,6 +42,8 @@ for k, v in pairs(plugins) do
 end
 
 local packer = require("packer")
+
+local use_rocks = packer.use_rocks
 
 return packer.startup(function(use)
 	setfenv(1, vim.tbl_extend("force", _G or {}, plugins))
@@ -126,13 +129,10 @@ return packer.startup(function(use)
 		vim_snippets,
 		requires = luasnip
 	})
-	use {
-		vscode_react,
-		run = 'yarn install --frozen-lockfile && yarn compile'
-	}
 	conf_use(neogen)
 	use(dressing)
 	use(telescope)
 	conf_use(lualine)
 	use(clangd)
+	use_rocks(jsregexp)
 end)
