@@ -18,9 +18,9 @@ end
 ---@return table: 
 ---  -active_parameter
 ---  -active_signature
----  -signatures: list of tables like
----    -funcname
----    -parameters: list of strings
+---  -signatures: list of tables with
+---    -funcname: string
+---    -parameters: string[] or nil.
 local function normalize(err, res)
 	if err or not res then
 		return nil
@@ -45,7 +45,7 @@ local function normalize(err, res)
 		for _, param in ipairs(res_sig.parameters) do
 			table.insert(params, to_paramstring(param.label, res_sig.label))
 		end
-		sig.parameters = params
+		sig.parameters = #params > 0 and params or nil
 		table.insert(clean.signatures, sig)
 	end
 
@@ -73,14 +73,19 @@ local function signature_to_lines(signature, width)
 		end
 	end
 
-	if #signature.parameters > 1 then
-		append(signature.parameters[1] .. ",", true)
-		for i=2,#signature.parameters-1 do
-			append(signature.parameters[i] .. ",", false)
+	if signature.parameters then
+		if #signature.parameters > 1 then
+			append(signature.parameters[1] .. ",", true)
+			for i=2,#signature.parameters-1 do
+				append(signature.parameters[i] .. ",", false)
+			end
+			append(signature.parameters[#signature.parameters] .. ")", false)
+		else
+			append(signature.parameters[1] .. ")", true)
 		end
-		append(signature.parameters[#signature.parameters] .. ")", false)
 	else
-		append(signature.parameters[1] .. ")", true)
+		-- signature has no parameters.
+		lines[1] = lines[1] .. ")"
 	end
 
 	return lines
@@ -163,7 +168,10 @@ local function show_active(sig, active_param)
 	vim.api.nvim_win_set_buf(win, buf)
 	vim.api.nvim_buf_set_text(buf, 0,0,0,0, lines)
 
-	highlight_param(buf, lines, sig.parameters[active_param])
+	-- make sure the parameter actually exists before highlighting it.
+	if sig.parameters and sig.parameters[active_param] then
+		highlight_param(buf, lines, sig.parameters[active_param])
+	end
 
 	return win, buf, lines
 end
@@ -171,8 +179,10 @@ end
 local function reset_sighelp()
 	-- active, close window, reset session.
 	-- force-close both.
-	vim.api.nvim_win_close(session.win, true)
-	vim.api.nvim_buf_delete(session.buf, {force = true})
+	if session.win and vim.api.nvim_win_is_valid(session.win) then
+		vim.api.nvim_win_close(session.win, true)
+		vim.api.nvim_buf_delete(session.buf, {force = true})
+	end
 	session = {}
 	vim.api.nvim_clear_autocmds({
 		group = augroup
@@ -185,10 +195,11 @@ local function handler(err, res, _, _)
 		if session.win then
 			reset_sighelp()
 		else
-			print("no sighelp here")
+			vim.notify("no sighelp here", vim.log.levels.WARN)
 		end
 		return
 	end
+	Insp(sig_res)
 
 	local current_sig = sig_res.signatures[sig_res.active_signature]
 	local current_param = sig_res.active_parameter
