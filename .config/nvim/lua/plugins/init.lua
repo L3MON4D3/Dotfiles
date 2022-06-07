@@ -34,6 +34,7 @@ local plugins = {
 	lspsig = "ray-x/lsp_signature.nvim",
 	cmp_sig = "hrsh7th/cmp-nvim-lsp-signature-help",
 	jsregexp = "jsregexp",
+	xml = "luaexpat",
 	libmodal = "Iron-E/nvim-libmodal",
 }
 
@@ -136,5 +137,6 @@ return packer.startup(function(use)
 	conf_use(lualine)
 	use(clangd)
 	use_rocks(jsregexp)
+	use_rocks(xml)
 	use(libmodal)
 end)
