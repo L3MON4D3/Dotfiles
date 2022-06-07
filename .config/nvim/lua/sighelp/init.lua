@@ -215,29 +215,32 @@ local function handler(err, res, _, _)
 	session.current_param = sig_res.active_parameter
 end
 
+local function on(events, cb)
+	vim.api.nvim_create_autocmd(events, {
+		buffer = vim.api.nvim_get_current_buf(),
+		callback = cb,
+		group = augroup
+	})
+end
+
+local function request_sighelp()
+	vim.lsp.buf_request(0,
+		 "textDocument/signatureHelp",
+		 vim.tbl_extend("error",
+			 vim.lsp.util.make_position_params(0),
+			 { context = { triggerKind=1 } } ))
+end
+
 local function toggle()
 	if session.win then
 		reset_sighelp()
 	else
 		-- not active, make request.
-		vim.lsp.buf_request(0,
-			 "textDocument/signatureHelp",
-			 vim.tbl_extend("error",
-				 vim.lsp.util.make_position_params(0),
-				 { context = { triggerKind=1 } } ))
-
-		-- make new request on CursorHoldI.
-		vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
-			buffer = vim.api.nvim_get_current_buf(),
-			callback = function()
-				vim.lsp.buf_request(0,
-					 "textDocument/signatureHelp",
-					 vim.tbl_extend("error",
-						 vim.lsp.util.make_position_params(0),
-						 { context = { triggerKind=1 } } ))
-			end,
-			group = augroup
-		})
+		request_sighelp()
+		-- make new request on CursorMovedI.
+		on({"CursorMovedI"}, function() request_sighelp() end)
+		-- hide on InsertLeave.
+		on("InsertLeave", function() reset_sighelp() end)
 	end
 end
 
