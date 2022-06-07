@@ -41,3 +41,4 @@ vim.api.nvim_create_autocmd("TermOpen", {
 vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
 
 require("sighelp")
+require("modes")

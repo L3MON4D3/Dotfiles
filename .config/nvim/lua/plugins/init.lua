@@ -33,7 +33,8 @@ local plugins = {
 	clangd = "p00f/clangd_extensions.nvim",
 	lspsig = "ray-x/lsp_signature.nvim",
 	cmp_sig = "hrsh7th/cmp-nvim-lsp-signature-help",
-	jsregexp = "jsregexp"
+	jsregexp = "jsregexp",
+	libmodal = "Iron-E/nvim-libmodal",
 }
 
 local plugins_inverse = {}
@@ -135,4 +136,5 @@ return packer.startup(function(use)
 	conf_use(lualine)
 	use(clangd)
 	use_rocks(jsregexp)
+	use(libmodal)
 end)
