@@ -1,5 +1,5 @@
 local cmp = require("cmp")
-local gen = require("vksnippets.generate")
+local vkinfo = require("vkinfo")
 local ls = require("luasnip")
 
 
@@ -19,7 +19,7 @@ end
 
 local items = {}
 
-for i, struct in ipairs(gen.structs) do
+for i, struct in ipairs(vkinfo.structs) do
 	items[i] = {
 		-- omit "Vk".
 		word = struct.name:sub(3, -1),
@@ -35,11 +35,40 @@ function source:complete(_, callback)
 	callback(items)
 end
 
+local function to_snippet(struct)
+	ls.setup_snip_env()
+
+	local nodes = {
+		-- replace Vk-prefix with vk::.
+		t("vk::" .. struct.name:sub(3, -1) .. " "), i(1), t{" {", ""}
+	}
+
+	local in_indx = 2
+	-- skip sType and pNext (hope they are actually always at [1] and [2]...)
+	for _, member in ipairs(struct) do
+		if member.name == "sType" or member.name == "pNext" then
+			goto continue
+		end
+
+		vim.list_extend(nodes, {
+			t("\t." .. member.name .. " = "),
+			i(in_indx, member.type),
+			t{"", ""}
+		})
+
+		in_indx = in_indx + 1
+		::continue::
+	end
+	table.insert(nodes, t"};")
+
+	return s("", nodes)
+end
+
 local snippets = {}
 function source:execute(completion_item, callback)
 	local indx = completion_item.data
 	if not snippets[indx] then
-		snippets[indx] = gen.to_snippet(gen.structs[indx])
+		snippets[indx] = to_snippet(vkinfo.structs[indx])
 	end
 
 	local cursor = vim.api.nvim_win_get_cursor(0)

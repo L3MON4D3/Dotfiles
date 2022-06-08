@@ -2,6 +2,10 @@ local cmp = require'cmp'
 local session = require("session")
 
 require("vksnippets")
+-- cannot be loaded earlier, I think.
+-- TODO find a better place for this call
+-- probably involves moving around packers packer_load(???).lua.
+require("vkdoc")
 
 cmp.setup {
 	completion = {

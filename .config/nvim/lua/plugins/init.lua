@@ -35,6 +35,7 @@ local plugins = {
 	cmp_sig = "hrsh7th/cmp-nvim-lsp-signature-help",
 	jsregexp = "jsregexp",
 	xml = "luaexpat",
+	dbus = "ldbus",
 	libmodal = "Iron-E/nvim-libmodal",
 	impatient = "lewis6991/impatient.nvim"
 }
@@ -139,6 +140,7 @@ return packer.startup(function(use)
 	use(clangd)
 	use_rocks(jsregexp)
 	use_rocks(xml)
+	use_rocks{"dbus_proxy"}
 	use(libmodal)
 	use(impatient)
 end)

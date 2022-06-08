@@ -26,6 +26,32 @@ local function find_structs(xml)
 	return structs
 end
 
+local function find_category(xml, category_name)
+	local items = {}
+	recursive_walk(xml, function(t)
+		if t.category == category_name then
+			items[t.name] = true
+		end
+		-- keep recursing on no match.
+		return false
+	end)
+
+	return items
+end
+
+local function find_functions(xml)
+	local items = {}
+	recursive_walk(xml, function(t)
+		if t[0] == "command" then
+			if t[1] == nil and not t.alias then
+				items[t.name] = true
+			end
+		end
+		return false
+	end)
+
+	return items
+end
 
 local lxp = require("lxp.totable")
 local vk_xml = io.open("/usr/share/vulkan/registry/vk.xml", "r")
@@ -33,36 +59,10 @@ p = lxp.parse(vk_xml)
 lxp.clean(p)
 lxp.torecord(p)
 
-local function snip_struct(struct)
-	ls.setup_snip_env()
-
-	local nodes = {
-		-- replace Vk-prefix with vk::.
-		t("vk::" .. struct.name:sub(3, -1) .. " "), i(1), t{" {", ""}
-	}
-
-	local in_indx = 2
-	-- skip sType and pNext (hope they are actually always at [1] and [2]...)
-	for _, member in ipairs(struct) do
-		if member.name == "sType" or member.name == "pNext" then
-			goto continue
-		end
-
-		vim.list_extend(nodes, {
-			t("\t." .. member.name .. " = "),
-			i(in_indx, member.type),
-			t{"", ""}
-		})
-
-		in_indx = in_indx + 1
-		::continue::
-	end
-	table.insert(nodes, t"};")
-
-	return s("", nodes)
-end
-
 return {
 	structs = find_structs(p),
-	to_snippet = snip_struct
+	structnames = find_category(p, "struct"),
+	enumnames = find_category(p, "enum"),
+	handlenames = find_category(p, "handle"),
+	functions = find_functions(p)
 }
