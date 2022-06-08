@@ -89,8 +89,8 @@ end
 vim.api.nvim_set_keymap('i', "<C-t>", '<cmd>lua require("plugins.luasnip.external_update_dynamic_node").dynamic_node_external_update(1)<Cr>', {noremap = true})
 vim.api.nvim_set_keymap('s', "<C-t>", '<cmd>lua require("plugins.luasnip.external_update_dynamic_node").dynamic_node_external_update(1)<Cr>', {noremap = true})
 
-vim.api.nvim_set_keymap('i', "<C-g>", '<cmd>lua require("plugins.luasnip.external_update_dynamic_node").dynamic_node_external_update(2)<Cr>', {noremap = true})
-vim.api.nvim_set_keymap('s', "<C-g>", '<cmd>lua require("plugins.luasnip.external_update_dynamic_node").dynamic_node_external_update(2)<Cr>', {noremap = true})
+vim.api.nvim_set_keymap('i', "<C-s-t>", '<cmd>lua require("plugins.luasnip.external_update_dynamic_node").dynamic_node_external_update(2)<Cr>', {noremap = true})
+vim.api.nvim_set_keymap('s', "<C-s-t", '<cmd>lua require("plugins.luasnip.external_update_dynamic_node").dynamic_node_external_update(2)<Cr>', {noremap = true})
 
 return {
 	dynamic_node_external_update = dynamic_node_external_update

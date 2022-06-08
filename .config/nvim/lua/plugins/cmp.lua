@@ -1,6 +1,8 @@
 local cmp = require'cmp'
 local session = require("session")
 
+require("vksnippets")
+
 cmp.setup {
 	completion = {
 		autocomplete = false,
@@ -19,15 +21,7 @@ cmp.setup {
 	mapping = cmp.mapping.preset.insert{
 		['<C-d>'] = cmp.mapping.scroll_docs(-4),
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
-		['<C-o>'] = cmp.mapping.complete(),
-		['<C-y>'] = cmp.mapping.confirm()
-	},
-	sources = {
-		{ name = 'nvim_lsp' },
-		-- { name = 'nvim_lsp_signature_help' },
-		{ name = 'luasnip' },
-		{ name = 'luasnip_choice' },
-		{ name = 'cmp_git' },
+		['<C-y>'] = cmp.mapping.confirm(),
 	},
 	window = {
 		documentation = false,
@@ -37,3 +31,8 @@ cmp.setup {
 		ghost_text = true
 	},
 }
+
+vim.cmd[[
+inoremap <C-O> <cmd>lua require("cmp").complete({config = {sources = {{name = "nvim_lsp"}} } })<Cr>
+inoremap <C-S-O> <cmd>lua require("cmp").complete({config = {sources = {{name = "vksnippets"}} } })<Cr>
+]]
