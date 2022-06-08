@@ -36,6 +36,7 @@ local plugins = {
 	jsregexp = "jsregexp",
 	xml = "luaexpat",
 	libmodal = "Iron-E/nvim-libmodal",
+	impatient = "lewis6991/impatient.nvim"
 }
 
 local plugins_inverse = {}
@@ -139,4 +140,5 @@ return packer.startup(function(use)
 	use_rocks(jsregexp)
 	use_rocks(xml)
 	use(libmodal)
+	use(impatient)
 end)

@@ -6,6 +6,7 @@ set noswapfile
 
 source ~/.config/nvim/functions.vim 
 
+lua require("impatient")
 lua require("plugins")
 
 augroup packer_user_config
