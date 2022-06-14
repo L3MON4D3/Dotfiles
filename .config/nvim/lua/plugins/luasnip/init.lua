@@ -66,9 +66,9 @@ ls.config.setup({
 			end})
 		end,
 		parse = function(trig, body)
-			ls.parser.parse_snippet(trig, body, {
+			return ls.parser.parse_snippet(trig, body, {
 				dedent = true,
-				trim_emptyr = true
+				trim_empty = true
 			})
 		end,
 		n = require("luasnip.extras").nonempty,
@@ -96,6 +96,8 @@ vim.cmd [[
 ]]
 
 require("luasnip.loaders.from_lua").lazy_load()
+require("luasnip.loaders.from_lua").load({paths = {vim.fn.getcwd() .. "/.luasnippets/"}})
+
 
 require("plugins.luasnip.external_update_dynamic_node")
 -- require("luasnip/loaders/from_vscode").lazy_load()
