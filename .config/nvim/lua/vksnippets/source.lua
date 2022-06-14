@@ -53,12 +53,15 @@ local function to_snippet(struct)
 		vim.list_extend(nodes, {
 			t("\t." .. member.name .. " = "),
 			i(in_indx, member.type),
-			t{"", ""}
+			t{",", ""}
 		})
 
 		in_indx = in_indx + 1
 		::continue::
 	end
+	-- remove last ",":
+	nodes[#nodes] = t{"", ""}
+
 	table.insert(nodes, t"};")
 
 	return s("", nodes)

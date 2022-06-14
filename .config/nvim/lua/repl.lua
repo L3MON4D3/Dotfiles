@@ -57,9 +57,13 @@ function M.toggle(term_id, split_command, focus)
 		api.nvim_win_close(win, true)
 		windows[term_id][tabpage] = nil
 	else
+		-- gets active window.
 		local current_win = api.nvim_tabpage_get_win(tabpage)
 		vim.cmd(split_command)
 		local split_win = api.nvim_tabpage_get_win(tabpage)
+		api.nvim_win_set_option(split_win, "winfixheight", true)
+		-- probably also good?
+		api.nvim_win_set_option(split_win, "winfixwidth", true)
 
 		if not focus  then
 			_G._insert_term_skip = true

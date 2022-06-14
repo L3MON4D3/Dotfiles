@@ -65,7 +65,12 @@ ls.config.setup({
 				end
 			end})
 		end,
-		parse = ls.parser.parse_snippet,
+		parse = function(trig, body)
+			ls.parser.parse_snippet(trig, body, {
+				dedent = true,
+				trim_emptyr = true
+			})
+		end,
 		n = require("luasnip.extras").nonempty,
 		m = require("luasnip.extras").match,
 		ai = require("luasnip.nodes.absolute_indexer")

@@ -1,10 +1,8 @@
 local nvim_lsp = require("lspconfig")
 
-local function sem_token_attach(client)
-	if client.server_capabilities.semantic_tokens_full then
-		vim.lsp.buf.semantic_tokens_full()
-		vim.cmd [[autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()]]
-	end
+local function sem_token_attach(_)
+	vim.lsp.buf.semantic_tokens_full()
+	vim.cmd [[autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()]]
 end
 
 local lsp_attach = function(client)
@@ -12,13 +10,15 @@ local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gD', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>d', '<cmd>lua vim.diagnostic.open_float()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>n', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>v', '<cmd>lua Toggle_virtual_text()<CR>:e<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>ci', '<cmd>lua vim.lsp.buf.incoming_calls()<cr>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', '<space>co', '<cmd>lua vim.lsp.buf.outgoing_calls()<cr>', {noremap = true})
 
 	-- require("lsp_signature").on_attach({
 	-- 	always_trigger = false,
@@ -96,6 +96,13 @@ require("clangd_extensions").setup({
 			sem_token_attach(client)
 		end,
 		capabilities = capabilities
+	},
+	extensions = {
+		inlay_hints = {
+			parameter_hints_prefix = "⟵ ",
+			other_hints_prefix = "⟼ ",
+			highlight = "GruvboxBg1"
+		}
 	}
 })
 
@@ -141,7 +148,6 @@ nvim_lsp.julials.setup{
 	capabilities = capabilities,
 	on_attach = function(client)
 		lsp_attach(client)
-		sem_token_attach(client)
 	end,
 }
 

@@ -1,56 +1,7 @@
 local ns_id = vim.api.nvim_create_namespace("sighelp")
 local session = {}
 local augroup = vim.api.nvim_create_augroup("sighelp", {})
-
-local function to_paramstring(param_label, label)
-	if type(param_label) == "table" then
-		-- 0-based index in table from lsp.
-		-- this will fail for some UTF16-chars.
-		-- exclude end.
-		return label:sub(param_label[1] + 1, param_label[2])
-	else
-		return param_label
-	end
-end
-
----Extract labels from sighelp-response.
----@param res response
----@return table: 
----  -active_parameter
----  -active_signature
----  -signatures: list of tables with
----    -funcname: string
----    -parameters: string[] or nil.
-local function normalize(err, res)
-	if err or not res then
-		return nil
-	end
-	local clean = {}
-	-- both 0-based to 1-based.
-	-- default is 0.
-	clean.active_parameter = (res.activeParameter or 0)+1
-	clean.active_signature = (res.activeSignature or 0)+1
-
-	-- no signatures returned.
-	if #res.signatures == 0 then
-		return nil
-	end
-
-	clean.signatures = {}
-	for _, res_sig in ipairs(res.signatures) do
-		local sig = {}
-		sig.funcname = res_sig.label:match("^([^(]+)%(")
-
-		local params = {}
-		for _, param in ipairs(res_sig.parameters) do
-			table.insert(params, to_paramstring(param.label, res_sig.label))
-		end
-		sig.parameters = #params > 0 and params or nil
-		table.insert(clean.signatures, sig)
-	end
-
-	return clean
-end
+local util = require("sighelp.util")
 
 local function signature_to_lines(signature, width)
 	local lines = {}
@@ -135,37 +86,48 @@ local function show_active(sig, active_param)
 	local cur = vim.api.nvim_win_get_cursor(0)
 	cur[1] = cur[1] - 1
 
-	local win = vim.api.nvim_open_win(0, false, {
-		relative = "cursor",
-		-- width may be truncated signature_to_lines cannot be called before
-		-- the window has actually been placed and the correct width can be
-		-- queried.
-		width = 100,
-		-- adjust height later, with #signature_to_lines.
-		height = 1,
-		-- one below cursor.
-		row = 1,
-		col = 0,
-		style = "minimal",
-		border = {"󲕭","󲕲","󲕮","󲕳","󲕯", "󲕱", "󲕰", "󲕴"}
-	})
+	local buf, win, width
+	if session.win then
+		buf = session.buf
+		win = session.win
+		width = session.win_original_width
 
-	-- get actual, potentially truncated width:
-	local width = vim.api.nvim_win_get_width(win)
+		-- clear buffer.
+		vim.api.nvim_buf_set_lines(buf, 0, -1, false, {""})
+	else
+		win = vim.api.nvim_open_win(0, false, {
+			relative = "cursor",
+			-- width may be truncated signature_to_lines cannot be called before
+			-- the window has actually been placed and the correct width can be
+			-- queried.
+			width = 100,
+			-- adjust height later, with #signature_to_lines.
+			height = 1,
+			-- one below cursor.
+			row = 1,
+			col = 0,
+			style = "minimal",
+			border = {"󲕭","󲕲","󲕮","󲕳","󲕯", "󲕱", "󲕰", "󲕴"}
+		})
+		-- get actual, potentially truncated width:
+		width = vim.api.nvim_win_get_width(win)
+		-- unlisted, scratch.
+		buf = vim.api.nvim_create_buf(false, true)
+		-- set bufs filetype for (hopefully) correct highlighting.
+		vim.api.nvim_buf_set_option(buf, "filetype", vim.api.nvim_buf_get_option(0, "filetype"))
+
+		-- multiline-indented string -> folds.
+		vim.api.nvim_win_set_option(win, "foldenable", false)
+
+		vim.api.nvim_win_set_buf(win, buf)
+	end
+
 	local lines = signature_to_lines(sig, width)
 	-- finally set correct height.
 	vim.api.nvim_win_set_config(win, {
 		height = #lines,
 		width = longest_line(lines)
 	})
-	-- multiline-indented string -> folds.
-	vim.api.nvim_win_set_option(win, "foldenable", false)
-
-	-- unlisted, scratch.
-	local buf = vim.api.nvim_create_buf(false, true)
-	-- set bufs filetype for (hopefully) correct highlighting.
-	vim.api.nvim_buf_set_option(buf, "filetype", vim.api.nvim_buf_get_option(0, "filetype"))
-	vim.api.nvim_win_set_buf(win, buf)
 	vim.api.nvim_buf_set_text(buf, 0,0,0,0, lines)
 
 	-- make sure the parameter actually exists before highlighting it.
@@ -173,7 +135,7 @@ local function show_active(sig, active_param)
 		highlight_param(buf, lines, sig.parameters[active_param])
 	end
 
-	return win, buf, lines
+	return win, buf, lines, width
 end
 
 local function reset_sighelp()
@@ -190,7 +152,7 @@ local function reset_sighelp()
 end
 
 local function handler(err, res, _, _)
-	local sig_res = normalize(err, res)
+	local sig_res = util.normalize(err, res)
 	if not sig_res then
 		if session.win then
 			reset_sighelp()
@@ -199,9 +161,18 @@ local function handler(err, res, _, _)
 		end
 		return
 	end
-	Insp(sig_res)
 
-	local current_sig = sig_res.signatures[sig_res.active_signature]
+	local sig_indx
+	if session.override_indx then
+		-- wrap around if no signature with this index available/
+		-- if all were iterated through.
+		sig_indx = sig_res.signatures[session.override_indx] and session.override_indx or 1
+		session.override_indx = nil
+	else
+		sig_indx = sig_res.active_signature
+	end
+
+	local current_sig = sig_res.signatures[sig_indx]
 	local current_param = sig_res.active_parameter
 	if vim.deep_equal(current_sig, session.current_sig) then
 		-- this signature is currently displayed! if the param also matches, there's nothing to do.
@@ -214,7 +185,7 @@ local function handler(err, res, _, _)
 		session.current_param = current_param
 		return
 	end
-	local win, buf, lines = show_active(current_sig, sig_res.active_parameter)
+	local win, buf, lines, orig_width = show_active(current_sig, sig_res.active_parameter)
 	-- for closing win.
 	session.win = win
 	-- for setting new extmark.
@@ -223,7 +194,9 @@ local function handler(err, res, _, _)
 	session.lines = lines
 	-- abort early if sig and active param still match.
 	session.current_sig = current_sig
+	session.current_sig_indx = sig_indx
 	session.current_param = sig_res.active_parameter
+	session.win_original_width = orig_width
 end
 
 local function on(events, cb)
@@ -234,27 +207,20 @@ local function on(events, cb)
 	})
 end
 
-local function request_sighelp()
-	vim.lsp.buf_request(0,
-		 "textDocument/signatureHelp",
-		 vim.tbl_extend("error",
-			 vim.lsp.util.make_position_params(0),
-			 { context = { triggerKind=1 } } ))
-end
-
 local function toggle()
 	if session.win then
-		reset_sighelp()
+		session.override_indx = session.current_sig_indx + 1
+		util.request_sighelp(handler)
 	else
 		-- not active, make request.
-		request_sighelp()
+		util.request_sighelp(handler)
 		-- make new request on CursorMovedI.
-		on({"CursorMovedI"}, function() request_sighelp() end)
+		on({"CursorMovedI"}, function() util.request_sighelp(handler) end)
 		-- hide on InsertLeave.
 		on("InsertLeave", function() reset_sighelp() end)
 	end
 end
 
-vim.lsp.handlers["textDocument/signatureHelp"] = handler
+-- vim.lsp.handlers["textDocument/signatureHelp"] = handler
 
 vim.keymap.set("i", "<C-H>", toggle)

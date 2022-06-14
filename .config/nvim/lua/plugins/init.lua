@@ -37,7 +37,8 @@ local plugins = {
 	xml = "luaexpat",
 	dbus = "ldbus",
 	libmodal = "Iron-E/nvim-libmodal",
-	impatient = "lewis6991/impatient.nvim"
+	impatient = "lewis6991/impatient.nvim",
+	prettier = "prettier/vim-prettier"
 }
 
 local plugins_inverse = {}
@@ -143,4 +144,5 @@ return packer.startup(function(use)
 	use_rocks{"dbus_proxy"}
 	use(libmodal)
 	use(impatient)
+	use(prettier)
 end)

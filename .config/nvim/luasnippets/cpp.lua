@@ -5,13 +5,17 @@ local function capture_insert(_, snip, _, capture_indx, pre_text, post_text)
 end
 
 return {
-	ls.parser.parse_snippet({trig = "if", wordTrig = true}, "if ($1)\n\t$0"),
-	ls.parser.parse_snippet({trig = "for", wordTrig = true}, "for ($1 : $2)\n\t$0"),
+	parse({trig = "if", wordTrig = true}, "if ($1)\n\t$0"),
+	parse({trig = "for", wordTrig = true}, "for ($1 : $2)\n\t$0"),
 	s({trig = "for(%w+)", wordTrig = true, regTrig = true}, {
 		t({"for ("}), d(1, capture_insert, {}, {user_args = {1, "int ", " = 0"}}), t({"; "}),
 		f(function(_, snip) return {snip.captures[1]} end, {}), c(2, {sn(nil, {t({" != "}), i(1)}), i(nil)}), t({"; "}),
 		d(3, capture_insert, {}, {user_args = {1, "++"}}), t({")", "\t"}), i(0)
 	}),
 	s("iferr", fmt("if ({})\n\tthrow std::runtime_error(\"failed to {}\")", {i(1), i(2)})),
-	parse("vapp", "$1.insert($1.end(), $2.begin(), $2.end())")
+	parse("vapp", "$1.insert($1.end(), $2.begin(), $2.end())"),
+	parse("allof", "$1.begin(), $1.end()"),
+	parse("dname", [[boilerplate::add_debugname(${1:device}, $2, "${2}");]]),
+	parse("prag", "#pragma once"),
+	parse("ns", "namespace $1 {\n\n$2\n\n}")
 }

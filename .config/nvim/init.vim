@@ -146,13 +146,13 @@ hi link LspReferenceWrite CursorLine
 hi link LspProperty GruvboxBlue
 hi link LspFunction GruvboxOrangeBold
 hi link LspMethod GruvboxBlueBold
-hi link LspNamespace GruvboxYellow
+hi link LspNamespace GruvboxAqua
 hi link LspType GruvboxYellow
 hi link LspString GruvboxYellow
 hi link LspClass LspType
 hi link LspVariable GruvboxFg1
 
-hi link LspStatic GruvboxAqua
+hi link LspStatic LspProperty
 hi link LspEnumMember GruvboxPurple
 
 "hi! TSParameter guifg=#ebdbb2 gui=bold
