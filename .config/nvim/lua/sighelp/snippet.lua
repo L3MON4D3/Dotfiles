@@ -1,6 +1,6 @@
 local util = require("sighelp.util")
 
-ls.setup_snip_env()
+require("luasnip").setup_snip_env()
 
 local function sig_snipnodes(signature)
 	local nodes = {}

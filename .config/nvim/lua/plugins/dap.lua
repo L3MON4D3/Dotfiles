@@ -29,7 +29,8 @@ vim.fn.sign_define('DapBreakpoint', {text='⛔', texthl='GruvboxRed', linehl='',
 vim.fn.sign_define('DapBreakpointCondition', {text='⛔', texthl='GruvboxBlue', linehl='', numhl=''})
 vim.fn.sign_define('DapStopped', {text=' ', texthl='GruvboxYellow', linehl='', numhl=''})
 
-dap.configurations.cpp = vim.list_extend({
+dap.configurations.cpp = vim.list_extend(
+	Project_config().dap, {
 		{
 			name = "Launch",
 			type = "lldb",
@@ -39,8 +40,7 @@ dap.configurations.cpp = vim.list_extend({
 			end,
 			cwd = '${workspaceFolder}',
 			stopOnEntry = false,
-		},
-		{
+		}, {
 			name = "Attach",
 			type = "lldb",
 			request = "attach",
@@ -49,8 +49,7 @@ dap.configurations.cpp = vim.list_extend({
 			stopOnEntry = false,
 			args = {},
 		}
-	},
-	pdofile(".nvim_local.lua").dap or {} )
+		})
 
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp

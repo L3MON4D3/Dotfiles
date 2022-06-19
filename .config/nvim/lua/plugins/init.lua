@@ -59,7 +59,7 @@ return packer.startup(function(use)
 				[1] = arg,
 			}
 		end
-		arg.config = "require \"plugins/"..plugins_inverse[arg[1]].."\""
+		arg.config = "pcall(require, \"plugins/"..plugins_inverse[arg[1]].."\")"
 		use(arg)
 	end
 

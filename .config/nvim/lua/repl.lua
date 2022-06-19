@@ -3,7 +3,7 @@ local api = vim.api
 local M = {}
 
 local commands = {
-	julia = {"julia", "-q", "-J/home/simon/.julia/sysimages/GLMakieImage.so"}
+	julia = {"julia", "-q", "-J/home/simon/.julia/sysimages/GLMakieImage.so", "--threads=auto"}
 }
 
 local terminals = setmetatable({}, {

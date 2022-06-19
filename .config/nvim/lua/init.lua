@@ -1,5 +1,9 @@
 local repl = require("repl")
 
+function Project_config()
+	return require("project_configs")[vim.fn.getcwd()]
+end
+
 function Insp(data)
 	print(vim.inspect(data))
 end
@@ -41,7 +45,10 @@ vim.api.nvim_create_autocmd("TermOpen", {
 vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
 
 require("sighelp")
+require("sighelp.snippet")
 require("modes")
+
+Project_config().run()
 
 -- vim.treesitter.query.add_directive("set_injection_filetype_snippet_file!", function(_, _, bufnr, _, metadata)
 -- 	local name = vim.api.nvim_buf_get_name(bufnr)

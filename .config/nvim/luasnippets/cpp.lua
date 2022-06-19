@@ -15,7 +15,6 @@ return {
 	s("iferr", fmt("if ({})\n\tthrow std::runtime_error(\"failed to {}\")", {i(1), i(2)})),
 	parse("vapp", "$1.insert($1.end(), $2.begin(), $2.end())"),
 	parse("allof", "$1.begin(), $1.end()"),
-	parse("dname", [[boilerplate::add_debugname(${1:device}, $2, "${2}");]]),
 	parse("prag", "#pragma once"),
 	parse("ns", "namespace $1 {\n\n$2\n\n}")
 }

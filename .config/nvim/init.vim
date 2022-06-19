@@ -360,7 +360,7 @@ nnoremap <silent> <F22> :res -2<Cr>
 
 nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
 noremap <silent><leader>ep :tabnew<Cr>:e /home/simon/.config/nvim/lua/plugins/<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/lua/plugins/<Cr>
-noremap <silent><leader>es :tabnew<Cr>:e /home/simon/.config/nvim/lua/snippets/<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/lua/snippets/<Cr>
+noremap <silent><leader>ec :tabnew /home/simon/.config/nvim/lua/project_configs.lua<Cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
 
 nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
