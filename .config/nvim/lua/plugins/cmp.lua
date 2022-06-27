@@ -37,6 +37,6 @@ cmp.setup {
 }
 
 vim.cmd[[
-inoremap <C-O> <cmd>lua require("cmp").complete({config = {sources = {{name = "nvim_lsp"}} } })<Cr>
+inoremap <C-O> <cmd>lua require("cmp").complete({config = {sources = {{name = "nvim_lsp"}, {name = "luasnip"}} } })<Cr>
 inoremap <C-S-O> <cmd>lua require("cmp").complete({config = {sources = {{name = "vksnippets"}} } })<Cr>
 ]]

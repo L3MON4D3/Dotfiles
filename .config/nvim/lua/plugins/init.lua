@@ -38,7 +38,8 @@ local plugins = {
 	dbus = "ldbus",
 	libmodal = "Iron-E/nvim-libmodal",
 	impatient = "lewis6991/impatient.nvim",
-	prettier = "prettier/vim-prettier"
+	prettier = "prettier/vim-prettier",
+	hydra = "anuvyklack/hydra.nvim"
 }
 
 local plugins_inverse = {}
@@ -48,9 +49,9 @@ end
 
 local packer = require("packer")
 
-local use_rocks = packer.use_rocks
+local PACKER_COMPILED_PATH = vim.fn.stdpath('cache') .. '/packer/packer_compiled.lua'
 
-return packer.startup(function(use)
+packer.startup({function(use, use_rocks)
 	setfenv(1, vim.tbl_extend("force", _G or {}, plugins))
 
 	local function conf_use(arg)
@@ -65,6 +66,9 @@ return packer.startup(function(use)
 
 	conf_use{
 		luasnip,
+		requires = {
+			jsregexp
+		}
 	}
 
 	use(gruvbox)
@@ -110,10 +114,10 @@ return packer.startup(function(use)
 	conf_use(hop)
 	use(vim_glsl)
 	conf_use(dap)
-	conf_use{
-		dap_ui,
-		requires = dap
-	}
+	-- conf_use{
+	-- 	dap_ui,
+	-- 	requires = dap
+	-- }
 	use(playground)
 	use(cmp_git)
 
@@ -144,5 +148,7 @@ return packer.startup(function(use)
 	use_rocks{"dbus_proxy"}
 	use(libmodal)
 	use(impatient)
-	use(prettier)
-end)
+	-- conf_use({hydra, requires = dap})
+end, config = {
+	compile_path = PACKER_COMPILED_PATH
+}})

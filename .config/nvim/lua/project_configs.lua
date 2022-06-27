@@ -27,6 +27,15 @@ return setmetatable({
 				local fname = vim.fn.expand("<cWORD>")
 				repl.send("julia", "Visualize.main(\"data/" .. fname .. "\")")
 			end)
+
+			function quick_visualize(fname)
+				if fname:sub(1,1) ~= "/" then
+					fname = vim.fn.getcwd() .. "/" .. fname
+				end
+				repl.send("julia", "Visualize.main(\""..fname.."\")")
+			end
+
+			vim.cmd[[command! -nargs=1 -complete=file V :lua quick_visualize(<f-args>)]]
 		end
 	}),
 	["/home/simon/Documents/Uni/Kurse/s6/ba/brdf-plot/render"] = new({

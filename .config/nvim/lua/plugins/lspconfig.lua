@@ -63,7 +63,7 @@ end
 
 require("clangd_extensions").setup({
 	server = {
-		cmd = {"clangd", [[--completion-style=detailed]]},
+		cmd = {"clangd", [[--completion-style=detailed]], [[--enable-config]]},
 		on_attach = function(client)
 			completion_intercept(client, function(result)
 				local items = result.items or result

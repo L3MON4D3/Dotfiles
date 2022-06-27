@@ -16,5 +16,11 @@ return {
 	parse("vapp", "$1.insert($1.end(), $2.begin(), $2.end())"),
 	parse("allof", "$1.begin(), $1.end()"),
 	parse("prag", "#pragma once"),
-	parse("ns", "namespace $1 {\n\n$2\n\n}")
+	parse("ns", "namespace $1 {\n\n$2\n\n}"),
+	s("co", fmt([[std::cout << {} << std::endl;]], {
+		c(1, {
+			i(1),
+			{t"glm::to_string(", i(1), t")"}
+		})
+	})),
 }

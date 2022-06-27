@@ -1,4 +1,5 @@
 local types = require("luasnip.util.types")
+
 ls = require("luasnip")
 
 --vim.cmd("hi link LuasnipSnippetActive GruvboxRed")
@@ -78,6 +79,7 @@ ls.config.setup({
 })
 
 ls.filetype_extend("latex", {"tex"})
+ls.filetype_extend("glsl", {"c"})
 
 vim.cmd [[command! LuaSnipEdit :lua require("luasnip.loaders").edit_snippet_files()]]
 vim.cmd [[

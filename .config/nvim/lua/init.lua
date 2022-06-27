@@ -1,5 +1,7 @@
 local repl = require("repl")
 
+dofile(vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua")
+
 function Project_config()
 	return require("project_configs")[vim.fn.getcwd()]
 end

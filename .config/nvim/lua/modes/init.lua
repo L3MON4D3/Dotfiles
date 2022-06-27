@@ -1,1 +1,1 @@
-require("modes/upcase")
+require("modes.upcase")
