@@ -8,4 +8,12 @@ return {
 		f(function(_, snip) return {snip.captures[1]} end, {}), c(2, {sn(nil, {t({" != "}), i(1)}), i(nil)}), t({"; "}),
 		d(3, capture_insert, {}, {user_args = {1, "++"}}), t({")", "\t"}), i(0)
 	}),
+	parse("hguard", [[
+		#ifndef $1
+		#define $1
+
+		${2:$SELECT_DEDENT}
+
+		#endif
+	]])
 }

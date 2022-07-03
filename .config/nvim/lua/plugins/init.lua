@@ -39,7 +39,9 @@ local plugins = {
 	libmodal = "Iron-E/nvim-libmodal",
 	impatient = "lewis6991/impatient.nvim",
 	prettier = "prettier/vim-prettier",
-	hydra = "anuvyklack/hydra.nvim"
+	hydra = "anuvyklack/hydra.nvim",
+	ufo = "kevinhwang91/nvim-ufo",
+	promise = "kevinhwang91/promise-async",
 }
 
 local plugins_inverse = {}
@@ -148,6 +150,7 @@ packer.startup({function(use, use_rocks)
 	use_rocks{"dbus_proxy"}
 	use(libmodal)
 	use(impatient)
+	conf_use{ufo, requires = promise}
 	-- conf_use({hydra, requires = dap})
 end, config = {
 	compile_path = PACKER_COMPILED_PATH

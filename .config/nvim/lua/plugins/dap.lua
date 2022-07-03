@@ -49,7 +49,7 @@ dap.configurations.cpp = vim.list_extend(
 			stopOnEntry = false,
 			args = {},
 		}
-		})
+	})
 
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp

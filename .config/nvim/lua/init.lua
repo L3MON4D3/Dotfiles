@@ -1,7 +1,5 @@
 local repl = require("repl")
 
-dofile(vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua")
-
 function Project_config()
 	return require("project_configs")[vim.fn.getcwd()]
 end
@@ -13,6 +11,8 @@ end
 function Do_nvim_relative(filename)
 	return dofile("/home/simon/.config/nvim/lua/"..filename)
 end
+
+dofile(vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua")
 
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "term://*",
@@ -49,6 +49,7 @@ vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
 require("sighelp")
 require("sighelp.snippet")
 require("modes")
+require("plugins")
 
 Project_config().run()
 

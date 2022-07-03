@@ -6,7 +6,7 @@ set noswapfile
 
 source ~/.config/nvim/functions.vim 
 
-lua require("impatient")
+" lua require("impatient")
 
 augroup packer_user_config
   autocmd!
@@ -79,8 +79,9 @@ autocmd mine TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, h
 augroup END
 
 set fillchars=fold:\ ,vert:\│
-set foldtext=MyFoldText()
-set foldmethod=indent
+" set foldtext=MyFoldText()
+" set foldmethod=indent
+set foldlevel=99 foldlevelstart=-1
 
 set grepprg=rg\ --vimgrep
 set grepformat^=%f:%l:%c:%m
