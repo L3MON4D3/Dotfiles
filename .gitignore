@@ -18,3 +18,4 @@
 !Scripts/
 !Scripts/*
 /.config/nvim/lua/plugins/friendly_snippets.lua
+!/.config/nvim/queries/bash/injections.scm
