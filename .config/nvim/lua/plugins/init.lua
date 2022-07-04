@@ -152,6 +152,7 @@ packer.startup({function(use, use_rocks)
 	use(impatient)
 	conf_use{ufo, requires = promise}
 	-- conf_use({hydra, requires = dap})
-end, config = {
+end,
+config = {
 	compile_path = PACKER_COMPILED_PATH
 }})
