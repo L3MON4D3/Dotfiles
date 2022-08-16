@@ -6,8 +6,6 @@ set noswapfile
 
 source ~/.config/nvim/functions.vim 
 
-" lua require("impatient")
-
 augroup packer_user_config
   autocmd!
   autocmd BufWritePost ~/.config/nvim/lua/plugins/init.lua source <afile> | PackerCompile
@@ -78,7 +76,7 @@ autocmd mine TextYankPost * silent! lua vim.highlight.on_yank{on_visual=false, h
 
 augroup END
 
-set fillchars=fold:\ ,vert:\│
+set fillchars=fold:\ ,vert:│
 " set foldtext=MyFoldText()
 " set foldmethod=indent
 set foldminlines=2

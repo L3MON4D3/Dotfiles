@@ -74,14 +74,16 @@ ls.config.setup({
 		end,
 		n = require("luasnip.extras").nonempty,
 		m = require("luasnip.extras").match,
-		ai = require("luasnip.nodes.absolute_indexer")
+		ai = require("luasnip.nodes.absolute_indexer"),
+		postfix = require("luasnip.extras.postfix").postfix,
+		conds = require("luasnip.extras.expand_conditions")
 	}
 })
 
 ls.filetype_extend("latex", {"tex"})
 ls.filetype_extend("glsl", {"c"})
 
-vim.cmd [[command! LuaSnipEdit :lua require("luasnip.loaders").edit_snippet_files()]]
+vim.cmd [[command! LuaSnipEdit :lua require("plugins.luasnip.ft_edit")()]]
 vim.cmd [[
 	inoremap <silent> <C-K> <cmd>lua ls.expand()<Cr>
 	inoremap <silent> <C-L> <cmd>lua ls.jump(1)<Cr>
@@ -102,4 +104,3 @@ require("luasnip.loaders.from_lua").load({paths = {vim.fn.getcwd() .. "/.luasnip
 
 
 require("plugins.luasnip.external_update_dynamic_node")
--- require("luasnip/loaders/from_vscode").lazy_load()

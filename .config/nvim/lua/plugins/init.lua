@@ -9,7 +9,7 @@ local plugins = {
 	cmp = "hrsh7th/nvim-cmp",
 	cmp_lsp = "hrsh7th/cmp-nvim-lsp",
 	cmp_luasnip = "saadparwaiz1/cmp_luasnip",
-	treesitter = "nvim-treesitter/nvim-treesitter",
+	treesitter = "L3MON4D3/nvim-treesitter",
 	treesitter_textobjects = "nvim-treesitter/nvim-treesitter-textobjects",
 	hop = "phaazon/hop.nvim",
 	vim_glsl = "tikhomirov/vim-glsl",
@@ -42,6 +42,7 @@ local plugins = {
 	hydra = "anuvyklack/hydra.nvim",
 	ufo = "kevinhwang91/nvim-ufo",
 	promise = "kevinhwang91/promise-async",
+	catppuccin = "catppuccin/nvim"
 }
 
 local plugins_inverse = {}
@@ -53,7 +54,8 @@ local packer = require("packer")
 
 local PACKER_COMPILED_PATH = vim.fn.stdpath('cache') .. '/packer/packer_compiled.lua'
 
-packer.startup({function(use, use_rocks)
+local use_rocks = packer.use_rocks
+packer.startup({function(use)
 	setfenv(1, vim.tbl_extend("force", _G or {}, plugins))
 
 	local function conf_use(arg)
@@ -69,7 +71,7 @@ packer.startup({function(use, use_rocks)
 	conf_use{
 		luasnip,
 		requires = {
-			jsregexp
+			-- jsregexp
 		}
 	}
 
@@ -145,12 +147,13 @@ packer.startup({function(use, use_rocks)
 	use(telescope)
 	conf_use(lualine)
 	use(clangd)
-	use_rocks(jsregexp)
 	use_rocks(xml)
 	use_rocks{"dbus_proxy"}
+	use_rocks("jsregexp")
 	use(libmodal)
 	use(impatient)
 	conf_use{ufo, requires = promise}
+	conf_use(catppuccin)
 	-- conf_use({hydra, requires = dap})
 end,
 config = {

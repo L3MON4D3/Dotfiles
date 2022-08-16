@@ -130,7 +130,7 @@ nvim_lsp.texlab.setup{
 	},
 	on_attach = function(client)
 		lsp_attach(client)
-		sem_token_attach(client)
+		-- sem_token_attach(client)
 	end,
 	capabilities = capabilities
 }
@@ -144,7 +144,7 @@ nvim_lsp.pyright.setup{
 }
 
 nvim_lsp.julials.setup{
-	cmd = {"julia", "--startup-file=no", "-e using LanguageServer; runserver()", "-J/home/simon/.julia/sysimages/GLMakieImage.so"},
+	cmd = {"julia", "--startup-file=no", "-e", "using LanguageServer; runserver()", "-J", "/home/simon/.julia/sysimages/mine.so"},
 	capabilities = capabilities,
 	on_attach = function(client)
 		lsp_attach(client)
