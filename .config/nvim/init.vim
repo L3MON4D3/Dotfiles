@@ -81,7 +81,7 @@ augroup END
 set fillchars=fold:\ ,vert:│
 " set foldtext=MyFoldText()
 " set foldmethod=indent
-set foldminlines=2
+set foldminlines=1
 
 set grepprg=rg\ --vimgrep
 set grepformat^=%f:%l:%c:%m

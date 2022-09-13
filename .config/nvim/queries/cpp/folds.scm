@@ -65,7 +65,8 @@
 ; siblings
 (
  (field_declaration_list
-  (access_specifier) @first
+  (access_specifier) @first .
+  (_ declarator: (_))* .
   (access_specifier) @second)
  (#make-range-extended! "fold" @first "end_" 0 1 @second "end_" -1 0)
  (#set! foldtext_start "")
@@ -76,9 +77,10 @@
 
 ; last specifier
 (
-(field_declaration_list
- (access_specifier) @last . (field_declaration)* . (field_declaration) .) @list
- (#make-range-extended! "fold" @last "end_" 0 1 @list "end_" -1 200)
+ (field_declaration_list
+  (access_specifier) @last . (_ declarator: (_) )* . (_ declarator: (_) ) . ) @list
+ ; big col-offset so we end up at the end of the line.
+ (#make-range-extended! "fold" @last "end_" 0 1 @list "end_" -1 300)
  (#set! foldtext_start "")
  (#set! foldtext_start_hl "")
  (#set! foldtext_end "")
