@@ -80,6 +80,8 @@ ls.config.setup({
 	}
 })
 
+-- require("luasnip.util.log").set_loglevel("info")
+
 ls.filetype_extend("latex", {"tex"})
 ls.filetype_extend("glsl", {"c"})
 
@@ -101,6 +103,5 @@ vim.cmd [[
 
 require("luasnip.loaders.from_lua").lazy_load()
 require("luasnip.loaders.from_lua").load({paths = {vim.fn.getcwd() .. "/.luasnippets/"}})
-
 
 require("plugins.luasnip.external_update_dynamic_node")

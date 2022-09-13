@@ -3,7 +3,7 @@ local api = vim.api
 local M = {}
 
 local commands = {
-	julia = {"julia", "-q", "--threads=1", "-J" ,"/home/simon/.julia/sysimages/mine.so"}
+	julia = {"julia", "-q", "--threads=1", "-J" ,"/home/simon/.julia/sysimages/mine2.so"}
 }
 
 local terminals = setmetatable({}, {

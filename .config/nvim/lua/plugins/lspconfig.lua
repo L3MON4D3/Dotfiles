@@ -144,7 +144,7 @@ nvim_lsp.pyright.setup{
 }
 
 nvim_lsp.julials.setup{
-	cmd = {"julia", "--startup-file=no", "-e", "using LanguageServer; runserver()", "-J", "/home/simon/.julia/sysimages/mine.so"},
+	cmd = {"julia", "--startup-file=no", "-e", "using LanguageServer; runserver()", "-J", "/home/simon/.julia/sysimages/mine2.so"},
 	capabilities = capabilities,
 	on_attach = function(client)
 		lsp_attach(client)
@@ -210,15 +210,18 @@ nvim_lsp.sumneko_lua.setup {
 	capabilities = capabilities
 }
 
-nvim_lsp.rust_analyzer.setup({
-	capabilities = capabilities,
-	settings = {
-		["rust-analyzer"] = {
-			linksInHover = false
-		}
-	},
-	on_attach = function(client)
-		lsp_attach(client)
-		sem_token_attach(client)
-	end,
+local rt = require("rust-tools")
+rt.setup({
+	server = {
+		on_attach = function(client)
+			lsp_attach(client)
+			sem_token_attach(client)
+		end,
+		settings = {
+			["rust-analyzer"] = {
+				linksInHover = false
+			}
+		},
+		capabilities = capabilities,
+	}
 })

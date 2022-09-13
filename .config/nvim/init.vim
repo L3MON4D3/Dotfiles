@@ -14,6 +14,8 @@ augroup end
 augroup mine
 au!
 
+let g:neovide_cursor_animation_length = 0
+set guifont=iosevka:h11.5
 "autocmd mine bufnewfile,bufread *.h set filetype=c
 " autocmd mine bufnewfile,bufread * 
 "             \if !exists("b:gradleLoaded") && filereadable("build.gradle") |
@@ -127,7 +129,6 @@ hi StatusLineNC guibg=#282828 guifg=#1d2021
 hi Folded guibg= cterm=none gui=none
 
 hi FloatBorder guibg=#1d2021 guifg=#504945
-
 
 hi! TSVariable guifg=#ebdbb2
 "hi! link TSParameter Normal
@@ -358,6 +359,7 @@ nnoremap <silent> <F22> :res -2<Cr>
 
 nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
 noremap <silent><leader>ep :tabnew<Cr>:e /home/simon/.config/nvim/lua/plugins/<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/lua/plugins/<Cr>
+noremap <silent><leader>eq :tabnew<Cr>:e /home/simon/.config/nvim/queries<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/queries/<Cr>
 noremap <silent><leader>ec :tabnew /home/simon/.config/nvim/lua/project_configs.lua<Cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
 
@@ -389,7 +391,7 @@ tnoremap <silent> <F21> <C-\><C-N>:vert res -2<Cr>a
 tnoremap <silent> <F10> <C-\><C-N>:res +2<Cr>a
 tnoremap <silent> <F22> <C-\><C-N>:res -2<Cr>a
 
-cabbr <expr> && expand('%:h')
+cabbr <expr> && expand('%:p:.:h')
 cabbr invim /home/simon/.config/nvim/init.vim
 cabbr pacconf /home/simon/.config/nvim/lua/plugins/init.lua
 

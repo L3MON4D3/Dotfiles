@@ -42,7 +42,8 @@ local plugins = {
 	hydra = "anuvyklack/hydra.nvim",
 	ufo = "kevinhwang91/nvim-ufo",
 	promise = "kevinhwang91/promise-async",
-	catppuccin = "catppuccin/nvim"
+	catppuccin = "catppuccin/nvim",
+	rust_tools = "simrat39/rust-tools.nvim",
 }
 
 local plugins_inverse = {}
@@ -64,7 +65,7 @@ packer.startup({function(use)
 				[1] = arg,
 			}
 		end
-		arg.config = "pcall(require, \"plugins/"..plugins_inverse[arg[1]].."\")"
+		arg.config = "ok, t = pcall(require, \"plugins/"..plugins_inverse[arg[1]].."\") if not ok then print(t) end"
 		use(arg)
 	end
 
@@ -72,7 +73,8 @@ packer.startup({function(use)
 		luasnip,
 		requires = {
 			-- jsregexp
-		}
+		},
+		-- run = "make install_jsregexp 2> /home/simon/log >/home/simon/log"
 	}
 
 	use(gruvbox)
@@ -149,11 +151,12 @@ packer.startup({function(use)
 	use(clangd)
 	use_rocks(xml)
 	use_rocks{"dbus_proxy"}
-	use_rocks("jsregexp")
+	-- use_rocks("jsregexp")
 	use(libmodal)
 	use(impatient)
 	conf_use{ufo, requires = promise}
 	conf_use(catppuccin)
+	use(rust_tools)
 	-- conf_use({hydra, requires = dap})
 end,
 config = {
