@@ -59,7 +59,7 @@ local function virt_text_contains(virt_text, str)
 end
 
 local function right_pad_virt_text(virt_text, target_len)
-	local current_len = #virt_text_to_string(virt_text)
+	local current_len = vim.fn.strdisplaywidth(virt_text_to_string(virt_text))
 	if target_len > current_len then
 		table.insert(virt_text, {(" "):rep(target_len-current_len), "UfoFoldedFg"})
 	end
