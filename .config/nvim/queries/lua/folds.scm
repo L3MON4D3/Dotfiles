@@ -1,8 +1,3 @@
-[
- (arguments)
- (table_constructor)
-] @fold
-
 (
   (for_statement
    clause: (_) @clause
@@ -28,9 +23,12 @@
 )
 
 (
-  (function_declaration
-  	(_)
-  	parameters: (_) @params) @fn
+  [
+   (function_declaration
+  	parameters: (_) @params)
+   (function_definition
+  	parameters: (_) @params)
+   ] @fn
   (#make-range-extended! "fold" @params "end_" 0 1 @fn "end_" 0 0)
   (#set! foldtext_start "")
   (#set! foldtext_start_hl "")
@@ -39,7 +37,7 @@
 )
 
 (
-  (expression_list) @fold
+  (table_constructor) @fold
   (#set! foldtext_start "{")
   (#set! foldtext_start_hl "@punctuation.bracket")
   (#set! foldtext_end "}")
@@ -47,3 +45,13 @@
 )
 
 
+(
+ (function_call
+  name: (identifier) @name
+  (arguments) @fold)
+ (#set! foldtext_start "(")
+ (#set! foldtext_start_hl "@punctuation.bracket")
+ (#set! foldtext_end ")")
+ (#set! foldtext_end_hl "@punctuation.bracket")
+ (#not-any-of? @name "it" "describe")
+)
