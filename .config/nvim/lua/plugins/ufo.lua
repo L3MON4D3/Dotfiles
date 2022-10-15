@@ -1,7 +1,3 @@
-vim.wo.foldlevel = 64
-
-local render = require("ufo.render")
-
 -- removes from'th character.
 local function virt_text_remove_from(complete_virt_text, from)
 	local trunc_virt_text = {}
@@ -52,7 +48,6 @@ local function virt_text_to_string(virt_text)
 	return virt_text_str
 end
 
-
 local function virt_text_contains(virt_text, str)
 	-- enable plain
 	return virt_text_to_string(virt_text):find(str, 1, true) ~= nil
@@ -66,12 +61,11 @@ local function right_pad_virt_text(virt_text, target_len)
 	return virt_text
 end
 
-
 local handler = function(virtText, lnum, endLnum, width, _, ctx)
 	-- important: strdisplaywidth because # doesn't account for multibyte-characters.
 	local line_len = vim.fn.strdisplaywidth(virt_text_to_string(virtText))
 
-	local fold_virt_text
+	local fold_end_virt_text = ctx.get_fold_virt_text(endLnum)
 	local suffix_virt_text = {("  %d "):format(endLnum - lnum), "LspDiagnosticsDefaultHint"}
     if ctx.range and ctx.range.metadata and ctx.range.metadata.foldtext_start then
 		fold_virt_text = virt_text_remove_from(virtText, ctx.range.startCharacter)
@@ -97,7 +91,7 @@ local handler = function(virtText, lnum, endLnum, width, _, ctx)
 			suffix_virt_text,
 			{ctx.range.metadata.foldtext_end, ctx.range.metadata.foldtext_end_hl}
 		} )
-		vim.list_extend(fold_virt_text, virt_text_remove_to(ctx.end_virt_text, ctx.range.endCharacter) )
+		vim.list_extend(fold_virt_text, virt_text_remove_to(fold_end_virt_text, ctx.range.endCharacter) )
 	else
 		-- simple case, no metadata.
 		if virtText[#virtText][1]:match("[^%w]*{%s*$") or
@@ -114,12 +108,48 @@ local handler = function(virtText, lnum, endLnum, width, _, ctx)
 	return fold_virt_text
 end
 
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+
 local ufo = require("ufo")
+
+local function currentBufMaxFoldLevel()
+	local max_foldlevel = 0
+	for i = 1, vim.api.nvim_buf_line_count(0) do
+		local fl = vim.fn.foldlevel(i)
+		if fl > max_foldlevel then
+			max_foldlevel = fl
+		end
+	end
+
+	return max_foldlevel
+end
+
+local virtFoldLevel = 99
+vim.keymap.set('n', 'zR', function()
+	ufo.openAllFolds()
+	virtFoldLevel = currentBufMaxFoldLevel()
+end)
+vim.keymap.set('n', 'zM', function()
+	ufo.closeAllFolds()
+	virtFoldLevel = 0
+end)
+vim.keymap.set('n', 'zm', function()
+	virtFoldLevel = virtFoldLevel-1
+	require('ufo').closeFoldsWith(virtFoldLevel)
+end)
+vim.keymap.set('n', 'zr', function()
+	virtFoldLevel = virtFoldLevel+1
+	require('ufo').closeFoldsWith(virtFoldLevel)
+end)
+
 ufo.setup({
 	provider_selector = function()
         return {'treesitter', 'indent'}
     end,
 	open_fold_hl_timeout = 0,
 	fold_virt_text_handler = handler,
-	enable_fold_end_virt_text = true
+	enable_get_fold_virt_text = true,
+	enableFoldEndVirtText = true,
 })

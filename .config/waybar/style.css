@@ -11,7 +11,7 @@ window#waybar {
 }
 
 #workspaces button {
-    margin: 5px 0px 0px 0px;
+    margin: 5px 3px 0px 0px;
     background: transparent;
     padding: 0px;
 }
@@ -28,10 +28,10 @@ window#waybar {
 #workspaces button label {
 	padding: 1px 8px 0px 8px;
 	margin: 0px;
-	color: #fbf1c7;
-	background: transparent;
+	color: #ebdbb2;
+	border-radius: 5px 5px 5px 5px;
+	background-color: #83a598;
 }
-
 
 #workspaces button:first-child {
 	margin-left: 5px;
@@ -42,37 +42,37 @@ window#waybar {
 }
 
 #workspaces button.visible label {
-	border-radius: 50%;
 	/*background-color: rgba(251,241,199,.2);*/
-	background-color: rgba(11,13,13,.4);
-	color: #fbf1c7;
+	background-color: #458588;
+	color: #ebdbb2;
 }
 
 #workspaces button.focused label {
-	border-radius: 50%;
-	background-color: #1d2021;
+	border-radius: 5px 5px 5px 5px;
+	background-color: #458588;
 	/*background-color: rgba(251,241,199,.2);*/
-	color: #fbf1c7;
+	color: #ebdbb2
 }
 
 #mode {
     margin: 0px 0px 0px 16px;          
-    color: #fbf1c7;
+    color: #ebdbb2;
 }
 
 #clock,
 #battery {
-    background-color: #1d2021;
+    background-color: #83a598;
     padding: 0px 8px;
-    margin: 5px 0px 0px 0px;
-	color: #fbf1c7;
+    margin: 5px 0px 0px 5px;
+	border-radius: 5px 5px 5px 5px;
+	color: #ebdbb2;
 }
 
 #clock.1 {
 	margin-right: 5px;
-	border-radius: 0px 2px 2px 0px;
+	border-radius: 5px 5px 5px 5px;
 }
 
 #clock.2 {
-	border-radius: 2px 0px 0px 2px;
+	border-radius: 5px 5px 5px 5px;
 }

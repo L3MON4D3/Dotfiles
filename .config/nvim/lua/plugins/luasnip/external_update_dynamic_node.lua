@@ -35,8 +35,7 @@ local function dynamic_node_external_update(func_indx)
 		current_node.mark:pos_begin_raw()
 	)
 
-	-- store and leave current generated snippet.
-	dynamic_node.snip:store()
+	-- leave current generated snippet.
 	node_util.leave_nodes_between(dynamic_node.snip, current_node)
 
 	-- call update-function.

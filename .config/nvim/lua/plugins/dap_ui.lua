@@ -1,7 +1,15 @@
 require("dapui").setup({
-	sidebar = {
-		elements = { "watches" },
-		position = "right"
+	layouts = {
+		{
+			elements = {
+				"stacks",
+				"scopes",
+				"watches"
+			},
+			size = 40,
+			position = "tray"
+		}
 	},
 })
 
+vim.cmd([[command! DapUI :lua require("dapui").toggle()]])

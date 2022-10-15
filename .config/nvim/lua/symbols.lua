@@ -57,6 +57,9 @@ local greeks = {
 	["ga"] = "γ",
 	["e"] = "η",
 	["gr"] = "∇",
+	["S"] = "Σ",
+	["s"] = "σ",
+	["m"] = "μ",
 }
 
 local function table_to_mapping(prefix, table)

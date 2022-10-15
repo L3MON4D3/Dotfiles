@@ -58,7 +58,7 @@ local mat = function(_, snip)
 	return sn(nil, nodes)
 end
 
-return {
+snippets({
 	ls.parser.parse_snippet({trig = ";"}, "\\$$1\\$$0"),
 	s({trig = "(s*)sec", wordTrig = true, regTrig = true}, {
 		f(function(args, snip) return {"\\"..string.rep("sub", string.len(snip.captures[1]))} end, {}),
@@ -77,7 +77,7 @@ return {
 	parse({trig = "*", wordTrig = true}, "\\cdot "),
 	parse({trig = "sum", wordTrig = true}, [[\sum^{$1}_{$2}]]),
 	parse({trig = "sum", wordTrig = true}, [[\sum^{$1}_{$2}]]),
-	parse({trig = "int", wordTrig = true}, [[\int_{${1:lower}}^{${2:upper}} $3 \\,d$4]]),
+	parse({trig = "int", wordTrig = true}, [[\int_{${1:lower}}^{${2:upper}} $3 \\dx $4]]),
 	s("ls", {
 		t({"\\begin{"}), c(1, {
 			t"itemize",
@@ -120,4 +120,29 @@ return {
 		}),
 		rep(1)
 	})),
+})
+
+local texpairs = {
+	{"(", ")"},
+	{"\\left(", "\\right)"},
+	{"\\big(", "\\big)"},
+	{"\\Big(", "\\Big)"},
+	{"\\bigg(", "\\bigg)"},
+	{"\\Bigg(", "\\Bigg)"},
 }
+
+local function choices_from_pairlist(ji, list)
+	local choices = {}
+	for _, pair in ipairs(list) do
+		table.insert(choices, {
+			t(pair[1]), r(1, "inside_pairs", dl(1, l.LS_SELECT_DEDENT)), t(pair[2])
+		})
+	end
+	return c(ji, choices)
+end
+
+snippet(s("(", {
+	choices_from_pairlist(1, texpairs)
+}))
+
+return ___snippets

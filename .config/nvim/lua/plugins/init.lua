@@ -1,4 +1,5 @@
 local plugins = {
+	editorconfig = "gpanders/editorconfig.nvim",
 	luasnip = "/home/simon/Code/Lua/luasnip",
 	gruvbox = "gruvbox-community/gruvbox",
 	dispatch = "tpope/vim-dispatch",
@@ -34,8 +35,6 @@ local plugins = {
 	lspsig = "ray-x/lsp_signature.nvim",
 	cmp_sig = "hrsh7th/cmp-nvim-lsp-signature-help",
 	jsregexp = "jsregexp",
-	xml = "luaexpat",
-	dbus = "ldbus",
 	libmodal = "Iron-E/nvim-libmodal",
 	impatient = "lewis6991/impatient.nvim",
 	prettier = "prettier/vim-prettier",
@@ -84,14 +83,13 @@ packer.startup({function(use)
 		lspconfig,
 		requires = {
 			luasnip,
-			-- illuminate,
 			cmp_lsp,
 			clangd,
 			--lspsig
 		}
 	}
 	use(lspinstall)
-	-- use(illuminate)
+	conf_use(illuminate)
 
 	conf_use {
 		cmp,
@@ -120,10 +118,10 @@ packer.startup({function(use)
 	conf_use(hop)
 	use(vim_glsl)
 	conf_use(dap)
-	-- conf_use{
-	-- 	dap_ui,
-	-- 	requires = dap
-	-- }
+	conf_use{
+		dap_ui,
+		requires = dap
+	}
 	use(playground)
 	use(cmp_git)
 
@@ -149,7 +147,6 @@ packer.startup({function(use)
 	use(telescope)
 	conf_use(lualine)
 	use(clangd)
-	use_rocks(xml)
 	use_rocks{"dbus_proxy"}
 	-- use_rocks("jsregexp")
 	use(libmodal)
@@ -157,6 +154,7 @@ packer.startup({function(use)
 	conf_use{ufo, requires = promise}
 	conf_use(catppuccin)
 	use(rust_tools)
+	use(editorconfig)
 	-- conf_use({hydra, requires = dap})
 end,
 config = {

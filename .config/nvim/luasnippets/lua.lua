@@ -25,7 +25,15 @@ return {
 		function{}({})
 			{}
 		end
-	]], ins_generate())),
+	]], ins_generate({[3] = d(3, function(_, parent)
+		if #parent.snippet.env.LS_SELECT_DEDENT ~= 0 then
+			return sn(nil, {
+				t(parent.snippet.env.LS_SELECT_DEDENT), t{"","\t"}, i(1)
+			})
+		else
+			return sn(nil, { i(1) })
+		end
+	end)}))),
 	s("str", fmt("[[\n\t{}\n]]", ins_generate())),
 	s("sdt", fmt(
 		[[ls_helpers.static_docstring_test({}, {}, {})]],

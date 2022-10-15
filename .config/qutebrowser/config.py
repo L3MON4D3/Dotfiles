@@ -36,6 +36,8 @@ c.fonts.debug_console = '13pt Fira Code'
 c.fonts.completion.entry = '13pt Fira Code'
 c.fonts.completion.category = '13pt Fira Code'
 
+c.content.javascript.clipboard = 'access-paste'
+
 c.tabs.title.format = '{current_title}'
 c.tabs.favicons.show = 'never'
 c.tabs.indicator.width = 0

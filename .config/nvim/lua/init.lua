@@ -1,9 +1,5 @@
 local repl = require("repl")
 
-function Project_config()
-	return require("project_configs")[vim.fn.getcwd()]
-end
-
 function Insp(data)
 	print(vim.inspect(data))
 end
@@ -11,6 +7,9 @@ end
 function Do_nvim_relative(filename)
 	return dofile("/home/simon/.config/nvim/lua/"..filename)
 end
+
+-- before loading plugins!
+require("configs")
 
 dofile(vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua")
 
@@ -50,8 +49,6 @@ require("sighelp")
 require("sighelp.snippet")
 require("modes")
 require("plugins")
-
-Project_config().run()
 
 -- vim.treesitter.query.add_directive("set_injection_filetype_snippet_file!", function(_, _, bufnr, _, metadata)
 -- 	local name = vim.api.nvim_buf_get_name(bufnr)

@@ -1,4 +1,4 @@
-alias swayconf='vim ~/.config/sway/config'
+alias swayconf='cd ~/.config/sway; n config'
 alias waybarconf='vim ~/.config/waybar/config'
 alias winsel='swaymsg -t get_tree | jq -r '\''.. | (.nodes? // empty)[] | select(.pid and .visible) | .rect | "\(.x),\(.y) \(.width)x\(.height)"'\'' | slurp'
 alias rotEx='myRotateDisplay.sh'
