@@ -1,7 +1,6 @@
 ; inherits: c
 
 [
- (template_declaration)
  (catch_clause)
  (lambda_expression)
 ] @fold

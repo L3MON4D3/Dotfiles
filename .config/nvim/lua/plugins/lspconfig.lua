@@ -1,9 +1,9 @@
 local nvim_lsp = require("lspconfig")
 
-local function sem_token_attach(_)
-	vim.lsp.buf.semantic_tokens_full()
-	vim.cmd [[autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()]]
-end
+-- local function sem_token_attach(_)
+-- 	vim.lsp.buf.semantic_tokens_full()
+-- 	vim.cmd [[autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.buf.semantic_tokens_full()]]
+-- end
 
 local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', {noremap = true})
@@ -38,7 +38,7 @@ end
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, Diag_params)
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 local session = require("session")
 
@@ -93,7 +93,7 @@ require("clangd_extensions").setup({
 				end
 			end)
 			lsp_attach(client)
-			sem_token_attach(client)
+			-- sem_token_attach(client)
 		end,
 		capabilities = capabilities
 	},
@@ -113,7 +113,7 @@ nvim_lsp.texlab.setup{
 		texlab = {
 			build = {
 				executable = "latexmk",
-				args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f" },
+				args = { "-f", "--shell-escape", "-pdf", "-interaction=nonstopmode", "%f" },
 				onSave = true,
 				onChange = false
 			},
@@ -139,7 +139,6 @@ nvim_lsp.pyright.setup{
 	capabilities = capabilities,
 	on_attach = function(client)
 		lsp_attach(client)
-		sem_token_attach(client)
 	end,
 }
 
@@ -151,21 +150,34 @@ nvim_lsp.julials.setup{
 	end,
 }
 
-nvim_lsp.cmake.setup{}
+nvim_lsp.cmake.setup{
+	on_attach = lsp_attach
+}
 
-local sumneko_root_path = '/home/simon/.local/share/nvim/lspinstall/lua-language-server/'
-local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
+nvim_lsp.zls.setup{
+	on_attach = function(...)
+		lsp_attach(...)
+	end,
+}
 
-nvim_lsp.sumneko_lua.setup {
-	cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
+nvim_lsp.lua_ls.setup {
+	cmd = {"lua-language-server", "--logpath", "/home/simon/.cache/lua-language-server/", "--metapath", "/home/simon/.cache/lua-language-server/meta/"},
 	settings = {
 		Lua = {
+			completion = {
+				callSnippet = "Both"
+			},
 			capabilities = capabilities,
 			runtime = {
 				-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
 				version = 'LuaJIT',
-				-- Setup your lua path
-				path = vim.split(package.path, ';'),
+				path = {
+					"lua/?.lua",
+					"lua/?/init.lua",
+					-- meta & template seem to refer to /usr/lib/lua-language-server/meta.
+					"meta/template/?.lua",
+					"meta/template/?/init.lua",
+				}
 			},
 			diagnostics = {
 				-- Get the language server to recognize the `vim` and luasnip globals.
@@ -191,22 +203,27 @@ nvim_lsp.sumneko_lua.setup {
 					"fmt",
 					"ls",
 					"ins_generate",
-					"parse"
+					"parse",
+					"parse_add",
+					"s_add",
+					"dl",
 				},
 			},
 			workspace = {
 				-- Make the server aware of Neovim runtime files
-				library = {
-					[vim.fn.expand('$VIMRUNTIME/lua')] = true,
-					[vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-				},
+				library = vim.api.nvim_get_runtime_file("", true),
 				ignoreDir = {
-					"/home/simon/Packages"
+					".cache",
+					"Packages",
+					"deps"
 				}
 			},
 		},
 	},
-	on_attach = lsp_attach,
+	on_attach = function(...)
+		lsp_attach(...)
+		-- sem_token_attach(...)
+	end,
 	capabilities = capabilities
 }
 
@@ -215,7 +232,7 @@ rt.setup({
 	server = {
 		on_attach = function(client)
 			lsp_attach(client)
-			sem_token_attach(client)
+			-- sem_token_attach(client)
 		end,
 		settings = {
 			["rust-analyzer"] = {

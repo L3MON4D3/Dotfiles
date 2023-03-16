@@ -66,7 +66,8 @@ local handler = function(virtText, lnum, endLnum, width, _, ctx)
 	local line_len = vim.fn.strdisplaywidth(virt_text_to_string(virtText))
 
 	local fold_end_virt_text = ctx.get_fold_virt_text(endLnum)
-	local suffix_virt_text = {("  %d "):format(endLnum - lnum), "LspDiagnosticsDefaultHint"}
+	local suffix_virt_text = {("  %d "):format(endLnum - lnum), "DiagnosticDefaultHint"}
+    local fold_virt_text
     if ctx.range and ctx.range.metadata and ctx.range.metadata.foldtext_start then
 		fold_virt_text = virt_text_remove_from(virtText, ctx.range.startCharacter)
 

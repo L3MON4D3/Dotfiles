@@ -14,6 +14,10 @@ augroup end
 augroup mine
 au!
 
+" lua old_cmd = vim.cmd
+" lua vim.cmd = function(...) local first = ... if type(first) == "string" and first:match("Folded") then print(...) end old_cmd(...) end
+" lua old_set_hl = vim.api.nvim_set_hl
+" lua vim.api.nvim_set_hl = function(...) local id, name = ... if name == "Folded" then print(debug.traceback()) end old_set_hl(...) end
 let g:neovide_cursor_animation_length = 0
 set guifont=iosevka:h11.5
 "autocmd mine bufnewfile,bufread *.h set filetype=c
@@ -91,15 +95,6 @@ set grepformat^=%f:%l:%c:%m
 set termguicolors
 set pumblend=15
 syntax on
-let g:gruvbox_italic='1'
-let g:gruvbox_contrast_dark='hard'
-let g:gruvbox_sign_column='bg0'
-let g:gruvbox_invert_selection=0
-let g:gruvbox_termcolors=256
-
-set background=dark
-colorscheme gruvbox
-
 ""airline
 "let g:airline_powerline_fonts=1
 "let g:airline_theme='gruvbox'
@@ -113,52 +108,22 @@ colorscheme gruvbox
 "let g:airline#extensions#tabline#show_tab_count = 0
 
 "Tabline
-hi TabLine guibg=#1d2021 guifg=#504945 gui=none
-hi TabLineSel guibg=0 guifg=229 gui=none
-
-"Statusline
-hi Status1 guibg=#fabd2f guifg=#1d2021 gui=bold
-hi Status2 guibg=#fe8019 guifg=#1d2021 gui=bold
-hi Status3 guibg=#83a598 guifg=#1d2021 gui=bold
-
-hi User1 guibg=#3c3836 guifg=#1d2021
-
-hi StatusLine guibg=#3c3836 guifg=#1d2021
-hi StatusLineNC guibg=#282828 guifg=#1d2021
+" hi TabLine guibg=#1d2021 guifg=#504945 gui=none
+" hi TabLineSel guibg=0 guifg=229 gui=none
+" 
+" "Statusline
+" hi Status1 guibg=#fabd2f guifg=#1d2021 gui=bold
+" hi Status2 guibg=#fe8019 guifg=#1d2021 gui=bold
+" hi Status3 guibg=#83a598 guifg=#1d2021 gui=bold
+" 
+" hi User1 guibg=#3c3836 guifg=#1d2021
+" 
+" hi StatusLine guibg=#3c3836 guifg=#1d2021
+" hi StatusLineNC guibg=#282828 guifg=#1d2021
 
 hi Folded guibg= cterm=none gui=none
 
 hi FloatBorder guibg=#1d2021 guifg=#504945
-
-hi! TSVariable guifg=#ebdbb2
-"hi! link TSParameter Normal
-hi! TSField guifg=#ebdbb2
-
-hi GruvboxRed guifg=#d75151
-
-hi UnderlineTransparent gui=underline
-
-hi link LspReferenceText CursorLine
-hi link LspReferenceRead CursorLine
-hi link LspReferenceWrite CursorLine
-
-hi link LspProperty GruvboxBlue
-hi link LspFunction GruvboxOrangeBold
-hi link LspMethod GruvboxBlueBold
-hi link LspNamespace GruvboxAqua
-hi link LspType GruvboxYellow
-hi link LspString GruvboxYellow
-hi link LspClass LspType
-hi link LspVariable GruvboxFg1
-
-hi link LspStatic LspProperty
-hi link LspEnumMember GruvboxPurple
-
-"hi! TSParameter guifg=#ebdbb2 gui=bold
-hi! link TSParameter GruvboxFg1
-hi! link TSFunction GruvboxOrangeBold
-
-hi! TSStringEscape gui=bold
 
 set laststatus=2
 set showtabline=2
@@ -193,6 +158,9 @@ set splitbelow
 set splitright
 set switchbuf+=useopen
 set virtualedit=block
+set splitkeep=topline
+
+set noea
 
 set signcolumn=auto
 set updatetime=1000
@@ -255,6 +223,7 @@ sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=
 let mapleader=","
 let maplocalleader="<Space>"
 
+lua require('impatient')
 lua require('init')
 set completeopt=menuone
 "inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
@@ -360,7 +329,7 @@ nnoremap <silent> <F22> :res -2<Cr>
 nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
 noremap <silent><leader>ep :tabnew<Cr>:e /home/simon/.config/nvim/lua/plugins/<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/lua/plugins/<Cr>
 noremap <silent><leader>eq :tabnew<Cr>:e /home/simon/.config/nvim/queries<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/queries/<Cr>
-noremap <silent><leader>ec :tabnew /home/simon/.config/nvim/lua/configs/project_configs.lua<Cr>
+noremap <silent><leader>ec :tabnew /home/simon/.config/nvim/lua/configs/configs.lua<Cr>
 noremap <silent><leader>ef :tabnew /home/simon/.config/nvim/lua/configs/file_configs.lua<Cr>
 nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
 
@@ -398,4 +367,5 @@ cabbr pacconf /home/simon/.config/nvim/lua/plugins/init.lua
 
 if filereadable('.vProj.vim')
     source .vProj.vim
+    echo "replace .vProj.vim with project-config!"
 endif

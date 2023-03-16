@@ -19,18 +19,18 @@ dap.adapters.lldb = {
 	name = "lldb",
 }
 
-dap.adapters.cppdbg = {
-	type = 'executable',
-	command = '/usr/lib/nvim-dap-cpptools/debugAdapters/OpenDebugAD7',
-	name = "vscode-cpptools",
-}
+-- dap.adapters.cppdbg = {
+-- 	type = 'executable',
+-- 	command = '/home/simon/Downloads/extension/debugAdapters/bin/OpenDebugAD7',
+-- 	name = "vscode-cpptools",
+-- }
 
 vim.fn.sign_define('DapBreakpoint', {text='⛔', texthl='GruvboxRed', linehl='', numhl=''})
 vim.fn.sign_define('DapBreakpointCondition', {text='⛔', texthl='GruvboxBlue', linehl='', numhl=''})
 vim.fn.sign_define('DapStopped', {text=' ', texthl='GruvboxYellow', linehl='', numhl=''})
 
 dap.configurations.cpp = vim.list_extend(
-	Project_config().dap, {
+	Config(0).dap, {
 		{
 			name = "Launch",
 			type = "lldb",
@@ -45,14 +45,26 @@ dap.configurations.cpp = vim.list_extend(
 			type = "lldb",
 			request = "attach",
 			cwd = '${workspaceFolder}',
-			pid = require('dap.utils').pick_process,
+			pid = 107202,
 			stopOnEntry = false,
 			args = {},
-		}
+		},
+		-- {
+		-- 	name = "zigLaunch",
+        --     type = "cppdbg",
+        --     request = "attach",
+        --     cwd = "${workspaceFolder}",
+        --     pid = 108277,
+		-- 	program = "/usr/bin/zls",
+        --     processId = 108277,
+        --     MIMode = "gdb",
+        --     MIDebuggerPath = "/home/simon/Downloads/extension/debugAdapters/bin/OpenDebugAD7"
+		-- }
 	})
 
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
+-- dap.configurations.zig = dap.configurations.cpp
 
 local widget_entities = {
 	scopes = "Scope",
@@ -78,6 +90,10 @@ for e_k, e_v in pairs(widget_entities) do
 		vim.cmd(string.format([[command! Dap%s%s :lua dap_widgets.%s.%s.toggle()]], e_v, v_v, e_k, v_k))
 	end
 end
+
+
+vim.cmd([[command! DF :lua dap_widgets.frames.centered_float.toggle()]])
+vim.cmd([[command! DS :lua dap_widgets.scopes.sidebar.toggle()]])
 
 vim.cmd[[
 command! DapREPL :lua require("dap").repl.toggle()

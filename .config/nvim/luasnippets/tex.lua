@@ -58,69 +58,66 @@ local mat = function(_, snip)
 	return sn(nil, nodes)
 end
 
-snippets({
-	ls.parser.parse_snippet({trig = ";"}, "\\$$1\\$$0"),
-	s({trig = "(s*)sec", wordTrig = true, regTrig = true}, {
-		f(function(args, snip) return {"\\"..string.rep("sub", string.len(snip.captures[1]))} end, {}),
-		t({"section{"}), i(1), t({"}", ""}), i(0)
-	}),
-	parse({trig = "beg", wordTrig = true}, "\\begin{$1}\n\t${2:$SELECT_DEDENT}\n\\end{$1}"),
-	parse({trig = "beq", wordTrig = true}, "\\begin{equation*}\n\t${1:$SELECT_DEDENT}\n\\end{equation*}"),
-	parse({trig = "bal", wordTrig = true}, "\\begin{aligned}\n\t${1:$SELECT_DEDENT}\n\\end{aligned}"),
-	parse({trig = "bfr", wordTrig = true}, "\\begin{frame}\n\\frametitle{$1}\n$2\n\\end{frame}"),
-	parse({trig = "ab", wordTrig = true}, "\\langle $1 \\rangle"),
-	parse({trig = "lra", wordTrig = true}, "\\leftrightarrow"),
-	parse({trig = "Lra", wordTrig = true}, "\\Leftrightarrow"),
-	parse({trig = "fr", wordTrig = true}, "\\frac{$1}{$2}"),
-	parse({trig = "tr", wordTrig = true}, "\\item $1"),
-	parse({trig = "abs", wordTrig = true}, "\\lvert ${1:$SELECT_DEDENT} \\rvert"),
-	parse({trig = "*", wordTrig = true}, "\\cdot "),
-	parse({trig = "sum", wordTrig = true}, [[\sum^{$1}_{$2}]]),
-	parse({trig = "sum", wordTrig = true}, [[\sum^{$1}_{$2}]]),
-	parse({trig = "int", wordTrig = true}, [[\int_{${1:lower}}^{${2:upper}} $3 \\dx $4]]),
-	s("ls", {
-		t({"\\begin{"}), c(1, {
-			t"itemize",
-			t"enumerate",
-			i(nil)
-		}), t({"}", "\t\\item "}),
-		i(2), d(3, rec_ls, {}),
-		t({"", "\\end{"}), rep(1), t"}", i(0)
-	}),
-	s("tab", fmt([[
-	\begin{{tabular}}{{{}}}
-	{}
-	\end{{tabular}}
-	]], {i(1, "c"), d(2, tab, {1}, {
+parse_add({trig = ";"}, "\\$$1\\$$0")
+s_add({trig = "(s*)sec", wordTrig = true, regTrig = true}, {
+	f(function(args, snip) return {"\\"..string.rep("sub", string.len(snip.captures[1]))} end, {}),
+	t({"section{"}), i(1), t({"}", ""}), i(0)
+})
+parse_add({trig = "beg", wordTrig = true}, "\\begin{$1}\n${2:$SELECT_DEDENT}\n\\end{$1}")
+parse_add({trig = "beq", wordTrig = true}, "\\begin{equation*}\n${1:$SELECT_DEDENT}\n\\end{equation*}")
+parse_add({trig = "bal", wordTrig = true}, "\\begin{aligned}\n${1:$SELECT_DEDENT}\n\\end{aligned}")
+parse_add({trig = "bfr", wordTrig = true}, "\\begin{frame}\n\\frametitle{$1}\n$2\n\\end{frame}")
+parse_add({trig = "ab", wordTrig = true}, "\\langle $1 \\rangle")
+parse_add({trig = "lra", wordTrig = true}, "\\leftrightarrow")
+parse_add({trig = "Lra", wordTrig = true}, "\\Leftrightarrow")
+parse_add({trig = "fr", wordTrig = true}, "\\frac{${1:$LS_SELECT_DEDENT}}{$2}")
+parse_add({trig = "tr", wordTrig = true}, "\\item $1")
+parse_add({trig = "abs", wordTrig = true}, "\\lvert ${1:$SELECT_DEDENT} \\rvert")
+parse_add({trig = "*", wordTrig = true}, "\\cdot ")
+parse_add({trig = "sum", wordTrig = true}, [[\sum_{$1}^{$2}]])
+parse_add({trig = "int", wordTrig = true}, [[\int_{${1:lower}}^{${2:upper}} $3 \\dx $4]])
+s_add("ls", {
+	t({"\\begin{"}), c(1, {
+		t"itemize",
+		t"enumerate",
+		i(nil)
+	}), t({"}", "\t\\item "}),
+	i(2), d(3, rec_ls, {}),
+	t({"", "\\end{"}), rep(1), t"}", i(0)
+})
+s_add("tab", fmt([[
+\begin{{tabular}}{{{}}}
+{}
+\end{{tabular}}
+]], {i(1, "c"), d(2, tab, {1}, {
+	user_args = {
+		function(snip) snip.rows = snip.rows + 1 end,
+		-- don't drop below one.
+		function(snip) snip.rows = math.max(snip.rows - 1, 1) end
+	}
+} )}))
+parse_add(",", [[\$$1\$]])
+parse_add("it", [[\textit{$1}]])
+parse_add("tx", [[\text{$1}]])
+parse_add("abr", [[\langle $1 \rangle]])
+parse_add("norm", [[\lVert ${1:$SELECT_DEDENT} \rVert]])
+s_add("mat", fmt([[
+\begin{{{}}}
+{}
+\end{{{}}}
+]], {c(1, {t"matrix", t"pmatrix", t"bmatrix", t"Bmatrix", t"vmatrix", t"Vmatrix"}),
+	d(2, mat, {}, {
 		user_args = {
 			function(snip) snip.rows = snip.rows + 1 end,
 			-- don't drop below one.
-			function(snip) snip.rows = math.max(snip.rows - 1, 1) end
+			function(snip) snip.rows = math.max(snip.rows - 1, 1) end,
+			function(snip) snip.cols = snip.cols + 1 end,
+			-- don't drop below one.
+			function(snip) snip.cols = math.max(snip.cols - 1, 1) end
 		}
-	} )})),
-	parse(",", [[\$$1\$]]),
-	parse("it", [[\textit{$1}]]),
-	parse("tx", [[\text{$1}]]),
-	parse("abr", [[\langle $1 \rangle]]),
-	parse("norm", [[\lVert ${1:$SELECT_DEDENT} \rVert]]),
-	s("mat", fmt([[
-	\begin{{{}}}
-	{}
-	\end{{{}}}
-	]], {c(1, {t"matrix", t"pmatrix", t"bmatrix", t"Bmatrix", t"vmatrix", t"Vmatrix"}),
-		d(2, mat, {}, {
-			user_args = {
-				function(snip) snip.rows = snip.rows + 1 end,
-				-- don't drop below one.
-				function(snip) snip.rows = math.max(snip.rows - 1, 1) end,
-				function(snip) snip.cols = snip.cols + 1 end,
-				-- don't drop below one.
-				function(snip) snip.cols = math.max(snip.cols - 1, 1) end
-			}
-		}),
-		rep(1)
-	})),
-})
+	}),
+	rep(1)
+}))
 
 local texpairs = {
 	{"(", ")"},
@@ -129,6 +126,14 @@ local texpairs = {
 	{"\\Big(", "\\Big)"},
 	{"\\bigg(", "\\bigg)"},
 	{"\\Bigg(", "\\Bigg)"},
+}
+local texsqpairs = {
+	{"[", "]"},
+	{"\\left[", "\\right]"},
+	{"\\big[", "\\big]"},
+	{"\\Big[", "\\Big]"},
+	{"\\bigg[", "\\bigg]"},
+	{"\\Bigg[", "\\Bigg]"},
 }
 
 local function choices_from_pairlist(ji, list)
@@ -141,8 +146,11 @@ local function choices_from_pairlist(ji, list)
 	return c(ji, choices)
 end
 
-snippet(s("(", {
+s_add({trig = "(", wordTrig=false}, {
 	choices_from_pairlist(1, texpairs)
-}))
+})
+s_add({trig = "[", wordTrig=false}, {
+	choices_from_pairlist(1, texsqpairs)
+})
 
-return ___snippets
+parse_add("comm", "\\newcommand{$1}{$2}")

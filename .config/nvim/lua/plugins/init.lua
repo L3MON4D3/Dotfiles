@@ -1,7 +1,7 @@
 local plugins = {
 	editorconfig = "gpanders/editorconfig.nvim",
 	luasnip = "/home/simon/Code/Lua/luasnip",
-	gruvbox = "gruvbox-community/gruvbox",
+	gruvbox = "ellisonleao/gruvbox.nvim",
 	dispatch = "tpope/vim-dispatch",
 	fugitive = "tpope/vim-fugitive",
 	lspconfig = "neovim/nvim-lspconfig",
@@ -10,6 +10,7 @@ local plugins = {
 	cmp = "hrsh7th/nvim-cmp",
 	cmp_lsp = "hrsh7th/cmp-nvim-lsp",
 	cmp_luasnip = "saadparwaiz1/cmp_luasnip",
+	cmp_buffer = "hrsh7th/cmp-buffer",
 	treesitter = "L3MON4D3/nvim-treesitter",
 	treesitter_textobjects = "nvim-treesitter/nvim-treesitter-textobjects",
 	hop = "phaazon/hop.nvim",
@@ -34,6 +35,7 @@ local plugins = {
 	clangd = "p00f/clangd_extensions.nvim",
 	lspsig = "ray-x/lsp_signature.nvim",
 	cmp_sig = "hrsh7th/cmp-nvim-lsp-signature-help",
+	cmp_path = "hrsh7th/cmp-path",
 	jsregexp = "jsregexp",
 	libmodal = "Iron-E/nvim-libmodal",
 	impatient = "lewis6991/impatient.nvim",
@@ -43,6 +45,10 @@ local plugins = {
 	promise = "kevinhwang91/promise-async",
 	catppuccin = "catppuccin/nvim",
 	rust_tools = "simrat39/rust-tools.nvim",
+	jupytext = "goerz/jupytext.vim",
+	fwatch = "rktjmp/fwatch.nvim",
+	unception = "samjwill/nvim-unception",
+	yuck = "elkowar/yuck.vim",
 }
 
 local plugins_inverse = {}
@@ -73,10 +79,11 @@ packer.startup({function(use)
 		requires = {
 			-- jsregexp
 		},
-		-- run = "make install_jsregexp 2> /home/simon/log >/home/simon/log"
+		-- run = "make install_jsregexp"
 	}
+	conf_use(jupytext)
 
-	use(gruvbox)
+	conf_use(gruvbox)
 	use(dispatch)
 	use(fugitive)
 	conf_use {
@@ -97,12 +104,18 @@ packer.startup({function(use)
 			cmp_lsp,
 			cmp_luasnip,
 			cmp_git,
+			cmp_path,
+			-- cmp_buffer,
 			-- cmp_sig,
 			-- lsp-expand
-			luasnip
-		}
+			luasnip,
+			"doxnit/cmp-luasnip-choice"
+		},
+		commit = "cfafe0a1ca8933f7b7968a287d39904156f2c57d"
 	}
+	use(fwatch)
 	use(cmp_lsp)
+	-- use(cmp_buffer)
 	-- use(cmp_sig)
 	use {
 		cmp_luasnip,
@@ -126,7 +139,7 @@ packer.startup({function(use)
 	use(cmp_git)
 
 	use(github_link)
-	conf_use(semantic_tokens)
+	-- conf_use(semantic_tokens)
 	conf_use(comment)
 	use(plenary)
 	conf_use{
@@ -155,6 +168,8 @@ packer.startup({function(use)
 	conf_use(catppuccin)
 	use(rust_tools)
 	use(editorconfig)
+	use(unception)
+	use(yuck)
 	-- conf_use({hydra, requires = dap})
 end,
 config = {

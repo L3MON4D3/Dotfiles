@@ -5,10 +5,11 @@ ls = require("luasnip")
 --vim.cmd("hi link LuasnipSnippetActive GruvboxRed")
 ls.config.setup({
 	history = true,
-	update_events = "InsertLeave",
+	loaders_store_source = true,
+	update_events = {"TextChanged"},
 	enable_autosnippets = true,
-	region_check_events = "CursorHold,InsertLeave",
-	delete_check_events = "TextChanged,InsertEnter",
+	region_check_events = {"CursorHold", "InsertLeave"},
+	delete_check_events = "TextChanged, InsertEnter",
 	store_selection_keys = "<Tab>",
 	ext_opts = {
 		[types.choiceNode] = {
@@ -18,11 +19,44 @@ ls.config.setup({
 			},
 		},
 	},
-	ft_func = require("luasnip.extras.filetype_functions").from_pos_or_filetype,
+	ft_func = function()
+		local fts = require("luasnip.extras.filetype_functions").from_pos_or_filetype()
+		-- should be possible to extend `all`-filetype.
+		table.insert(fts, "all")
+		local effective_fts = {}
+
+		local buflocal_extend = Config(0).luasnip_ft_extend
+		if buflocal_extend then
+			for _, ft in ipairs(fts) do
+				vim.list_extend(effective_fts, buflocal_extend[ft] or {})
+			end
+			vim.list_extend(effective_fts, fts)
+		else
+			effective_fts = fts
+		end
+
+		return effective_fts
+	end,
 	load_ft_func = require("luasnip.extras.filetype_functions").extend_load_ft({
-		markdown = {"lua", "json"}
+		markdown = {"lua", "json"},
+		python = {"ipynb"}
 	}),
 	snip_env = {
+		__snip_env_behaviour = "set",
+		ms = ls.multi_snippet,
+		ms_add = function(...)
+			local m_s = ls.multi_snippet(...)
+			table.insert(getfenv(2).ls_file_snippets, m_s)
+		end,
+		s_add = function(...)
+			local snip = ls.s(...)
+			snip.metadata = debug.getinfo(2)
+			table.insert(getfenv(2).ls_file_snippets, snip)
+		end,
+		s_add_auto = function(...)
+			local snip = ls.s(...)
+			table.insert(getfenv(2).ls_file_autosnippets, snip)
+		end,
 		s = ls.s,
 		sn = ls.sn,
 		t = ls.t,
@@ -66,6 +100,16 @@ ls.config.setup({
 				end
 			end})
 		end,
+		parse_add = function(...)
+			local p = ls.extend_decorator.apply(ls.parser.parse_snippet, {}, {dedent = true, trim_empty = true})
+			local snip = p(...)
+			table.insert(getfenv(2).ls_file_snippets, snip)
+		end,
+		parse_add_auto = function(...)
+			local p = ls.extend_decorator.apply(ls.parser.parse_snippet, {}, {dedent = true, trim_empty = true})
+			local snip = p(...)
+			table.insert(getfenv(2).ls_file_autosnippets, snip)
+		end,
 		parse = ls.extend_decorator.apply(ls.parser.parse_snippet, {}, {dedent = true, trim_empty = true}),
 		n = require("luasnip.extras").nonempty,
 		m = require("luasnip.extras").match,
@@ -79,8 +123,11 @@ ls.config.setup({
 
 ls.filetype_extend("latex", {"tex"})
 ls.filetype_extend("glsl", {"c"})
+ls.filetype_extend("cpp", {"c"})
 
-vim.cmd [[command! LuaSnipEdit :lua require("plugins.luasnip.ft_edit")()]]
+vim.api.nvim_create_user_command("LuaSnipEditF", require("plugins.luasnip.ft_edit"), {})
+vim.api.nvim_create_user_command("LuaSnipEditS", require("luasnip.extras.snip_edit").jump_to_current_snippet_source, {})
+
 vim.cmd [[
 	inoremap <silent> <C-K> <cmd>lua ls.expand()<Cr>
 	inoremap <silent> <C-L> <cmd>lua ls.jump(1)<Cr>
@@ -96,7 +143,9 @@ vim.cmd [[
 	smap <silent><expr> <C-S-E> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
 ]]
 
-require("luasnip.loaders.from_lua").lazy_load()
+-- require("luasnip.util.log").set_loglevel("info")
+require("luasnip.loaders.from_lua").lazy_load({paths = "./luasnippets"})
 require("luasnip.loaders.from_lua").load({paths = {vim.fn.getcwd() .. "/.luasnippets/"}})
+-- require("luasnip.loaders.from_snipmate").lazy_load()
 
 require("plugins.luasnip.external_update_dynamic_node")

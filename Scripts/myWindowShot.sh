@@ -1,1 +1,3 @@
-grim -g "$(swaymsg -t get_tree | jq -r '.. | (.nodes? // empty)[] | select(.pid and .visible) | .rect | "\(.x+2),\(.y+2) \(.width-4)x\(.height-4)"' | slurp)" screen.png
+grim -g "$( {
+swaymsg -t get_tree | jq -r '.. | (.nodes? // empty)[] | select(.pid and .visible) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' ;
+		swaymsg -t get_tree | jq -r '.. | (.floating_nodes? // empty)[] | select(.pid and .visible) | .rect | "\(.x+1),\(.y) \(.width-2)x\(.height-1)"' ; } | slurp)" screen.png

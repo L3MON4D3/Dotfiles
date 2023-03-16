@@ -139,66 +139,59 @@ local switch_case_node = fmta('<keyword><expression>) {\n<case>\n}', {
   case = isn(2, { t"\t", get_case_node(1) }, "$PARENT_INDENT\t")
 })
 
-return {
-	s('github',
-      fmt([[https://github.com/{}/{}/archive/{}/$name-$version.tar.gz]],
-        {
-          i(1, "author"),
-          i(2, "project"),
-          -- TODO: choiceNode
-          --c(3, { i(1, "$version"), i(1, "v$version") }),
-          c(3, {
-            t"$version",
-            t"v$version",
-          }),
-        }
-      )
-    ),
-	s("trig", {
-		t("SECTION(\""), i(1, "default"), t("\")"),
-		t({"", "{"}),
-		-- isn only applies indent at newlines, so a `    ` is still needed to indent the first line.
-		t({"", "    "}), isn(2,
-			f(function (_, snip) return snip.env.SELECT_DEDENT end, {}),
-			-- indent with four spaces.
-			"$PARENT_INDENT    "),
-		t({"", "}"})
+s_add('github',
+  fmt([[https://github.com/{}/{}/archive/{}/$name-$version.tar.gz]],
+	{
+	  i(1, "author"),
+	  i(2, "project"),
+	  -- TODO: choiceNode
+	  --c(3, { i(1, "$version"), i(1, "v$version") }),
+	  c(3, {
+		t"$version",
+		t"v$version",
+	  }),
+	}
+  )
+)
+s_add("trig", {i(1, "text"), dl(2, l._1, {1})})
+s_add("lel", i(1, "lal"))
+parse_add("lol", "a${1:$TM_CURRENT_LINE}")
+s_add({trig="fn"}, {
+	d(6, jdocsnip, {ai[2], ai[4], ai[5]}), t({"", ""}),
+	c(1, {
+		t({"public "}),
+		t({"private "})
 	}),
-	s("trig", switch_case_node),
-	s("trig", {i(1, "text"), dl(2, l._1, {1})}),
-	s("lel", i(1, "lal")),
-	parse("lol", "a${1:$TM_CURRENT_LINE}"),
-	s({trig="fn"}, {
-		d(6, jdocsnip, {ai[2], ai[4], ai[5]}), t({"", ""}),
-		c(1, {
-			t({"public "}),
-			t({"private "})
-		}),
-		c(2, {
-			t({"void"}),
-			i(nil, {""}),
-			t({"String"}),
-			t({"char"}),
-			t({"int"}),
-			t({"double"}),
-			t({"boolean"}),
-		}),
-		t({" "}),
-		i(3, {"myFunc"}),
-		t({"("}), i(4), t({")"}),
-		c(5, {
-			t({""}),
-			sn(nil, {
-				t({""," throws "}),
-				i(1)
-			})
-		}),
-		t({" {", "\t"}),
-		i(0),
-		t({"", "}"})
+	c(2, {
+		t({"void"}),
+		i(nil, {""}),
+		t({"String"}),
+		t({"char"}),
+		t({"int"}),
+		t({"double"}),
+		t({"boolean"}),
 	}),
-	s("pyinit", d(1, pyinit, {}, { user_args = {
-		function(parent) vim.ui.input({prompt = "Number of args: "}, function(argc)
-			parent.argc = math.max(argc, 1)
-		end) end }}))
-}
+	t({" "}),
+	i(3, {"myFunc"}),
+	t({"("}), i(4), t({")"}),
+	c(5, {
+		t({""}),
+		sn(nil, {
+			t({""," throws "}),
+			i(1)
+		})
+	}),
+	t({" {", "\t"}),
+	i(0),
+	t({"", "}"})
+}, {
+	condition = function() return true end
+})
+s_add("pyinit", d(1, pyinit, {}, { user_args = {
+	function(parent) vim.ui.input({prompt = "Number of args: "}, function(argc)
+		parent.argc = math.max(argc, 1)
+	end) end }}))
+
+parse_add("bugg", "TEST: ${3:[${4:$CURRENT_MONTH_NAME $CURRENT_DATE, $CURRENT_YEAR}]} ${2:Foo}")
+
+-- vim: ft=lua

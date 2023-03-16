@@ -1,5 +1,3 @@
-require("plugins.luasnip.helpers").setup_snip_env()
-
 local function neg(fn, ...)
 	return not fn(...)
 end
@@ -15,19 +13,17 @@ local function part(func, ...)
 	return function() return func(unpack(args)) end
 end
 
-return {
-	s({trig="con", wordTrig=true}, {
-		i(1),
-		f(function(args) return {" "..string.rep(".", 80-(#args[1][1]+#args[2][1]+2+2)).." "} end, {1, 2}),
-		t({"|"}),
-		i(2),
-		t({"|"}),
-		i(0)
-	}),
-	s({trig="*", wordTrig=true}, {
-		t({"*"}),
-		i(1),
-		t({"*"}),
-		i(0)
-	}, { cond = part(neg, even_count, '%*') }),
-}
+s_add({trig="con", wordTrig=true}, {
+	i(1),
+	f(function(args) return {" "..string.rep(".", 80-(#args[1][1]+#args[2][1]+2+2)).." "} end, {1, 2}),
+	t({"|"}),
+	i(2),
+	t({"|"}),
+	i(0)
+})
+s_add({trig="*", wordTrig=true}, {
+	t({"*"}),
+	i(1),
+	t({"*"}),
+	i(0)
+}, { cond = part(neg, even_count, '%*') })

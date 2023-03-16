@@ -21,17 +21,16 @@ local function char_count_same(c1, c2)
 end
 
 local function pair(pair_begin, pair_end, expand_func, ...)
-	return s({trig = pair_begin, wordTrig=false}, {t({pair_begin}), i(1), t({pair_end})}, {condition = part(expand_func, part(..., pair_begin, pair_end))})
+	s_add({trig = pair_begin, wordTrig=false}, {t({pair_begin}), i(1), t({pair_end})}, {condition = part(expand_func, part(..., pair_begin, pair_end))})
 end
 
-return {
-	pair("(", ")", neg, char_count_same),
-	pair("{", "}", neg, char_count_same),
-	pair("[", "]", neg, char_count_same),
-	pair("<", ">", neg, char_count_same),
-	pair("'", "'", neg, even_count),
-	pair('"', '"', neg, even_count),
-	pair("`", "`", neg, even_count),
-	s({trig="{,", wordTrig=false, hidden=true}, { t({"{","\t"}), i(1), t({"", "}"}) }),
-	parse("lel", "lo")
-}
+pair("(", ")", neg, char_count_same)
+pair("{", "}", neg, char_count_same)
+pair("[", "]", neg, char_count_same)
+pair("<", ">", neg, char_count_same)
+pair("'", "'", neg, even_count)
+pair('"', '"', neg, even_count)
+pair("`", "`", neg, even_count)
+s_add({trig="{,", wordTrig=false, hidden=true}, { t({"{","\t"}), i(1), t({"", "}"}) })
+
+parse_add("lel", "lo")

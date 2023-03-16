@@ -32,13 +32,17 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 vim.api.nvim_create_autocmd("TermOpen", {
-	callback = function()
+	callback = function(args)
 		vim.cmd([[
-			startinsert
+			"startinsert
 			setlocal nonumber
 			setlocal norelativenumber
 			setlocal ft=term
 		]])
+		-- immediately enter bash, don't for other terminals.
+		if args.file:match("bash$") then
+			vim.cmd("startinsert")
+		end
 	end
 })
 

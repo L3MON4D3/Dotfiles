@@ -61,7 +61,7 @@
 
 ; only match functions without initializer list.
 (
- (function_definition . (_)? . (function_declarator) . (compound_statement) @fold .)
+ (function_definition . (_)? . (_)? . declarator: (_) . (compound_statement) @fold .)
  (#set! foldtext_start "{")
  (#set! foldtext_start_hl "@punctuation.bracket")
  (#set! foldtext_end "}")

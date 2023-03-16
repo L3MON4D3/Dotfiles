@@ -3,3 +3,6 @@ setl ai cindent nosi
 setl cinkeys=
 setl indentexpr=""
 nnoremap <silent><buffer> <space>i :ClangdSwitchSourceHeader<Cr>
+set formatoptions+=c
+set formatoptions-=t
+set textwidth=80
