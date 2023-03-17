@@ -47,7 +47,7 @@
 
 (
  (function_call
-  name: (identifier) @name
+  name: (_) @name
   (arguments) @fold)
  (#set! foldtext_start "(")
  (#set! foldtext_start_hl "@punctuation.bracket")
