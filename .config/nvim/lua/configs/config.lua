@@ -94,11 +94,11 @@ local session_run_fns = {}
 local function new(o)
 	if o.run_buf then
 		local old_buf_func = o.run_buf
-		o.run_buf = function(bufnr)
+		o.run_buf = function(args)
 			-- only run buf_func if it wasn't run already.
-			if buf_run_fns[bufnr][old_buf_func] == nil then
-				old_buf_func(bufnr)
-				buf_run_fns[bufnr][old_buf_func] = true
+			if buf_run_fns[args.buf][old_buf_func] == nil then
+				old_buf_func(args)
+				buf_run_fns[args.buf][old_buf_func] = true
 			end
 		end
 	end
