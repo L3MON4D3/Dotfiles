@@ -89,7 +89,6 @@ set grepformat^=%f:%l:%c:%m
 
 set termguicolors
 set pumblend=15
-syntax on
 ""airline
 "let g:airline_powerline_fonts=1
 "let g:airline_theme='gruvbox'
