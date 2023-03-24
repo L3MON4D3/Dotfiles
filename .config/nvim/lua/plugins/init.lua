@@ -146,12 +146,12 @@ local plugin_spec = {
 		da_lua,
 	},
 	use(vrepeat),
-	conf_use{
-		friendly_snippets,
-	},
-	conf_use({
-		vim_snippets,
-	}),
+	-- conf_use{
+	-- 	friendly_snippets,
+	-- },
+	-- conf_use({
+	-- 	vim_snippets,
+	-- }),
 	conf_use(neogen),
 	use(dressing),
 	use(telescope),

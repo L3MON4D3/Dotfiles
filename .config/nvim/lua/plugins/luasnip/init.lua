@@ -149,6 +149,5 @@ vim.cmd [[
 -- require("luasnip.util.log").set_loglevel("info")
 require("luasnip.loaders.from_lua").lazy_load({paths = "./luasnippets"})
 require("luasnip.loaders.from_lua").load({paths = {vim.fn.getcwd() .. "/.luasnippets/"}})
--- require("luasnip.loaders.from_snipmate").lazy_load()
 
 require("plugins.luasnip.external_update_dynamic_node")
