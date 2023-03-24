@@ -31,6 +31,13 @@ pair("<", ">", neg, char_count_same)
 pair("'", "'", neg, even_count)
 pair('"', '"', neg, even_count)
 pair("`", "`", neg, even_count)
-s_add({trig="{,", wordTrig=false, hidden=true}, { t({"{","\t"}), i(1), t({"", "}"}) })
+s_add({trig="{,", wordTrig=false, hidden=true}, { t({"{","\t"}), i(1, "", {key = "asdf"}), t({"", "}"}) })
 
 parse_add("lel", "lo")
+
+-- local k = require("luasnip.nodes.key_indexer").new_key
+-- s_add("aaa", {
+-- 	rep(k("a")),
+-- 	t" ",
+-- 	i(1, "etest", {key = "a"})
+-- })

@@ -318,9 +318,6 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 
-noremap <silent> <F11> :vnew<Cr>:term<Cr>
-noremap <silent> <F23> :new<Cr>:term<Cr>
-
 nnoremap <silent> <F9> :vert res +2<Cr>
 nnoremap <silent> <F21> :vert res -2<Cr>
 nnoremap <silent> <F10> :res +2<Cr>
@@ -361,7 +358,7 @@ tnoremap <silent> <F21> <C-\><C-N>:vert res -2<Cr>a
 tnoremap <silent> <F10> <C-\><C-N>:res +2<Cr>a
 tnoremap <silent> <F22> <C-\><C-N>:res -2<Cr>a
 
-cabbr <expr> && expand('%:p:.:h')
+cabbr <expr> && fnameescape(expand('%:p:.:h'))
 cabbr invim /home/simon/.config/nvim/init.vim
 cabbr pacconf /home/simon/.config/nvim/lua/plugins/init.lua
 

@@ -8,17 +8,52 @@ local commands = {
 	bash = {"bash"}
 }
 
+local function create_term(command)
+	local res = {}
+
+	local job_id
+
+	local buf = api.nvim_create_buf(false, false)
+	res.buf = buf
+
+	local term_chan_id = vim.api.nvim_open_term(buf, {
+		on_input = function(_, _, _, data)
+			vim.api.nvim_chan_send(job_id, data)
+		end
+	})
+
+	job_id = vim.fn.jobstart(command, {
+		on_stdout = function(_, data)
+			vim.api.nvim_chan_send(term_chan_id, table.concat(data, "\r\n"))
+
+			-- set terminal as active as soon as we got some output.
+			vim.defer_fn(function()
+				res.active = true
+			end, 0)
+		end,
+		pty = true
+	})
+	res.channel = job_id
+
+	-- local prev_buf = api.nvim_get_current_buf()
+
+	-- api.nvim_set_current_buf(buf)
+	-- local channel = vim.fn.termopen(command)
+	-- res.channel = channel
+	-- res.buf = buf
+	-- api.nvim_set_current_buf(prev_buf)
+
+	return res
+end
+
+-- map stuff like julia, python, bash (term_id) to table with keys
+-- * channel (the channel to the external process)
+-- * buf (the buffer)
 local terminals = setmetatable({}, {
 	__index = function(t, k)
-		local buf = api.nvim_create_buf(false, false)
-
-		local prev_buf = api.nvim_get_current_buf()
-
-		api.nvim_set_current_buf(buf)
-		local channel = vim.fn.termopen(commands[k])
-		api.nvim_set_current_buf(prev_buf)
-
-		local res = {channel = channel, buf = buf}
+		local term_id = k
+		local term_type = term_id:match("^[^%.]+")
+		local res = create_term(commands[term_type])
 		rawset(t, k, res)
 		return res
 	end
@@ -43,12 +78,54 @@ end
 
 function M.send(term_id, cmd)
 	M.ensure_enabled(term_id)
-	api.nvim_chan_send(terminals[term_id].channel, cmd .. "\n")
+
+	print(vim.api.nvim_buf_get_name(0))
+	print(vim.api.nvim_get_current_buf())
+	print("ohno")
+	local send_fn
+	send_fn = function()
+		if terminals[term_id].active then
+			api.nvim_chan_send(terminals[term_id].channel, cmd .. "\n")
+		else
+			-- schedule for another try in 50ms.
+			vim.defer_fn(send_fn, 50)
+		end
+	end
+	send_fn()
 end
 
 function M.show(term_id)
 	M.ensure_enabled(term_id)
 	api.nvim_set_current_buf(terminals[term_id].buf)
+end
+
+local function open_new(tabpage, split_command, focus, buf)
+	-- gets active window.
+	local current_win = api.nvim_tabpage_get_win(tabpage)
+	vim.cmd(split_command)
+	local split_win = api.nvim_tabpage_get_win(tabpage)
+
+	if not focus then
+		_G._insert_term_skip = true
+		api.nvim_set_current_win(current_win)
+		api.nvim_win_set_buf(split_win, buf)
+		_G._insert_term_skip = false
+	else
+		api.nvim_set_current_buf(buf)
+	end
+
+	-- Don't take up more space than allocated from split command.
+	vim.wo[split_win].winfixheight = true
+	vim.wo[split_win].winfixwidth = true
+
+	-- hide left column, disabling numbers is enough.
+	vim.wo[split_win].number = false
+	vim.wo[split_win].relativenumber = false
+
+	-- all have the same filetype.
+	vim.bo[buf].ft = "term"
+
+	return split_win
 end
 
 function M.toggle(term_id, split_command, focus)
@@ -59,24 +136,15 @@ function M.toggle(term_id, split_command, focus)
 		api.nvim_win_close(win, true)
 		windows[term_id][tabpage] = nil
 	else
-		-- gets active window.
-		local current_win = api.nvim_tabpage_get_win(tabpage)
-		vim.cmd(split_command)
-		local split_win = api.nvim_tabpage_get_win(tabpage)
-		api.nvim_win_set_option(split_win, "winfixheight", true)
-		-- probably also good?
-		api.nvim_win_set_option(split_win, "winfixwidth", true)
-
-		if not focus  then
-			_G._insert_term_skip = true
-			api.nvim_set_current_win(current_win)
-			api.nvim_win_set_buf(split_win, terminals[term_id].buf)
-			_G._insert_term_skip = false
-		else
-			api.nvim_set_current_buf(terminals[term_id].buf)
-		end
-		windows[term_id][tabpage] = split_win
+		local win_id = open_new(tabpage, split_command, focus, terminals[term_id].buf)
+		windows[term_id][tabpage] = win_id
 	end
+end
+
+function M.open_unique(command, split_command, focus)
+	local term_data = create_term(command)
+	local tabpage = vim.fn.tabpagenr()
+	open_new(tabpage, split_command, focus, term_data.buf)
 end
 
 function M.restart(term_id)

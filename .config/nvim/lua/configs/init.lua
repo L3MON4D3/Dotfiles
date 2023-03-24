@@ -47,8 +47,6 @@ function Config(bufnr)
 end
 
 local function fileconfig_au_cb(args)
-	-- setting this here is alright, this will run before project-level run_file.
-	vim.api.nvim_buf_set_var(args.buf, "my_luasnip_filetype_extension", {})
 	Config(args.buf).run_buf(args)
 	Config(args.buf).run_session()
 end

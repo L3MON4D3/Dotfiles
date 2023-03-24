@@ -76,10 +76,6 @@ packer.startup({function(use)
 
 	conf_use{
 		luasnip,
-		requires = {
-			-- jsregexp
-		},
-		-- run = "make install_jsregexp"
 	}
 	conf_use(jupytext)
 

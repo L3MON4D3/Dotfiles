@@ -6,7 +6,7 @@ ls = require("luasnip")
 ls.config.setup({
 	history = true,
 	loaders_store_source = true,
-	update_events = {"TextChanged"},
+	update_events = {"TextChangedI,TextChanged"},
 	enable_autosnippets = true,
 	region_check_events = {"CursorHold", "InsertLeave"},
 	delete_check_events = "TextChanged, InsertEnter",
@@ -116,7 +116,7 @@ ls.config.setup({
 		ai = require("luasnip.nodes.absolute_indexer"),
 		postfix = require("luasnip.extras.postfix").postfix,
 		conds = require("luasnip.extras.expand_conditions")
-	}
+	},
 })
 
 -- require("luasnip.util.log").set_loglevel("info")
@@ -126,7 +126,10 @@ ls.filetype_extend("glsl", {"c"})
 ls.filetype_extend("cpp", {"c"})
 
 vim.api.nvim_create_user_command("LuaSnipEditF", require("plugins.luasnip.ft_edit"), {})
-vim.api.nvim_create_user_command("LuaSnipEditS", require("luasnip.extras.snip_edit").jump_to_current_snippet_source, {})
+local sl_ok, sl = pcall(require, "luasnip.extras.snip_location")
+if sl_ok then
+	vim.api.nvim_create_user_command("LuaSnipEditS", sl.jump_to_active_snippet, {})
+end
 
 vim.cmd [[
 	inoremap <silent> <C-K> <cmd>lua ls.expand()<Cr>

@@ -237,4 +237,9 @@ return {
 			vim.bo.filetype = "json"
 		end
 	},
+	[".*/.git/hooks/.*"] = {
+		run_buf = function(args)
+			vim.bo[args.buf].filetype = "bash"
+		end
+	}
 }

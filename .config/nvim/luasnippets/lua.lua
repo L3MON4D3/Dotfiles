@@ -11,8 +11,8 @@ s_add({trig="ee", wordTrig=true}, {
 })
 s_add("for", {
 	t"for ", c(1, {
-		sn(nil, {i(1, "k"), t", ", i(2, "v"), t" in ", c(3, {t"pairs", t"ipairs", i(nil)}), t"(", i(4), t")"}),
-		sn(nil, {i(1, "i"), t" = ", i(2), t", ", i(3), })
+		sn(nil, {i(1, "k"), t", ", i(2, "v"), t" in ", c(3, {{t"pairs(",i(1),t")"}, {t"ipairs(",i(1),t")"}, i(nil)}) }),
+		sn(nil, {i(1, "i"), t" = ", i(2), t", ", i(3) })
 	}), t{" do", "\t"}, isn(2, {dl(1, l.LS_SELECT_DEDENT)}, "$PARENT_INDENT\t"), t{"", "end"}
 })
 s_add("while", fmt([[
