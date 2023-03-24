@@ -1,6 +1,6 @@
 local plugins = {
 	editorconfig = "gpanders/editorconfig.nvim",
-	luasnip = "/home/simon/Code/Lua/luasnip",
+	luasnip = "L3MON4D3/LuaSnip",
 	gruvbox = "ellisonleao/gruvbox.nvim",
 	dispatch = "tpope/vim-dispatch",
 	fugitive = "tpope/vim-fugitive",
@@ -38,10 +38,9 @@ local plugins = {
 	cmp_path = "hrsh7th/cmp-path",
 	jsregexp = "jsregexp",
 	libmodal = "Iron-E/nvim-libmodal",
-	impatient = "lewis6991/impatient.nvim",
 	prettier = "prettier/vim-prettier",
 	hydra = "anuvyklack/hydra.nvim",
-	ufo = "kevinhwang91/nvim-ufo",
+	ufo = "L3MON4D3/nvim-ufo",
 	promise = "kevinhwang91/promise-async",
 	catppuccin = "catppuccin/nvim",
 	rust_tools = "simrat39/rust-tools.nvim",
@@ -56,118 +55,120 @@ for k, v in pairs(plugins) do
 	plugins_inverse[v] = k
 end
 
-local packer = require("packer")
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
-local PACKER_COMPILED_PATH = vim.fn.stdpath('cache') .. '/packer/packer_compiled.lua'
+setfenv(1, vim.tbl_extend("force", _G or {}, plugins))
 
-local use_rocks = packer.use_rocks
-packer.startup({function(use)
-	setfenv(1, vim.tbl_extend("force", _G or {}, plugins))
-
-	local function conf_use(arg)
-		if type(arg) == "string" then
-			arg = {
-				[1] = arg,
-			}
-		end
-		arg.config = "ok, t = pcall(require, \"plugins/"..plugins_inverse[arg[1]].."\") if not ok then print(t) end"
-		use(arg)
+local function use(arg)
+	if not arg then
+		print(debug.traceback())
+		return
 	end
+	if type(arg) == "string" then
+		arg = {
+			[1] = arg,
+		}
+	end
+	arg.name = plugins_inverse[arg[1]]
+	return arg
+end
+local function conf_use(arg)
+	arg = use(arg)
+	arg.config = function()
+		local ok, err_if_not_ok = pcall(require, "plugins/"..plugins_inverse[arg[1]])
+		if not ok then
+			print(err_if_not_ok)
+		end
+	end
+	return arg
+end
 
+local plugin_spec = {
 	conf_use{
 		luasnip,
-	}
-	conf_use(jupytext)
+		dev = true
+	},
+	conf_use(jupytext),
 
-	conf_use(gruvbox)
-	use(dispatch)
-	use(fugitive)
+	conf_use(gruvbox),
+	use(dispatch),
+	use(fugitive),
 	conf_use {
 		lspconfig,
-		requires = {
-			luasnip,
-			cmp_lsp,
-			clangd,
-			--lspsig
-		}
-	}
-	use(lspinstall)
-	conf_use(illuminate)
+		dependencies = {gruvbox}
+	},
+	use(lspinstall),
+	conf_use(illuminate),
 
 	conf_use {
 		cmp,
-		requires = {
-			cmp_lsp,
-			cmp_luasnip,
-			cmp_git,
-			cmp_path,
-			-- cmp_buffer,
-			-- cmp_sig,
-			-- lsp-expand
-			luasnip,
-			"doxnit/cmp-luasnip-choice"
-		},
 		commit = "cfafe0a1ca8933f7b7968a287d39904156f2c57d"
-	}
-	use(fwatch)
-	use(cmp_lsp)
+	},
+	use(fwatch),
+	use(cmp_lsp),
 	-- use(cmp_buffer)
 	-- use(cmp_sig)
 	use {
 		cmp_luasnip,
-		requires = luasnip
-	}
+	},
 	conf_use {
 		treesitter,
 		run = ":TSUpdate",
-		requires = treesitter_textobjects
-	}
-	use(treesitter_textobjects)
+		lazy = true
+	},
+	use(treesitter_textobjects),
 
-	conf_use(hop)
-	use(vim_glsl)
-	conf_use(dap)
+	conf_use(hop),
+	use(vim_glsl),
+	conf_use(dap),
 	conf_use{
 		dap_ui,
-		requires = dap
-	}
-	use(playground)
-	use(cmp_git)
+	},
+	use(playground),
+	use(cmp_git),
 
-	use(github_link)
+	use(github_link),
 	-- conf_use(semantic_tokens)
-	conf_use(comment)
-	use(plenary)
+	conf_use(comment),
+	use(plenary),
 	conf_use{
 		da_lua,
-		requires = dap
-	}
-	use(vrepeat)
-	conf_use({
+	},
+	use(vrepeat),
+	conf_use{
 		friendly_snippets,
-		requires = luasnip
-	})
+	},
 	conf_use({
 		vim_snippets,
-		requires = luasnip
-	})
-	conf_use(neogen)
-	use(dressing)
-	use(telescope)
-	conf_use(lualine)
-	use(clangd)
-	use_rocks{"dbus_proxy"}
-	-- use_rocks("jsregexp")
-	use(libmodal)
-	use(impatient)
-	conf_use{ufo, requires = promise}
-	conf_use(catppuccin)
-	use(rust_tools)
-	use(editorconfig)
-	use(unception)
-	use(yuck)
-	-- conf_use({hydra, requires = dap})
-end,
-config = {
-	compile_path = PACKER_COMPILED_PATH
-}})
+	}),
+	conf_use(neogen),
+	use(dressing),
+	use(telescope),
+	conf_use(lualine),
+	use(clangd),
+	use(libmodal),
+	conf_use(ufo),
+	conf_use(catppuccin),
+	use(rust_tools),
+	use(editorconfig),
+	-- use(unception),
+	use(yuck),
+	use(promise)
+}
+
+require("lazy").setup(plugin_spec, {
+	dev = {
+		path = "~/Code/"
+	}
+})

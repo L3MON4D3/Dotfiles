@@ -11,7 +11,7 @@ local repl = require("repl")
 -- before loading plugins!
 require("configs")
 
-dofile(vim.fn.stdpath("cache") .. "/packer/packer_compiled.lua")
+require("plugins")
 
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "term://*",
@@ -45,7 +45,6 @@ vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
 require("sighelp")
 require("sighelp.snippet")
 require("modes")
-require("plugins")
 
 -- vim.treesitter.query.add_directive("set_injection_filetype_snippet_file!", function(_, _, bufnr, _, metadata)
 -- 	local name = vim.api.nvim_buf_get_name(bufnr)

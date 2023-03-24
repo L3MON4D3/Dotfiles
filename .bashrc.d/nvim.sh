@@ -1,5 +1,5 @@
 export nc=~/.config/nvim/
-export np=~/.local/share/nvim/site/pack/packer/start/
+export np=~/.local/share/nvim/lazy/
 
 if [[ -z "${EDITOR}" ]]; then
 	export EDITOR=nvim

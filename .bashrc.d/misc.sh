@@ -65,7 +65,7 @@ export cr=~/Documents/Uni/Kurse/s7/cr/
 export tn=~/Documents/Uni/Kurse/s7/tnn/
 export ag=~/Documents/Uni/Kurse/s6/ag/
 export p2=~/Documents/Uni/Kurse/s6/p2
-export lsn=~/Code/Lua/luasnip
+export lsn=~/Code/luasnip
 
 export RUST_SRC_PATH=/home/simon/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/
 

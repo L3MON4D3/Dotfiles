@@ -6,11 +6,6 @@ set noswapfile
 
 source ~/.config/nvim/functions.vim 
 
-augroup packer_user_config
-  autocmd!
-  autocmd BufWritePost ~/.config/nvim/lua/plugins/init.lua source <afile> | PackerCompile
-augroup end
-
 augroup mine
 au!
 
@@ -223,7 +218,6 @@ sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=
 let mapleader=","
 let maplocalleader="<Space>"
 
-lua require('impatient')
 lua require('init')
 set completeopt=menuone
 "inoremap <Tab> <cmd>lua return require'snippets'.expand_or_advance(1)<CR>
@@ -361,8 +355,3 @@ tnoremap <silent> <F22> <C-\><C-N>:res -2<Cr>a
 cabbr <expr> && fnameescape(expand('%:p:.:h'))
 cabbr invim /home/simon/.config/nvim/init.vim
 cabbr pacconf /home/simon/.config/nvim/lua/plugins/init.lua
-
-if filereadable('.vProj.vim')
-    source .vProj.vim
-    echo "replace .vProj.vim with project-config!"
-endif

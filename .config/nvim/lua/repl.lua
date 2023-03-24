@@ -14,6 +14,7 @@ local function create_term(command)
 	local job_id
 
 	local buf = api.nvim_create_buf(false, false)
+	api.nvim_buf_set_name(buf, "term://" .. command[1])
 	res.buf = buf
 
 	local term_chan_id = vim.api.nvim_open_term(buf, {
@@ -34,14 +35,6 @@ local function create_term(command)
 		pty = true
 	})
 	res.channel = job_id
-
-	-- local prev_buf = api.nvim_get_current_buf()
-
-	-- api.nvim_set_current_buf(buf)
-	-- local channel = vim.fn.termopen(command)
-	-- res.channel = channel
-	-- res.buf = buf
-	-- api.nvim_set_current_buf(prev_buf)
 
 	return res
 end
@@ -79,9 +72,6 @@ end
 function M.send(term_id, cmd)
 	M.ensure_enabled(term_id)
 
-	print(vim.api.nvim_buf_get_name(0))
-	print(vim.api.nvim_get_current_buf())
-	print("ohno")
 	local send_fn
 	send_fn = function()
 		if terminals[term_id].active then

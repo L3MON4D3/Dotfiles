@@ -79,6 +79,7 @@ return {
 				type = "lldb",
 				request = "launch",
 				program = "build/bin/nvim",
+				args = {"~/a.jl"},
 				cwd = '${workspaceFolder}',
 				runInTerminal = true
 			}}
@@ -189,10 +190,10 @@ return {
 			cabbrev_buf("@@", "/home/simon/Documents/Uni/Kurse/s6/ba/doc/thesis/tex/figures")
 		end
 	},
-	["/home/simon/Code/Lua/luasnip"] = {
+	["/home/simon/Code/luasnip"] = {
 		run_buf = function()
-			cabbrev_buf("%%", "/home/simon/Code/Lua/luasnip/lua/luasnip")
-			cabbrev_buf("!!", "/home/simon/Code/Lua/luasnip/tests/integration")
+			cabbrev_buf("%%", "/home/simon/Code/luasnip/lua/luasnip")
+			cabbrev_buf("!!", "/home/simon/Code/luasnip/tests/integration")
 		end
 	},
 	["/home/simon/Documents/Uni/Kurse/s7/co/PE_2"] = conf.combine_force(
