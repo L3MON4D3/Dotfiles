@@ -8,7 +8,12 @@ local commands = {
 	bash = {"bash"}
 }
 
-local function create_term(command)
+local term_opts = {}
+
+local function create_term(command, opts)
+	opts = opts or {}
+	local job_opts = opts.job_opts or {}
+
 	local res = {}
 
 	local job_id
@@ -23,7 +28,7 @@ local function create_term(command)
 		end
 	})
 
-	job_id = vim.fn.jobstart(command, {
+	job_id = vim.fn.jobstart(command, vim.tbl_extend("force", {
 		on_stdout = function(_, data)
 			vim.api.nvim_chan_send(term_chan_id, table.concat(data, "\r\n"))
 
@@ -32,8 +37,11 @@ local function create_term(command)
 				res.active = true
 			end, 0)
 		end,
-		pty = true
-	})
+		on_exit = function()
+			vim.api.nvim_buf_delete(buf, {force = true})
+		end,
+		pty = true,
+	}, job_opts))
 	res.channel = job_id
 
 	return res
@@ -46,7 +54,7 @@ local terminals = setmetatable({}, {
 	__index = function(t, k)
 		local term_id = k
 		local term_type = term_id:match("^[^%.]+")
-		local res = create_term(commands[term_type])
+		local res = create_term(commands[term_type], term_opts[term_id])
 		rawset(t, k, res)
 		return res
 	end
@@ -139,6 +147,10 @@ end
 
 function M.restart(term_id)
 	terminals[term_id] = nil
+end
+
+function M.set_opts(term_id, opts)
+	term_opts[term_id] = opts
 end
 
 return M

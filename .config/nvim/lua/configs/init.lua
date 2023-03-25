@@ -1,58 +1,110 @@
 local conf = require("configs.config")
 local configs = conf.gen_config(require("configs.configs"))
+local config_options = require("configs.config_options")
 
--- define globally for access anywhere.
-local function gen_file_config(fname)
-	-- find configs where pattern matches fname, and apply those higher up in
-	-- the path before those lower down.
-	local path_to_config = {}
-	local paths = {}
-
-	for pattern, config in pairs(configs) do
-		local match = fname:match("^"..pattern)
-		if match then
-			path_to_config[match] = config
-			table.insert(paths, match)
-		end
-	end
-
-	-- sort such that short paths occur before longer ones.
-	-- Then, configs from less specific paths are overridden with those of more
-	-- specific ones.
-	table.sort(paths, function(sort_before, sort_after)
-		return #sort_before < #sort_after
-	end)
-
-	local sorted_configs = vim.tbl_map(function(path)
-		return path_to_config[path]
-	end, paths)
-
-	return conf.combine_force(unpack(sorted_configs))
-end
-
-local generated_confs = {}
-function Config(bufnr)
-	local fname = vim.api.nvim_buf_get_name(bufnr)
+local function gen_configs_from_patterns(fname)
+	-- use cwd if buffer for initial buffer (I guess fname == "" is the only
+	-- way to detect that one).
 	if fname == "" then
 		fname = vim.loop.cwd()
 	end
 
-	local f_conf = generated_confs[fname]
+	local pattern_configs = {dir = {}, filetype = {}, file = {}}
+	for pattern, config in pairs(configs.pattern) do
+		local match = fname:match(pattern)
+		if match then
+			pattern_configs[config.category][match] = config
+		end
+	end
+
+	return pattern_configs
+end
+
+-- return list of configs, with least specific at [1], most specific at [#t].
+local function dir_configs_sorted(pattern_configs, cwd)
+	local path_so_far = ""
+	local matching_configs = {}
+
+	for _, path_component in ipairs(vim.split(cwd, "/", {plain=true})) do
+		path_so_far = "/" .. path_component
+		-- important: insert the pattern-generated config before the one that
+		-- is exactly meant for this directory.
+		-- Makes more sense priority-wise.
+		table.insert(matching_configs, pattern_configs.dir[path_so_far])
+		table.insert(matching_configs, configs.dir[path_so_far])
+	end
+
+	return matching_configs
+end
+
+-- generate filetype-configs:
+-- first filetypes from global configs, the earlier a ft in the comma-separated
+-- enumeration, the higher its priority, eg the later it appears in the
+-- returned list.
+-- Also, all filetype-configs from global config are higher-priority than those
+-- of the pattern-config.
+local function filetype_configs_sorted(pattern_configs, filetype_string)
+	local fts_reversed = {}
+	for _, ft in ipairs(vim.split(filetype_string, ",", {plain=true})) do
+		table.insert(fts_reversed, 1, ft)
+	end
+
+	local matching_configs = {}
+	for _, ft in ipairs(fts_reversed) do
+		table.insert(matching_configs, pattern_configs.filetype[ft])
+	end
+	for _, ft in ipairs(fts_reversed) do
+		table.insert(matching_configs, configs.filetype[ft])
+	end
+	return matching_configs
+end
+
+-- generate config for buffer by
+-- * finding all applicable configs in `configs`
+-- * merging them, with more specific configs overriding/extending those more
+--   general ones.
+--   The exact order, by ascending priority, is
+--   * dir
+--   * filetype
+--   * filename
+--   The priority inside these categories is described further in their
+--   respective functions/in this function.
+local function gen_buf_config(buf)
+	local bufname = vim.api.nvim_buf_get_name(buf)
+
+	-- generate configs from patterns.
+	local pattern_configs = gen_configs_from_patterns(bufname)
+
+	local matching_configs = {}
+
+	-- lowest priority: directory-configs.
+	vim.list_extend(matching_configs, dir_configs_sorted(pattern_configs, vim.loop.cwd()))
+	-- next: filetype-config.
+	vim.list_extend(matching_configs, filetype_configs_sorted(pattern_configs, vim.bo[buf].filetype))
+	-- finally: file-config. Since the buffer only has one file, we just insert those in this function.
+	table.insert(matching_configs, pattern_configs.file[bufname])
+	table.insert(matching_configs, configs.file[bufname])
+
+	return conf.combine_force(unpack(matching_configs))
+end
+
+local generated_confs = {}
+function Config(bufnr)
+	local f_conf = generated_confs[bufnr]
 	if not f_conf then
-		f_conf = gen_file_config(fname)
-		generated_confs[fname] = f_conf
+		f_conf = gen_buf_config(bufnr)
+		generated_confs[bufnr] = f_conf
 	end
 
 	return f_conf
 end
 
 local function fileconfig_au_cb(args)
-	Config(args.buf).run_buf(args)
-	Config(args.buf).run_session()
+	for k, k_apply in pairs(vim.tbl_map(function(option) return option.apply end, config_options)) do
+		k_apply(Config(args.buf)[k], args)
+	end
 end
-vim.api.nvim_create_autocmd({"BufRead","BufNewFile"}, {
+vim.api.nvim_create_autocmd({"BufEnter","BufNewFile"}, {
 	-- to run under all circumstances I guess?
 	callback = fileconfig_au_cb
 })
-
-fileconfig_au_cb({buf = 0})
