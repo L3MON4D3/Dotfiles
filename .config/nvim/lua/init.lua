@@ -1,7 +1,5 @@
-function I(data)
-	vim.print(data)
-end
-Insp = I
+I = vim.print
+Insp = vim.print
 
 function Do_nvim_relative(filename)
 	return dofile("/home/simon/.config/nvim/lua/"..filename)
