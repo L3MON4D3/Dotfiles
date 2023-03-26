@@ -217,7 +217,7 @@ return {
 						name = "dijktest",
 						type = "lldb",
 						request = "launch",
-						program = "/home/simon/Documents/Uni/Kurse/s7/co/PE_2/bin/postman",
+						program = "/home/simon/Documents/Uni/Kurse/s7/co/PE_2/bin/chinese_postman",
 						cwd = '${workspaceFolder}',
 						runInTerminal = false,
 						args = {"/home/simon/Documents/Uni/Kurse/s7/co/PE_2/graphs/grconn9882.dmx", "out"}
