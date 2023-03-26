@@ -50,6 +50,20 @@ local function new(o)
 	return setmetatable(o, complete_conf_mt)
 end
 
+local id = function(k) return k end
+local keymod = {
+	dir = function(k)
+		if not k:match("/$") then
+			return k .. "/"
+		else
+			return k
+		end
+	end,
+	pattern = id,
+	filetype = id,
+	file = id,
+}
+
 function M.gen_config(conf)
 	local generated_config = {
 		dir = {},
@@ -61,7 +75,7 @@ function M.gen_config(conf)
 		for k, v in pairs(t) do
 			-- process configs:
 			-- make sure some functions are only run once in some buffer, or session.
-			generated_config[category][k] = new(v)
+			generated_config[category][keymod[category](k)] = new(v)
 		end
 	end
 	return generated_config
