@@ -38,6 +38,41 @@ local make = {
 	end
 }
 
+local nop = function() end
+
+local function repl_create(name, spec)
+	local initial_message = spec.initial_messages
+	local initial_messages = spec.initial_messages or {}
+	local mappings = spec.mappings or {}
+	local pre = spec.pre or nop
+
+	return {
+		run_buf = function(args)
+			pre(args)
+			if initial_message then
+				repl.send(name, initial_message)
+			end
+			for _, message in ipairs(initial_messages) do
+				repl.send(name, message)
+			end
+			nnoremapsilent_buf(args.buf, ",i", function()
+				repl.toggle(name, "below 15 split", false)
+			end)
+			for rhs, command in pairs(mappings) do
+				if type(command) == "function" then
+					nnoremapsilent_buf(args.buf, rhs, function()
+						repl.send(name, command(args))
+					end)
+				else
+					nnoremapsilent_buf(args.buf, rhs, function()
+						repl.send(name, command)
+					end)
+				end
+			end
+		end
+	}
+end
+
 return {
 	dir = {
 		["/home/simon/Documents/Uni/Kurse/s6/ba/brdf-plot"] = {
@@ -199,12 +234,26 @@ return {
 				cabbrev_buf("@@", "/home/simon/Documents/Uni/Kurse/s6/ba/doc/thesis/tex/figures")
 			end
 		},
-		["/home/simon/Code/luasnip"] = {
-			run_buf = function()
-				cabbrev_buf("%%", "/home/simon/Code/luasnip/lua/luasnip")
-				cabbrev_buf("!!", "/home/simon/Code/luasnip/tests/integration")
-			end
-		},
+		["/home/simon/Code/luasnip"] = conf.combine_force(
+			repl_create("bash", {
+				mappings = {
+					T = function()
+						local command = "TEST_07=false make test"
+						local file = vim.api.nvim_buf_get_name(0)
+						if file:match("_spec%.lua$") then
+							command = "TEST_FILE=" .. file .. " " .. command
+						end
+						return command
+					end
+				}
+			}),
+			{
+				run_buf = function()
+					cabbrev_buf("%%", "/home/simon/Code/luasnip/lua/luasnip")
+					cabbrev_buf("!!", "/home/simon/Code/luasnip/tests/integration")
+				end
+			}
+		),
 		["/home/simon/Documents/Uni/Kurse/s7/co/PE_2"] = conf.combine_force(
 			make, {
 				run_buf = function()

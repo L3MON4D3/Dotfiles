@@ -19,7 +19,7 @@ local function create_term(command, opts)
 	local job_id
 
 	local buf = api.nvim_create_buf(false, false)
-	api.nvim_buf_set_name(buf, "term://" .. command[1])
+	api.nvim_buf_set_name(buf, ("term://%s/%s"):format(buf, command[1]))
 	res.buf = buf
 
 	local term_chan_id = vim.api.nvim_open_term(buf, {

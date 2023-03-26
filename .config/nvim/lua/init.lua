@@ -31,11 +31,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 vim.keymap.set("n", "<F11>", function()
-	repl.open_unique("bash", "split", true)
+	repl.open_unique({"bash"}, "split", true)
 end, {noremap = true, silent = true})
 -- F23 = S-F11.
 vim.keymap.set("n", "<F23>", function()
-	repl.open_unique("bash", "vsplit", true)
+	repl.open_unique({"bash"}, "vsplit", true)
 end, {noremap = true, silent = true})
 
 -- set EDITOR to open files in this session. Prevents nested nvim-instance.
