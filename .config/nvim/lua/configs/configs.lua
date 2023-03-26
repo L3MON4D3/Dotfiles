@@ -75,15 +75,17 @@ return {
 					cabbrev_buf("%%", "/home/simon/Packages/neovim/src/nvim")
 					cabbrev_buf("%m", "/home/simon/Packages/neovim/src/nvim/main.c")
 				end,
-				dap = {{
-					name = "nvim",
-					type = "lldb",
-					request = "launch",
-					program = "build/bin/nvim",
-					args = {"~/a.jl"},
-					cwd = '${workspaceFolder}',
-					runInTerminal = true
-				}}
+				dap = {
+					cpp = {{
+						name = "nvim",
+						type = "lldb",
+						request = "launch",
+						program = "build/bin/nvim",
+						args = {"~/a.jl"},
+						cwd = '${workspaceFolder}',
+						runInTerminal = true
+					}}
+				}
 			}
 		),
 		["/home/simon/Packages/Cemu"] = conf.combine_force(
@@ -93,14 +95,16 @@ return {
 				cabbrev_buf("%%", "/home/simon/Packages/Cemu/src")
 				cabbrev_buf("%m", "/home/simon/Packages/Cemu/src/main.cpp")
 			end,
-			dap = {{
-				name = "cemu",
-				type = "lldb",
-				request = "launch",
-				program = "build/bin/nvim",
-				cwd = '${workspaceFolder}',
-				env = 'GDK_BACKEND=x11'
-			}}
+			dap = {
+				cpp = {{
+					name = "cemu",
+					type = "lldb",
+					request = "launch",
+					program = "build/bin/nvim",
+					cwd = '${workspaceFolder}',
+					env = 'GDK_BACKEND=x11'
+				}}
+			}
 		}),
 		["/home/simon/.config/sway"] = {
 			run_buf = function(args)
@@ -135,15 +139,17 @@ return {
 						os.execute("imv captures/*.svg &")
 					end, {})
 				end,
-				dap = {{
-					name = "cma queen",
-					type = "lldb",
-					request = "launch",
-					program = "CMA",
-					cwd = '${workspaceFolder}',
-					runInTerminal = false,
-					args = {"--graph", "graphs/queen4_4.dmx"}
-				}}
+				dap = {
+					cpp = {{
+						name = "cma queen",
+						type = "lldb",
+						request = "launch",
+						program = "CMA",
+						cwd = '${workspaceFolder}',
+						runInTerminal = false,
+						args = {"--graph", "graphs/queen4_4.dmx"}
+					}}
+				}
 			}
 		),
 		["/home/simon/Documents/Uni/Kurse/s6/ba/brdf-plot/render"] = conf.combine_force(
@@ -156,22 +162,24 @@ return {
 					nnoremapsilent_buf(args.buf, "<space>r", ":Dispatch mangohod ./build/LTSH<Cr>")
 				end,
 				dap = {
-					{
-						name = "renderdoc",
-						type = "lldb",
-						request = "launch",
-						program = "renderdoccmd",
-						cwd = '${workspaceFolder}',
-						stopOnEntry = false,
-						args = {"capture", "/home/simon/Documents/Uni/Kurse/s6/ba/brdf-plot/render/build/LTSH"}
-					},
-					{
-						name = "LTSH",
-						type = "lldb",
-						request = "launch",
-						program = "/home/simon/Documents/Uni/Kurse/s6/ba/brdf-plot/render/build/LTSH",
-						cwd = '${workspaceFolder}',
-						stopOnEntry = false,
+					cpp = {
+						{
+							name = "renderdoc",
+							type = "lldb",
+							request = "launch",
+							program = "renderdoccmd",
+							cwd = '${workspaceFolder}',
+							stopOnEntry = false,
+							args = {"capture", "/home/simon/Documents/Uni/Kurse/s6/ba/brdf-plot/render/build/LTSH"}
+						},
+						{
+							name = "LTSH",
+							type = "lldb",
+							request = "launch",
+							program = "/home/simon/Documents/Uni/Kurse/s6/ba/brdf-plot/render/build/LTSH",
+							cwd = '${workspaceFolder}',
+							stopOnEntry = false,
+						}
 					}
 				}
 			}
@@ -204,15 +212,17 @@ return {
 					cabbrev_buf("%m", "/home/simon/Documents/Uni/Kurse/s7/co/PE_2/src/main.cpp")
 					cabbrev_buf("@@", "/home/simon/Documents/Uni/Kurse/s7/co/PE_2/include")
 				end,
-				dap = {{
-					name = "dijktest",
-					type = "lldb",
-					request = "launch",
-					program = "/home/simon/Documents/Uni/Kurse/s7/co/PE_2/bin/postman",
-					cwd = '${workspaceFolder}',
-					runInTerminal = false,
-					args = {"/home/simon/Documents/Uni/Kurse/s7/co/PE_2/graphs/grconn9882.dmx", "out"}
-				}}
+				dap = {
+					cpp = {{
+						name = "dijktest",
+						type = "lldb",
+						request = "launch",
+						program = "/home/simon/Documents/Uni/Kurse/s7/co/PE_2/bin/postman",
+						cwd = '${workspaceFolder}',
+						runInTerminal = false,
+						args = {"/home/simon/Documents/Uni/Kurse/s7/co/PE_2/graphs/grconn9882.dmx", "out"}
+					}}
+				}
 			}
 		),
 		["/home/simon/Documents/Uni/Kurse/s6/ba/doc/figures"] = {
