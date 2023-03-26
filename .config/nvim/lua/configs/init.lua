@@ -26,7 +26,7 @@ local function dir_configs_sorted(pattern_configs, cwd)
 	local matching_configs = {}
 
 	for _, path_component in ipairs(vim.split(cwd, "/", {plain=true})) do
-		path_so_far = "/" .. path_component
+		path_so_far = path_so_far .. path_component .. "/"
 		-- important: insert the pattern-generated config before the one that
 		-- is exactly meant for this directory.
 		-- Makes more sense priority-wise.
