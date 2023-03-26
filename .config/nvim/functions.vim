@@ -1,40 +1,3 @@
-function! New_term()
-    enew
-    vertical resize 40
-    setl winfixwidth
-    "let t:termchannel=termopen('bash', {'on_exit':'Close_term','on_stdout':'Jdb_handler'})
-    let t:termchannel=termopen('bash', {'on_exit':'Close_term'})
-    call chansend(t:termchannel, ['clear', ''])
-endfunction
-
-function! Close_term(job_id, data, event)
-    unlet t:termchannel
-endfunction
-
-function! Exec_term(command)
-    wa
-    if !exists('t:termchannel')
-        let l:filename = expand('%')
-        call New_term()
-        execute "sbuffer ".l:filename
-    endif
-    call chansend(t:termchannel, [a:command, ''])
-endfunction
-
-function! MyFoldText()
-    return repeat(" ", indent(v:foldstart-1))."|"
-endfunction
-
-function! SwitchImplemetationInterface()
-    if expand('%:e')[0] == "h"
-        exec "edit " . substitute(expand('%'), '\.h', '\.c', '')
-    else 
-        if expand('%:e')[0] == "c"
-            exec "edit " . substitute(expand('%'), '\.c', '\.h', '')
-        endif
-    endif
-endfunction
-
 function! MyTabLine()
     let s = ''
     for i in range(tabpagenr('$'))
@@ -108,10 +71,6 @@ function! BranchClean()
     return l:branches
 endfunction
 
-function! VarExists(var)
-    if exists(a:var) | return a:var | else | return '' | endif
-endfunction
-
 function! Statusline()
     let l:var = "%#Status1#"."%( %{w:stFn}%m %)"
     let l:var .= "%#Status2#"."%{w:stFt}"
@@ -119,16 +78,4 @@ function! Statusline()
     let l:var .= "%="
     let l:var .= "%#Status3#\ %03l/%L:%02v\ "
     return l:var
-endfunction
-
-"Adds paranthesis to if. Call on last line of if.
-function! ParanAdd()
-    let crtLn = line(".")
-    "assume shiftwidth of 4
-    let targetIndnt = indent(crtLn) - 4
-    call append(crtLn, repeat('	', targetIndnt/4).'}')
-    while indent(crtLn) != targetIndnt
-        let crtLn -= 1
-    endwhile
-    call setline(crtLn, getline(crtLn).' {')
 endfunction

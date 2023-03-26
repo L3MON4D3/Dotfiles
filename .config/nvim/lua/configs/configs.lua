@@ -37,6 +37,12 @@ local make = {
 		nnoremapsilent_buf(args.buf, "<space>r", ":Make run<Cr>")
 	end
 }
+local cargo = {
+	run_buf = function(args)
+		cabbrev_buf("%%", "src")
+		cabbrev_buf("%m", "src/main.rs")
+	end
+}
 
 local nop = function() end
 

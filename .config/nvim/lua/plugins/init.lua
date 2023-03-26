@@ -155,7 +155,7 @@ local plugin_spec = {
 	conf_use(neogen),
 	use(dressing),
 	use(telescope),
-	conf_use(lualine),
+	-- conf_use(lualine),
 	use(clangd),
 	use(libmodal),
 	conf_use(ufo),
