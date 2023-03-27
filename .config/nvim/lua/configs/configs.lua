@@ -44,6 +44,17 @@ local cargo = {
 	end
 }
 
+local sway_reload_on_write = {
+	run_buf = function(args)
+		vim.api.nvim_create_autocmd("BufWritePost", {
+			callback = function()
+				os.execute("SWAYSOCK=/run/user/1000/sway-ipc.1000.$(pidof sway).sock swaymsg reload")
+			end,
+			buffer = args.buf
+		})
+	end
+}
+
 local nop = function() end
 
 local function repl_create(name, spec)
@@ -147,17 +158,8 @@ return {
 				}}
 			}
 		}),
-		["/home/simon/.config/sway"] = {
-			run_buf = function(args)
-				vim.bo[args.buf].filetype = "swayconfig"
-				vim.api.nvim_create_autocmd("BufWritePost",{
-					callback = function()
-						os.execute("SWAYSOCK=/run/user/1000/sway-ipc.1000.$(pidof sway).sock swaymsg reload")
-					end,
-					buffer = args.buf
-				})
-			end
-		},
+		["/home/simon/.config/sway"] = sway_reload_on_write,
+		["/home/simon/.config/waybar"] = sway_reload_on_write,
 		["/home/simon/Documents/Uni/Kurse/s7/tnn/ex"] = {
 			luasnip_ft_extend = {
 				python = {"ipynb"}
@@ -299,15 +301,10 @@ return {
 				cabbrev_buf("%m", "/home/simon/Code/termpick/src/main.zig")
 			end
 		}),
-		["/home/simon/.config/waybar/config"] = {
-			run_buf = function()
-				vim.bo.filetype = "json"
-			end
-		},
 	},
 	pattern = {
 		-- only PKGBUILD immediately in subdirectory of .packages/local.
-		["^/home/simon/.packages/local/.+/PKGBUILD$"] = {
+		["^/home/simon/.packages/local/[^/]+/PKGBUILD$"] = {
 			category = "file",
 			run_buf = function(args)
 				local repl_name = "bash." .. args.buf
@@ -315,6 +312,18 @@ return {
 				nnoremapsilent_buf(args.buf, "M", function()
 					-- make and install PKGBUILD
 					repl.send(repl_name, "makepkg -f && p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm")
+				end)
+			end
+		},
+		-- for PKGBUILDS of my local packages
+		["^/home/simon/.packages/[^/]+/[^/]+/PKGBUILD$"] = {
+			category = "file",
+			run_buf = function(args)
+				local repl_name = "bash." .. args.buf
+
+				nnoremapsilent_buf(args.buf, "R", function()
+					-- make and install PKGBUILD
+					repl.send(repl_name, "cp $(l *.zst -t | head -n 1) /mnt/repo/x86_64/ && repo-add /mnt/repo/x86_64/l3mon.db.tar $(l *.zst -t | head -n 1)")
 				end)
 			end
 		}

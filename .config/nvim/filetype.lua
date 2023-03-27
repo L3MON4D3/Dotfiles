@@ -8,9 +8,11 @@ vim.filetype.add({
 		tpp = "cpp"
 	},
 	filename = {
-		PKGBUILD = "PKGBUILD"
+		PKGBUILD = "PKGBUILD",
+		["/home/simon/.config/waybar/config"] = "json"
 	},
 	pattern = {
-		[".git/hooks/.*"] = "bash"
-	}
+		[".git/hooks/.*"] = "bash",
+		["/home/simon/.config/sway/.*"] = "swayconfig"
+	},
 })

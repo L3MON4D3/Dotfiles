@@ -78,7 +78,8 @@ local function gen_buf_config(buf)
 	local matching_configs = {}
 
 	-- lowest priority: directory-configs.
-	vim.list_extend(matching_configs, dir_configs_sorted(pattern_configs, vim.loop.cwd()))
+	local buf_dir = bufname ~= "" and vim.fn.fnamemodify(bufname, ":h") or vim.loop.cwd()
+	vim.list_extend(matching_configs, dir_configs_sorted(pattern_configs, buf_dir))
 	-- next: filetype-config.
 	vim.list_extend(matching_configs, filetype_configs_sorted(pattern_configs, vim.bo[buf].filetype))
 	-- finally: file-config. Since the buffer only has one file, we just insert those in this function.

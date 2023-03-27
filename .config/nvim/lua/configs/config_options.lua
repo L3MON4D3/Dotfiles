@@ -105,5 +105,15 @@ return {
 		finalize = id,
 		-- only exists to be queried.
 		apply = nop
+	},
+	category = {
+		default = nil,
+		combine_strategy = function(categories)
+			-- return last category, keep with force-combine.
+			return categories[#categories]
+		end,
+		finalize = id,
+		-- apply won't be called IIRC.
+		apply = nop
 	}
 }
