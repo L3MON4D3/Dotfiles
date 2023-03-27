@@ -16,7 +16,6 @@
 !.config/qutebrowser/
 !.config/qutebrowser/config.py
 !Scripts/
-!Scripts/*
-/.config/nvim/lua/plugins/friendly_snippets.lua
 !/.config/nvim/queries/bash/injections.scm
-/Scripts/mySysProgDownload.sh
+!/.config/waybar/style.css
+!/.config/waybar/config

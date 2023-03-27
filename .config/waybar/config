@@ -3,9 +3,6 @@
     "output":["eDP-1","DP-1"],
     "modules-left":["sway/workspaces","sway/mode"],
     "modules-right":["clock#2","battery","clock#1"],
-    "sway/mode": {
-        "format":"<span style=\"Italic\">{}</span>"
-    },
     "clock#1": {
         "format":"{:%R}"
     },
@@ -20,9 +17,6 @@
     "output":"HDMI-A-1",
     "modules-left":["sway/workspaces","sway/mode"],
     "modules-right":["clock#2","clock#1"],
-    "sway/mode": {
-        "format":"<span style=\"Italic\">{}</span>"
-    },
     "clock#1": {
         "format":"{:%R}"
     },
