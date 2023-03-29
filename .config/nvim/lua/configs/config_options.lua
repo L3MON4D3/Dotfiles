@@ -62,9 +62,9 @@ return {
 			if run_buf then
 				return function(args)
 					-- only run buf_func if it wasn't run already.
-					if applied_buf[args.buf][run_buf] == nil then
+					if applied_buf[args.file][run_buf] == nil then
 						run_buf(args)
-						applied_buf[args.buf][run_buf] = true
+						applied_buf[args.file][run_buf] = true
 					end
 				end
 			end
