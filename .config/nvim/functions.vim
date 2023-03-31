@@ -60,7 +60,7 @@ endfunction
 function! BranchClean()
     let l:branches=[]
     for i in range(tabpagenr('$'))
-        let l:branch = [system("cd ". getcwd(-1,i+1) ." && git branch --show-current")[:-2]]
+        let l:branch = [system("cd ". fnameescape(getcwd(-1,i+1)) ." && git branch --show-current")[:-2]]
         if match(l:branch[0], "^fatal:") == 0
             let l:branch = [""]
         else
