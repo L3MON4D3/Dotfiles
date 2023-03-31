@@ -66,6 +66,18 @@ local function filetype_configs_sorted(pattern_configs, filetype_string)
 	return matching_configs
 end
 
+local function bufname_to_dir(bufname)
+	if bufname == "" then
+		return vim.loop.cwd()
+	end
+	if bufname:sub(1, 11) == "fugitive://" then
+		-- filename is like fugitive://<.git-directory-with-trailing-slash>/
+		-- omit appended / and fugitive://
+		return bufname:sub(12, -2)
+	end
+	return vim.fn.fnamemodify(bufname, ":h")
+end
+
 -- generate config for buffer by
 -- * finding all applicable configs in `configs`
 -- * merging them, with more specific configs overriding/extending those more
@@ -78,6 +90,7 @@ end
 --   respective functions/in this function.
 local function gen_buf_config(buf)
 	local bufname = vim.api.nvim_buf_get_name(buf)
+	local buf_dir = bufname_to_dir(bufname)
 
 	-- generate configs from patterns.
 	local pattern_configs = gen_configs_from_patterns(bufname)
@@ -85,7 +98,6 @@ local function gen_buf_config(buf)
 	local matching_configs = {}
 
 	-- lowest priority: directory-configs.
-	local buf_dir = bufname ~= "" and vim.fn.fnamemodify(bufname, ":h") or vim.loop.cwd()
 	vim.list_extend(matching_configs, dir_configs_sorted(pattern_configs, buf_dir))
 	-- next: filetype-config.
 	vim.list_extend(matching_configs, filetype_configs_sorted(pattern_configs, vim.bo[buf].filetype))
