@@ -2,18 +2,25 @@ local conf = require("configs.config")
 local configs = conf.gen_config(require("configs.configs"))
 local config_options = require("configs.config_options")
 
-local function gen_configs_from_patterns(fname)
+local function gen_configs_from_patterns(bufname)
 	-- use cwd if buffer for initial buffer (I guess fname == "" is the only
 	-- way to detect that one).
-	if fname == "" then
-		fname = vim.loop.cwd()
+	if bufname == "" then
+		bufname = vim.loop.cwd()
 	end
 
 	local pattern_configs = {dir = {}, filetype = {}, file = {}}
 	for pattern, config in pairs(configs.pattern) do
-		local match = fname:match(pattern)
+		local match = bufname:match(pattern)
 		if match then
-			pattern_configs[config.category][match] = config
+			if pattern_configs[config.category][match] then
+				-- the order in which we force does not matter (for now), the
+				-- only guarantee regarding priority is that file overrides
+				-- filetype overrides dir.
+				pattern_configs[config.category][match] = conf.combine_force(pattern_configs[config.category][match], config)
+			else
+				pattern_configs[config.category][match] = config
+			end
 		end
 	end
 
