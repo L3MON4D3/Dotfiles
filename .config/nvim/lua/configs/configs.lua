@@ -301,6 +301,16 @@ return {
 				cabbrev_buf("%m", "/home/simon/Code/termpick/src/main.zig")
 			end
 		}),
+		["/home/simon/Packages/Anna Gebertz"] = {
+			run_buf = function(args)
+				vim.api.nvim_create_autocmd("BufWritePost", {
+					callback = function()
+						os.execute("qutebrowser -s new_instance_open_target tab-silent  :reload 2> /dev/null")
+					end,
+					buffer = args.buf
+				})
+			end
+		}
 	},
 	pattern = {
 		-- only PKGBUILD immediately in subdirectory of .packages/local.
