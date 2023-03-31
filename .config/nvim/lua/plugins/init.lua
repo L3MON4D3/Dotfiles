@@ -48,6 +48,7 @@ local plugins = {
 	fwatch = "rktjmp/fwatch.nvim",
 	unception = "samjwill/nvim-unception",
 	yuck = "elkowar/yuck.vim",
+	oil = "stevearc/oil.nvim"
 }
 
 local plugins_inverse = {}
@@ -162,9 +163,10 @@ local plugin_spec = {
 	conf_use(catppuccin),
 	use(rust_tools),
 	use(editorconfig),
-	-- use(unception),
+	use(unception),
 	use(yuck),
-	use(promise)
+	use(promise),
+	conf_use(oil)
 }
 
 require("lazy").setup(plugin_spec, {
