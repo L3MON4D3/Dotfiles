@@ -112,7 +112,7 @@ local function fileconfig_au_cb(args)
 		k_apply(Config(args.buf)[k], args)
 	end
 end
-vim.api.nvim_create_autocmd({"BufEnter","BufNewFile"}, {
+vim.api.nvim_create_autocmd({"BufEnter"}, {
 	-- to run under all circumstances I guess?
 	callback = fileconfig_au_cb
 })
