@@ -242,3 +242,11 @@ rt.setup({
 		capabilities = capabilities,
 	}
 })
+
+nvim_lsp.cssls.setup{
+	on_attach = lsp_attach
+}
+
+nvim_lsp.html.setup{
+	on_attach = lsp_attach
+}
