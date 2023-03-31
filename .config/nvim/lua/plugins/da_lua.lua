@@ -23,4 +23,4 @@ dap.adapters.nlua = function(callback, config)
 	callback({ type = 'server', host = config.host, port = config.port })
 end
 
-vim.cmd [[command! DapLaunchLua :lua require"osv".launch()]]
+vim.cmd [[command! DLL :lua require"osv".launch()]]
