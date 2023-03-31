@@ -6,7 +6,7 @@ ls = require("luasnip")
 ls.config.setup({
 	history = true,
 	loaders_store_source = true,
-	update_events = {"TextChangedI,TextChanged"},
+	update_events = {"InsertLeave"},
 	enable_autosnippets = true,
 	region_check_events = {"CursorHold", "InsertLeave"},
 	delete_check_events = "TextChanged, InsertEnter",
