@@ -1,8 +1,8 @@
 local conf = require("configs.config")
-local configs = conf.gen_config(require("configs.configs"))
+local global_configs = conf.gen_config(require("configs.configs"))
 local config_options = require("configs.config_options")
 
-local function gen_configs_from_patterns(bufname)
+local function gen_configs_from_patterns(bufname, configs)
 	-- use cwd if buffer for initial buffer (I guess fname == "" is the only
 	-- way to detect that one).
 	if bufname == "" then
@@ -28,7 +28,7 @@ local function gen_configs_from_patterns(bufname)
 end
 
 -- return list of configs, with least specific at [1], most specific at [#t].
-local function dir_configs_sorted(pattern_configs, cwd)
+local function dir_configs_sorted(pattern_configs, configs, cwd)
 	local path_so_far = ""
 	local matching_configs = {}
 
@@ -50,7 +50,7 @@ end
 -- returned list.
 -- Also, all filetype-configs from global config are higher-priority than those
 -- of the pattern-config.
-local function filetype_configs_sorted(pattern_configs, filetype_string)
+local function filetype_configs_sorted(pattern_configs, configs, filetype_string)
 	local fts_reversed = {}
 	for _, ft in ipairs(vim.split(filetype_string, ",", {plain=true})) do
 		table.insert(fts_reversed, 1, ft)
@@ -92,18 +92,20 @@ local function gen_buf_config(buf)
 	local bufname = vim.api.nvim_buf_get_name(buf)
 	local buf_dir = bufname_to_dir(bufname)
 
-	-- generate configs from patterns.
-	local pattern_configs = gen_configs_from_patterns(bufname)
-
 	local matching_configs = {}
+	for _, configs in ipairs(global_configs) do
+		-- generate configs from patterns.
+		local pattern_configs = gen_configs_from_patterns(bufname, configs)
 
-	-- lowest priority: directory-configs.
-	vim.list_extend(matching_configs, dir_configs_sorted(pattern_configs, buf_dir))
-	-- next: filetype-config.
-	vim.list_extend(matching_configs, filetype_configs_sorted(pattern_configs, vim.bo[buf].filetype))
-	-- finally: file-config. Since the buffer only has one file, we just insert those in this function.
-	table.insert(matching_configs, pattern_configs.file[bufname])
-	table.insert(matching_configs, configs.file[bufname])
+		-- lowest priority: directory-configs.
+		vim.list_extend(matching_configs, dir_configs_sorted(pattern_configs, configs, buf_dir))
+		-- next: filetype-config.
+		vim.list_extend(matching_configs, filetype_configs_sorted(pattern_configs, configs, vim.bo[buf].filetype))
+
+		-- finally: file-config. Since the buffer only has one file, we just insert those in this function.
+		table.insert(matching_configs, pattern_configs.file[bufname])
+		table.insert(matching_configs, configs.file[bufname])
+	end
 
 	return conf.combine_force(unpack(matching_configs))
 end

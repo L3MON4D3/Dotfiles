@@ -65,20 +65,25 @@ local keymod = {
 }
 
 function M.gen_config(conf)
-	local generated_config = {
-		dir = {},
-		pattern = {},
-		filetype = {},
-		file = {}
-	}
-	for category, t in pairs(conf) do
-		for k, v in pairs(t) do
-			-- process configs:
-			-- make sure some functions are only run once in some buffer, or session.
-			generated_config[category][keymod[category](k)] = new(v)
+	local generated_configs = {}
+
+	for _, config in ipairs(conf) do
+		local generated_config = {
+			dir = {},
+			pattern = {},
+			filetype = {},
+			file = {}
+		}
+		for category, t in pairs(config) do
+			for k, v in pairs(t) do
+				-- process configs:
+				-- make sure some functions are only run once in some buffer, or session.
+				generated_config[category][keymod[category](k)] = new(v)
+			end
 		end
+		table.insert(generated_configs, generated_config)
 	end
-	return generated_config
+	return generated_configs
 end
 
 return M
