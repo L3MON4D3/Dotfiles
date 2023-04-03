@@ -1,8 +1,6 @@
 shopt -s extglob
 
-# don't source wm.sh, it starts the window manager and (potentially) doesn't return.
-for file in ~/.bashrc.d/!(wm.sh); do
+# source in alphanumerically ascending order.
+for file in ~/.bashrc.d/*; do
 	source "$file"
 done
-
-[[ -f ~/.bashrc.d/wm.sh ]] && source ~/.bashrc.d/wm.sh

@@ -19,3 +19,8 @@
 !/.config/nvim/queries/bash/injections.scm
 !/.config/waybar/style.css
 !/.config/waybar/config
+!/.local/
+!/.local/bin/
+!/.local/bin/mySudoEdit.sh
+!/.bash-completions/
+!/.bash-completions/*

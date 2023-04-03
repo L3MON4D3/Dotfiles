@@ -15,9 +15,7 @@ alias pod='popd'
 alias curl='curl -w "\n"'
 alias gs='git status'
 alias gti='git'
-complete -o bashdefault -o default -o nospace -F __git_wrap__git_main gti
 alias g='git'
-complete -o bashdefault -o default -o nospace -F __git_wrap__git_main g
 alias pe='perl -lpe'
 alias rs='rsync -ah --progress'
 alias less='less -r'
@@ -28,16 +26,10 @@ alias paste="curl -F 'sprunge=<-' http://sprunge.us"
 alias ch='cht.sh'
 alias dbupd='rm *.zst; makepkg -fd && cp *.zst /mnt/repo/x86_64/ && repo-add /mnt/repo/x86_64/l3mon.db.tar *.zst'
 
+alias p='pacman'
+
 stty start undef
 stty -ixon
-
-function p() {
-	paru $@
-	# update own packages only if called without args.
-	if [[ $# -eq 0 ]]; then
-		myUpdateRemote.sh
-	fi
-}
 
 source ~/.functions
 
