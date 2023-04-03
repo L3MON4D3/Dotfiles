@@ -13,6 +13,8 @@ vim.filetype.add({
 	},
 	pattern = {
 		[".git/hooks/.*"] = "bash",
-		["/home/simon/.config/sway/.*"] = "swayconfig"
+		["/home/simon/.config/sway/.*"] = "swayconfig",
+		-- from opening current line in editor, via bash.
+		["/tmp/bash%-fc%..*"] = "bash"
 	},
 })
