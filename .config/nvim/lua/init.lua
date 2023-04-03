@@ -44,6 +44,7 @@ vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
 require("sighelp")
 require("sighelp.snippet")
 require("modes")
+require("bash-scratch")
 
 -- vim.treesitter.query.add_directive("set_injection_filetype_snippet_file!", function(_, _, bufnr, _, metadata)
 -- 	local name = vim.api.nvim_buf_get_name(bufnr)
