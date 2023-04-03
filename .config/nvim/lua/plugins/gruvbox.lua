@@ -2,7 +2,7 @@ require("gruvbox").setup({
 	contrast = "hard",
 	transparent_mode = true,
 	palette_overrides = {
-		bright_red = "#d75151"
+		-- bright_red = "#d75151"
 	},
 	overrides = {
 		TabLine = {
@@ -40,6 +40,9 @@ require("gruvbox").setup({
 			bg="#282828",
 			fg="#1d2021"
 		},
+
+		-- don't do a palette override, only change for keywords and the like.
+		GruvboxRed = { fg = "#d75151" },
 
 		String = { italic = false },
 		Operator = { italic = false },
