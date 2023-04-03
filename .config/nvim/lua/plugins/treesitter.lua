@@ -16,7 +16,7 @@ require'nvim-treesitter.configs'.setup {
 		"markdown",
 		"dot",
 		"java",
-		"help",
+		"vimdoc",
 		"regex",
 		"luap",
 		"vim",
