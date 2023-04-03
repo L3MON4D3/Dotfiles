@@ -98,7 +98,7 @@ end
 local plugin_spec = {
 	conf_use{
 		luasnip,
-		dev = true
+		dev = vim.fn.hostname() == "teal"
 	},
 	conf_use(jupytext),
 
