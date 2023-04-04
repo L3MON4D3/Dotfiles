@@ -12,6 +12,7 @@ end
 local function bash_scratch()
 	vim.cmd[[
 		:silent e `mktemp /tmp/XXXX.sh`
+		:set ft=bash
 		:silent !chmod +x %
 	]]
 	local tmpfile_name = vim.api.nvim_buf_get_name(0)
