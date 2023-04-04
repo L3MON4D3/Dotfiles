@@ -124,6 +124,7 @@ ls.config.setup({
 ls.filetype_extend("latex", {"tex"})
 ls.filetype_extend("glsl", {"c"})
 ls.filetype_extend("cpp", {"c"})
+ls.filetype_extend("sh", {"bash"})
 
 vim.api.nvim_create_user_command("LuaSnipEditF", require("plugins.luasnip.ft_edit"), {})
 local sl_ok, sl = pcall(require, "luasnip.extras.snip_location")
