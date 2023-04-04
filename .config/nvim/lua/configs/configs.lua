@@ -322,7 +322,7 @@ return {
 
 					nnoremapsilent_buf(args.buf, "M", function()
 						-- make and install PKGBUILD
-						repl.send(repl_name, "makepkg -f && p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm")
+						repl.send(repl_name, "rm *.zst; makepkg -f && p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm")
 					end)
 				end
 			},
@@ -349,7 +349,7 @@ return {
 
 					-- want to be able to override this, can't set it in after.
 					nnoremapsilent_buf(args.buf, "M", function()
-						repl.send(repl_name, "makepkg -f && p -U $(l *.zst | sort | tail -n 1) --noconfirm")
+						repl.send(repl_name, "rm *.zst; makepkg -f && p -U *.zst --noconfirm")
 					end)
 
 					nnoremapsilent_buf(args.buf, ",i", function()
@@ -407,21 +407,18 @@ return {
 
 					nnoremapsilent_buf(args.buf, "M", function()
 						-- make and install PKGBUILD
-						repl.send(repl_name, "makepkg -f")
+						repl.send(repl_name, "rm *.zst; makepkg -f")
 					end)
-					nnoremapsilent_buf(args.buf, ",C", function()
-						-- make and install PKGBUILD
-						repl.send(repl_name, "p -U $(l *cinnabar*.zst -t | head -n 1)")
-					end)
-					nnoremapsilent_buf(args.buf, ",T", function()
-						-- make and install PKGBUILD
-						repl.send(repl_name, "p -U $(l *teal*.zst -t | head -n 1)")
-					end)
+					-- nnoremapsilent_buf(args.buf, ",C", function()
+					-- 	-- make and install PKGBUILD
+					-- 	repl.send(repl_name, "p -U $(l *cinnabar*.zst -t | head -n 1)")
+					-- end)
+					-- nnoremapsilent_buf(args.buf, ",T", function()
+					-- 	-- make and install PKGBUILD
+					-- 	repl.send(repl_name, "p -U $(l *teal*.zst -t | head -n 1)")
+					-- end)
 					nnoremapsilent_buf(args.buf, "R", function()
-						-- install last two recently built packages.
-						repl.send(repl_name, "dbpush $(l *teal*.zst -t | head -n 1)")
-						repl.send(repl_name, "dbpush $(l *cinnabar*.zst -t | head -n 1)")
-						repl.send(repl_name, "dbpush $(l *canary*.zst -t | head -n 1)")
+						repl.send(repl_name, "dbpush *.zst")
 					end)
 				end
 			}
