@@ -45,6 +45,7 @@ require("sighelp")
 require("sighelp.snippet")
 require("modes")
 require("bash-scratch")
+require("write")
 
 -- vim.treesitter.query.add_directive("set_injection_filetype_snippet_file!", function(_, _, bufnr, _, metadata)
 -- 	local name = vim.api.nvim_buf_get_name(bufnr)
