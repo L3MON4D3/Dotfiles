@@ -26,6 +26,10 @@ alias paste="curl -F 'sprunge=<-' http://sprunge.us"
 alias ch='cht.sh'
 alias dbupd='rm *.zst; makepkg -fd && cp *.zst /mnt/repo/x86_64/ && repo-add /mnt/repo/x86_64/l3mon.db.tar *.zst'
 
+dbpush() {
+	cp $1 /mnt/repo/archlinux/l3mon/os/x86_64/ && repo-add /mnt/repo/archlinux/l3mon/os/x86_64/l3mon.db.tar $(basename -- "$1")
+}
+
 alias p='pacman'
 
 stty start undef

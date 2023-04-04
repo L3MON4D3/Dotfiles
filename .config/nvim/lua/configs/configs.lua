@@ -334,7 +334,7 @@ return {
 
 					nnoremapsilent_buf(args.buf, "R", function()
 						-- make and install PKGBUILD
-						repl.send(repl_name, "cp $(l *.zst -t | head -n 1) /mnt/repo/archlinux/l3mon/os/x86_64/ && repo-add /mnt/repo/archlinux/l3mon/os/x86_64/l3mon.db.tar $(l *.zst -t | head -n 1)")
+						repl.send(repl_name, "dbpush $(l *.zst -t | head -n 1)")
 					end)
 				end
 			}
@@ -419,9 +419,9 @@ return {
 					end)
 					nnoremapsilent_buf(args.buf, "R", function()
 						-- install last two recently built packages.
-						repl.send(repl_name, "cp $(l *teal*.zst -t | head -n 1) /mnt/repo/archlinux/l3mon/os/x86_64/ && repo-add /mnt/repo/archlinux/l3mon/os/x86_64/l3mon.db.tar $(l *teal*.zst -t | head -n 1)")
-						repl.send(repl_name, "cp $(l *cinnabar*.zst -t | head -n 1) /mnt/repo/archlinux/l3mon/os/x86_64/ && repo-add /mnt/repo/archlinux/l3mon/os/x86_64/l3mon.db.tar $(l *cinnabar*.zst -t | head -n 1)")
-						repl.send(repl_name, "cp $(l *canary*.zst -t | head -n 1) /mnt/repo/archlinux/l3mon/os/x86_64/ && repo-add /mnt/repo/archlinux/l3mon/os/x86_64/l3mon.db.tar $(l *canary*.zst -t | head -n 1)")
+						repl.send(repl_name, "dbpush $(l *teal*.zst -t | head -n 1)")
+						repl.send(repl_name, "dbpush $(l *cinnabar*.zst -t | head -n 1)")
+						repl.send(repl_name, "dbpush $(l *canary*.zst -t | head -n 1)")
 					end)
 				end
 			}
