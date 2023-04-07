@@ -112,10 +112,12 @@ end
 
 local generated_confs = {}
 function Config(bufnr)
-	local f_conf = generated_confs[bufnr]
+	local bufname = vim.api.nvim_buf_get_name(bufnr)
+
+	local f_conf = generated_confs[bufname]
 	if not f_conf then
 		f_conf = gen_buf_config(bufnr)
-		generated_confs[bufnr] = f_conf
+		generated_confs[bufname] = f_conf
 	end
 
 	return f_conf
