@@ -2,5 +2,5 @@ include ./conf.d/colors
 include ./conf.d/*
 
 exec_always myRestartWaybar.sh
-exec systemctl --user import-environment SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE WAYLAND_DISPLAY DISPLAY
+exec systemctl --user import-environment SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE WAYLAND_DISPLAY DISPLAY XDG_RUNTIME_DIR QT_WAYLAND_DISABLE_WINDOWDECORATION _JAVA_AWT_WM_NONREPARENTING QT_QPA_PLATFORM MOZ_ENABLE_WAYLAND
 exec systemctl --user start sway-session.target
