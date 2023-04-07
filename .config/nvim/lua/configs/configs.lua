@@ -314,30 +314,17 @@ return {
 			}
 		},
 		pattern = {
-			-- only PKGBUILD immediately in subdirectory of .packages/local.
-			["^/home/simon/.packages/local/[^/]+/PKGBUILD$"] = {
-				category = "file",
-				run_buf = function(args)
-					local repl_name = "bash." .. args.buf
-
-					nnoremapsilent_buf(args.buf, "M", function()
-						-- make and install PKGBUILD
-						repl.send(repl_name, "rm *.zst; makepkg -f && p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm")
-					end)
-				end
-			},
-			-- for PKGBUILDS of my local packages
+			-- for PKGBUILDS of my packages.
 			["^/home/simon/.packages/[^/]+/[^/]+/PKGBUILD$"] = {
 				category = "file",
 				run_buf = function(args)
 					local repl_name = "bash." .. args.buf
 
-					nnoremapsilent_buf(args.buf, "R", function()
-						-- make and install PKGBUILD
-						repl.send(repl_name, "dbpush $(l *.zst -t | head -n 1)")
+					nnoremapsilent_buf(args.buf, "U", function()
+						repl.send(repl_name,  "dbpush *.zst")
 					end)
 				end
-			}
+			},
 		},
 		filetype = {
 			PKGBUILD = {
@@ -349,13 +336,16 @@ return {
 
 					-- want to be able to override this, can't set it in after.
 					nnoremapsilent_buf(args.buf, "M", function()
-						repl.send(repl_name, "rm *.zst; makepkg -f && p -U *.zst --noconfirm")
+						repl.send(repl_name, "rm *.zst; makepkg -f && for f in *.zst; do echo $f; tar -tvf $f; done")
 					end)
-
 					nnoremapsilent_buf(args.buf, ",i", function()
 						repl.toggle(repl_name, "below 15 split", false)
 					end)
-				end
+				end,
+				luasnip_ft_extend = {
+					-- treesitter parses PKGBUILD as just bash, so we have to fix that here :/
+					all = {"PKGBUILD"}
+				}
 			},
 			julia = {
 				run_buf = function(args)
@@ -399,29 +389,43 @@ return {
 		}
 	},
 	{
+		-- pattern = {
+		-- 	["^/home/simon/.packages/split/[^/]+/PKGBUILD$"] = {
+		-- 		category = "file",
+		-- 		run_buf = function(args)
+		-- 			local repl_name = "bash." .. args.buf
+
+		-- 			-- nnoremapsilent_buf(args.buf, ",C", function()
+		-- 			-- 	-- make and install PKGBUILD
+		-- 			-- 	repl.send(repl_name, "p -U $(l *cinnabar*.zst -t | head -n 1)")
+		-- 			-- end)
+		-- 			-- nnoremapsilent_buf(args.buf, ",T", function()
+		-- 			-- 	-- make and install PKGBUILD
+		-- 			-- 	repl.send(repl_name, "p -U $(l *teal*.zst -t | head -n 1)")
+		-- 			-- end)
+		-- 			nnoremapsilent_buf(args.buf, "R", function()
+		-- 				repl.send(repl_name, "dbpush *.zst")
+		-- 			end)
+		-- 		end
+		-- 	}
+		-- }
 		pattern = {
-			["^/home/simon/.packages/split/[^/]+/PKGBUILD$"] = {
+			-- only PKGBUILD immediately in subdirectory of .packages/local.
+			["^/home/simon/.packages/local/[^/]+/PKGBUILD$"] = {
 				category = "file",
 				run_buf = function(args)
 					local repl_name = "bash." .. args.buf
 
 					nnoremapsilent_buf(args.buf, "M", function()
-						-- make and install PKGBUILD
-						repl.send(repl_name, "rm *.zst; makepkg -f")
+						repl.send(repl_name, "rm *.zst; makepkg -f && p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm  && for f in *.zst; do echo $f; tar -tvf $f; done")
 					end)
-					-- nnoremapsilent_buf(args.buf, ",C", function()
-					-- 	-- make and install PKGBUILD
-					-- 	repl.send(repl_name, "p -U $(l *cinnabar*.zst -t | head -n 1)")
-					-- end)
-					-- nnoremapsilent_buf(args.buf, ",T", function()
-					-- 	-- make and install PKGBUILD
-					-- 	repl.send(repl_name, "p -U $(l *teal*.zst -t | head -n 1)")
-					-- end)
-					nnoremapsilent_buf(args.buf, "R", function()
-						repl.send(repl_name, "dbpush *.zst")
+
+					nnoremapsilent_buf(args.buf, "U", function()
+						-- make and install PKGBUILD
+						repl.send(repl_name, "p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm && dbpush *.zst")
 					end)
 				end
-			}
+			},
 		}
 	}
 }
