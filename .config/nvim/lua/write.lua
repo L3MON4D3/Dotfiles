@@ -52,6 +52,8 @@ local write = function(args)
 		vim.opt_local.buftype = 'nowrite'
 	end
 
+	vim.api.nvim_create_autocmd("BufEnter", {command = "set noro", buffer = 0})
+
 	pcall(function()
 		vim.cmd('silent write !env SUDO_ASKPASS=' .. vim.fn.shellescape(askpass) .. '	sudo -A tee % > /dev/null')
 	end)
