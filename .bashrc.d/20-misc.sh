@@ -24,7 +24,6 @@ alias ip='ip -c'
 alias sus='systemctl suspend'
 alias paste="curl -F 'sprunge=<-' http://sprunge.us"
 alias ch='cht.sh'
-alias dbupd='rm *.zst; makepkg -fd && cp *.zst /mnt/repo/x86_64/ && repo-add /mnt/repo/x86_64/l3mon.db.tar *.zst'
 
 dbpush() {
 	for package in "$@"
