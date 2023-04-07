@@ -1,0 +1,4 @@
+set $fg_color #1d2021
+set $bg_color #689d6a
+set $focused_color #b8bb26
+set $unfocused_color #83a598

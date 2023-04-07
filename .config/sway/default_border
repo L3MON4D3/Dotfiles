@@ -1,0 +1,5 @@
+default_border pixel 2
+default_floating_border pixel 2
+
+client.focused #fbf1c7 #d65d0e #d65d0e #fbf1c7 #fbf1c7
+client.unfocused #504945 #1d2021 #fbf1c7 #504945 #504945

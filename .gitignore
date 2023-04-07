@@ -10,7 +10,9 @@
 !.config/nvim/init.vim
 !.gitignore
 !.config/sway
-!.config/sway/config
+!.config/sway/*
+!.config/sway/conf.d/
+!.config/sway/conf.d/*
 !.bashrc.d
 !.bashrc.d/*
 !.config/qutebrowser/

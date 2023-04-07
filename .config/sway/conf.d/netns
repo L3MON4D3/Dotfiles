@@ -1,0 +1,17 @@
+mode "netns" {
+    # nordvpn
+    bindsym d mode "nordvpn_de"
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+n mode "netns"
+
+mode "nordvpn_de" {
+	bindsym Return exec $term netns-exec nordvpn_de bash; mode "default"
+	bindsym f exec netns-exec nordvpn_de firefox -no-remote -P nordvpn_de; mode default
+	bindsym c exec netns-exec nordvpn_de chromium --ozone-platform-hint=auto; mode default
+
+    bindsym Escape mode "default"
+}

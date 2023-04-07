@@ -1,0 +1,10 @@
+# mode "kill" {
+# 	bindsym s exec bash -c 'kill -s SIGSTOP $(swaymsg -t get_tree | jq "..|objects|select(has(\\"focused\\") and .focused) | .pid")'
+# 	bindsym c exec bash -c 'kill -s SIGCONT $(swaymsg -t get_tree | jq "..|objects|select(has(\\"focused\\") and .focused) | .pid")'
+# 	bindsym t exec bash -c 'kill -s SIGTERM $(swaymsg -t get_tree | jq "..|objects|select(has(\\"focused\\") and .focused) | .pid")'
+# 
+#     # Return to default mode
+#     bindsym Return mode "default"
+#     bindsym Escape mode "default"
+# }
+# bindsym $mod+n mode "kill"

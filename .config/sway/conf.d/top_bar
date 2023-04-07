@@ -1,0 +1,11 @@
+titlebar_border_thickness 0
+titlebar_padding 3
+
+default_border normal 0
+default_floating_border normal 1
+
+font pango:monospace 0
+
+client.focused $focused_color $focused_color $focused_color
+client.unfocused $unfocused_color $unfocused_color $unfocused_color
+client.focused_inactive $unfocused_color $unfocused_color $unfocused_color
