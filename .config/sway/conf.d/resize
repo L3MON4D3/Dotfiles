@@ -1,0 +1,3 @@
+mode "resize" {
+	bindsym s exec sway-window-fix-aspect-ratio.lua
+}

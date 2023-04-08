@@ -208,8 +208,6 @@ mode "resize" {
     bindsym Up resize shrink height 10px
     bindsym Right resize grow width 10px
 
-    bindsym s exec mySetWindowAspectRatio.lua
-
     # return to default mode
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -268,15 +266,6 @@ mode "apps" {
 	bindsym Escape mode "default"
 }
 bindsym $mod+a mode "apps"
-
-mode "torrent" {
-	bindsym s exec 'makoctl dismiss -a && /home/simon/Scripts/myQbtCtrl.py --status'
-	bindsym c exec makoctl dismiss -a
-	bindsym b exec 'xdg-open http://cinnabar:8080'
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-bindsym $mod+t mode "torrent"
 
 mode "notifications" {
 	bindsym c exec makoctl dismiss -a

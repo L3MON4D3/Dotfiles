@@ -1,0 +1,8 @@
+mode "torrent" {
+	bindsym s exec 'makoctl dismiss -a && /home/simon/.local/bin/qBittorrentManager.py status'
+	bindsym c exec makoctl dismiss -a
+	bindsym b exec 'xdg-open http://cinnabar:8080'
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+t mode "torrent"
