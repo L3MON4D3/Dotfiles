@@ -11,7 +11,7 @@ require'nvim-treesitter.configs'.setup {
 		"make",
 		"python",
 		"mermaid",
-		"jsonc",
+		-- "jsonc",
 		"json",
 		"markdown",
 		"dot",

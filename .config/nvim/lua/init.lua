@@ -14,7 +14,7 @@ require("plugins")
 
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "term://*",
-	callback = function()
+	callback = function(args)
 		if _G._insert_term_skip then
 			return
 		end
@@ -40,6 +40,8 @@ end, {noremap = true, silent = true})
 
 -- set EDITOR to open files in this session. Prevents nested nvim-instance.
 vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
+
+vim.g.editorconfig = true
 
 require("sighelp")
 require("sighelp.snippet")

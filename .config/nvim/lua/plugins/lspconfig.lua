@@ -1,4 +1,5 @@
 local nvim_lsp = require("lspconfig")
+local util = require("util")
 
 -- local function sem_token_attach(_)
 -- 	vim.lsp.buf.semantic_tokens_full()
@@ -42,22 +43,22 @@ capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 local session = require("session")
 
-local function completion_intercept(client, cb)
+local function completion_intercept(client, method_cb_map)
 	local orig_rpc_request = client.rpc.request
 	client.rpc.request = function(method, params, handler, ...)
 		local orig_handler = handler
-		if method == 'textDocument/completion' then
-			-- Idiotic take on <https://github.com/fannheyward/coc-pyright/blob/6a091180a076ec80b23d5fc46e4bc27d4e6b59fb/src/index.ts#L90-L107>.
-			handler = function(...)
-				local err, result = ...
+		return orig_rpc_request(method, params, function(...)
+			local err, result = ...
 
-				if not err and result then
-					cb(result)
+			if method_cb_map[method] and not err and result then
+				-- method can return false to prevent
+				if method_cb_map[method](result) then
+					return orig_handler(...)
 				end
+			else
 				return orig_handler(...)
 			end
-		end
-		return orig_rpc_request(method, params, handler, ...)
+		end, ...)
 	end
 end
 
@@ -65,35 +66,65 @@ require("clangd_extensions").setup({
 	server = {
 		cmd = {"clangd", [[--completion-style=detailed]], [[--enable-config]]},
 		on_attach = function(client)
-			completion_intercept(client, function(result)
-				local items = result.items or result
-				for _, item in ipairs(items) do
-					local item_text = item.textEdit.newText
-					if item_text:match("^[%w_]+%(.*%)$") then
-						local name = item_text:match("^[%w_]+")
-						local content = item_text:match("%((.*)%)$")
-						if content:match("$0") then
-							content = content:gsub("$0", "$1000")
-						elseif content:match("${0") then
-							content = content:gsub("${0", "${1000")
-						end
+			completion_intercept(client,
+			{
+				["textDocument/completion"] = function(result)
+					local items = result.items or result
+					for _, item in ipairs(items) do
+						local item_text = item.textEdit.newText
+						if item_text:match("^[%w_]+%(.*%)$") then
+							local name = item_text:match("^[%w_]+")
+							local content = item_text:match("%((.*)%)$")
+							if content:match("$0") then
+								content = content:gsub("$0", "$1000")
+							elseif content:match("${0") then
+								content = content:gsub("${0", "${1000")
+							end
 
-						ls.setup_snip_env()
-						session.lsp_override_snips[item_text] = s("", {
-							t(name),
-							c(1, {
-								{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
-								{t"{", r(1, "type"), t"}"},
+							ls.setup_snip_env()
+							session.lsp_override_snips[item_text] = s("", {
+								t(name),
+								c(1, {
+									{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
+									{t"{", r(1, "type"), t"}"},
+								})
 							})
-						})
-						item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
-					elseif item.insertTextFormat == vim.lsp.protocol.InsertTextFormat.Snippet then
-						item.textEdit.newText = item_text:gsub("${0", "${100")
+							item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
+						elseif item.insertTextFormat == vim.lsp.protocol.InsertTextFormat.Snippet then
+							item.textEdit.newText = item_text:gsub("${0", "${100")
+						end
 					end
+					-- accept all completions.
+					return true
+				end,
+				["textDocument/inlayHint"] = function(result)
+					util.filter_list(result, function(item)
+						   -- glm::
+						if item.label == "x:" or
+						   item.label == "y:" or
+						   item.label == "z:" or
+						   item.label == "a:" or
+						   item.label == "b:" or
+						   item.label == "v:" or
+						   item.label == "m:" or
+						   -- std::
+						   item.label == "s:" or
+						   item.label == "nptr:" or
+						   item.label == "scalar:" or
+						   item.lable == "argv0" then
+							return false
+						end
+						-- local line = item.position.line
+						-- local col = item.position.character
+						-- local node = vim.treesitter.get_node({pos = {line,col}})
+						-- I(vim.treesitter.get_node_text(node:parent(), 0))
+						return true
+					end)
+					-- accept request.
+					return true
 				end
-			end)
+			})
 			lsp_attach(client)
-			-- sem_token_attach(client)
 		end,
 		capabilities = capabilities
 	},
@@ -143,7 +174,7 @@ nvim_lsp.pyright.setup{
 }
 
 nvim_lsp.julials.setup{
-	cmd = {"julia", "--startup-file=no", "-e", "using LanguageServer; runserver()", "-J", "/home/simon/.julia/sysimages/mine2.so"},
+	cmd = {"julia", "--startup-file=no", "-e", "using LanguageServer; runserver()", "-J", "/home/simon/.julia/sysimages/mine1.8.5.so"},
 	capabilities = capabilities,
 	on_attach = function(client)
 		lsp_attach(client)

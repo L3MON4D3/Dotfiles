@@ -38,7 +38,7 @@ return function()
 		end,
 		format = function(path, _)
 			path = path:gsub(
-				vim.pesc(vim.fn.stdpath("data") .. "/site/pack/packer/start"),
+				vim.pesc(vim.fn.stdpath("data") .. "/lazy"),
 				"$PLUGINS"
 			)
 			if vim.env.HOME then

@@ -36,6 +36,15 @@
  (#set! foldtext_end_hl "@punctuation.bracket")
 )
 
+(
+ compound_statement (compound_statement) @fold
+
+ (#set! foldtext_start "{")
+ (#set! foldtext_start_hl "@punctuation.bracket")
+ (#set! foldtext_end "}")
+ (#set! foldtext_end_hl "@punctuation.bracket")
+)
+
  (field_declaration
    type: (enum_specifier)
    default_value: (initializer_list)) @fold

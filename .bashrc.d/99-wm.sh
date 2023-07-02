@@ -12,8 +12,21 @@ export WLR_NO_HARDWARE_CURSORS=0
 export QT_QPA_PLATFORM=wayland
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 
+export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
+
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-	exec systemd-cat --identifier=sway sway
+	while [ ! -e /dev/dri/card0 ]
+	do
+		sleep 0.001
+	done
+	while [ ! -e /dev/dri/card1 ]
+	do
+		sleep 0.001
+	done
+
+	export WLR_DRM_DEVICES=$(realpath /dev/dri/by-path/pci-0000:28:00.0-card)
+	env > /home/simon/out
+	exec systemd-cat --identifier=sway sway --unsupported-gpu
 fi
 #export swaysock for ssh'd headless users.
 if [[ -z ${SWAYSOCK} ]]; then

@@ -35,11 +35,14 @@ set $menu dmenu_path | dmenu | xargs swaymsg exec --
 output eDP-1 transform 0 mode 1920x1080@60.000Hz position 0,0
 
 output DP-1 transform 0 mode 2560x1440@143.999Hz position 0,0
-output HDMI-A-1 subpixel rgb
-#output DP-3 subpixel rgb
+output DP-1 subpixel rgb
+output DP-4 transform 0 mode 2560x1440@143.999Hz position 0,0
+output DP-4 subpixel rgb
 
 output HDMI-A-1 transform 90 resolution 1080x1920@60.000Hz position 2560,0
 output HDMI-A-1 subpixel vbgr
+output HDMI-A-2 transform 90 resolution 1080x1920@60.000Hz position 2560,0
+output HDMI-A-2 subpixel vbgr
 
 ### Idle configuration
 #
@@ -240,11 +243,14 @@ for_window [class="^qrenderdoc$"] floating enable
 for_window [instance="^cemu$"] floating enable
 for_window [title="^qutebrowser password fill$"] floating enable
 for_window [class="^yuzu$"] floating enable
+for_window [class="^Ryujinx$"] floating enable
 for_window [app_id="^waybar$"] floating enable
+for_window [class="^exercise.*_.*$"] floating enable
+for_window [title="^Lutris$"] floating enable
 
 mode "apps" {
 	bindsym b exec QT_QPA_PLATFORM=wayland __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json qutebrowser
-	bindsym r exec QT_QPA_PLATFORM=xcb qrenderdoc
+	bindsym r exec Ryujinx
 	bindsym f exec firefox
 	bindsym n exec $term ncmpcpp
 	bindsym g exec gimp
@@ -262,6 +268,7 @@ mode "apps" {
     bindsym e exec easyeffects
     bindsym y exec QT_QPA_PLATFORM=xcb yuzu
     bindsym w exec GDK_BACKEND=x11 cemu
+    bindsym l exec lutris
 	bindsym Return mode "default"
 	bindsym Escape mode "default"
 }
@@ -282,11 +289,12 @@ mode "browser" {
 bindsym $mod+y mode "browser"
 
 mode "power" {
-    bindsym h output HDMI-A-1 dpms toggle
+    bindsym h output HDMI-A-2 dpms toggle
     # only works with short pause????
-    bindsym d exec /bin/bash -c "sleep 0.1; swaymsg output DP-1 dpms toggle"
-    bindsym b exec /bin/bash -c "sleep 0.1; swaymsg output DP-1 dpms toggle && swaymsg output HDMI-A-1 dpms toggle"
-    bindsym s exec 'sudo systemctl suspend'
+    bindsym d exec /bin/bash -c "sleep 0.1; swaymsg output DP-4 dpms toggle"
+    bindsym b exec /bin/bash -c "sleep 0.1; swaymsg output DP-4 dpms toggle && swaymsg output HDMI-A-2 dpms toggle"
+    # allow this to be overridden.
+    bindsym --no-warn s exec 'sudo systemctl suspend'
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }

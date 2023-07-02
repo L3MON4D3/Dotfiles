@@ -109,4 +109,22 @@ function M.get_visual()
 	return select_dedent
 end
 
+function M.filter_list(list, predicate)
+	local res_len = #list
+	local move_item_by = 0
+
+	for i = 1,res_len do
+		local item = list[i]
+		list[i] = nil
+		if not predicate(item) then
+			-- overwrite the place this would have been inserted at with the
+			-- next element.
+			move_item_by = move_item_by - 1
+		else
+			-- just insert the item.
+			list[i+move_item_by] = item
+		end
+	end
+end
+
 return M

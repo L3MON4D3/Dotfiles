@@ -41,3 +41,18 @@ parse_add("lel", "lo")
 -- 	t" ",
 -- 	i(1, "etest", {key = "a"})
 -- })
+
+s_add('map1',
+    fmt(
+        [[
+    vim.keymap.set('{}', '{}', function()
+        {}
+    end, {{ silent = true, desc = '{}' }})
+    ]],
+        {
+            i(1, 'mode'),
+            i(2, 'lhs'),
+            i(3, 'vim.opt.textwidth = 100'),
+            i(4, 'My awesome mapping'),
+        }
+    ))

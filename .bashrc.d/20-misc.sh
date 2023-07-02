@@ -25,10 +25,15 @@ alias sus='systemctl suspend'
 alias paste="curl -F 'sprunge=<-' http://sprunge.us"
 alias ch='cht.sh'
 
+package_name() {
+	echo "$1" | perl -lpe 's/^(.*)-[^-]+-[^-]+-[^-.]+\.(.*)$/$1.$2/'
+}
+
 dbpush() {
 	for package in "$@"
 	do
-		cp "$package" /mnt/repo/archlinux/l3mon/os/x86_64/ && repo-add /mnt/repo/archlinux/l3mon/os/x86_64/l3mon.db.tar $(basename -- "$package")
+		db_name=$(package_name $(basename -- "$package"))
+		cp "$package" "/mnt/repo/archlinux/l3mon/os/x86_64/$db_name" && repo-add /mnt/repo/archlinux/l3mon/os/x86_64/{l3mon.db.tar,"$db_name"}
 	done
 }
 
@@ -56,13 +61,10 @@ export CC=clang
 export INCLUDE=/usr/include/stb/
 
 export PATH=~/.cargo/bin/:~/Scripts:/usr/bin/ccache/bin/:~/.local/bin/:/usr/bin/vendor_perl/:$PATH
-export online=~/Documents/Uni/Kurse/s6/.online
-export ba=~/Documents/Uni/Kurse/s6/ba
-export co=~/Documents/Uni/Kurse/s7/co
-export cr=~/Documents/Uni/Kurse/s7/cr/
-export tn=~/Documents/Uni/Kurse/s7/tnn/
-export ag=~/Documents/Uni/Kurse/s6/ag/
-export p2=~/Documents/Uni/Kurse/s6/p2
+shopt -s direxpand
+export cg1=~/Documents/Uni/Kurse/s8/cg1/
+export ma=~/Documents/Uni/Kurse/s8/ma/
+export omp=~/Documents/Uni/Kurse/s8/omp
 export lsn=~/Code/luasnip
 
 export RUST_SRC_PATH=/home/simon/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/

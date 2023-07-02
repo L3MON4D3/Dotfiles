@@ -16,13 +16,51 @@ local function cabbrev_buf(rhs, lhs)
 	vim.cmd("cabbrev <buffer> " .. rhs .. " " .. lhs)
 end
 
-local cmake = {
-	run_buf = function(args)
-		vim.bo[args.buf].makeprg = "cmake"
-		nnoremapsilent_buf(args.buf, "<space>b", ":Make --build build<Cr>")
-		nnoremapsilent_buf(args.buf, "<space>m", ":Make -B build<Cr>")
+local nop = function() end
+
+local function repl_mapping(args, name, lhs, command)
+	if type(command) == "function" then
+		nnoremapsilent_buf(args.buf, lhs, function()
+			repl.send(name, command(args))
+		end)
+	else
+		nnoremapsilent_buf(args.buf, lhs, function()
+			repl.send(name, command)
+		end)
 	end
-}
+end
+
+local function repl_create(name, spec)
+	local initial_message = spec.initial_messages
+	local initial_messages = spec.initial_messages or {}
+	local mappings = spec.mappings or {}
+	local pre = spec.pre or nop
+
+	return {
+		run_buf = function(args)
+			pre(args)
+			if initial_message then
+				repl.send(name, initial_message)
+			end
+			for _, message in ipairs(initial_messages) do
+				repl.send(name, message)
+			end
+			nnoremapsilent_buf(args.buf, ",i", function()
+				repl.toggle(name, "below 15 split", false)
+			end)
+			for lhs, command in pairs(mappings) do
+				repl_mapping(args, name, lhs, command)
+			end
+		end
+	}
+end
+
+local cmake = repl_create("bash", {
+	mappings = {
+		["<Space>b"] = [[cmake --build build]],
+		["<Space>m"] = [[cmake -B build]]
+	}
+})
 local zig = {
 	run_buf = function(args)
 		vim.bo[args.buf].makeprg = "zig build"
@@ -54,41 +92,6 @@ local sway_reload_on_write = {
 		})
 	end
 }
-
-local nop = function() end
-
-local function repl_create(name, spec)
-	local initial_message = spec.initial_messages
-	local initial_messages = spec.initial_messages or {}
-	local mappings = spec.mappings or {}
-	local pre = spec.pre or nop
-
-	return {
-		run_buf = function(args)
-			pre(args)
-			if initial_message then
-				repl.send(name, initial_message)
-			end
-			for _, message in ipairs(initial_messages) do
-				repl.send(name, message)
-			end
-			nnoremapsilent_buf(args.buf, ",i", function()
-				repl.toggle(name, "below 15 split", false)
-			end)
-			for rhs, command in pairs(mappings) do
-				if type(command) == "function" then
-					nnoremapsilent_buf(args.buf, rhs, function()
-						repl.send(name, command(args))
-					end)
-				else
-					nnoremapsilent_buf(args.buf, rhs, function()
-						repl.send(name, command)
-					end)
-				end
-			end
-		end
-	}
-end
 
 return {
 	{
@@ -139,6 +142,30 @@ return {
 							runInTerminal = true
 						}}
 					}
+				}
+			),
+			["/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/"] = conf.combine_force(
+				cmake, {
+					run_buf = function(args)
+						cabbrev_buf("%c", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/CMakeLists.txt")
+						cabbrev_buf("%0", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise00_CUDAIntro")
+						cabbrev_buf("%1", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise01_HDR")
+						cabbrev_buf("%2", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise02_Raycasting")
+						cabbrev_buf("%3", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise03_WhittedRaytracing")
+						cabbrev_buf("%4", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise04_Radiosity")
+						cabbrev_buf("%5", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise05_BRDFModels")
+						cabbrev_buf("%6", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise06_Pathtracing")
+						cabbrev_buf("%7", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise07_LightsourceSampling")
+						cabbrev_buf("%8", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise08_PhotonMapping")
+						cabbrev_buf("%9", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise09_BDPT")
+						cabbrev_buf("%a", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise10_VolumetricPathtracing")
+
+						-- update this.
+						cabbrev_buf("%%", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise10_VolumetricPathtracing")
+						cabbrev_buf("%m", "/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/src/exercise10_VolumetricPathtracing/main.cpp")
+						repl_mapping(args, "bash", "<Space>r",
+							"/home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/bin/exercise10_VolumetricPathtracing -s /home/simon/Documents/Uni/Kurse/s8/cg1/ex/framework/data/exercise10_VolumetricPathtracing/cornell_box_spheres_area_lights_fog.xml")
+					end,
 				}
 			),
 			["/home/simon/Packages/Cemu"] = conf.combine_force(
@@ -415,10 +442,6 @@ return {
 				category = "file",
 				run_buf = function(args)
 					local repl_name = "bash." .. args.buf
-
-					nnoremapsilent_buf(args.buf, "M", function()
-						repl.send(repl_name, "rm *.zst; makepkg -f && p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm  && for f in *.zst; do echo $f; tar -tvf $f; done")
-					end)
 
 					nnoremapsilent_buf(args.buf, "U", function()
 						-- make and install PKGBUILD

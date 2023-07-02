@@ -40,6 +40,14 @@ require("gruvbox").setup({
 			bg="#282828",
 			fg="#1d2021"
 		},
+		NormalFloat= {
+			fg="#ebdbb2",
+			bg="#3c3836",
+		},
+		InlayHint = {
+			fg="#665c54",
+			bg="#3c3836",
+		},
 
 		-- don't do a palette override, only change for keywords and the like.
 		GruvboxRed = { fg = "#d75151" },

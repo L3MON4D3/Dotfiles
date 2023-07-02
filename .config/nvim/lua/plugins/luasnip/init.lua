@@ -115,7 +115,8 @@ ls.config.setup({
 		m = require("luasnip.extras").match,
 		ai = require("luasnip.nodes.absolute_indexer"),
 		postfix = require("luasnip.extras.postfix").postfix,
-		conds = require("luasnip.extras.expand_conditions")
+		conds = require("luasnip.extras.expand_conditions"),
+		k = require("luasnip.nodes.key_indexer").new_key
 	},
 })
 
@@ -125,6 +126,7 @@ ls.filetype_extend("latex", {"tex"})
 ls.filetype_extend("glsl", {"c"})
 ls.filetype_extend("cpp", {"c"})
 ls.filetype_extend("sh", {"bash"})
+ls.filetype_extend("cuda", {"cpp", "c"})
 
 vim.api.nvim_create_user_command("LuaSnipEditF", require("plugins.luasnip.ft_edit"), {})
 local sl_ok, sl = pcall(require, "luasnip.extras.snip_location")

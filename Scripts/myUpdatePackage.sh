@@ -1,5 +1,17 @@
 #!/bin/sh
 
+package_name() {
+	echo "$1" | perl -lpe 's/^(.*)-[^-]+-[^-]+-[^-.]+\.(.*)$/$1.$2/'
+}
+
+dbpush() {
+	for package in "$@"
+	do
+		db_name=$(package_name $(basename -- "$package"))
+		cp "$package" "/mnt/repo/archlinux/l3mon/os/x86_64/$db_name" && repo-add /mnt/repo/archlinux/l3mon/os/x86_64/{l3mon.db.tar,"$db_name"}
+	done
+}
+
 # Run makepkg in current dir, add package to repo if a new one was built.
 # $1 will passed to pacman (eg. --dbonly for packages built from
 # local files).
@@ -31,8 +43,7 @@ if [ ! -z "$packagename" ]; then
 	cat "$p2name"
 	file=$(compgen -G "$packagename")
 	# add generated file to repo.
-	cp "$file" /mnt/repo/x86_64/
-	repo-add /mnt/repo/x86_64/l3mon.db.tar "$file"
+	dbpush "$file"
 	sudo pacman -U --noconfirm $1 "$file"
 else
 	echo -e "\033[;1m\033[32m==>\033[97m $(basename $(pwd)) is up to date"

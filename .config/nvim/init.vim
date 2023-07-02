@@ -335,7 +335,7 @@ nnoremap [] ?}\n<Cr>:noh<Cr>
 inoremap <C-C> <Esc>g~iwea
 inoremap <C-U> <Esc>viwU<Esc>ea
 
-inoremap <C-F> <C-X><C-F>
+" inoremap <C-F> <C-X><C-F>
 
 tnoremap <silent> <C-J> <C-\><C-N>:let b:mode="i"<Cr><C-w>j
 tnoremap <silent> <C-K> <C-\><C-N>:let b:mode="i"<Cr><C-w>k

@@ -4,4 +4,4 @@ alias rebootf='sudo systemctl reboot --boot-loader-entry=auto-reboot-to-firmware
 alias make='make -j 12'
 export TERM=foot
 
-export RMAPI_HOST=http://sljk.ddns.net:3000
+export RMAPI_HOST=http://cinnabar:3000

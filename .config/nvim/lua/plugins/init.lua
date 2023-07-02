@@ -1,5 +1,6 @@
 local plugins = {
 	editorconfig = "gpanders/editorconfig.nvim",
+	eve_snippets = "evesdropper/luasnip-latex-snippets.nvim",
 	luasnip = "L3MON4D3/LuaSnip",
 	gruvbox = "ellisonleao/gruvbox.nvim",
 	dispatch = "tpope/vim-dispatch",
@@ -10,12 +11,14 @@ local plugins = {
 	cmp = "hrsh7th/nvim-cmp",
 	cmp_lsp = "hrsh7th/cmp-nvim-lsp",
 	cmp_luasnip = "saadparwaiz1/cmp_luasnip",
+	-- cmp_ls_choice = "L3MON4D3/cmp-luasnip-choice",
 	cmp_buffer = "hrsh7th/cmp-buffer",
 	treesitter = "L3MON4D3/nvim-treesitter",
 	treesitter_textobjects = "nvim-treesitter/nvim-treesitter-textobjects",
 	hop = "phaazon/hop.nvim",
 	vim_glsl = "tikhomirov/vim-glsl",
 	dap = "mfussenegger/nvim-dap",
+	dap_py = "mfussenegger/nvim-dap-python",
 	dap_ui = "rcarriga/nvim-dap-ui",
 	friendly_snippets = "rafamadriz/friendly-snippets",
 	plenary = "nvim-lua/plenary.nvim",
@@ -48,7 +51,8 @@ local plugins = {
 	fwatch = "rktjmp/fwatch.nvim",
 	unception = "samjwill/nvim-unception",
 	yuck = "elkowar/yuck.vim",
-	oil = "stevearc/oil.nvim"
+	oil = "stevearc/oil.nvim",
+	systemd = "lilydjwg/vim-systemd-syntax",
 }
 
 local plugins_inverse = {}
@@ -114,11 +118,12 @@ local plugin_spec = {
 
 	conf_use {
 		cmp,
-		commit = "cfafe0a1ca8933f7b7968a287d39904156f2c57d"
 	},
 	use(fwatch),
 	use(cmp_lsp),
-	-- use(cmp_buffer)
+	use(cmp_path),
+	use(cmp_buffer),
+	-- use(cmp_ls_choice),
 	-- use(cmp_sig)
 	use {
 		cmp_luasnip,
@@ -147,9 +152,7 @@ local plugin_spec = {
 		da_lua,
 	},
 	use(vrepeat),
-	-- conf_use{
-	-- 	friendly_snippets,
-	-- },
+	-- conf_use(friendly_snippets),
 	-- conf_use({
 	-- 	vim_snippets,
 	-- }),
@@ -166,7 +169,10 @@ local plugin_spec = {
 	use(unception),
 	use(yuck),
 	use(promise),
-	conf_use(oil)
+	conf_use(oil),
+	conf_use(dap_py),
+	--use(systemd),
+	-- use(eve_snippets)
 }
 
 require("lazy").setup(plugin_spec, {

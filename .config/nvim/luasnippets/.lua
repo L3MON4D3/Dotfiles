@@ -139,7 +139,8 @@ local switch_case_node = fmta('<keyword><expression>) {\n<case>\n}', {
   case = isn(2, { t"\t", get_case_node(1) }, "$PARENT_INDENT\t")
 })
 
-s_add('github',
+
+s_add('____a',
   fmt([[https://github.com/{}/{}/archive/{}/$name-$version.tar.gz]],
 	{
 	  i(1, "author"),
@@ -147,8 +148,8 @@ s_add('github',
 	  -- TODO: choiceNode
 	  --c(3, { i(1, "$version"), i(1, "v$version") }),
 	  c(3, {
-		t"$version",
-		t"v$version",
+	  	t"$version",
+	  	t"v$version",
 	  }),
 	}
   )

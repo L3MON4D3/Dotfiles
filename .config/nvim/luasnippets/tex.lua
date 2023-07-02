@@ -75,7 +75,18 @@ parse_add({trig = "tr", wordTrig = true}, "\\item $1")
 parse_add({trig = "abs", wordTrig = true}, "\\lvert ${1:$SELECT_DEDENT} \\rvert")
 parse_add({trig = "*", wordTrig = true}, "\\cdot ")
 parse_add({trig = "sum", wordTrig = true}, [[\sum_{$1}^{$2}]])
-parse_add({trig = "int", wordTrig = true}, [[\int_{${1:lower}}^{${2:upper}} $3 \\dx $4]])
+-- parse_add({trig = "int", wordTrig = true}, [[\int_{${1:lower}}^{${2:upper}} $3 \\dx $4]])
+s_add("int", fmta([[
+	\int_{<>}<> <> \dx <>
+]], {
+	i(1,"lower"),
+	c(2, {
+		t"",
+		{t"^{", i(1, "upper"), t"}"}
+	}),
+	i(3),
+	i(4)
+}))
 s_add("ls", {
 	t({"\\begin{"}), c(1, {
 		t"itemize",
@@ -154,3 +165,8 @@ s_add({trig = "[", wordTrig=false}, {
 })
 
 parse_add("comm", "\\newcommand{$1}{$2}")
+
+s_add({trig = "b(%d)", regTrig = true},
+      f(function(args, snip) return
+          "Captured Text: " .. snip.captures[1] .. "." end, {}
+       ))

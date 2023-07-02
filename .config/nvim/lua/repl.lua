@@ -3,7 +3,7 @@ local api = vim.api
 local M = {}
 
 local commands = {
-	julia = {"julia", "-q", "--threads=1", "-J" ,"/home/simon/.julia/sysimages/mine2.so"},
+	julia = {"julia", "-q", "--threads=1", "-J", "/home/simon/.julia/sysimages/img.so"},
 	python = {"ipython"},
 	bash = {"bash"}
 }
@@ -128,7 +128,7 @@ end
 
 function M.toggle(term_id, split_command, focus)
 	M.ensure_enabled(term_id)
-	local tabpage = vim.fn.tabpagenr()
+	local tabpage = vim.api.nvim_win_get_tabpage(0)
 	local win = windows[term_id][tabpage]
 	if win and api.nvim_win_is_valid(win) then
 		api.nvim_win_close(win, true)
@@ -141,7 +141,7 @@ end
 
 function M.open_unique(command, split_command, focus)
 	local term_data = create_term(command)
-	local tabpage = vim.fn.tabpagenr()
+	local tabpage = vim.api.nvim_win_get_tabpage(0)
 	open_new(tabpage, split_command, focus, term_data.buf)
 end
 
