@@ -18,30 +18,26 @@ local function create_term(command, opts)
 
 	local job_id
 
-	local buf = api.nvim_create_buf(false, false)
+	local buf = api.nvim_create_buf(true, false)
 	api.nvim_buf_set_name(buf, ("term://%s/%s"):format(buf, command[1]))
 	res.buf = buf
 
-	local term_chan_id = vim.api.nvim_open_term(buf, {
-		on_input = function(_, _, _, data)
-			vim.api.nvim_chan_send(job_id, data)
-		end
-	})
-
-	job_id = vim.fn.jobstart(command, vim.tbl_extend("force", {
-		on_stdout = function(_, data)
-			vim.api.nvim_chan_send(term_chan_id, table.concat(data, "\r\n"))
-
-			-- set terminal as active as soon as we got some output.
-			vim.defer_fn(function()
-				res.active = true
-			end, 0)
-		end,
-		on_exit = function()
-			vim.api.nvim_buf_delete(buf, {force = true})
-		end,
-		pty = true,
-	}, job_opts))
+	vim.api.nvim_buf_call(buf, function()
+		job_id = vim.fn.termopen(command, vim.tbl_extend("force", {
+			on_stdout = function(_, _)
+				-- set terminal as active as soon as we got some output.
+				-- (useful for delaying input until there has been a first sign
+				-- of activity from the job.)
+				vim.defer_fn(function()
+					res.active = true
+				end, 0)
+			end,
+			on_exit = function()
+				vim.api.nvim_buf_delete(buf, {force = true})
+			end,
+			pty = true,
+		}, job_opts))
+	end)
 	res.channel = job_id
 
 	return res
