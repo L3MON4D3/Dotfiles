@@ -62,72 +62,72 @@ local function completion_intercept(client, method_cb_map)
 	end
 end
 
-require("clangd_extensions").setup({
-	server = {
-		cmd = {"clangd", [[--completion-style=detailed]], [[--enable-config]]},
-		on_attach = function(client)
-			completion_intercept(client,
-			{
-				["textDocument/completion"] = function(result)
-					local items = result.items or result
-					for _, item in ipairs(items) do
-						local item_text = item.textEdit.newText
-						if item_text:match("^[%w_]+%(.*%)$") then
-							local name = item_text:match("^[%w_]+")
-							local content = item_text:match("%((.*)%)$")
-							if content:match("$0") then
-								content = content:gsub("$0", "$1000")
-							elseif content:match("${0") then
-								content = content:gsub("${0", "${1000")
-							end
+nvim_lsp.clangd.setup({
+	cmd = {"clangd", [[--completion-style=detailed]], [[--enable-config]]},
+	on_attach = function(client)
+		completion_intercept(client,
+		{
+			["textDocument/completion"] = function(result)
+				local items = result.items or result
+				for _, item in ipairs(items) do
+					local item_text = item.textEdit.newText
+					if item_text:match("^[%w_]+%(.*%)$") then
+						local name = item_text:match("^[%w_]+")
+						local content = item_text:match("%((.*)%)$")
+						if content:match("$0") then
+							content = content:gsub("$0", "$1000")
+						elseif content:match("${0") then
+							content = content:gsub("${0", "${1000")
+						end
 
-							ls.setup_snip_env()
-							session.lsp_override_snips[item_text] = s("", {
-								t(name),
-								c(1, {
-									{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
-									{t"{", r(1, "type"), t"}"},
-								})
+						ls.setup_snip_env()
+						session.lsp_override_snips[item_text] = s("", {
+							t(name),
+							c(1, {
+								{t"(", r(1, "type", ls.parser.parse_snippet(1, content)), t")"},
+								{t"{", r(1, "type"), t"}"},
 							})
-							item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
-						elseif item.insertTextFormat == vim.lsp.protocol.InsertTextFormat.Snippet then
-							item.textEdit.newText = item_text:gsub("${0", "${100")
-						end
+						})
+						item.insertTextFormat = vim.lsp.protocol.InsertTextFormat.Snippet
+					elseif item.insertTextFormat == vim.lsp.protocol.InsertTextFormat.Snippet then
+						item.textEdit.newText = item_text:gsub("${0", "${100")
 					end
-					-- accept all completions.
-					return true
-				end,
-				["textDocument/inlayHint"] = function(result)
-					util.filter_list(result, function(item)
-						   -- glm::
-						if item.label == "x:" or
-						   item.label == "y:" or
-						   item.label == "z:" or
-						   item.label == "a:" or
-						   item.label == "b:" or
-						   item.label == "v:" or
-						   item.label == "m:" or
-						   -- std::
-						   item.label == "s:" or
-						   item.label == "nptr:" or
-						   item.label == "scalar:" or
-						   item.lable == "argv0" then
-							return false
-						end
-						-- local line = item.position.line
-						-- local col = item.position.character
-						-- local node = vim.treesitter.get_node({pos = {line,col}})
-						-- I(vim.treesitter.get_node_text(node:parent(), 0))
-						return true
-					end)
-					-- accept request.
-					return true
 				end
-			})
-			lsp_attach(client)
-		end,
-		capabilities = capabilities
-	},
+				-- accept all completions.
+				return true
+			end,
+			["textDocument/inlayHint"] = function(result)
+				util.filter_list(result, function(item)
+					   -- glm::
+					if item.label == "x:" or
+					   item.label == "y:" or
+					   item.label == "z:" or
+					   item.label == "a:" or
+					   item.label == "b:" or
+					   item.label == "v:" or
+					   item.label == "m:" or
+					   -- std::
+					   item.label == "s:" or
+					   item.label == "nptr:" or
+					   item.label == "scalar:" or
+					   item.lable == "argv0" then
+						return false
+					end
+					-- local line = item.position.line
+					-- local col = item.position.character
+					-- local node = vim.treesitter.get_node({pos = {line,col}})
+					-- I(vim.treesitter.get_node_text(node:parent(), 0))
+					return true
+				end)
+				-- accept request.
+				return true
+			end
+		})
+		lsp_attach(client)
+	end,
+	capabilities = capabilities
+})
+require("clangd_extensions").setup({
 	extensions = {
 		inlay_hints = {
 			parameter_hints_prefix = "⟵ ",
@@ -136,6 +136,8 @@ require("clangd_extensions").setup({
 		}
 	}
 })
+require("clangd_extensions.inlay_hints").setup_autocmd()
+require("clangd_extensions.inlay_hints").set_inlay_hints()
 
 nvim_lsp.texlab.setup{
 	cmd = { "texlab" },
