@@ -26,3 +26,10 @@
 #	insteadOf = https://gitlab.freedesktop.org/
 [github]
 	user = L3MON4D3
+[safe]
+	directory = /home/simon/Documents/Uni/Kurse/s9/hpc/ex/juwels/02-running-s6sikatz
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

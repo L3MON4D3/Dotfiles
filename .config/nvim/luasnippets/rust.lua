@@ -4,3 +4,10 @@ parse_add({trig = "fn"}, [[
 		$0
 	\}
 ]])
+ts_px_add({
+	trig = ".testing",
+	matchTSNode = {
+		query = [[(call_expression) @prefix]],
+		query_lang = "rust",
+	},
+}, { t"hello" })

@@ -16,7 +16,7 @@ local function gen_configs_from_patterns(bufname, configs)
 			if pattern_configs[config.category][match] then
 				-- the order in which we force does not matter (for now), the
 				-- only guarantee regarding priority is that file overrides
-				-- filetype overrides dir.
+				-- dir overrides filetype.
 				pattern_configs[config.category][match] = conf.combine_force(pattern_configs[config.category][match], config)
 			else
 				pattern_configs[config.category][match] = config
@@ -97,10 +97,11 @@ local function gen_buf_config(buf)
 		-- generate configs from patterns.
 		local pattern_configs = gen_configs_from_patterns(bufname, configs)
 
-		-- lowest priority: directory-configs.
-		vim.list_extend(matching_configs, dir_configs_sorted(pattern_configs, configs, buf_dir))
-		-- next: filetype-config.
+		-- lowest prio: filetype-config.
 		vim.list_extend(matching_configs, filetype_configs_sorted(pattern_configs, configs, vim.bo[buf].filetype))
+
+		-- next lowest priority: directory-configs, sorted by adjacency to buffer-file.
+		vim.list_extend(matching_configs, dir_configs_sorted(pattern_configs, configs, buf_dir))
 
 		-- finally: file-config. Since the buffer only has one file, we just insert those in this function.
 		table.insert(matching_configs, pattern_configs.file[bufname])
@@ -123,7 +124,13 @@ function Config(bufnr)
 	return f_conf
 end
 
+local did_config = {}
 local function fileconfig_au_cb(args)
+	if did_config[args.buf] then
+		-- already executed for this buffer, do nothing.
+		return
+	end
+
 	for k, k_apply in pairs(vim.tbl_map(function(option) return option.apply end, config_options)) do
 		k_apply(Config(args.buf)[k], args)
 	end

@@ -16,11 +16,13 @@ s_add("for", {
 		fmt([[{} in vim.gsplit({})]], {i(1, "str"), i(2)})
 	}), t{" do", "\t"}, isn(2, {dl(1, l.LS_SELECT_DEDENT)}, "$PARENT_INDENT\t"), t{"", "end"}
 })
+
 s_add("while", fmt([[
 while {} do
 	{}
 end
 ]], ins_generate()))
+
 s_add("fn", fmt([[
 	function{}({})
 		{}
@@ -34,6 +36,7 @@ s_add("fn", fmt([[
 		return sn(nil, { i(1) })
 	end
 end)})))
+
 s_add("str", fmt("[[\n\t{}\n]]", ins_generate()))
 s_add("sdt", fmt(
 	[[ls_helpers.static_docstring_test({}, {}, {})]],

@@ -13,7 +13,6 @@ dap.adapters.lldb = {
 	command = '/usr/bin/lldb-vscode',
 	name = "lldb",
 }
-
 -- dap.adapters.cppdbg = {
 -- 	type = 'executable',
 -- 	command = '/home/simon/Downloads/extension/debugAdapters/bin/OpenDebugAD7',
@@ -23,31 +22,6 @@ dap.adapters.lldb = {
 vim.fn.sign_define('DapBreakpoint', {text='⛔', texthl='GruvboxRed', linehl='', numhl=''})
 vim.fn.sign_define('DapBreakpointCondition', {text='⛔', texthl='GruvboxBlue', linehl='', numhl=''})
 vim.fn.sign_define('DapStopped', {text=' ', texthl='GruvboxYellow', linehl='', numhl=''})
-
-dap.configurations.cpp = {
-	{
-		name = "Launch",
-		type = "lldb",
-		request = "launch",
-		program = function()
-			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-		end,
-		cwd = '${workspaceFolder}',
-		stopOnEntry = false,
-	}, {
-		name = "Attach",
-		type = "lldb",
-		request = "attach",
-		cwd = '${workspaceFolder}',
-		pid = 107202,
-		stopOnEntry = false,
-		args = {},
-	},
-}
-
-dap.configurations.c = vim.deepcopy(dap.configurations.cpp)
-dap.configurations.rust = vim.deepcopy(dap.configurations.cpp)
-
 
 local dap_widgets = require("dap.ui.widgets")
 
@@ -68,6 +42,10 @@ vim.api.nvim_create_user_command("DS", function()
 	sidebar.toggle()
 end, {})
 
+vim.api.nvim_create_user_command("DT", function()
+	dap.terminate();
+end, {})
+
 vim.cmd[[
 command! DR :lua require("dap").repl.toggle()
 
@@ -78,8 +56,8 @@ noremap <F18> :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point
 noremap <F3> :lua require"dap".step_over()<Cr>
 noremap <F4> :lua require"dap".step_into()<Cr>
 noremap <F16> :lua require"dap".step_out()<Cr>
-noremap <F5> :lua require"dap".continue()<Cr>
 noremap <F17> :lua require"dap".run_last()<Cr>
 noremap <F6> :lua require"dap.ui.widgets".hover()<Cr>
-noremap <leader>dws :lua require"dapui".toggle("sidebar")<Cr>
+noremap - :lua require"dap".up()<Cr>
+noremap + :lua require"dap".down()<Cr>
 ]]

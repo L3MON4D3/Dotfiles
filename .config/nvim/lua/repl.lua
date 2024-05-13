@@ -5,7 +5,9 @@ local M = {}
 local commands = {
 	julia = {"julia", "-q", "--threads=1", "-J", "/home/simon/.julia/sysimages/img.so"},
 	python = {"ipython"},
-	bash = {"bash"}
+	bash = {"bash"},
+	juwels = {"ssh", "juwels"},
+	jureca = {"ssh", "jureca"},
 }
 
 local term_opts = {}

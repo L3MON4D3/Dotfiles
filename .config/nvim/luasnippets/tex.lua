@@ -44,11 +44,11 @@ local mat = function(_, snip)
 	local nodes = {}
 	local ins_indx = 1
 	for j = 1, snip.rows do
-		table.insert(nodes, r(ins_indx, tostring(j).."x1", i(1)))
+		table.insert(nodes, r(ins_indx, tostring(j).."x1", i(1)) )
 		ins_indx = ins_indx+1
 		for k = 2, snip.cols do
 			table.insert(nodes, t" & ")
-			table.insert(nodes, r(ins_indx, tostring(j).."x"..tostring(k), i(1)))
+			table.insert(nodes, r(ins_indx, tostring(j).."x"..tostring(k), i(1)) )
 			ins_indx = ins_indx+1
 		end
 		table.insert(nodes, t{"\\\\", ""})
@@ -77,7 +77,7 @@ parse_add({trig = "*", wordTrig = true}, "\\cdot ")
 parse_add({trig = "sum", wordTrig = true}, [[\sum_{$1}^{$2}]])
 -- parse_add({trig = "int", wordTrig = true}, [[\int_{${1:lower}}^{${2:upper}} $3 \\dx $4]])
 s_add("int", fmta([[
-	\int_{<>}<> <> \dx <>
+	\int_{<>}<> <> \Intd <>
 ]], {
 	i(1,"lower"),
 	c(2, {
@@ -112,7 +112,7 @@ parse_add("it", [[\textit{$1}]])
 parse_add("tx", [[\text{$1}]])
 parse_add("abr", [[\langle $1 \rangle]])
 parse_add("norm", [[\lVert ${1:$SELECT_DEDENT} \rVert]])
-s_add("mat", fmt([[
+s_add({trig="mat", filetype="all"}, fmt([[
 \begin{{{}}}
 {}
 \end{{{}}}
@@ -166,7 +166,11 @@ s_add({trig = "[", wordTrig=false}, {
 
 parse_add("comm", "\\newcommand{$1}{$2}")
 
-s_add({trig = "b(%d)", regTrig = true},
-      f(function(args, snip) return
-          "Captured Text: " .. snip.captures[1] .. "." end, {}
-       ))
+parse_add({trig = ".inv", wordTrig = false}, "^{-1}")
+
+-- s_add_auto({trig = "_", wordTrig = false}, {
+-- 	t"_", c(1, {
+-- 		r(1, "bot", i(1)),
+-- 		{t"{", r(1, "bot", i(1)), t"}"}
+-- 	})
+-- })

@@ -36,3 +36,16 @@ parse_add("meth", [[
 	def $1(self$2) :
 		$3
 ]])
+
+px_add({trig=".p", match_pattern = ".+"}, parse(nil, "print($POSTFIX_MATCH)"))
+
+local function import(shorthand, importname)
+	parse_add(shorthand, ("import %s as %s"):format(importname, shorthand))
+end
+
+import("pd", "pandas")
+import("px", "plotly.express")
+import("np", "numpy")
+import("sns", "seaborn")
+import("plt", "matplotlib.pyplot")
+import("sk", "sklearn")

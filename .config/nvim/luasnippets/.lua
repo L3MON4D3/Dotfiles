@@ -29,7 +29,7 @@ local function jdocsnip(args, _, old_state)
 			if old_state and old_state["arg"..arg] then
 				inode = i(insert, old_state["arg"..arg]:get_text())
 			else
-				inode = i(insert)
+				inode = i(insert, utils)
 			end
 			vim.list_extend(nodes, {t({" * @param "..arg.." "}), inode, t({"", ""})})
 			param_nodes["arg"..arg] = inode
@@ -194,5 +194,6 @@ s_add("pyinit", d(1, pyinit, {}, { user_args = {
 	end) end }}))
 
 parse_add("bugg", "TEST: ${3:[${4:$CURRENT_MONTH_NAME $CURRENT_DATE, $CURRENT_YEAR}]} ${2:Foo}")
+parse_add("buggg", "$1 asdfasdfasdff $1")
 
 -- vim: ft=lua

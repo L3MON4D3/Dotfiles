@@ -1,20 +1,20 @@
 local cmp = require'cmp'
 local types = require("cmp.types")
--- local session = require("session")
+local session = require("session")
 
 cmp.setup {
 	completion = {
-		autocomplete = false,
+		autocomplete = false,-- {cmp.TriggerEvent.TextChanged},
 		completeopt = "menu,menuone,select"
 	},
 	snippet = {
 		expand = function(args)
-			-- local override_snip = session.lsp_override_snips[args.body]
-			-- if override_snip then
-			-- 	require("luasnip").snip_expand(override_snip)
-			-- else
+			local override_snip = session.lsp_override_snips[args.body]
+			if override_snip then
+				require("luasnip").snip_expand(override_snip)
+			else
 				require("luasnip").lsp_expand(args.body)
-			-- end
+			end
 		end,
 	},
 	mapping = {
@@ -25,13 +25,13 @@ cmp.setup {
 		['<C-p>'] = cmp.mapping.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert }),
 	},
 	sources = cmp.config.sources({
-		{name = "path"}
+		{name = "path"},
+		{name = "luasnip"}
 	}),
 	window = {
 		documentation = false,
 	},
 	experimental = {
-		native_menu = false,
 		ghost_text = true
 	},
 }

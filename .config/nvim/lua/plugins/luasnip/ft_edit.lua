@@ -5,6 +5,10 @@ local snippet_collections = {
 		dir = "/home/simon/.config/nvim/luasnippets",
 		extension = "lua"
 	},
+	{
+		dir = vim.fn.getcwd() .. "/.luasnippets",
+		extension = "lua"
+	},
 	-- snipmate-snippets
 	-- this would edit snippets provided by vim-snippets.
 	{

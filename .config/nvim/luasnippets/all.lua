@@ -31,9 +31,10 @@ pair("<", ">", neg, char_count_same)
 pair("'", "'", neg, even_count)
 pair('"', '"', neg, even_count)
 pair("`", "`", neg, even_count)
-s_add({trig="{,", wordTrig=false, hidden=true}, { t({"{","\t"}), i(1, "", {key = "asdf"}), t({"", "}"}) })
+s_add({trig="{,", wordTrig=false, hidden=true, priority=1001}, { t({"{","\t"}), i(1, "", {key = "asdf"}), t({"", "}"}) })
 
 parse_add("lel", "lo")
+parse_add("lal", "la")
 
 -- local k = require("luasnip.nodes.key_indexer").new_key
 -- s_add("aaa", {
@@ -45,7 +46,7 @@ parse_add("lel", "lo")
 s_add('map1',
     fmt(
         [[
-    vim.keymap.set('{}', '{}', function()
+    vim.keaeeeeeee.set('{}', '{}', function()
         {}
     end, {{ silent = true, desc = '{}' }})
     ]],

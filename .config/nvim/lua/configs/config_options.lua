@@ -1,14 +1,7 @@
 local nop = function() end
 local id = function(x) return x end
 
-local auto_table_mt = {
-	__index = function(t, k)
-		local v = {}
-		rawset(t, k, v)
-		return v
-	end
-}
-local applied_buf = setmetatable({}, auto_table_mt)
+local applied_buf = require("auto_table").autotable(3)
 local applied = {}
 
 -- create function calling all passed functions in passed order.
@@ -25,34 +18,48 @@ return {
 	dap = {
 		default = {},
 		combine_strategy = function(daps)
-			local combined = {}
+			local config_set = {}
 
-			for _, dap_config in ipairs(daps) do
-				for ft, configs in pairs(dap_config) do
-					if not combined[ft] then
-						combined[ft] = {}
-					end
-					vim.list_extend(combined[ft], configs)
+			for _, dap_configs in ipairs(daps) do
+				for _, config in ipairs(dap_configs) do
+					-- collect one per my_type.
+					config_set[config.my_type] = config
 				end
 			end
 
-			return combined
+			local config_list = {}
+			for _, v in pairs(config_set) do
+				table.insert(config_list, v)
+			end
+
+			return config_list
 		end,
 		finalize = id,
-		apply = function(v, _)
+		apply = function(v, args)
 			local dap = require("dap")
 
-			for ft, ft_config in pairs(v) do
-				if not dap.configurations[ft] then
-					dap.configurations[ft] = {}
+			vim.keymap.set("n", "<F5>", function()
+				if dap.session() then
+					-- session active, just do regular continue.
+					dap.continue()
+					return
 				end
-				for _, config in ipairs(ft_config) do
-					local config_names = vim.tbl_map(function(c) return c.name end, dap.configurations[ft])
-					if not vim.tbl_contains(config_names, config.name) then
-						table.insert(dap.configurations[ft], config)
+
+				-- otherwise, open picker to select from possible configs.
+				require("dap.ui").pick_if_many(
+					v,
+					"Configuration: ",
+					function(i) return i.name end,
+					function(configuration)
+						if configuration then
+							vim.notify('Running configuration ' .. configuration.name, vim.log.levels.INFO, {title = "DAP"})
+							dap.run(configuration)
+						else
+							vim.notify('No configuration selected', vim.log.levels.INFO, {title = "DAP"})
+						end
 					end
-				end
-			end
+				)
+			end, { buffer = args.buf} )
 		end
 	},
 	run_buf = {
@@ -62,9 +69,11 @@ return {
 			if run_buf then
 				return function(args)
 					-- only run buf_func if it wasn't run already.
-					if applied_buf[args.file][run_buf] == nil then
+					-- Track via buf-number and filename, since the file may
+					-- change for initial buffers ("[None]").
+					if not applied_buf[args.buf][args.file][run_buf] then
 						run_buf(args)
-						applied_buf[args.file][run_buf] = true
+						applied_buf[args.buf][args.file][run_buf] = true
 					end
 				end
 			end
@@ -74,6 +83,7 @@ return {
 	run_session = {
 		default = nop,
 		combine_strategy = fn_combine,
+		-- prevent running the same session-function twice.
 		finalize = function(run_session)
 			if run_session then
 				return function()
@@ -106,6 +116,7 @@ return {
 		-- only exists to be queried.
 		apply = nop
 	},
+	-- for patterns!!
 	category = {
 		default = nil,
 		combine_strategy = function(categories)

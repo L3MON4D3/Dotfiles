@@ -52,9 +52,16 @@ c.statusbar.show = 'never'
 c.editor.command = ['foot', 'nvim', '{}']
 
 config.load_autoconfig(False)
-c.url.searchengines = {'DEFAULT': 'https://google.com/search?q={}'}
+c.url.searchengines = {
+    'DEFAULT': 'https://google.com/search?q={}',
+    '!k': 'https://kagi.com/search?q={}',
+    '!d': 'https://duckduckgo.com/?ia=web&q={}',
+    '!a': 'https://annas-archive.org/search?q={}',
+}
 
-config.bind("pf", "spawn --userscript password_fill")
+config.bind("pf", "spawn --userscript qute-pass --username-target=secret --username-pattern=\"[\\w]+: ?(.*)\"")
+config.bind("pp", "spawn --userscript qute-pass --username-target=secret --username-pattern=\"[\\w]+: ?(.*)\" --password-only ")
+config.bind("pu", "spawn --userscript qute-pass --username-target=secret --username-pattern=\"[\\w]+: ?(.*)\" --username-only ")
 config.bind("e", "edit-url")
 
 config.bind("<Ctrl-p>", "spawn --userscript remPrint")

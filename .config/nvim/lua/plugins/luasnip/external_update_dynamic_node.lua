@@ -26,13 +26,14 @@ local function dynamic_node_external_update(func_indx)
 	-- to identify current node in new snippet, if it is available.
 	external_update_id = external_update_id + 1
 	current_node.external_update_id = external_update_id
+	local current_node_key = current_node.key
 
 	-- store which mode we're in to restore later.
 	local insert_pre_call = vim.fn.mode() == "i"
 	-- is byte-indexed! Doesn't matter here, but important to be aware of.
 	local cursor_pos_pre_relative = util.pos_sub(
 		util.get_cursor_0ind(),
-		current_node.mark:pos_begin_raw()
+		current_node.mark:get_endpoint(1)
 	)
 
 	-- leave current generated snippet.
@@ -55,9 +56,9 @@ local function dynamic_node_external_update(func_indx)
 	-- everything below here isn't strictly necessary, but it's pretty nice to have.
 
 
-	-- try to find the node we marked earlier.
+	-- try to find the node we marked earlier (or the node with the same key (not if nil), both with equal priority).
 	local target_node = dynamic_node:find_node(function(test_node)
-		return test_node.external_update_id == external_update_id
+		return (test_node.external_update_id == external_update_id) or (current_node_key ~= nil and test_node.key == current_node_key)
 	end)
 
 	if target_node then
@@ -68,9 +69,13 @@ local function dynamic_node_external_update(func_indx)
 		node_util.enter_nodes_between(dynamic_node, target_node, true)
 
 		if insert_pre_call then
+			-- set from end, since the most-likely scenario is a user typing at
+			-- the end of an insertNode, and in that case, inserting text
+			-- before the typed text will probably not result in unexpected
+			-- shifts of the cursor.
 			util.set_cursor_0ind(
 				util.pos_add(
-					target_node.mark:pos_begin_raw(),
+					target_node.mark:get_endpoint(1),
 					cursor_pos_pre_relative
 				)
 			)

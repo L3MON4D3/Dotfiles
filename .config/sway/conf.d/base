@@ -39,9 +39,9 @@ output DP-1 subpixel rgb
 output DP-4 transform 0 mode 2560x1440@143.999Hz position 0,0
 output DP-4 subpixel rgb
 
-output HDMI-A-1 transform 90 resolution 1080x1920@60.000Hz position 2560,0
+output HDMI-A-1 transform 90 resolution 1920x1080@60.000Hz position 2560,0
 output HDMI-A-1 subpixel vbgr
-output HDMI-A-2 transform 90 resolution 1080x1920@60.000Hz position 2560,0
+output HDMI-A-2 transform 90 resolution 1920x1080@60.000Hz position 2560,0
 output HDMI-A-2 subpixel vbgr
 
 ### Idle configuration
@@ -62,11 +62,11 @@ output HDMI-A-2 subpixel vbgr
 #
 # Example configuration:
 #
-input "2:7:SynPS/2_Synaptics_TouchPad" {
-       	dwt enabled
-       	tap enabled
-       	natural_scroll enabled
-}
+# input "2:7:SynPS/2_Synaptics_TouchPad" {
+#        	dwt enabled
+#        	tap enabled
+#        	natural_scroll enabled
+# }
 
 input type:pointer {
 	pointer_accel -1
@@ -237,6 +237,7 @@ for_window [app_id="^com.github.wwmm.easyeffects$"] floating enable
 for_window [class="^gnuplot_qt$"] floating enable
 for_window [app_id="^python3$"] floating enable
 for_window [app_id="^imv$"] floating enable
+for_window [app_id="^alloy$"] floating enable
 for_window [app_id="^eww$"] floating enable
 for_window [title="^Makie$"] floating enable
 for_window [class="^qrenderdoc$"] floating enable
@@ -247,28 +248,35 @@ for_window [class="^Ryujinx$"] floating enable
 for_window [app_id="^waybar$"] floating enable
 for_window [class="^exercise.*_.*$"] floating enable
 for_window [title="^Lutris$"] floating enable
+for_window [title="^Lutris$"] floating enable
+for_window [class="Gimp"] floating enable
+for_window [class="ATCG"] floating enable
+for_window [title="^lstopo"] floating enable
+for_window [class="^Overcooked2.x86_64$"] move container output DP-1
 
 mode "apps" {
 	bindsym b exec QT_QPA_PLATFORM=wayland __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json qutebrowser
 	bindsym r exec Ryujinx
 	bindsym f exec firefox
-	bindsym n exec $term ncmpcpp
+	bindsym n exec $term ssh -t cinnabar bash -lc ncmpcpp
 	bindsym g exec gimp
 	bindsym i exec inkscape
 	bindsym t exec thunderbird
     bindsym q exec qbittorrent
     bindsym v exec vlc
-    bindsym d exec discord
+    bindsym d exec bash -c '/home/simon/.local/bin/sway-assign-windows set app_id ArmCord && armcord --enable-features=UseOzonePlatform --ozone-platform=wayland'
     bindsym z exec zathura
     bindsym o exec tor-browser
-    bindsym k exec /usr/bin/kodi --windowing=wayland
-    bindsym s exec spotify
+    # would love to use pipewire here, but that doesn't work :(
+    bindsym k exec /usr/bin/kodi --windowing=wayland --audio-backend=alsa
+    bindsym s exec bash -c '/home/simon/.local/bin/sway-assign-windows set class "steam"; steam'
     bindsym j exec qutebrowser /home/simon/Documents/Documentation/docs/index.html
     bindsym c exec chromium --ozone-platform-hint=auto
     bindsym e exec easyeffects
     bindsym y exec QT_QPA_PLATFORM=xcb yuzu
     bindsym w exec GDK_BACKEND=x11 cemu
     bindsym l exec lutris
+    bindsym u exec bash -c '/home/simon/.local/bin/sway-assign-windows set class "unrealeditor.exe"; WINEPREFIX=/home/simon/.local/share/wineprefixes/uc3-64 wine /mnt/hdd1/UE_5.3/Engine/Binaries/Win64/UnrealEditor.exe'
 	bindsym Return mode "default"
 	bindsym Escape mode "default"
 }
@@ -289,10 +297,10 @@ mode "browser" {
 bindsym $mod+y mode "browser"
 
 mode "power" {
-    bindsym h output HDMI-A-2 dpms toggle
+    bindsym h exec /bin/bash -c "sleep 0.1; swaymsg output HDMI-A-1 dpms toggle &"
     # only works with short pause????
-    bindsym d exec /bin/bash -c "sleep 0.1; swaymsg output DP-4 dpms toggle"
-    bindsym b exec /bin/bash -c "sleep 0.1; swaymsg output DP-4 dpms toggle && swaymsg output HDMI-A-2 dpms toggle"
+    bindsym d exec /bin/bash -c "sleep 0.1; swaymsg output DP-1 dpms toggle"
+    bindsym b exec /bin/bash -c "sleep 0.1; swaymsg output DP-1 dpms toggle && swaymsg output HDMI-A-1 dpms toggle"
     # allow this to be overridden.
     bindsym --no-warn s exec 'sudo systemctl suspend'
     bindsym Return mode "default"
@@ -303,6 +311,8 @@ bindsym $mod+p mode "power"
 mode "screen" {
 	bindsym r exec /home/simon/Scripts/myScreenRec.sh
 	bindsym s exec bash -c 'grim -g "$(slurp)" screen.png'
+	bindsym d exec dragon-drop "screen.png"
+	bindsym n exec "eww open --toggle screenmove"; mode "default"
 	bindsym w exec /home/simon/Scripts/myWindowShot.sh
 	bindsym p exec /home/simon/Scripts/myPopOut.sh
     bindsym Return mode "default"
@@ -342,9 +352,9 @@ popup_during_fullscreen smart
 bindsym XF86MonBrightnessDown exec sudo /home/simon/Scripts/myBacklight.sh -d 60
 bindsym XF86MonBrightnessUp exec sudo /home/simon/Scripts/myBacklight.sh -u 60
 
-bindsym XF86AudioPlay exec mpc toggle
-bindsym XF86AudioNext exec mpc next
-bindsym XF86AudioPrev exec mpc prev
+bindsym XF86AudioPlay exec ssh cinnabar mpc toggle
+bindsym XF86AudioNext exec ssh cinnabar mpc next
+bindsym XF86AudioPrev exec ssh cinnabar mpc prev
 bindsym XF86AudioRaiseVolume exec mpc volume +5
 bindsym XF86AudioLowerVolume exec mpc volume -5
 

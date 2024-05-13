@@ -1,4 +1,26 @@
 local nvim_lsp = require("lspconfig")
+
+local lspconfig_util = require("lspconfig.util")
+
+-- prevent setting home-directory as root (at least as long as root_pattern is
+-- used for resolving root).
+lspconfig_util.root_pattern = function(...)
+  local patterns = vim.tbl_flatten { ... }
+  local function matcher(path)
+    for _, pattern in ipairs(patterns) do
+      for _, p in ipairs(vim.fn.glob(lspconfig_util.path.join(lspconfig_util.path.escape_wildcards(path), pattern), true, true)) do
+        if lspconfig_util.path.exists(p) and p ~= "/home/simon/.git" then
+          return path
+        end
+      end
+    end
+  end
+  return function(startpath)
+    startpath = lspconfig_util.strip_archive_subpath(startpath)
+    return lspconfig_util.search_ancestors(startpath, matcher)
+  end
+end
+
 local util = require("util")
 
 -- local function sem_token_attach(_)
@@ -11,8 +33,8 @@ local lsp_attach = function(client)
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gD', '<cmd>lua vim.lsp.buf.definition()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', {noremap = true})
-	vim.api.nvim_buf_set_keymap(0, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', {noremap = true})
+	vim.api.nvim_buf_set_keymap(0, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', {noremap = true})
+
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>d', '<cmd>lua vim.diagnostic.open_float()<CR>', {noremap = true})
 	vim.api.nvim_buf_set_keymap(0, 'n', '<space>n', '<cmd>lua vim.lsp.buf.rename()<CR>', {noremap = true})
@@ -170,13 +192,18 @@ nvim_lsp.texlab.setup{
 
 nvim_lsp.pyright.setup{
 	capabilities = capabilities,
-	on_attach = function(client)
-		lsp_attach(client)
-	end,
+	on_attach = lsp_attach,
+	settings = {
+		python = {
+			analysis = {
+				autoSearchPaths = false
+			}
+		}
+	}
 }
 
 nvim_lsp.julials.setup{
-	cmd = {"julia", "--startup-file=no", "-e", "using LanguageServer; runserver()", "-J", "/home/simon/.julia/sysimages/mine1.8.5.so"},
+	cmd = {"julia", "--startup-file=no", "-e", "using LanguageServer; runserver()", "-J", "/home/simon/.julia/sysimages/img.so"},
 	capabilities = capabilities,
 	on_attach = function(client)
 		lsp_attach(client)
@@ -191,6 +218,9 @@ nvim_lsp.zls.setup{
 	on_attach = function(...)
 		lsp_attach(...)
 	end,
+	settings = {
+		enable_autofix = true
+	}
 }
 
 nvim_lsp.lua_ls.setup {

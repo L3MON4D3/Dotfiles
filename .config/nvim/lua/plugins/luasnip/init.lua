@@ -1,15 +1,19 @@
 local types = require("luasnip.util.types")
+local node_util = require("luasnip.nodes.util")
 
 ls = require("luasnip")
 
 --vim.cmd("hi link LuasnipSnippetActive GruvboxRed")
 ls.config.setup({
-	history = true,
+	keep_roots = true,
+	link_roots = true,
+	link_children = true,
+
 	loaders_store_source = true,
-	update_events = {"InsertLeave"},
+	update_events = {"TextChangedI"},
 	enable_autosnippets = true,
 	region_check_events = {"CursorHold", "InsertLeave"},
-	delete_check_events = "TextChanged, InsertEnter",
+	delete_check_events = "TextChanged, InsertEnter, CursorMovedI",
 	store_selection_keys = "<Tab>",
 	ext_opts = {
 		[types.choiceNode] = {
@@ -56,6 +60,16 @@ ls.config.setup({
 		s_add_auto = function(...)
 			local snip = ls.s(...)
 			table.insert(getfenv(2).ls_file_autosnippets, snip)
+		end,
+		ts_px_add = function(...)
+			local ts_postfix = require("luasnip.extras.treesitter_postfix").treesitter_postfix
+			local snip = ts_postfix(...)
+			table.insert(getfenv(2).ls_file_snippets, snip)
+		end,
+		px_add = function(...)
+			local postfix = require("luasnip.extras.postfix").postfix
+			local snip = postfix(...)
+			table.insert(getfenv(2).ls_file_snippets, snip)
 		end,
 		s = ls.s,
 		sn = ls.sn,
@@ -115,12 +129,93 @@ ls.config.setup({
 		m = require("luasnip.extras").match,
 		ai = require("luasnip.nodes.absolute_indexer"),
 		postfix = require("luasnip.extras.postfix").postfix,
+		ts_postfix = require("luasnip.extras.treesitter_postfix").treesitter_postfix,
 		conds = require("luasnip.extras.expand_conditions"),
 		k = require("luasnip.nodes.key_indexer").new_key
 	},
+	parser_nested_assembler = function(_, snippetNode)
+		function snippetNode:init_dry_run_active(dry_run)
+			if dry_run and dry_run.active[self] == nil then
+				dry_run.active[self] = self.active
+			end
+		end
+		function snippetNode:is_active(dry_run)
+			return (not dry_run and self.active)
+				or (dry_run and dry_run.active[self])
+		end
+
+		local original_extmarks_valid = snippetNode.extmarks_valid
+
+		function snippetNode:extmarks_valid()
+			-- the contents of this snippetNode are supposed to be deleted, and
+			-- we don't want the snippet to be considered invalid because of
+			-- that -> always return true.
+			return true
+		end
+		local select = function(snip, no_move, dry_run)
+			if dry_run then
+				return
+			end
+			snip:focus()
+			-- make sure the inner nodes will all shift to one side when the
+			-- entire text is replaced.
+			snip:subtree_set_rgrav(true)
+			-- fix own extmark-gravities, subtree_set_rgrav affects them as well.
+			snip.mark:set_rgravs(false, true)
+
+			-- SELECT all text inside the snippet.
+			if not no_move then
+				vim.api.nvim_feedkeys(
+					vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
+					"n",
+					true
+				)
+				node_util.select_node(snip)
+			end
+		end
+
+		function snippetNode:jump_into(dir, no_move, dry_run)
+			self:init_dry_run_active(dry_run)
+			if self:is_active(dry_run) then
+				-- inside snippet, but not selected.
+				if dir == 1 then
+					self:input_leave(no_move, dry_run)
+					return self.next:jump_into(dir, no_move, dry_run)
+				else
+					select(self, no_move, dry_run)
+					return self
+				end
+			else
+				-- jumping in from outside snippet.
+				self:input_enter(no_move, dry_run)
+				if dir == 1 then
+					select(self, no_move, dry_run)
+					return self
+				else
+					return self.inner_last:jump_into(dir, no_move, dry_run)
+				end
+			end
+		end
+
+		-- this is called only if the snippet is currently selected.
+		function snippetNode:jump_from(dir, no_move, dry_run)
+			if dir == 1 then
+				if original_extmarks_valid(snippetNode) then
+					return self.inner_first:jump_into(dir, no_move, dry_run)
+				else
+					return self.next:jump_into(dir, no_move, dry_run)
+				end
+			else
+				self:input_leave(no_move, dry_run)
+				return self.prev:jump_into(dir, no_move, dry_run)
+			end
+		end
+
+		return snippetNode
+	end
 })
 
--- require("luasnip.util.log").set_loglevel("info")
+require("luasnip.util.log").set_loglevel("debug")
 
 ls.filetype_extend("latex", {"tex"})
 ls.filetype_extend("glsl", {"c"})
@@ -134,23 +229,62 @@ if sl_ok then
 	vim.api.nvim_create_user_command("LuaSnipEditS", sl.jump_to_active_snippet, {})
 end
 
-vim.cmd [[
-	inoremap <silent> <C-K> <cmd>lua ls.expand()<Cr>
-	inoremap <silent> <C-L> <cmd>lua ls.jump(1)<Cr>
-	inoremap <silent> <C-J> <cmd>lua ls.jump(-1)<Cr>
+vim.keymap.set({"i", "s"}, "<C-K>", ls.expand, {silent = true})
+vim.keymap.set({"i", "s"}, "<C-L>", function() ls.jump( 1) end, {silent = true})
+vim.keymap.set({"i", "s"}, "<C-J>", function() ls.jump(-1) end, {silent = true})
 
-	snoremap <silent> <C-L> <cmd>lua ls.jump(1)<Cr>
-	snoremap <silent> <C-J> <cmd>lua ls.jump(-1)<Cr>
+vim.keymap.set({"i", "s"}, "<C-E>", function()
+	if ls.choice_active() then
+		ls.change_choice(1)
+	end
+end, {silent = true})
 
-	imap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''
-	smap <silent><expr> <C-E> luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''
+local select_next = false
+vim.keymap.set({"i"}, "<C-;>", function()
+	local ok, _ = pcall(ls.activate_node, {
+		strict = true,
+		select = select_next
+	})
+	if not ok then
+		print("No node.")
+		return
+	end
 
-	imap <silent><expr> <C-S-E> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
-	smap <silent><expr> <C-S-E> luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''
-]]
+	if select_next then
+		return
+	end
 
--- require("luasnip.util.log").set_loglevel("info")
+	local curbuf = vim.api.nvim_get_current_buf()
+	local hl_duration_ms = 100
+
+	local node = ls.session.current_nodes[curbuf]
+	local from, to = node:get_buf_position({raw = true})
+
+	-- highlight snippet for 1000ms
+	local id = vim.api.nvim_buf_set_extmark(
+		curbuf,
+		ls.session.ns_id,
+		from[1],
+		from[2],
+		{
+			-- one line below, at col 0 => entire last line is highlighted.
+			end_row = to[1],
+			end_col = to[2],
+			hl_group = "Visual",
+		}
+	)
+	vim.defer_fn(function()
+		vim.api.nvim_buf_del_extmark(curbuf, ls.session.ns_id, id)
+	end, hl_duration_ms)
+
+	-- select if there is another press within the next second.
+	select_next = true
+	vim.uv.new_timer():start(1000, 0, function()
+		select_next = false
+	end)
+end)
+
 require("luasnip.loaders.from_lua").lazy_load({paths = "./luasnippets"})
-require("luasnip.loaders.from_lua").load({paths = {vim.fn.getcwd() .. "/.luasnippets/"}})
+require("luasnip.loaders.from_lua").load({lazy_paths = ".luasnippets"})
 
 require("plugins.luasnip.external_update_dynamic_node")

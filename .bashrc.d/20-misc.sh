@@ -62,10 +62,13 @@ export INCLUDE=/usr/include/stb/
 
 export PATH=~/.cargo/bin/:~/Scripts:/usr/bin/ccache/bin/:~/.local/bin/:/usr/bin/vendor_perl/:$PATH
 shopt -s direxpand
-export cg1=~/Documents/Uni/Kurse/s8/cg1/
-export ma=~/Documents/Uni/Kurse/s8/ma/
-export omp=~/Documents/Uni/Kurse/s8/omp
+export cg2=~/Documents/Uni/Kurse/s9/cg2/
+export lab=~/Documents/Uni/Kurse/s10/lab/
+export sem=~/Documents/Uni/Kurse/s10/sem/
+export vda=~/Documents/Uni/Kurse/s10/vda/
+
 export lsn=~/Code/luasnip
+export cu=~/Code/cuora
 
 export RUST_SRC_PATH=/home/simon/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/
 

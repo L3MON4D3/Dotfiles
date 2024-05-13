@@ -183,7 +183,6 @@ hi link HopNextKey1 GruvboxBlueBold
 hi link HopNextKey2 GruvboxBlue
 hi link HopUnmatched NonText
 
-
 hi! link DiagnosticDefaultError GruvboxRed
 hi! link DiagnosticSignError GruvboxRedSign
 hi! link DiagnosticUnderlineError GruvboxRedUnderline
@@ -269,7 +268,7 @@ endfunction
 noremap <silent><leader>n :noh<Cr>
 noremap <silent><leader>l :set invlist<Cr>
 noremap <silent><leader>r :set invrelativenumber<Cr>
-noremap <silent><leader>o :tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>
+" noremap <silent><leader>o :tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>
 noremap <leader>fw :set invwinfixwidth<Cr>
 noremap <leader>fh :set invwinfixheight<Cr>
 noremap <silent><leader><leader>f :luafile %<Cr>
@@ -283,9 +282,6 @@ vnoremap <leader>[ <Esc>`>a]<Esc>`<i[<Esc>%
 vnoremap <leader>" <Esc>`>a"<Esc>`<i"<Esc>%
 vnoremap <leader>' <Esc>`>a'<Esc>`<i'<Esc>%
 vnoremap <leader><Space> <Esc>`>a <Esc>`<i <Esc>%
-
-vnoremap <leader>c <Esc>`>a*/<Esc>`<i/*<Esc>
-nnoremap <leader>uc ?\/\*<Cr>2x/*/\/<Cr>2x
 
 " Search for selected text, forwards or backwards.
 vnoremap <silent> * :<C-U>
@@ -324,8 +320,6 @@ noremap <silent><leader>ef :tabnew /home/simon/.config/nvim/lua/configs/file_con
 nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
 
 nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
-
-nnoremap <silent> gb :ls<Cr>:b<Space> 
 
 nnoremap [[ ?{\n<Cr>:noh<Cr>
 nnoremap ][ /{\n<Cr>:noh<Cr>

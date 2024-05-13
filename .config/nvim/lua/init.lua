@@ -38,6 +38,8 @@ vim.keymap.set("n", "<F23>", function()
 	repl.open_unique({"bash"}, "vsplit", true)
 end, {noremap = true, silent = true})
 
+vim.keymap.set("n", "<leader>d", require("toggle_comment"), {noremap = true, silent = true})
+
 -- set EDITOR to open files in this session. Prevents nested nvim-instance.
 vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
 
@@ -55,3 +57,15 @@ require("write")
 -- 	metadata.language = vim.fn.fnamemodify(name, ":t:r")
 -- 	return true
 -- end )
+
+-- mappings and commands
+
+vim.api.nvim_create_user_command("O", function()
+	vim.api.nvim_input(":tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>")
+end, {})
+
+-- predicate used by lua/togglecomment.scm
+vim.treesitter.query.add_predicate("root-child", function(match, _, _, predicate)
+	local node = match[predicate[2]]
+	return node:parent():parent() == nil
+end)

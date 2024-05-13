@@ -27,3 +27,37 @@ parse_add("class", [[
 		$3
 	};
 ]])
+ts_px_add({
+		trig = ".up",
+		matchTSNode = {
+			query = [[
+				[
+					(type_identifier)
+					(template_type)
+					(qualified_identifier)
+				]
+			@prefix ]],
+			query_lang = "cpp",
+			select = "longest"
+		},
+		reparseBuffer = "live"
+	}, {
+		l("std::unique_ptr<" .. l.LS_TSMATCH .. ">")
+	})
+ts_px_add({
+		trig = ".opt",
+		matchTSNode = {
+			query = [[
+				[
+					(type_identifier)
+					(template_type)
+					(qualified_identifier)
+				]
+			@prefix ]],
+			query_lang = "cpp",
+			select = "longest"
+		},
+		reparseBuffer = "live"
+	}, {
+		l("std::optional<" .. l.LS_TSMATCH .. ">")
+	})

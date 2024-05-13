@@ -1,4 +1,6 @@
 local plugins = {
+	toggleterm = "akinsho/toggleterm.nvim",
+	ls_latex_snips = "iurimateus/luasnip-latex-snippets.nvim",
 	editorconfig = "gpanders/editorconfig.nvim",
 	eve_snippets = "evesdropper/luasnip-latex-snippets.nvim",
 	luasnip = "L3MON4D3/LuaSnip",
@@ -53,6 +55,8 @@ local plugins = {
 	yuck = "elkowar/yuck.vim",
 	oil = "stevearc/oil.nvim",
 	systemd = "lilydjwg/vim-systemd-syntax",
+	nvim_nio = "nvim-neotest/nvim-nio",
+	-- textsubjects = "RRethy/nvim-treesitter-textsubjects"
 }
 
 local plugins_inverse = {}
@@ -100,10 +104,21 @@ local function conf_use(arg)
 end
 
 local plugin_spec = {
+	conf_use {
+		treesitter,
+		run = ":TSUpdate",
+		lazy = true
+	},
 	conf_use{
 		luasnip,
-		dev = vim.fn.hostname() == "teal"
+		dev = vim.fn.hostname() == "teal",
+		-- run = "make install_jsregexp",
+		-- specify name!!
+		-- just treesitter would insert the url, which is not desired here!!
+		-- commit = "1def35377854535bb3b0f4cc7a33c083cdb12571",
+		dependencies = {"treesitter"}
 	},
+	-- conf_use(ls_latex_snips),
 	conf_use(jupytext),
 
 	conf_use(gruvbox),
@@ -121,17 +136,12 @@ local plugin_spec = {
 	},
 	use(fwatch),
 	use(cmp_lsp),
-	use(cmp_path),
+	use({cmp_path, commit = "1e19f86"}),
 	use(cmp_buffer),
 	-- use(cmp_ls_choice),
 	-- use(cmp_sig)
 	use {
 		cmp_luasnip,
-	},
-	conf_use {
-		treesitter,
-		run = ":TSUpdate",
-		lazy = true
 	},
 	use(treesitter_textobjects),
 
@@ -140,6 +150,7 @@ local plugin_spec = {
 	conf_use(dap),
 	conf_use{
 		dap_ui,
+		dependencies = {nvim_nio}
 	},
 	use(playground),
 	use(cmp_git),
@@ -158,7 +169,7 @@ local plugin_spec = {
 	-- }),
 	conf_use(neogen),
 	use(dressing),
-	use(telescope),
+	conf_use(telescope),
 	-- conf_use(lualine),
 	use(clangd),
 	use(libmodal),
@@ -171,6 +182,7 @@ local plugin_spec = {
 	use(promise),
 	conf_use(oil),
 	conf_use(dap_py),
+	conf_use(toggleterm),
 	--use(systemd),
 	-- use(eve_snippets)
 }

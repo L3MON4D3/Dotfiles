@@ -85,6 +85,7 @@ require("gruvbox").setup({
 		["@lsp.mod.global.lua"] = {link = "Namespace"},
 
 		["@function.cpp"] = {link = "GruvboxOrange"},
+		Delimiter = {link = "GruvboxOrange"},
 	},
 })
 

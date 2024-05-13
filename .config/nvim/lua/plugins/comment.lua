@@ -8,5 +8,16 @@ require("Comment").setup{
 		block = '<leader>b'
 	},
 }
-vim.api.nvim_set_keymap('n', '<leader>co', '<cmd>lua require("Comment.api").insert_linewise_below()<Cr>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>cO', '<cmd>lua require("Comment.api").insert_linewise_above()<Cr>', {noremap = true})
+
+
+local config = require("Comment.config"):get()
+
+vim.keymap.set("n", "<leader>o", function()
+	require("Comment.api").insert.linewise.below(config)
+end, {noremap = true})
+vim.keymap.set("n", "<leader>O", function()
+	require("Comment.api").insert.linewise.above(config)
+end, {noremap = true})
+vim.keymap.set("n", "<leader>A", function()
+	require("Comment.api").insert.linewise.eol(config)
+end, {noremap = true})

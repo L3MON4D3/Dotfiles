@@ -3,10 +3,14 @@ vim.filetype.add({
 		alpha = "alpha",
 		comp = "glsl",
 		frag = "glsl",
+		gs = "glsl",
 		plt = "gnuplot",
 		sc = "cpp",
 		tpp = "cpp",
-		["code-snippets"] = "json"
+		["code-snippets"] = "json",
+		zon = "zig",
+		ush = "c",
+		usf = "c",
 	},
 	filename = {
 		PKGBUILD = "PKGBUILD",
@@ -21,7 +25,7 @@ vim.filetype.add({
 			-- priority less than all other rules, but higher than defaults.
 			priority = -math.huge,
 			function(_, bufnr)
-				local content = vim.filetype.getlines(bufnr, 1)
+				local content = vim.api.nvim_buf_get_lines(bufnr, 1, 2, false)[1]
 				if content == "[Unit]" then
 					return "systemd"
 				end

@@ -127,4 +127,28 @@ function M.filter_list(list, predicate)
 	end
 end
 
+function M.process_output(cmd)
+	local p = assert(io.popen(cmd, "r"))
+	local s = assert(p:read("*a"))
+	p:close()
+	-- remove trailing newline.
+	s = s:gsub("\n$", "")
+
+	return s
+end
+
+---Convert set of values to a list of those values.
+---@generic T
+---@param tbl T|T[]|table<T, boolean>
+---@return table<T, boolean>
+function M.set_to_list(tbl)
+	local ls = {}
+
+	for v, _ in pairs(tbl) do
+		table.insert(ls, v)
+	end
+
+	return ls
+end
+
 return M

@@ -36,3 +36,27 @@ s_add("if", fmt([[
 		end
 	end, 2)
 }))
+
+ts_px_add({
+		trig = ".ei",
+		matchTSNode = {
+			query = "(if_statement) @prefix",
+			query_lang = "c",
+			select = "longest"
+		},
+		reparseBuffer = "live" }, {
+		d(1, function(_, parent)
+			if parent.env.LS_TSMATCH == nil then
+				return s(nil, t"")
+			end
+			-- tricky: remove indent on lines containing LS_TSMATCH. The
+			-- indentation is provided by the captured `if`.
+			return sn(nil, {
+				isn(1, fmt([[
+					{} else if ({}) {{]], {t(parent.env.LS_TSMATCH), i(1)}), ""),
+				t{"",""},
+				sn(2, fmt([[
+						{}
+					}}
+				]], {i(1)})) })
+		end)})
