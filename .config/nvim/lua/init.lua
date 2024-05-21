@@ -8,7 +8,7 @@ end
 local repl = require("repl")
 
 -- before loading plugins!
-require("configs")
+require("configs").setup("/home/simon/.config/nvim/configs.lua")
 
 require("plugins")
 

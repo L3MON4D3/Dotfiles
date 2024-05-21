@@ -8,6 +8,7 @@ ls.config.setup({
 	keep_roots = true,
 	link_roots = true,
 	link_children = true,
+	exit_roots = false,
 
 	loaders_store_source = true,
 	update_events = {"TextChangedI"},
@@ -29,7 +30,7 @@ ls.config.setup({
 		table.insert(fts, "all")
 		local effective_fts = {}
 
-		local buflocal_extend = Config(0).luasnip_ft_extend
+		local buflocal_extend = vim.b.luasnip_ft_extend
 		if buflocal_extend then
 			for _, ft in ipairs(fts) do
 				vim.list_extend(effective_fts, buflocal_extend[ft] or {})
