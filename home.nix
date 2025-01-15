@@ -29,30 +29,30 @@
   };
 
   programs.git = {
-  	enable = true;
-  	userName = "Simon Katz";
-  	userEmail = "simon@l3mon4.de";
-  	extraConfig = {
-			init.defaultBranch = "main";
-  	};
-  	aliases = {
-			log1 = "log --pretty='%C(auto)%h: %s'";
-			l    = "log --pretty='%C(auto)%h: %s'";
-			log2 = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
-			g    = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
-			s = "status";
-			rc = "rebase --continue";
-			p = "push";
-			c = "checkout";
-			bg = "bisect good";
-			bb = "bisect bad";
-  	};
-  	extraConfig = {
-			github = {
-				user = "L3MON4D3";
-				userName = "L3MON4D3";
-			};
-  	};
+    enable = true;
+    userName = "Simon Katz";
+    userEmail = "simon@l3mon4.de";
+    extraConfig = {
+      init.defaultBranch = "main";
+    };
+    aliases = {
+      log1 = "log --pretty='%C(auto)%h: %s'";
+      l    = "log --pretty='%C(auto)%h: %s'";
+      log2 = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
+      g    = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
+      s = "status";
+      rc = "rebase --continue";
+      p = "push";
+      c = "checkout";
+      bg = "bisect good";
+      bb = "bisect bad";
+    };
+    extraConfig = {
+      github = {
+        user = "L3MON4D3";
+        userName = "L3MON4D3";
+      };
+    };
   };
 
   # environment.variables = {
@@ -60,8 +60,7 @@
   # };
 
   # Packages that should be installed to the user profile.
-  home.packages = with pkgs; [
-  ];
+  home.packages = with pkgs; [ ];
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
