@@ -1,6 +1,10 @@
 { config, lib, pkgs, inputs, data, ... }:
 
 {
+  imports = [
+    ./modules/bash-alias-completion.nix
+  ];
+
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
   nix.settings.experimental-features = [
@@ -33,6 +37,7 @@
     n = "nvim";
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';
     ".." = "cd ..";
+    g = "git";
   };
 
   environment.variables = {
