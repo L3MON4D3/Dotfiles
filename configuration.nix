@@ -35,6 +35,11 @@
     ".." = "cd ..";
   };
 
+  environment.variables = {
+    MANPAGER = "nvim +Man!";
+    MANWIDTH = "999";
+  };
+
   security.sudo = {
     enable = true;
     extraRules = [{
