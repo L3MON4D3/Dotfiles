@@ -3,6 +3,7 @@
 {
   imports = [
     ./modules/bash-alias-completion.nix
+    ./modules/bash-dircolors.nix
   ];
 
   # Set your time zone.
