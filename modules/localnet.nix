@@ -11,7 +11,7 @@ in
   systemd.network.enable = true;
   systemd.network.networks."10-lan" = {
     matchConfig.Name = lan."${machine}".interface;
-    networkConfig.Address = lan."${machine}".ipv4;
+    networkConfig.Address = lan."${machine}".address;
     networkConfig.Gateway = lan.gateway;
     networkConfig.DHCP = false;
     networkConfig.IPv6AcceptRA = false;
