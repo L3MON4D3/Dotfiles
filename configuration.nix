@@ -88,6 +88,7 @@
     which
     tree
     dust
+    wireguard-tools
 
     # nix related
     nix-output-monitor
