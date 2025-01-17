@@ -12,8 +12,10 @@
     gateway = "192.168.178.1";
   };
   wireguard_home = {
-    ifname = "wg_home";
-    indigo = {
+    name = "wg_home";
+    host = {
+      # indigo
+      endpoint = "l3mon4.de:51822";
       address = "10.0.0.1/24";
       privkey_file = "/var/secrets/wireguard_home/indigo_private";
       pubkey = "UjwW2Cd7RbHlS+E7iKq1Igez+325QyxYm7wu3HseCRo=";
@@ -24,7 +26,6 @@
       pubkey = "zJsfvvuFCh5AK2/wl4TZZZlWz2l4SM9fEdWy2mea/0c=";
     };
     dns = "10.0.0.1";
-    endpoint = "l3mon4.de:51822";
   };
   wireguard_mullvad_de = {
     indigo = {
