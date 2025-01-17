@@ -10,6 +10,7 @@
     };
     dns = "192.168.178.5";
     gateway = "192.168.178.1";
+    address_range = "192.168.178.0/24";
   };
   wireguard_home = {
     name = "wg_home";
@@ -28,14 +29,18 @@
     dns = "10.0.0.1";
   };
   wireguard_mullvad_de = {
+    name = "wg_mullvad_de";
     indigo = {
       address = "10.71.192.70/32";
-      privkey_file = "/var/secrets/wireguard_mullvad/unique_worm.private";
+      privkey_file = "/var/secrets/wireguard_mullvad/de_unique_worm.private";
       pubkey = "9ldhvN7r4xGZkGehbsNfYb5tpyTJ5KBb5B3TbxCwklw=";
       local_address = "192.168.178.40/24";
       keepalive = false;
     };
+    host = {
+      endpoint = "146.70.117.34:51820";
+      pubkey = "9ldhvN7r4xGZkGehbsNfYb5tpyTJ5KBb5B3TbxCwklw="; 
+    };
     dns = "10.64.0.1";
-    endpoint = "146.70.117.34:51820";
   };
 }
