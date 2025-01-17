@@ -1,0 +1,2 @@
+(binding) @togglecomment
+(formal) @togglecomment

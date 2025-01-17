@@ -1,0 +1,2 @@
+set indentexpr=
+set indentkeys=
