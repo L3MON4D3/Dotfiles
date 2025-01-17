@@ -4,6 +4,7 @@
   imports = [
     ./modules/bash-alias-completion.nix
     ./modules/bash-dircolors.nix
+    ./modules/users.nix
   ];
 
   # Set your time zone.
@@ -48,23 +49,6 @@
       ]}:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin"
     '';
   };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.simon = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user and provide user-group.
-    packages = with pkgs; [
-      tree
-    ];
-    uid = 1000;
-  };
-
-  users.users.simon.openssh.authorizedKeys.keys = [
-    data.pubkey
-  ];
-
-  # for correct permissions on files from nfs/existing data.
-  users.groups.nfs.gid = 1000;
 
   # programs.firefox.enable = true;
 
