@@ -18,4 +18,11 @@
 
   # for correct permissions on files from nfs/existing data.
   users.groups.nfs.gid = 1000;
+
+  users.users.qbittorrent = {
+    uid = 200;
+    extraGroups = [ "nfs" "media" ];
+    group = "qbittorrent";
+  };
+  users.groups.qbittorrent.gid = 200;
 }
