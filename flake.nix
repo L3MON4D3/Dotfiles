@@ -29,7 +29,11 @@
           home-manager.extraSpecialArgs = { inputs = inputs; };
         }
         {
-              _module.args = { inputs = inputs; data = import ./data; machine = "indigo"; };
+              _module.args = {
+                inputs = inputs;
+                data = import ./data;
+                machine = "indigo";
+              };
         }
       ];
     };
