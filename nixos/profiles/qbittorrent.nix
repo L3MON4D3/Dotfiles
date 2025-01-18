@@ -42,7 +42,6 @@ let
       Scheduler\start_time=@Variant(\0\0\0\xf\0n\xc7`)
 
       Downloads\PreAllocation=false
-      Downloads\SavePath=/mnt/downloads/
       Downloads\ScanDirsV2=@Variant(\0\0\0\x1c\0\0\0\0)
       Downloads\StartInPause=false
 
