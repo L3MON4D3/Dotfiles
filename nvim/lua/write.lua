@@ -43,7 +43,7 @@ local write = function(args)
 		return vim.fn.setfperm(askpass, 'rwx------')
 	end, 'setfperm')
 	expect(0, function()
-		return vim.fn.writefile({ '#!/bin/bash', 'builtin echo -n ' .. vim.fn.shellescape(password) }, askpass, 's')
+		return vim.fn.writefile({ '#!/usr/bin/env bash', 'builtin echo -n ' .. vim.fn.shellescape(password) }, askpass, 's')
 	end, 'writefile (fill)')
 
 	local buftype = vim.o.buftype
