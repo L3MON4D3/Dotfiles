@@ -6,7 +6,7 @@
       ./hardware-configuration.nix
       ../../modules/localnet.nix
       ../../modules/wireguard/netns.nix
-      (import ../../modules/wireguard/host.nix data.network.wireguard_home2)
+      ../../modules/wireguard/host.nix
       ../../modules/qbittorrent.nix
     ];
 
@@ -16,6 +16,12 @@
     network_configs = [
       data.network.wireguard_home
       data.network.wireguard_mullvad_de
+    ];
+  };
+  l3mon.wg-quick-hosts = {
+    enable = true;
+    network_configs = [
+      data.network.wireguard_home2
     ];
   };
 }
