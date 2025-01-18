@@ -31,8 +31,8 @@
     js = "sudo journalctl";
     ju = "journalctl --user";
     l = "ls";
-    ls = "ls -a";
-    la = "ls -la";
+    la = "ls -a";
+    ll = "ls -la";
   };
   programs.bash.interactiveShellInit = ''
     where() {
