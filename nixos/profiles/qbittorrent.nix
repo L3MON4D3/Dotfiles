@@ -1,6 +1,8 @@
 { config, lib, pkgs, machine, data, ... }:
 
 let
+  qb_statedir = "/var/lib/qbittorrent";
+  qb_port = "7000";
   initial_qb_conf = pkgs.writeTextFile {
     name = "qbconf";
     text = ''
@@ -54,6 +56,7 @@ let
       MailNotification\enabled=false
 
       WebUI\Address=*
+      WebUI\Port=${qb_port}
       WebUI\AlternativeUIEnabled=false
       WebUI\CSRFProtection=false
       WebUI\ClickjackingProtection=true
@@ -88,13 +91,13 @@ in
     };
     script = ''
       # reset settings to default.
-      mkdir -p /var/qbittorrent/qBittorrent/config/
-      cp ${initial_qb_conf} /var/qbittorrent/qBittorrent/config/qBittorrent.conf
+      mkdir -p ${qb_statedir}/qBittorrent/config/
+      cp ${initial_qb_conf} ${qb_statedir}/qBittorrent/config/qBittorrent.conf
 
-      ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --profile=/var/qbittorrent/
+      ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --profile=${qb_statedir}
     '';
   };
   systemd.tmpfiles.rules = [
-    "d /var/qbittorrent 0755 qbittorrent qbittorrent"
+    "d ${qb_statedir} 0755 qbittorrent qbittorrent"
   ];
 }
