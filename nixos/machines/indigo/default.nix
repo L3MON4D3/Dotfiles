@@ -5,11 +5,17 @@
     [
       ./hardware-configuration.nix
       ../../modules/localnet.nix
+      ../../modules/wireguard/netns.nix
       (import ../../modules/wireguard/host.nix data.network.wireguard_home2)
-      (import ../../modules/wireguard/netns.nix data.network.wireguard_mullvad_de)
-      (import ../../modules/wireguard/netns.nix data.network.wireguard_home)
       ../../modules/qbittorrent.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
+  l3mon.network_namespaces = {
+    enable = true;
+    network_configs = [
+      data.network.wireguard_home
+      data.network.wireguard_mullvad_de
+    ];
+  };
 }
