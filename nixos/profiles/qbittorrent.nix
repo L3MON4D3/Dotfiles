@@ -68,6 +68,14 @@ let
   };
 in
 {
+  # qbittorrent needs to store data -> needs a users.
+  users.users.qbittorrent = {
+    isSystemUser = true;
+    uid = data.ids.qbittorrent;
+    group = "qbittorrent";
+  };
+  users.groups.qbittorrent.gid = data.ids.qbittorrent;
+
   systemd.services.qbittorrent_de = pkgs.lib.l3mon.mkNetnsService data.network.wireguard_mullvad_de {
     enable = true;
     description = "Run qbittorrent in network namespace de";

@@ -1,4 +1,5 @@
 {
   pubkey = import ./pubkey.nix;
   network = import ./network.nix;
+  ids = import ./ids.nix;
 }

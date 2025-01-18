@@ -4,7 +4,7 @@
   imports = [
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
-    ./modules/users.nix
+    ./profiles/simon.nix
   ];
 
   # Set your time zone.
@@ -129,6 +129,8 @@
     fsType = "nfs";
     options = [ "nfsvers=4.2" ];
   };
+  # for correct permissions on files from nfs/existing data.
+  users.groups.nfs.gid = 1000;
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
