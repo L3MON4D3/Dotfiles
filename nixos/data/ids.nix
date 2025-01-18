@@ -1,0 +1,5 @@
+# store uid and gid for known users.
+{
+  qbittorrent = 10001;
+  media = 10002;
+}
