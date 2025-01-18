@@ -1,6 +1,6 @@
 local util = require("util")
 
-local pre_path_chars = {" ", "("}
+local pre_path_chars = {" ", "(", "="}
 local path_termination_chars = {" ", ":", ")"}
 local row_col_separation_set = {[" "] = true, [":"] = true}
 
