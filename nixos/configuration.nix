@@ -20,16 +20,30 @@
     defaultEditor = true;
   };
 
-  environment.shellAliases = {
+  # override builtin aliases like ls.
+  environment.shellAliases = lib.mkAfter {
     n = "nvim";
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';
     ".." = "cd ..";
     g = "git";
+    ss = "sudo systemctl";
+    su = "systemctl --user";
+    js = "sudo journalctl";
+    ju = "journalctl --user";
+    ls = "ls -a";
   };
+  programs.bash.interactiveShellInit = ''
+    where() {
+      realpath $(which $1)
+    }
+    export -f where
+  '';
 
   environment.variables = {
     MANPAGER = "nvim +Man!";
-    MANWIDTH = "999";
+    # if 999 (recommended default), the doc is much to wide for my taste.
+    # this gives it a better appearance
+    MANWIDTH = "100";
   };
 
   security.sudo = {
@@ -61,6 +75,7 @@
 
     # utils
     ripgrep
+    shellcheck
 
     # networking tools
     dig
