@@ -107,6 +107,12 @@
     lm_sensors # for `sensors` command
     pciutils # lspci
     usbutils # lsusb
+
+    l3mon.netns-exec
+  ];
+
+  nixpkgs.overlays = [
+    (import ./packages/default.nix)
   ];
 
   fileSystems."/mnt/misc" = {
