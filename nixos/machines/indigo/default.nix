@@ -4,10 +4,12 @@
   imports =
     [
       ./hardware-configuration.nix
-      ../../modules/localnet.nix
+
       ../../modules/wireguard/netns.nix
       ../../modules/wireguard/host.nix
-      ../../modules/qbittorrent.nix
+
+      ../../profiles/localnet.nix
+      ../../profiles/qbittorrent.nix
     ];
 
   boot.loader.systemd-boot.enable = true;

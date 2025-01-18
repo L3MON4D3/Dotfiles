@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ./modules/bash-alias-completion.nix
-    ./modules/bash-dircolors.nix
+    ./profiles/bash-alias-completion.nix
+    ./profiles/bash-dircolors.nix
     ./modules/users.nix
   ];
 
