@@ -68,24 +68,12 @@ let
   };
 in
 {
-  systemd.services.qbittorrent_de = {
+  systemd.services.qbittorrent_de = pkgs.lib.l3mon.mkNetnsService data.network.wireguard_mullvad_de {
     enable = true;
     description = "Run qbittorrent in network namespace de";
-    bindsTo = [ "network-online.target" "netns-${data.network.wireguard_mullvad_de.name}.service" ];
-    after = [ "network-online.target" "netns-${data.network.wireguard_mullvad_de.name}.service" ];
     wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "exec";
-      # disable network-name-lookup via nscd and nsswitch, and provide
-      # resolv.conf with vpn-provided dns.
-      BindPaths = [
-        "/var/empty:/var/run/nscd"
-        # NetworkNamespacePath= does not mount /etc/netns/-provided files.
-        # This is something done explicitly by `ip netns exec`.
-        "/etc/netns/${data.network.wireguard_home.name}/resolv.conf:/etc/resolv.conf"
-        "/etc/netns/${data.network.wireguard_home.name}/nsswitch.conf:/etc/nsswitch.conf"
-      ];
-      NetworkNamespacePath = "/var/run/netns/${data.network.wireguard_mullvad_de.name}";
     };
     serviceConfig = {
       User="qbittorrent";
