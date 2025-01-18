@@ -53,8 +53,9 @@
         # insecure, allows arbitrary modification to system by unprivileged user.
         # Does not matter here :D
         command = ''${pkgs.nixos-rebuild}/bin/nixos-rebuild'';
-    options = [ "NOPASSWD" ];
-      }];
+        options = [ "NOPASSWD" ];
+      }
+      ];
       groups = [ "wheel" ];
     }];
     extraConfig = with pkgs; ''
@@ -81,6 +82,7 @@
     dig
     wget
     curl
+    socat
 
     # misc
     file
