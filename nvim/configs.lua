@@ -273,7 +273,23 @@ matchconfig.register(mft"lua", c{
 --
 -- nix
 --
+repl.set_term_generator("nix_dir", function(term_id)
+	local match = term_id:match("nix%.dir%:([^%.]+)")
+	if match then
+		return {
+			cmd = {"nix", "repl"},
+			job_opts = {
+				cwd = dirdecode(match)
+			}
+		}
+	end
+end)
 matchconfig.register(mft"nix", c{
+	repl = {
+		run = {
+			id = "nix.dir:{direncode(vim.fs.dirname(args.file))}",
+		}
+	},
 	buf_opts = {
 		expandtab = true,
 		tabstop = 2,
