@@ -102,7 +102,12 @@ in
       resolvectl dnsovertls ${interface_name} no || :
 
       # send all traffic over connection.
-      wg set ${interface_name} private-key ${machine_conf.privkey_file} peer ${wg_network.host.pubkey} endpoint ${wg_network.host.endpoint} allowed-ips 0.0.0.0/0
+      wg set ${interface_name} \
+        private-key ${machine_conf.privkey_file} \
+        peer ${wg_network.host.pubkey} \
+        endpoint ${wg_network.host.endpoint} \
+        ${optionalString wg_network.keepalive "persistent-keepalive 60"} \
+        allowed-ips 0.0.0.0/0
 
       ip link set ${interface_name} netns ${netns_name}
 
