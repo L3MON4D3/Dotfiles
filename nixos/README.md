@@ -1,4 +1,4 @@
-This directory contains nixOS configurations for machines I own.
+This directory contains my NixOS configuration.
 
 The general structure is as follows:
 
@@ -17,5 +17,20 @@ wg-netns-consumable files from them via
 # Try: mount-unit with NetworkNamespacePath in Unit???
 
 # Conventions
+
+## Wireguard
 * netns-name matches name of wg_network.
-* service-name is 
+* service-name is netns-`netns-name`.
+
+## Custom packages
+* provide via overlay as pkgs.l3mon.*. I think this makes a lot of sense since
+  packages are included in pkgs-fixpoint-computation and can be overridden (not
+  possible when maintaining in a separate attrset) and I don't have to worry
+  about name-conflicts with packages in pkgs.
+
+
+# Resources
+* [noogle](https://noogle.dev/) for searching stdlib functions and pulling the
+  implementation.
+* [nixpkgs](https://github.com/NixOS/nixpkgs) Actually has all implementations
+  :D
