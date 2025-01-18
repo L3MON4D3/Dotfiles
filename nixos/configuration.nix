@@ -21,7 +21,7 @@
   };
 
   # override builtin aliases like ls.
-  environment.shellAliases = lib.mkAfter {
+  environment.shellAliases = {
     n = "nvim";
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';
     ".." = "cd ..";
@@ -30,7 +30,9 @@
     su = "systemctl --user";
     js = "sudo journalctl";
     ju = "journalctl --user";
+    l = "ls";
     ls = "ls -a";
+    la = "ls -la";
   };
   programs.bash.interactiveShellInit = ''
     where() {
