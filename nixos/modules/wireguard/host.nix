@@ -23,6 +23,7 @@ in {
         machine_conf = wg_network.host;
         full_address = machine_conf.address + wg_network.subnet_mask;
         peernames = builtins.filter (x:
+          x != "keepalive" &&
           x != "dns" &&
           x != "name" &&
           x != "host" &&
