@@ -2,7 +2,7 @@
 
 let
   qb_statedir = "/var/lib/qbittorrent";
-  qb_port = "7000";
+  qb_port = wg_machine_conf.local_service_ports.qbittorrent;
   initial_qb_conf = pkgs.writeTextFile {
     name = "qbconf";
     text = ''

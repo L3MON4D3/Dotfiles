@@ -54,6 +54,9 @@
       privkey_file = "/var/secrets/wireguard_mullvad/de_unique_worm.private";
       pubkey = "9ldhvN7r4xGZkGehbsNfYb5tpyTJ5KBb5B3TbxCwklw=";
       local_address = "192.168.178.40";
+      local_service_ports = {
+        qbittorrent = "7000";
+      };
     };
     host = {
       endpoint = "146.70.117.34:51820";
