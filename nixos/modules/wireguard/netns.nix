@@ -12,6 +12,16 @@ in {
       description = lib.mdDoc "List of wireguard-networks as defined in ./data/networks.";
       default = [];
     };
+
+    mkNetnsService = mkOption {
+      type = types.anything;
+      description = lib.mdDoc ''
+      Call this with a wireguard-network definition
+      and a systemd-service attrset to create a systemd-service confined to the
+      network-namespace.
+      '';
+      readOnly = true;
+    };
   };
 
   config = mkIf cfg.enable (let
@@ -163,36 +173,28 @@ in {
         };
       };
 
-      nixpkgs.overlays = [
-        (final: prev: {
-          lib = prev.lib.recursiveUpdate
-            prev.lib
-            {
-              l3mon.mkNetnsService = (wg_network: service: prev.lib.mkMerge [
-                service
-                (
-                  let
-                    netns_name = wg_network.name;
-                  in {
-                    bindsTo = [ "netns-${netns_name}.service" ];
-                    after = ["netns-${netns_name}.service" ];
-                    serviceConfig = {
-                      # disable network-name-lookup via nscd and nsswitch, and provide
-                      # resolv.conf with vpn-provided dns.
-                      BindPaths = [
-                        "/var/empty:/var/run/nscd"
-                        # NetworkNamespacePath= does not mount /etc/netns/-provided files.
-                        # This is something done explicitly by `ip netns exec`.
-                        "/etc/netns/${netns_name}/resolv.conf:/etc/resolv.conf"
-                        "/etc/netns/${netns_name}/nsswitch.conf:/etc/nsswitch.conf"
-                      ];
-                      NetworkNamespacePath = "/var/run/netns/${netns_name}";
-                    };
-                  }
-                )
-              ]);
+      l3mon.network_namespaces.mkNetnsService = (wg_network: service: lib.mkMerge [
+        service
+        (
+          let
+            netns_name = wg_network.name;
+          in {
+            bindsTo = [ "netns-${netns_name}.service" ];
+            after = ["netns-${netns_name}.service" ];
+            serviceConfig = {
+              # disable network-name-lookup via nscd and nsswitch, and provide
+              # resolv.conf with vpn-provided dns.
+              BindPaths = [
+                "/var/empty:/var/run/nscd"
+                # NetworkNamespacePath= does not mount /etc/netns/-provided files.
+                # This is something done explicitly by `ip netns exec`.
+                "/etc/netns/${netns_name}/resolv.conf:/etc/resolv.conf"
+                "/etc/netns/${netns_name}/nsswitch.conf:/etc/nsswitch.conf"
+              ];
+              NetworkNamespacePath = "/var/run/netns/${netns_name}";
             };
-        })
-      ];
+          }
+        )
+      ]);
     });
 }
