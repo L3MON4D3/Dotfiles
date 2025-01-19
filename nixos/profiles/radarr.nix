@@ -64,7 +64,7 @@ in
     ];
     
     services.nginx.virtualHosts.radarr = {
-      serverName = "radarr radarr.indigo";
+      serverName = "radarr radarr.${machine}";
       locations = {
         "/" = {
           proxyPass = "http://${wg_machine_conf.local_address}:${port}";
