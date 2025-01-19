@@ -63,8 +63,6 @@ in
       "d ${statedir} 0755 media media"
     ];
     
-    services.nginx.enable = true;
-    services.nginx.enableReload = true;
     services.nginx.virtualHosts.radarr = {
       serverName = "radarr radarr.indigo";
       locations = {
