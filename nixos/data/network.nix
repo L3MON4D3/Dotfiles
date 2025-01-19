@@ -11,6 +11,9 @@
     indigo = {
       address = "192.168.178.20";
       interface = "ens3";
+      service_ports = {
+        mysqld = "7000";
+      };
     };
   };
   wireguard_home2 = {

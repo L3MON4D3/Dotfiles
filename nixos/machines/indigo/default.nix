@@ -12,6 +12,8 @@
       ../../profiles/qbittorrent.nix
       ../../profiles/radarr.nix
       ../../profiles/sonarr.nix
+
+      ../../profiles/kodi.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -41,6 +43,16 @@
   };
   users.groups.media.gid = data.ids.media;
 
+  services.mysql = {
+    enable = true; 
+    package = pkgs.mariadb;
+    settings = {
+      mysqld = {
+        bind-address = "*";
+        port = data.network.lan."${machine}".service_ports.mysqld;
+      };
+    };
+  };
   systemd.tmpfiles.rules = [
     "d /srv/media               0755 media media"
   ];
