@@ -1,7 +1,10 @@
 { config, lib, pkgs, machine, data, ... }:
 
+with lib;
 let
   qb_statedir = "/var/lib/qbittorrent";
+  wg_network = data.network.wireguard_mullvad_de;
+  wg_machine_conf = wg_network."${machine}";
   qb_port = wg_machine_conf.local_service_ports.qbittorrent;
   initial_qb_conf = pkgs.writeTextFile {
     name = "qbconf";
@@ -70,34 +73,45 @@ let
   };
 in
 {
-  # qbittorrent needs to store data -> needs a users.
-  users.users.qbittorrent = {
-    isSystemUser = true;
-    uid = data.ids.qbittorrent;
-    group = "qbittorrent";
-  };
-  users.groups.qbittorrent.gid = data.ids.qbittorrent;
-
-  systemd.services.qbittorrent_de = pkgs.lib.l3mon.mkNetnsService data.network.wireguard_mullvad_de {
-    enable = true;
-    description = "Run qbittorrent in network namespace de";
-    wantedBy = ["multi-user.target"];
-    serviceConfig = {
-      Type = "exec";
+  config = {
+    # qbittorrent needs to store data -> needs a users.
+    users.users.qbittorrent = {
+      isSystemUser = true;
+      uid = data.ids.qbittorrent;
+      group = "qbittorrent";
     };
-    serviceConfig = {
-      User="qbittorrent";
-      Group="qbittorrent";
-    };
-    script = ''
-      # reset settings to default.
-      mkdir -p ${qb_statedir}/qBittorrent/config/
-      cp ${initial_qb_conf} ${qb_statedir}/qBittorrent/config/qBittorrent.conf
+    users.groups.qbittorrent.gid = data.ids.qbittorrent;
 
-      ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --profile=${qb_statedir}
-    '';
+    systemd.services.qbittorrent_de = config.l3mon.network_namespaces.mkNetnsService wg_network {
+      enable = true;
+      description = "Run qbittorrent in network namespace de";
+      wantedBy = ["multi-user.target"];
+      serviceConfig = {
+        Type = "exec";
+      };
+      serviceConfig = {
+        User="qbittorrent";
+        Group="qbittorrent";
+      };
+      script = ''
+        # reset settings to default.
+        mkdir -p ${qb_statedir}/qBittorrent/config/
+        cp ${initial_qb_conf} ${qb_statedir}/qBittorrent/config/qBittorrent.conf
+
+        ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --profile=${qb_statedir}
+      '';
+    };
+    systemd.tmpfiles.rules = [
+      "d ${qb_statedir} 0755 qbittorrent qbittorrent"
+    ];
+    
+    };
   };
-  systemd.tmpfiles.rules = [
-    "d ${qb_statedir} 0755 qbittorrent qbittorrent"
-  ];
+
+  # provide torrent-directory globally.
+  options.l3mon.qbittorrent.torrentDir = mkOption {
+    type = with types; path;
+    description = "Path to torrent-directory.";
+    default = "${qb_statedir}/qBittorrent/downloads";
+  };
 }
