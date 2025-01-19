@@ -10,6 +10,7 @@
 
       ../../profiles/localnet.nix
       ../../profiles/qbittorrent.nix
+      ../../profiles/radarr.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -31,4 +32,15 @@
 
   services.nginx.enable = true;
   services.nginx.enableReload = true;
+
+  users.users.media = {
+    isSystemUser = true;
+    uid = data.ids.media;
+    group = "media";
+  };
+  users.groups.media.gid = data.ids.media;
+
+  systemd.tmpfiles.rules = [
+    "d /srv/media               0755 media media"
+  ];
 }
