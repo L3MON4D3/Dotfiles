@@ -1,3 +1,5 @@
+# almost an exact copy of mysql.nix from nixpkgs, but!: allow ensureUsers to specify a remote User.
+
 { config, lib, pkgs, ... }:
 let
 
@@ -218,6 +220,14 @@ in
                   "database.*" = "ALL PRIVILEGES";
                   "*.*" = "SELECT, LOCK TABLES";
                 }
+              '';
+            };
+            remotePassword = lib.mkOption {
+              type = with lib.types; nullOr str;
+              default = null;
+              description = ''
+                Set to null for a unix-authenticated user, set to any string to
+                provide a password for a non-local user.
               '';
             };
           };
@@ -465,9 +475,9 @@ in
 
         ${lib.concatMapStrings (user:
           ''
-            ( echo "CREATE USER IF NOT EXISTS '${user.name}'@'localhost' IDENTIFIED WITH ${if isMariaDB then "unix_socket" else "auth_socket"};"
+            ( echo "CREATE USER IF NOT EXISTS '${user.name}'@${if user.remotePassword == null then "'localhost' IDENTIFIED WITH ${if isMariaDB then "unix_socket" else "auth_socket"}" else "'%' IDENTIFIED BY '${user.remotePassword}'"} ;"
               ${lib.concatStringsSep "\n" (lib.mapAttrsToList (database: permission: ''
-                echo "GRANT ${permission} ON ${database} TO '${user.name}'@'localhost';"
+                echo "GRANT ${permission} ON ${database} TO '${user.name}'@${if user.remotePassword == null then "'localhost'" else "'%'"};"
               '') user.ensurePermissions)}
             ) | ${cfg.package}/bin/mysql -N
           '') cfg.ensureUsers}

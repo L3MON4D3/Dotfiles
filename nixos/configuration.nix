@@ -1,7 +1,11 @@
 { config, lib, pkgs, inputs, data, ... }:
 
 {
+  disabledModules = ["services/databases/mysql.nix"];
+
   imports = [
+    ./modules/mysql.nix
+
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
     ./profiles/simon.nix
