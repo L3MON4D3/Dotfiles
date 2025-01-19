@@ -29,4 +29,6 @@
     ];
   };
 
+  services.nginx.enable = true;
+  services.nginx.enableReload = true;
 }
