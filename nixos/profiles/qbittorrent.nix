@@ -82,6 +82,19 @@ in
     };
     users.groups.qbittorrent.gid = data.ids.qbittorrent;
 
+    system.activationScripts = {
+      radarr = {
+        text = ''
+          install -D -o qbittorrent -g qbittorrent ${initial_qb_conf} ${qb_statedir}/qBittorrent/config/qBittorrent.conf
+          chown qbittorrent:qbittorrent \
+            ${qb_statedir} \
+            ${qb_statedir}/qBittorrent \
+            ${qb_statedir}/qBittorrent/config
+        '';
+      };
+    };
+
+
     systemd.services.qbittorrent_de = config.l3mon.network_namespaces.mkNetnsService wg_network {
       enable = true;
       description = "Run qbittorrent in network namespace de";
@@ -94,10 +107,6 @@ in
         Group="qbittorrent";
       };
       script = ''
-        # reset settings to default.
-        mkdir -p ${qb_statedir}/qBittorrent/config/
-        cp ${initial_qb_conf} ${qb_statedir}/qBittorrent/config/qBittorrent.conf
-
         ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --profile=${qb_statedir}
       '';
     };
