@@ -105,6 +105,14 @@ in
       "d ${qb_statedir} 0755 qbittorrent qbittorrent"
     ];
     
+    services.nginx.virtualHosts.qbittorrent = {
+      serverName = "qbt qbt.${machine}";
+      locations = {
+        "/" = {
+          proxyPass = "http://${wg_machine_conf.local_address}:${qb_port}";
+          recommendedProxySettings = true;
+        };
+      };
     };
   };
 
