@@ -291,6 +291,7 @@ matchconfig.register(mft"nix", c{
 		}
 	},
 	buf_opts = {
+		formatoptions = "cqjr",
 		expandtab = true,
 		tabstop = 2,
 		shiftwidth = 2,
