@@ -57,6 +57,7 @@
       local_service_ports = {
         qbittorrent = "7000";
         radarr = "7001";
+        sonarr = "7002";
       };
     };
     host = {

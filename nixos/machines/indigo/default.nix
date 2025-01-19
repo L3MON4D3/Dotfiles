@@ -11,6 +11,7 @@
       ../../profiles/localnet.nix
       ../../profiles/qbittorrent.nix
       ../../profiles/radarr.nix
+      ../../profiles/sonarr.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
