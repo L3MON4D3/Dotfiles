@@ -28,6 +28,19 @@ wg-netns-consumable files from them via
   possible when maintaining in a separate attrset) and I don't have to worry
   about name-conflicts with packages in pkgs.
 
+## Secrets
+Provide secrets at runtime by referring to files in /var/secret.
+Or, and this seems very flexible: use envsubst in an activationScript to
+populate secrets via env-var into some template-file!
+See `profiles/radarr.nix` for an example.
+
+# TODO
+* Use DHCP (Kea, dhcpcd is deprecated) for configuring ips.
+  Be careful doing this in fritzbox-net, have to disable its dhcp-server.
+* Look into using tailscale (or the self-hosted variant), it may be faster
+  than raw wireguard due to hole-punching (directly connect peers vs route all
+  traffic over server).
+
 
 # Resources
 * [noogle](https://noogle.dev/) for searching stdlib functions and pulling the
