@@ -16,7 +16,7 @@ in {
 
   config = mkIf cfg.enable (let
     lan_interface = data.network.lan."${machine}".interface;
-    lan_ip = data.network.lan."${machine}".address;
+    lan_ip = data.network.lan."${machine}".address + data.network.lan.subnet_mask;
   in {
     systemd.services = builtins.listToAttrs (map (
       wg_network: let
@@ -24,11 +24,11 @@ in {
         netns_name = "${wg_network.name}";
         interface_name = "${wg_network.name}";
         dns = "${wg_network.dns}";
-        address = "${machine_conf.address}";
+        address = machine_conf.address + wg_network.subnet_mask;
 
         route_local = machine_conf ? local_address;
-        local_address = "${machine_conf.local_address}";
-        route_local_address = builtins.substring 0 ((builtins.stringLength local_address) - 2) local_address + "32";
+        local_address = machine_conf.local_address + data.network.lan.subnet_mask;
+        route_local_address = "${machine_conf.local_address}/32";
         disallow_local_macvlan = pkgs.writeTextFile {
           name = "rules.conf";
           text = ''
@@ -108,8 +108,7 @@ in {
               ip -n ${netns_name} link set macvlan_netns up
 
               ip -n ${netns_name} addr add ${local_address} dev macvlan_netns
-              # extract xxx.xxx.xxx.xxx/ from xxx.xxx.xxx.xxx/xx, append /32, s.t.
-              # only the exact ip is routed over the macvlan.
+              # only route the exact ip over the macvlan.
               ip route add ${route_local_address} dev macvlan_root
 
               # disable ipv4 with destination outside the local network on the interface.
