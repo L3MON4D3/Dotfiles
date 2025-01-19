@@ -3,7 +3,10 @@
 {
   users.users.simon = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user and provide user-group.
+    extraGroups = [
+      "wheel"
+      "media"
+    ]; # Enable ‘sudo’ for the user and provide user-group.
     packages = with pkgs; [
       tree
     ];

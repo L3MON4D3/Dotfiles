@@ -56,6 +56,7 @@
       local_address = "192.168.178.40";
       local_service_ports = {
         qbittorrent = "7000";
+        radarr = "7001";
       };
     };
     host = {
