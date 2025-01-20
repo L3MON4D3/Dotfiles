@@ -9,6 +9,9 @@
 
   xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/projects/dotfiles/nvim";
 
+  home.file.".ssh/id_rsa".source = config.lib.file.mkOutOfStoreSymlink "/var/secrets/id_rsa";
+  home.file.".ssh/id_rsa.pub".source = config.lib.file.mkOutOfStoreSymlink "/var/secrets/id_rsa.pub";
+
   # encode the file content in nix configuration file directly
   # home.file.".xxx".text = ''
   #     xxx
