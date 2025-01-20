@@ -96,6 +96,7 @@
     tree
     dust
     wireguard-tools
+    restic
 
     # nix related
     nix-output-monitor
