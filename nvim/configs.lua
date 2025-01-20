@@ -288,6 +288,9 @@ matchconfig.register(mft"nix", c{
 	repl = {
 		run = {
 			id = "nix.dir:{direncode(vim.fs.dirname(args.file))}",
+			mappings = {
+				["<Space>r"] = ":r\n:p import {args.file}"
+			}
 		}
 	},
 	buf_opts = {
