@@ -16,8 +16,8 @@ local function create_term(command, job_opts)
 	vim.api.nvim_buf_call(buf, function()
 		job_id = vim.fn.jobstart(command, vim.tbl_extend("force", {
 			on_exit = function(...)
-				-- buffer is deleted automatically.
-				-- vim.api.nvim_buf_delete(buf, {force = true})
+				-- buffer is deleted automatically sometimes.
+				pcall(vim.api.nvim_buf_delete, buf, {force = true})
 				if job_opts.on_exit then
 					job_opts.on_exit(...)
 				end
