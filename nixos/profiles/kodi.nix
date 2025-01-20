@@ -6,7 +6,6 @@ let
 in
 {
   services.mysql = {
-    ensureDatabases = [ "MyVideos131" ];
     ensureUsers = [
       {
         name = "kodi";
