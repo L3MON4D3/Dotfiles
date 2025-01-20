@@ -9,11 +9,12 @@ in
     ensureUsers = [
       {
         name = "kodi";
+        # plaintext password, but mysql is not exposed to the internet, so no worries :)
+        remotePassword = "kodi";
         ensurePermissions = {
           # https://kodi.wiki/view/MySQL/Setting_up_MySQL#tab=Restricting_MySQL_access_rights
           "*.*" = "ALL PRIVILEGES";
         };
-        remotePassword = "kodi";
       }
       {
         # for backup
