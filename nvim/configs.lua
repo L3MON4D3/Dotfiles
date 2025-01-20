@@ -182,10 +182,10 @@ local jl_lsp = matchconfig.register(mft"julia", c{
 	}
 } .. lsp_generic)
 
-matchconfig.register(mft"julia" * mdir"/home/simon/Projects/master/glint-jl", c{
+matchconfig.register(mft"julia" * mdir"/home/simon/projects/master/glint-jl", c{
 	lsp = {
 		julials = {
-			root_dir = "/home/simon/Projects/master/glint-jl"
+			root_dir = "/home/simon/projects/master/glint-jl"
 		}
 	}
 }):after(jl_lsp)
@@ -533,7 +533,7 @@ local function nix_override_zig(dir)
 	-- For some reason (probably loading-order or something, not surprising
 	-- tbh) the first invocation fails in preserving completions, while the
 	-- second succeeds.
-	-- repl.set_term(proj_repl_id, {"bash", "-c", 'eval "$(nix print-dev-env /home/simon/Projects/nix-text/zig); bash"'}, {cwd = dir})
+	-- repl.set_term(proj_repl_id, {"bash", "-c", 'eval "$(nix print-dev-env /home/simon/projects/nix-text/zig); bash"'}, {cwd = dir})
 	repl.set_term(proj_repl_id, {"nix", "develop"}, {cwd = dir})
 	local dir_mc = matchconfig.register(mdir(dir) * mft"zig", c{
 		lsp = {
@@ -554,8 +554,8 @@ local function nix_override_zig(dir)
 	return dir_mc
 end
 
-nix_override_zig("/home/simon/Projects/nix-text/zig")
-nix_override_zig("/home/simon/Projects/master/glint-vk")
+nix_override_zig("/home/simon/projects/nix-text/zig")
+nix_override_zig("/home/simon/projects/master/glint-vk")
 nix_override_zig("/home/simon/projects/test_zig")
 
 --
@@ -604,7 +604,7 @@ cmake_generic:blacklist_by("project")
 --- LuaSnip
 ---
 
-local luasnip_dir = "/home/simon/Projects/Nvim/luasnip"
+local luasnip_dir = "/home/simon/projects/nvim/luasnip"
 repl.set_term("bash.dir:" .. luasnip_dir, {"bash"}, {cwd = luasnip_dir})
 matchconfig.register(mdir(luasnip_dir), c{
 	repl = {
@@ -623,8 +623,8 @@ matchconfig.register(mdir(luasnip_dir), c{
 		}
 	},
 	run_buf = function()
-		actions.cabbrev_buf("%%", "/home/simon/Projects/Nvim/luasnip/lua/luasnip")
-		actions.cabbrev_buf("!!", "/home/simon/Projects/Nvim/luasnip/tests/integration")
+		actions.cabbrev_buf("%%", "/home/simon/projects/nvim/luasnip/lua/luasnip")
+		actions.cabbrev_buf("!!", "/home/simon/projects/nvim/luasnip/tests/integration")
 	end
 } )
 
@@ -632,7 +632,7 @@ matchconfig.register(mdir(luasnip_dir), c{
 --- Matchconfig
 ---
 
-local mc = "/home/simon/Projects/Nvim/matchconfig"
+local mc = "/home/simon/projects/nvim/matchconfig"
 matchconfig.register(mdir(mc), c{
 	run_buf = function()
 		local abspath = mc .. "/lua/matchconfig"
@@ -659,7 +659,7 @@ local sway_reload_on_write = c{
 matchconfig.register(mdir"/home/simon/.config/sway", sway_reload_on_write)
 matchconfig.register(mdir"/home/simon/.config/waybar", sway_reload_on_write)
 
-matchconfig.register(mdir"/home/simon/Projects/termpick", c{
+matchconfig.register(mdir"/home/simon/projects/termpick", c{
 	repl = {
 		run = {
 			type = "bash.dir:{direncode(args.match_args)}",
@@ -669,8 +669,8 @@ matchconfig.register(mdir"/home/simon/Projects/termpick", c{
 		}
 	},
 	run_buf = function()
-		cabbrev_buf("%%", "/home/simon/Projects/termpick/src")
-		cabbrev_buf("%m", "/home/simon/Projects/termpick/src/main.zig")
+		cabbrev_buf("%%", "/home/simon/projects/termpick/src")
+		cabbrev_buf("%m", "/home/simon/projects/termpick/src/main.zig")
 	end
 })
 
@@ -683,7 +683,7 @@ matchconfig.register(mdir"/home/simon/Packages/Anna Gebertz", c{
 	end
 })
 
-local cuora_dir = "/home/simon/Projects/cuora"
+local cuora_dir = "/home/simon/projects/cuora"
 repl.set_term("bash.cwd:" .. cuora_dir, {"bash"}, {
 	cwd = cuora_dir
 })
@@ -692,8 +692,8 @@ local cuora = matchconfig.register(mdir(cuora_dir), c{
 		nnoremapsilent_buf("<space>s", function()
 			os.execute("imv out.svg &")
 		end)
-		cabbrev_buf("%%", "/home/simon/Projects/cuora/src")
-		cabbrev_buf("%m", "/home/simon/Projects/cuora/src/main.zig")
+		cabbrev_buf("%%", "/home/simon/projects/cuora/src")
+		cabbrev_buf("%m", "/home/simon/projects/cuora/src/main.zig")
 	end,
 	dap = {
 		launch = {
@@ -952,7 +952,7 @@ pkgbuild_all:before(pkgbuild_local)
 ---
 --- zot7fuse
 ---
-matchconfig.register(mfile"/home/simon/Projects/zot7fuse/init.py", c{
+matchconfig.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
 	dap = {
 		launch = {
 			type = 'python',
@@ -967,10 +967,10 @@ matchconfig.register(mfile"/home/simon/Projects/zot7fuse/init.py", c{
 })
 
 ---
---- Projects/master
+--- projects/master
 ---
 
-local proj_master_dir = "/home/simon/Projects/master/glint-jl"
+local proj_master_dir = "/home/simon/projects/master/glint-jl"
 repl.set_term("julia.pm", {"julia", "-q", "--threads", "11"}, {cwd = proj_master_dir, initial_keys = "using renderer, distr_test"})
 local master = matchconfig.register(matchers.dir(proj_master_dir), c{
 	repl = {run = {id = "julia.pm"}},
