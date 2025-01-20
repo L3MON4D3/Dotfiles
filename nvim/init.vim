@@ -318,13 +318,6 @@ nnoremap <silent> <S-F9> :vert res -2<Cr>
 nnoremap <silent> <F10> :res +2<Cr>
 nnoremap <silent> <S-F10> :res -2<Cr>
 
-nnoremap <silent> <leader>ev :tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>
-noremap <silent><leader>ep :tabnew<Cr>:e /home/simon/.config/nvim/lua/plugins/<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/lua/plugins/<Cr>
-noremap <silent><leader>eq :tabnew<Cr>:e /home/simon/.config/nvim/queries<Cr>:normal gh<Cr>:tcd /home/simon/.config/nvim/queries/<Cr>
-noremap <silent><leader>ec :tabnew /home/simon/.config/nvim/lua/configs/configs.lua<Cr>
-noremap <silent><leader>ef :tabnew /home/simon/.config/nvim/lua/configs/file_configs.lua<Cr>
-nnoremap <silent> <leader>sv :source $MYVIMRC<Cr>
-
 nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
 
 nnoremap [[ ?{\n<Cr>:noh<Cr>
