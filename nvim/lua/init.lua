@@ -49,6 +49,13 @@ end, {noremap = true, silent = true})
 
 vim.keymap.set("n", "<leader>d", require("toggle_comment"), {noremap = true, silent = true})
 
+-- apparently $MYVIMRC already resolves to realpath.
+vim.keymap.set("n", "<leader>ev", ":tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>")
+local config_dir_realpath = vim.uv.fs_realpath(vim.fn.stdpath("config"))
+vim.keymap.set("n", "<leader>ep", ":tabnew<Cr>:e " .. config_dir_realpath .. "/lua/plugins/<Cr>:normal gh<Cr>:tcd " .. config_dir_realpath .. "/lua/plugins/<Cr>")
+vim.keymap.set("n", "<leader>sv", ":source $MYVIMRC<Cr>")
+
+
 -- set EDITOR to open files in this session. Prevents nested nvim-instance.
 vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
 
