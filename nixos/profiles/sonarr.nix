@@ -81,5 +81,20 @@ in
         };
       };
     };
+
+    l3mon.restic.specs.sonarr = {
+      backupDaily = {
+        text = ''
+          cd ${statedir}
+          restic backup --tag=sonarr --skip-if-unchanged=true sonarr.db
+        '';
+      };
+      forget = {
+        # maybe too much?
+        text = ''
+          restic forget --tag=sonarr --group-by=tag --keep-daily=7 --keep-monthly=12
+        '';
+      };
+    };
   };
 }
