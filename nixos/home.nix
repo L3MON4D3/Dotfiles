@@ -37,6 +37,13 @@
     userEmail = "simon@l3mon4.de";
     extraConfig = {
       init.defaultBranch = "main";
+      github = {
+        user = "L3MON4D3";
+        userName = "L3MON4D3";
+      };
+      pull = {
+        rebase = false;
+      };
     };
     aliases = {
       log1 = "log --pretty='%C(auto)%h: %s'";
@@ -49,12 +56,6 @@
       c = "checkout";
       bg = "bisect good";
       bb = "bisect bad";
-    };
-    extraConfig = {
-      github = {
-        user = "L3MON4D3";
-        userName = "L3MON4D3";
-      };
     };
   };
 
