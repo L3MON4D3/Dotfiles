@@ -24,7 +24,7 @@ in {
     };
 
     dailyBackupTime = mkOption {
-      type = types.string;
+      type = types.str;
       description = "When to do the daily backup. Specify as second part of systemd-timer OnCalendar-string, eg. 20:00:00";
       default = "20:00:00";
     };
