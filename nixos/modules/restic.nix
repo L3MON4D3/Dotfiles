@@ -28,6 +28,11 @@ in {
       description = "When to do the daily backup. Specify as second part of systemd-timer OnCalendar-string, eg. 20:00:00";
       default = "20:00:00";
     };
+    dailyRequiredServices = mkOption {
+      type = with types; listOf str;
+      description = "Services that have to be running before restic-daily can do its backup. Useful for mysqld.";
+      default = [];
+    };
 
     wrapper = mkOption {
       type = types.package;
@@ -116,19 +121,26 @@ in {
         Unit = "restic-daily.service";
       };
     };
-    systemd.services."restic-daily" = common_unit_opts // {
-      path = [ pkgs.restic ];
-      script = builtins.concatStringsSep "\n" (
-        specs_to_scriptlist "backupDaily" ++
-        specs_to_scriptlist "forget" ++
-        (if cfg.doRepoMaintenance then [
-          ''
-            restic prune
-            restic check --read-data
-          ''
-        ] ++ map shellApplicationSpecToCaller cfg.maintenanceExtra else [])
-      );
-    };
+    # mkMerge because we have multiple after,requires-keys, and // would
+    # override.
+    systemd.services."restic-daily" = lib.mkMerge [
+      common_unit_opts
+      {
+        after = cfg.dailyRequiredServices;
+        requires = cfg.dailyRequiredServices;
+        path = [ pkgs.restic ];
+        script = builtins.concatStringsSep "\n" (
+          specs_to_scriptlist "backupDaily" ++
+          specs_to_scriptlist "forget" ++
+          (if cfg.doRepoMaintenance then [
+            ''
+              restic prune
+              restic check --read-data
+            ''
+          ] ++ map shellApplicationSpecToCaller cfg.maintenanceExtra else [])
+        );
+      }
+    ];
     l3mon.restic.wrapper = pkgs.writeShellApplication {
       name = "l3mon-restic";
       runtimeInputs = [ pkgs.restic pkgs.coreutils pkgs.bashInteractive ];
