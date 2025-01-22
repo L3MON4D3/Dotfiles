@@ -34,11 +34,6 @@ in
         mysqldump MyVideos131 | restic backup --tag=kodi --stdin --stdin-filename=MyVideos131 --skip-if-unchanged=true
       '';
     };
-    backup15min = {
-      text = ''
-        echo lel
-      '';
-    };
     forget = {
       text = ''
         restic forget --tag=kodi --group-by=tag --keep-monthly=2
