@@ -123,6 +123,21 @@ in
         };
       };
     };
+    l3mon.restic.specs.qbittorrent = {
+      backupDaily = {
+        text = ''
+          cd ${qb_statedir}/qBittorrent/data/BT_backup
+          restic backup --tag=qbittorrents --skip-if-unchanged=true -- *.torrent 
+        '';
+      };
+      forget = {
+        text = ''
+          # For each known file (torrent), keep last snapshot where it existed.
+          # This makes sure every torrent-file still exists somewhere in the restic-repository.
+          restic forget --tag=qbittorrents --group-by="tag,path" --keep-last=1
+        '';
+      };
+    };
   };
 
   # provide torrent-directory globally.
