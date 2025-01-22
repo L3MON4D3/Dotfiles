@@ -26,6 +26,7 @@ in
     ];
   };
 
+  l3mon.restic.dailyRequiredServices = [ "mysql.service" ];
   l3mon.restic.specs.kodi = {
     backupDaily = {
       runtimeInputs = [ config.services.mysql.package ];
