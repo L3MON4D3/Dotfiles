@@ -1,9 +1,6 @@
 { config, lib, pkgs, machine, data, ... }:
 
 with lib;
-let
-
-in
 {
   services.mysql = {
     ensureUsers = [
