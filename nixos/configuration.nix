@@ -21,7 +21,10 @@
   # stable neovim for root user.
   programs.neovim = {
     enable = true;
-    defaultEditor = true;
+  };
+  environment.variables = {
+    EDITOR = "nvim";
+    SYSTEMD_EDITOR = "nvim";
   };
 
   # override builtin aliases like ls.
@@ -30,9 +33,10 @@
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';
     ".." = "cd ..";
     g = "git";
-    ss = "sudo systemctl";
+    # keep environment, like EDITOR.
+    ss = "sudo -E systemctl";
+    js = "sudo -E journalctl";
     su = "systemctl --user";
-    js = "sudo journalctl";
     ju = "journalctl --user";
     l = "ls";
     la = "ls -a";
@@ -65,9 +69,7 @@
       groups = [ "wheel" ];
     }];
     extraConfig = with pkgs; ''
-      Defaults:picloud secure_path="${lib.makeBinPath [
-        systemd
-      ]}:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin"
+      Defaults env_keep += "SYSTEMD_EDITOR"
     '';
   };
 
