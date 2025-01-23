@@ -25,7 +25,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
 
-          home-manager.users.simon = import ./home.nix;
+          home-manager.users.simon = import ./home;
           home-manager.extraSpecialArgs = { inputs = inputs; };
         }
         {
