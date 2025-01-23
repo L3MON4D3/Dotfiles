@@ -44,20 +44,18 @@ in {
     };
 
     doRepoMaintenance = mkOption {
-      type = types.raw;
-      description = lib.mdDoc "Attrset with keys `location` and `passwordFile`";
+      type = types.bool;
+      description = lib.mdDoc "Whether to perform prune and check on restic repo.";
     };
 
     maintenanceExtra = mkOption {
       type = with types; listOf attrs;
-      description = lib.mdDoc "Attrset with keys `location` and `passwordFile`";
+      description = lib.mdDoc "Additional attrs passed to pkgs.writeShellApplication and executed during daily backup tasks.";
     };
   };
 
   config = mkIf cfg.enable (let
     specs = cfg.specs;
-    backup_15min_specnames = builtins.filter (name: specs."${name}" ? backup15min) (builtins.attrNames specs);
-    forget_specnames = builtins.filter (name: specs."${name}" ? forget) (builtins.attrNames specs);
     shellApplicationSpecToCaller = spec: pkgs.writeShellApplication (
         spec // {
           name = "run";
@@ -99,48 +97,64 @@ in {
     };
     users.groups.restic.gid = config.ids.uids.restic;
 
-    systemd.timers."restic-15min" = {
-      enable = true;
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        OnBootSec = "15min";
-        OnUnitInactiveSec="15min";
-        Unit = "restic-15min.service";
-      };
-    };
-    systemd.services."restic-15min" = common_unit_opts // {
-      script = builtins.concatStringsSep "\n" (specs_to_scriptlist "backup15min");
-    };
-
-    systemd.timers."restic-daily" = {
-      enable = true;
-      wantedBy = [ "timers.target" ];
-      timerConfig = {
-        Persistent = true;
-        OnCalendar = "*-*-* " + cfg.dailyBackupTime;
-        Unit = "restic-daily.service";
-      };
-    };
-    # mkMerge because we have multiple after,requires-keys, and // would
-    # override.
-    systemd.services."restic-daily" = lib.mkMerge [
-      common_unit_opts
-      {
-        after = cfg.dailyRequiredServices;
-        requires = cfg.dailyRequiredServices;
-        path = [ pkgs.restic ];
-        script = builtins.concatStringsSep "\n" (
-          specs_to_scriptlist "backupDaily" ++
-          specs_to_scriptlist "forget" ++
-          (if cfg.doRepoMaintenance then [
+    systemd = let
+      script_15min = concatStringsSep "\n" (specs_to_scriptlist "backup15min");
+      script_daily = concatStringsSep "\n" (
+        (specs_to_scriptlist "backupDaily") ++
+        (specs_to_scriptlist "forget") ++
+        (if cfg.doRepoMaintenance then [
             ''
               restic prune
               restic check --read-data
             ''
-          ] ++ map shellApplicationSpecToCaller cfg.maintenanceExtra else [])
-        );
-      }
-    ];
+          ] ++ map shellApplicationSpecToCaller cfg.maintenanceExtra else []));
+          
+
+      enable_15min = script_15min != "";
+      enable_daily = script_daily != "";
+    in (
+      mkMerge [
+        (if enable_15min then {
+          timers."restic-15min" = {
+            enable = true;
+            wantedBy = [ "timers.target" ];
+            timerConfig = {
+              OnBootSec = "15min";
+              OnUnitInactiveSec="15min";
+              Unit = "restic-15min.service";
+            };
+          };
+          services."restic-15min" = common_unit_opts // {
+            script = script_15min;
+          };
+        } else {})
+
+        (if enable_daily then {
+          timers."restic-daily" = {
+            enable = true;
+            wantedBy = [ "timers.target" ];
+            timerConfig = {
+              Persistent = true;
+              OnCalendar = "*-*-* " + cfg.dailyBackupTime;
+              Unit = "restic-daily.service";
+            };
+          };
+
+          # mkMerge because we have multiple after,requires-keys, and // would
+          # override.
+          services."restic-daily" = lib.mkMerge [
+            common_unit_opts
+            {
+              after = cfg.dailyRequiredServices;
+              requires = cfg.dailyRequiredServices;
+              path = [ pkgs.restic ];
+              script = script_daily;
+            }
+          ];
+        } else {})
+      ]
+    );
+
     l3mon.restic.wrapper = pkgs.writeShellApplication {
       name = "l3mon-restic";
       runtimeInputs = [ pkgs.restic pkgs.coreutils pkgs.bashInteractive ];
