@@ -63,7 +63,8 @@ local plugins = {
 	ssr = "cshuaimin/ssr.nvim",
 	dbee = "kndndrj/nvim-dbee",
 	screenkey = "NStefan002/screenkey.nvim",
-	blink = "Saghen/blink.cmp"
+	blink = "Saghen/blink.cmp",
+	flatten = "willothy/flatten.nvim"
 }
 
 local plugins_inverse = {}
@@ -190,7 +191,7 @@ local plugin_spec = {
 	conf_use(catppuccin),
 	use(rust_tools),
 	-- use(editorconfig),
-	use(unception),
+	-- use(unception),
 	use(yuck),
 	use(promise),
 	conf_use(oil),
@@ -200,7 +201,8 @@ local plugin_spec = {
 	conf_use({
 		blink,
 		version = '*'
-	})
+	}),
+	-- conf_use{flatten, lazy=false, priority=1001}
 	-- conf_use{
 	-- 	dbee,
 	-- 	dependencies = {

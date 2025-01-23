@@ -55,9 +55,9 @@ local config_dir_realpath = vim.uv.fs_realpath(vim.fn.stdpath("config"))
 vim.keymap.set("n", "<leader>ep", ":tabnew<Cr>:e " .. config_dir_realpath .. "/lua/plugins/<Cr>:normal gh<Cr>:tcd " .. config_dir_realpath .. "/lua/plugins/<Cr>")
 vim.keymap.set("n", "<leader>sv", ":source $MYVIMRC<Cr>")
 
-
 -- set EDITOR to open files in this session. Prevents nested nvim-instance.
-vim.env.EDITOR = "myNvimRemoteEdit.sh " .. vim.api.nvim_get_vvar("servername")
+-- vim.env.EDITOR="nvim --server " .. vim.api.nvim_get_vvar("servername") .. " --remote-tab "
+-- vim.env.SYSTEMD_EDITOR="nvim --server " .. vim.api.nvim_get_vvar("servername") .. " --remote-tab "
 
 vim.g.editorconfig = true
 
