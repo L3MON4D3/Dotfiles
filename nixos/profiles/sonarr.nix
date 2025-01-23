@@ -82,6 +82,7 @@ in
       };
     };
 
+    users.users.restic.extraGroups = ["media"];
     l3mon.restic.specs.sonarr = {
       backupDaily = {
         text = ''
