@@ -10,6 +10,7 @@ The general structure is as follows:
 * `modules/` contains reusable modules that manage services etc.
 
 # Workflows
+
 ## Wireguard
 `/etc/secrets` contains all public and private keys, generate
 wg-netns-consumable files from them via
@@ -40,6 +41,10 @@ See `profiles/radarr.nix` for an example.
 * Look into using tailscale (or the self-hosted variant), it may be faster
   than raw wireguard due to hole-punching (directly connect peers vs route all
   traffic over server).
+* Use ACL to allow granular access to files and directories for restic. Probably
+  use systemd.tmpfiles for granular access, and run it after NixOS rebuild via
+  systemd-tmpfiles-resetup.service in activationScript (After?) to make sure
+  permissions are correct even when nixOS has different ACL for some directory.
 
 
 # Resources
