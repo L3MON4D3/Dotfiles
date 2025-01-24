@@ -4,8 +4,8 @@ with lib;
 let
   statedir = "/var/lib/radarr";
   wg_network = data.network.wireguard_mullvad_de;
-  wg_machine_conf = wg_network."${machine}";
-  port = wg_machine_conf.local_service_ports.radarr;
+  wg_machine_conf = wg_network.peers."${machine}";
+  port = data.ports.radarr;
   conf = pkgs.writeTextFile {
     name = "conf";
     # $RADARR_APIKEY is provided via envsubst.
@@ -67,7 +67,7 @@ in
       serverName = "radarr radarr.${machine}";
       locations = {
         "/" = {
-          proxyPass = "http://${wg_machine_conf.local_address}:${port}";
+          proxyPass = "http://${wg_machine_conf.local.address}:${port}";
           recommendedProxySettings = true;
           proxyWebsockets = true;
         };

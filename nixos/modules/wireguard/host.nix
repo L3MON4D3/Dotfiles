@@ -22,12 +22,7 @@ in {
       wg_network: let
         machine_conf = wg_network.host;
         full_address = machine_conf.address + wg_network.subnet_mask;
-        peernames = builtins.filter (x:
-          x != "keepalive" &&
-          x != "dns" &&
-          x != "name" &&
-          x != "host" &&
-          x != "subnet_mask") (builtins.attrNames wg_network);
+        peernames = builtins.filter (x: x != machine) (builtins.attrNames wg_network.peers);
       in {
         name = "${wg_network.name}";
         value = {
@@ -36,13 +31,13 @@ in {
           privateKeyFile = machine_conf.privkey_file;
           postUp = ''
             ${pkgs.iptables}/bin/iptables -A FORWARD -i ${wg_network.name} -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ${full_address} -o ${data.network.lan."${machine}".interface} -j MASQUERADE
+            ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ${full_address} -o ${data.network.lan.peers."${machine}".interface} -j MASQUERADE
           '';
           preDown = ''
             ${pkgs.iptables}/bin/iptables -D FORWARD -i ${wg_network.name} -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ${full_address} -o ${data.network.lan."${machine}".interface} -j MASQUERADE
+            ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ${full_address} -o ${data.network.lan.peers."${machine}".interface} -j MASQUERADE
           '';
-          peers = builtins.map (peername: let peerconf = wg_network."${peername}"; in {
+          peers = builtins.map (peername: let peerconf = wg_network.peers."${peername}"; in {
             publicKey = peerconf.pubkey;
             # can usually only reach peers directly.
             allowedIPs = ["${peerconf.address}/32"];

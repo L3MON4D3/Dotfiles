@@ -4,8 +4,8 @@ with lib;
 let
   statedir = "/var/lib/sonarr";
   wg_network = data.network.wireguard_mullvad_de;
-  wg_machine_conf = wg_network."${machine}";
-  port = wg_machine_conf.local_service_ports.sonarr;
+  wg_machine_conf = wg_network.peers."${machine}";
+  port = data.ports.sonarr;
   conf = pkgs.writeTextFile {
     name = "conf";
     # $SONARR_APIKEY is provided via envsubst.
@@ -75,7 +75,7 @@ in
       serverName = "sonarr sonarr.${machine}";
       locations = {
         "/" = {
-          proxyPass = "http://${wg_machine_conf.local_address}:${port}";
+          proxyPass = "http://${wg_machine_conf.local.address}:${port}";
           recommendedProxySettings = true;
           proxyWebsockets = true;
         };
