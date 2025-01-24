@@ -4,6 +4,7 @@
   imports = [
     ./profiles/zotero.nix
   ];
+
   home.username = "simon";
   home.homeDirectory = "/home/simon";
 
@@ -34,6 +35,7 @@
     package = inputs.neovim-nightly.packages.${pkgs.system}.default;
   };
 
+
   programs.git = {
     enable = true;
     userName = "Simon Katz";
@@ -62,9 +64,13 @@
     };
   };
 
-  # environment.variables = {
-  #   np = 
-  # };
+  home.sessionVariables = {
+    np = "~/.local/share/nvim/lazy";
+    nc = "~/projects/dotfiles/nvim";
+    mc = "~/projects/nvim/matchconfig";
+    lsn = "~/projects/nvim/luasnip";
+  };
+  programs.bash.enable = true;
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [ ];
