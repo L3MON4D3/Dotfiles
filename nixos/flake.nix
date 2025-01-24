@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       # The `follows` keyword in inputs is used for inheritance.
@@ -14,9 +15,15 @@
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }: {
-    nixosConfigurations.indigo = nixpkgs.lib.nixosSystem {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: {
+    nixosConfigurations.indigo = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
+      specialArgs = {
+        pkgs-unstable = import nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
+      };
       modules = [
         ./configuration.nix
         ./machines/indigo
@@ -26,11 +33,11 @@
           home-manager.useUserPackages = true;
 
           home-manager.users.simon = import ./home;
-          home-manager.extraSpecialArgs = { inputs = inputs; };
+          home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; };
         }
         {
           _module.args = {
-            inputs = inputs;
+            inherit inputs;
             data = import ./data;
             machine = "indigo";
           };

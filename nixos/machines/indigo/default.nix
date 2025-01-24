@@ -13,6 +13,7 @@
       ../../profiles/qbittorrent.nix
       ../../profiles/radarr.nix
       ../../profiles/sonarr.nix
+      ../../profiles/jackett
 
       ../../profiles/kodi.nix
     ];
