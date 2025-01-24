@@ -25,20 +25,21 @@ in {
   };
 
   config = mkIf cfg.enable (let
-    lan_interface = data.network.lan."${machine}".interface;
-    lan_ip = data.network.lan."${machine}".address + data.network.lan.subnet_mask;
+    lan_interface = data.network.lan.peers."${machine}".interface;
+    lan_ip = data.network.lan.peers."${machine}".address + data.network.lan.subnet_mask;
   in {
     systemd.services = builtins.listToAttrs (map (
       wg_network: let
-        machine_conf = wg_network."${machine}";
+        machine_conf = wg_network.peers."${machine}";
         netns_name = "${wg_network.name}";
         interface_name = "${wg_network.name}";
         dns = "${wg_network.dns}";
         address = machine_conf.address + wg_network.subnet_mask;
 
-        route_local = machine_conf ? local_address;
-        local_address = machine_conf.local_address + data.network.lan.subnet_mask;
-        route_local_address = "${machine_conf.local_address}/32";
+        route_local = machine_conf ? local;
+        local_peer = machine_conf.local;
+        local_address = local_peer.address + data.network.lan.subnet_mask;
+        route_local_address = "${local_peer.address}/32";
         disallow_local_macvlan = pkgs.writeTextFile {
           name = "rules.conf";
           text = ''

@@ -10,8 +10,8 @@ in
 
   systemd.network.enable = true;
   systemd.network.networks."10-lan" = {
-    matchConfig.Name = lan."${machine}".interface;
-    networkConfig.Address = lan."${machine}".address + lan.subnet_mask;
+    matchConfig.Name = lan.peers."${machine}".interface;
+    networkConfig.Address = lan.peers."${machine}".address + lan.subnet_mask;
     networkConfig.Gateway = lan.gateway;
     networkConfig.DHCP = false;
     networkConfig.IPv6AcceptRA = false;

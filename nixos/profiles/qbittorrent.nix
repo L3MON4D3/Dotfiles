@@ -4,8 +4,8 @@ with lib;
 let
   qb_statedir = "/var/lib/qbittorrent";
   wg_network = data.network.wireguard_mullvad_de;
-  wg_machine_conf = wg_network."${machine}";
-  qb_port = wg_machine_conf.local_service_ports.qbittorrent;
+  wg_machine_conf = wg_network.peers."${machine}";
+  qb_port = data.ports.qbittorrent;
   initial_qb_conf = pkgs.writeTextFile {
     name = "qbconf";
     text = ''
@@ -115,10 +115,10 @@ in
     ];
     
     services.nginx.virtualHosts.qbittorrent = {
-      serverName = "qbt qbt.${machine}";
+      serverName = "qbittorrent qbittorrent.${machine}";
       locations = {
         "/" = {
-          proxyPass = "http://${wg_machine_conf.local_address}:${qb_port}";
+          proxyPass = "http://${wg_machine_conf.local.address}:${qb_port}";
           recommendedProxySettings = true;
         };
       };

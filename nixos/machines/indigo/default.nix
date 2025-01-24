@@ -51,7 +51,7 @@
     settings = {
       mysqld = {
         bind-address = "*";
-        port = data.network.lan."${machine}".service_ports.mysqld;
+        port = data.ports.mysql;
       };
     };
   };
