@@ -270,37 +270,6 @@ matchconfig.register(mft"lua", c{
 	}
 })
 
---
--- nix
---
-repl.set_term_generator("nix_dir", function(term_id)
-	local match = term_id:match("nix%.dir%:([^%.]+)")
-	if match then
-		return {
-			cmd = {"nix", "repl"},
-			job_opts = {
-				cwd = dirdecode(match)
-			}
-		}
-	end
-end)
-matchconfig.register(mft"nix", c{
-	repl = {
-		run = {
-			id = "nix.dir:{direncode(vim.fs.dirname(args.file))}",
-			mappings = {
-				["<Space>r"] = ":r\n:p import {args.file}"
-			}
-		}
-	},
-	buf_opts = {
-		formatoptions = "cqjr",
-		expandtab = true,
-		tabstop = 2,
-		shiftwidth = 2,
-	}
-})
-
 require("matchconfig.options.lsp").set_default_capabilities(vim.tbl_deep_extend("force",
 	vim.lsp.protocol.make_client_capabilities(),
 	require("blink.cmp").get_lsp_capabilities()
@@ -389,6 +358,38 @@ local luasnippets = matchconfig.register(mft"lua" * mpattern".*/luasnippets/.*",
 	}
 })
 luasnippets:after(lsp_lua)
+
+--
+-- nix
+--
+repl.set_term_generator("nix_dir", function(term_id)
+	local match = term_id:match("nix%.dir%:([^%.]+)")
+	if match then
+		return {
+			cmd = {"nix", "repl"},
+			job_opts = {
+				cwd = dirdecode(match)
+			}
+		}
+	end
+end)
+matchconfig.register(mft"nix", c{
+	repl = {
+		run = {
+			id = "nix.dir:{direncode(vim.fs.dirname(args.file))}",
+			mappings = {
+				["<Space>r"] = ":r\n:p import {args.file}"
+			}
+		}
+	},
+	buf_opts = {
+		formatoptions = "cqjr",
+		expandtab = true,
+		tabstop = 2,
+		shiftwidth = 2,
+	}
+})
+
 
 --
 -- cpp
@@ -643,6 +644,26 @@ matchconfig.register(mdir(mc), c{
 	}
 })
 
+---
+--- Dotfiles-nixos
+---
+
+local dotfiles_dir = "/home/simon/projects/dotfiles/nixos"
+matchconfig.register(mdir(dotfiles_dir), c{
+	run_buf = function()
+		local abspath = mc .. "/lua/matchconfig"
+		cabbrev_buf("%%", abspath)
+	end,
+	repl = {
+		run = {
+			id = "bash.dir:" .. direncode(dotfiles_dir),
+			mappings = {
+				["R"] = "re"
+			}
+		},
+		set_type = {id = "bash.dir:" .. direncode(dotfiles_dir), type = repl_secondary}
+	}
+})
 
 ---
 --- Sway
