@@ -1,0 +1,119 @@
+{
+  config,
+  lib,
+  pkgs,
+  machine,
+  data,
+  ...
+}:
+
+with lib;
+let
+  format = pkgs.formats.yaml { };
+
+  mkConfigFile = spec: (
+    format.generate "config.yaml" {
+      ports.dns = spec.ports;
+      upstreams.groups.default = [
+        "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
+      ];
+      bootstrapDns = {
+        upstream = "https://one.one.one.one/dns-query";
+        ips = [
+          "1.1.1.1"
+          "1.0.0.1"
+        ];
+      };
+      blocking = if spec.block then
+        {
+          denylists = {
+            ads = [ "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts" ];
+            porn = [ "https://blocklistproject.github.io/Lists/porn.txt" ];
+          };
+          clientGroupsBlock = {
+            default = [
+              "ads"
+              "porn"
+            ];
+          };
+          loading.downloads.timeout = "30s";
+        }
+      else
+        { }
+      ;
+      # for some reason importing the list with ipv6 fails..?
+      connectIPVersion = "v4";
+      customDNS = {
+        customTTL = "1h";
+        # don't forward queries for these names, even if the query-type (eg.
+        # AAAA) is not defined.
+        filterUnmappedTypes = true;
+        mapping = lib.concatMapAttrs (
+          peername: peerconf:
+          {
+            ${peername} = peerconf.address;
+          }
+          // (
+            if peerconf ? services then
+              (builtins.listToAttrs (
+                lib.concatMap (service_name: [
+                  {
+                    name = "${service_name}.${peerconf.machine_id}";
+                    value = peerconf.address;
+                  }
+                  {
+                    name = service_name;
+                    value = peerconf.address;
+                  }
+                  {
+                    name = "${service_name}.internal";
+                    value = peerconf.address;
+                  }
+                ]) peerconf.services
+              ))
+            else
+              { }
+          )
+        ) spec.network.peers;
+      };
+    }
+  );
+
+  mkBlockySystemd = spec: {
+    description = "A DNS proxy and ad-blocker for the local network";
+    wantedBy = [ "multi-user.target" ];
+    requires = [
+      "network-online.target"
+      "systemd-networkd-wait-online.service"
+    ];
+    after = [
+      "network-online.target"
+      "systemd-networkd-wait-online.service"
+    ];
+
+    serviceConfig = {
+      DynamicUser = true;
+      ExecStart = "${pkgs.blocky}/bin/blocky --config ${spec.conf}";
+      Restart = "on-failure";
+
+      AmbientCapabilities = [ "CAP_NET_BIND_SERVICE" ];
+      CapabilityBoundingSet = [ "CAP_NET_BIND_SERVICE" ];
+    };
+  };
+in
+{
+  systemd.services.blocky_lan = mkBlockySystemd {
+    conf = mkConfigFile {
+      ports = ["127.0.0.1:53" "192.168.178.20:53"];
+      network = data.network.lan;
+      block = true;
+    };
+  };
+  systemd.services.blocky_wg_home2 = mkBlockySystemd {
+    conf = mkConfigFile {
+      ports = ["10.0.0.1:53"];
+      network = data.network.wireguard_home2;
+      block = false;
+    };
+  };
+}

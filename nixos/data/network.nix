@@ -13,20 +13,19 @@ rec {
         interface = "enp34s0";
       };
       indigo = {
+        machine_id = "indigo";
         address = "192.168.178.20";
         interface = "ens3";
         services = [
           "mysql"
-        ];
-      };
-      indigo_mullvad_de = {
-        address = "192.168.178.40";
-        services = [
           "jackett"
           "radarr"
           "sonarr"
           "qbittorrent"
         ];
+      };
+      indigo_mullvad_de = {
+        address = "192.168.178.40";
       };
     };
   };
@@ -36,19 +35,32 @@ rec {
     name = "wg_home2";
     dns = "10.0.0.1";
     host = peers.indigo;
+    address_range = "10.0.0.0/24";
     peers = {
       indigo = {
         # indigo
-        endpoint = "l3mon4.de:51822";
+        machine_id = "indigo";
+        endpoint = "192.168.178.20:51822";
         address = "10.0.0.1";
-        privkey_file = "/var/secrets/wireguard_home2/indigo_private";
+        privkey_file = "/var/secrets/wg_home2/indigo-private";
         pubkey = "UjwW2Cd7RbHlS+E7iKq1Igez+325QyxYm7wu3HseCRo=";
+        # for now, these are identical.
         services = lan.peers.indigo.services;
       };
       teal = {
         address = "10.0.0.2";
-        privkey_file = "/var/secrets/wireguard_home2/teal_private";
+        privkey_file = "/var/secrets/wg_home2/teal-private";
         pubkey = "zJsfvvuFCh5AK2/wl4TZZZlWz2l4SM9fEdWy2mea/0c=";
+      };
+      canary = {
+        address = "10.0.0.3";
+        privkey_file = "/var/secrets/wg_home2/canary-private";
+        pubkey = "2aaQykUGo4CQy1scam16F89flkPDMxu/qVV/cY+7tTM=";
+      };
+      xperia = {
+        address = "10.0.0.4";
+        privkey_file = "/var/secrets/wg_home2/xperia-private";
+        pubkey = "mrQt6UqR0HpJVGXp6qfVEATDVTzm80RHYks6wqETCEk=";
       };
     };
   };
