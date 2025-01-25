@@ -16,6 +16,8 @@
       ../../profiles/jackett
 
       ../../profiles/kodi.nix
+
+      ../../profiles/blocky.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
