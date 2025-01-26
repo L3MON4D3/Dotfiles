@@ -49,6 +49,11 @@
     export -f where
   '';
 
+  environment.etc."inputrc".text = ''
+    set editing-mode vi
+    set history-size 500000
+  '';
+
   environment.variables = {
     MANPAGER = "nvim +Man!";
     # if 999 (recommended default), the doc is much to wide for my taste.
