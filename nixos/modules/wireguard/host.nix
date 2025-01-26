@@ -18,6 +18,7 @@ in {
     lan_interface = data.network.lan."${machine}".interface;
   in {
     networking.nat.enable = true;
+
     networking.wg-quick.interfaces = builtins.listToAttrs (map (
       wg_network: let
         machine_conf = wg_network.host;
@@ -42,6 +43,40 @@ in {
             # can usually only reach peers directly.
             allowedIPs = ["${peerconf.address}/32"];
           }) peernames;
+        };
+      }
+    ) cfg.network_configs);
+
+    system.activationScripts = builtins.listToAttrs (map (
+      wg_network: let
+        machine_conf = wg_network.host;
+        full_address = machine_conf.address + wg_network.subnet_mask;
+        peernames = builtins.filter (x: x != machine) (builtins.attrNames wg_network.peers);
+      in {
+        name = "wg_generate_conf-${wg_network.name}";
+        value = {
+          text = concatStringsSep "\n" (builtins.map (peername: let
+            peerconf = wg_network.peers."${peername}";
+            conf_template = pkgs.writeTextFile {
+              name = "conf";
+              text = ''
+                [Interface]
+                PrivateKey = $PEER_PRIVKEY
+                Address = ${peerconf.address}${wg_network.subnet_mask}
+                DNS = ${wg_network.dns}
+
+                [Peer]
+                PublicKey = ${wg_network.host.pubkey}
+                AllowedIPs = ${wg_network.address_range}
+                Endpoint = ${wg_network.host.endpoint}
+              '';
+            };
+            conf_target_location = "/etc/wireguard_configs/${wg_network.name}/${peername}.conf";
+          in ''
+            mkdir -p /etc/wireguard_configs/${wg_network.name}/
+            PEER_PRIVKEY=$(cat ${peerconf.privkey_file}) ${pkgs.envsubst}/bin/envsubst -i ${conf_template} -o ${conf_target_location}
+            chmod 400 /etc/wireguard_configs/${wg_network.name}/${peername}.conf
+          '') peernames);
         };
       }
     ) cfg.network_configs);
