@@ -28,7 +28,7 @@ in {
     lan_interface = data.network.lan.peers."${machine}".interface;
     lan_ip = data.network.lan.peers."${machine}".address + data.network.lan.subnet_mask;
   in {
-    systemd.services = builtins.listToAttrs (map (
+    systemd.services = builtins.listToAttrs (lib.concatMap (
       wg_network: let
         machine_conf = wg_network.peers."${machine}";
         netns_name = "${wg_network.name}";
@@ -52,97 +52,115 @@ in {
             }
           '';
         };
-      in {
-        name = "netns-${netns_name}";
-        value = {
-          description = "Start network namespace with wireguard-connection.";
-          requires = [ "network-online.target" ] ++ (if route_local then ["root_macvlan.service"] else []);
-          after = [ "network-online.target" ] ++ (if route_local then ["root_macvlan.service"] else []);
-          wantedBy = ["multi-user.target"];
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-          };
-          path = [
-            # for wg, nft, resolvectl, ip
-            pkgs.wireguard-tools
-            pkgs.nftables
-            pkgs.systemd
-            pkgs.iproute2
-            pkgs.gnused
-            pkgs.procps
-            pkgs.coreutils
-          ];
-          script = ''
-            set -eE -o functrace
+      in [
+        {
+          name = "netns-${netns_name}";
+          value = {
+            description = "Start network namespace with wireguard-connection.";
+            requires = [ "network-online.target" ] ++ (if route_local then [ "root_macvlan.service" ] else []);
+            after = [ "network-online.target" ] ++ (if route_local then ["root_macvlan.service"] else []);
+            # only start blocky once the network-namespace exists.
+            before = (if route_local then ["blocky-${netns_name}.service"] else []);
+            wantedBy = ["multi-user.target"];
+            serviceConfig = {
+              Type = "oneshot";
+              RemainAfterExit = true;
+            };
+            path = [
+              # for wg, nft, resolvectl, ip
+              pkgs.wireguard-tools
+              pkgs.nftables
+              pkgs.systemd
+              pkgs.iproute2
+              pkgs.gnused
+              pkgs.procps
+              pkgs.coreutils
+            ];
+            script = ''
+              set -eE -o functrace
 
-            # for debugging!
-            failure() {
-              local lineno=$1
-              local msg=$2
+              # for debugging!
+              failure() {
+                local lineno=$1
+                local msg=$2
 
-              echo "Failed at $lineno: $msg"
-              echo "Cleaning up"
+                echo "Failed at $lineno: $msg"
+                echo "Cleaning up"
 
-              "ip netns delete ${netns_name} || true"
+                "ip netns delete ${netns_name} || true"
+                ${optionalString route_local "ip route delete ${route_local_address} || true"}
+              }
+              trap 'failure $LINENO "$BASH_COMMAND"' ERR
+              
+              ip netns add ${netns_name}
+              ip link add ${interface_name} type wireguard
+
+              resolvectl dns ${interface_name} ${dns} || :
+              resolvectl default-route ${interface_name} false || :
+              resolvectl dnssec ${interface_name} no || :
+              resolvectl dnsovertls ${interface_name} no || :
+
+              # send all traffic over connection.
+              wg set ${interface_name} \
+                private-key ${machine_conf.privkey_file} \
+                peer ${wg_network.host.pubkey} \
+                endpoint ${wg_network.host.endpoint} \
+                ${optionalString wg_network.keepalive "persistent-keepalive 60"} \
+                allowed-ips 0.0.0.0/0
+
+              ip link set ${interface_name} netns ${netns_name}
+
+              ip -n ${netns_name} address add ${address} dev ${interface_name}
+
+
+              ip -n ${netns_name} link set ${interface_name} up
+              ip -n ${netns_name} link set lo up
+              ip -n ${netns_name} route add default dev ${interface_name}
+
+              ${optionalString route_local ''
+                ip link add link ${lan_interface} name macvlan_netns netns ${netns_name} type macvlan mode bridge
+                ip -n ${netns_name} link set macvlan_netns up
+
+                ip -n ${netns_name} addr add ${local_address} dev macvlan_netns
+                # only route the exact ip over the macvlan.
+                ip route add ${route_local_address} dev macvlan_root
+
+                # disable ipv4 with destination outside the local network on the interface.
+                ip netns exec ${netns_name} nft -f ${disallow_local_macvlan}
+                ip netns exec ${netns_name} sysctl -w net.ipv6.conf.macvlan_netns.disable_ipv6=1
+              ''}
+
+              mkdir -p /etc/netns/${netns_name}/
+              echo "nameserver ${if route_local then "127.0.0.1" else dns}" > /etc/netns/${netns_name}/resolv.conf
+              cp /etc/nsswitch.conf /etc/netns/${netns_name}/nsswitch.conf
+
+              # disable systemd-resolved direct-call in namespace.
+              # This leaves dbus, but that should be redirected to the correct dns
+              # server due to the resolvectl call before.
+              sed 's/resolve \[!UNAVAIL=return\] //' -i /etc/netns/${netns_name}/nsswitch.conf
+            '';
+            preStop = ''
               ${optionalString route_local "ip route delete ${route_local_address} || true"}
-            }
-            trap 'failure $LINENO "$BASH_COMMAND"' ERR
-            
-            ip netns add ${netns_name}
-            ip link add ${interface_name} type wireguard
 
-            resolvectl dns ${interface_name} ${dns} || :
-            resolvectl default-route ${interface_name} false || :
-            resolvectl dnssec ${interface_name} no || :
-            resolvectl dnsovertls ${interface_name} no || :
-
-            # send all traffic over connection.
-            wg set ${interface_name} \
-              private-key ${machine_conf.privkey_file} \
-              peer ${wg_network.host.pubkey} \
-              endpoint ${wg_network.host.endpoint} \
-              ${optionalString wg_network.keepalive "persistent-keepalive 60"} \
-              allowed-ips 0.0.0.0/0
-
-            ip link set ${interface_name} netns ${netns_name}
-
-            ip -n ${netns_name} address add ${address} dev ${interface_name}
-
-
-            ip -n ${netns_name} link set ${interface_name} up
-            ip -n ${netns_name} link set lo up
-            ip -n ${netns_name} route add default dev ${interface_name}
-
-            ${optionalString route_local ''
-              ip link add link ${lan_interface} name macvlan_netns netns ${netns_name} type macvlan mode bridge
-              ip -n ${netns_name} link set macvlan_netns up
-
-              ip -n ${netns_name} addr add ${local_address} dev macvlan_netns
-              # only route the exact ip over the macvlan.
-              ip route add ${route_local_address} dev macvlan_root
-
-              # disable ipv4 with destination outside the local network on the interface.
-              ip netns exec ${netns_name} nft -f ${disallow_local_macvlan}
-              ip netns exec ${netns_name} sysctl -w net.ipv6.conf.macvlan_netns.disable_ipv6=1
-            ''}
-
-            mkdir -p /etc/netns/${netns_name}/
-            echo "nameserver ${dns}" > /etc/netns/${netns_name}/resolv.conf
-            cp /etc/nsswitch.conf /etc/netns/${netns_name}/nsswitch.conf
-
-            # disable systemd-resolved direct-call in namespace.
-            # This leaves dbus, but that should be redirected to the correct dns
-            # server due to the resolvectl call before.
-            sed 's/resolve \[!UNAVAIL=return\] //' -i /etc/netns/${netns_name}/nsswitch.conf
-          '';
-          preStop = ''
-            ${optionalString route_local "ip route delete ${route_local_address} || true"}
-
-            ip netns delete ${netns_name} || true
-          '';
-        };
-      }) cfg.network_configs ) // {
+              ip netns delete ${netns_name} || true
+            '';
+          };
+        }
+      ] ++ (if route_local then
+        [{
+            name = "blocky-${netns_name}";
+            value = config.l3mon.network_namespaces.mkNetnsService wg_network (config.l3mon.blocky.mkService {
+              conf = config.l3mon.blocky.mkConfig {
+                ports = ["127.0.0.1:53"];
+                network = data.network.lan;
+                block = false;
+                upstream = [ dns ];
+              };
+            });
+        }]
+      else
+        [ ])
+      ) cfg.network_configs ) // {
         root_macvlan = {
           description = "Add macvlan interface for connecting into network-namespaces.";
           requires = [ "network-online.target" ];

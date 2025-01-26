@@ -34,7 +34,7 @@ in
   config = {
     users.users.radarr = {
       isSystemUser = true;
-      extraGroups = ["media"];
+      extraGroups = [ "media" "qbittorrent" ];
       uid = config.ids.uids.radarr;
       group = "radarr";
     };
@@ -69,6 +69,7 @@ in
     };
     systemd.tmpfiles.rules = [
       "d ${statedir} 0750 radarr radarr"
+      "Z ${statedir} 0750 radarr radarr"
     ];
     
     services.nginx.virtualHosts.radarr = {
