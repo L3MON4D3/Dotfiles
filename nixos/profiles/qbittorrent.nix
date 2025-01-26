@@ -19,7 +19,7 @@ let
 
       Session\AlternativeGlobalDLSpeedLimit=0
       Session\AlternativeGlobalUPSpeedLimit=200
-      Session\GlobalDLSpeedLimit=1800
+      Session\GlobalDLSpeedLimit=2000
       Session\GlobalUPSpeedLimit=100
 
       Session\BandwidthSchedulerEnabled=true
