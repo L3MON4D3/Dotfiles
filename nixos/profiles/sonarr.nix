@@ -32,14 +32,23 @@ let
 in
 {
   config = {
+    users.users.sonarr = {
+      isSystemUser = true;
+      # access qbittorrent-downloads and media-files.
+      extraGroups = ["media" "qbittorrent"];
+      uid = config.ids.uids.sonarr;
+      group = "sonarr";
+    };
+    users.groups.sonarr.gid = config.ids.uids.sonarr;
+
     # reset settings to default, insert api-key.
     system.activationScripts = {
       sonarr = {
         text = ''
-          install -d -o media -g media ${statedir}
+          install -d -o sonarr -g sonarr ${statedir}
           source /var/secrets/sonarr_env
           SONARR_API_KEY=$SONARR_API_KEY ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${statedir}/config.xml
-          chown media:media ${statedir}/config.xml
+          chown sonarr:sonarr ${statedir}/config.xml
         '';
       };
     };
@@ -60,15 +69,15 @@ in
         Type = "exec";
       };
       serviceConfig = {
-        User="media";
-        Group="media";
+        User="sonarr";
+        Group="sonarr";
       };
       script = ''
         ${pkgs.sonarr}/bin/Sonarr -data=${statedir}
       '';
     };
     systemd.tmpfiles.rules = [
-      "d ${statedir} 0755 media media"
+      "d ${statedir}                        0755 sonarr sonarr"
     ];
     
     services.nginx.virtualHosts.sonarr = {
@@ -82,7 +91,7 @@ in
       };
     };
 
-    users.users.restic.extraGroups = ["media"];
+    users.users.restic.extraGroups = ["sonarr"];
     l3mon.restic.specs.sonarr = {
       backupDaily = {
         text = ''

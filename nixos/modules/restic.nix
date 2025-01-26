@@ -152,6 +152,11 @@ in {
             }
           ];
         } else {})
+        {
+          tmpfiles.rules = [
+            "d  ${cfg.repo.location}    0755    restic  restic"
+          ];
+        }
       ]
     );
 

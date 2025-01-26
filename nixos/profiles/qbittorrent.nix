@@ -111,7 +111,8 @@ in
       '';
     };
     systemd.tmpfiles.rules = [
-      "d ${qb_statedir} 0755 qbittorrent qbittorrent"
+      "d    ${qb_statedir}                  0755    qbittorrent qbittorrent"
+      "Z    ${config.l3mon.qbittorrent.torrentDir} 0755    qbittorrent qbittorrent"
     ];
     
     services.nginx.virtualHosts.qbittorrent = {
