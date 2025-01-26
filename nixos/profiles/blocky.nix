@@ -14,9 +14,14 @@ let
   mkConfigFile = spec: (
     format.generate "config.yaml" {
       ports.dns = spec.ports;
-      upstreams.groups.default = [
-        "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
-      ];
+      upstreams.groups.default = (
+      if spec ? upstream then
+        spec.upstream
+      else
+        [
+          "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
+        ]
+      );
       bootstrapDns = {
         upstream = "https://one.one.one.one/dns-query";
         ips = [
@@ -79,7 +84,7 @@ let
     }
   );
 
-  mkBlockySystemd = spec: {
+  mkBlockyService = spec: {
     description = "A DNS proxy and ad-blocker for the local network";
     wantedBy = [ "multi-user.target" ];
     requires = [
@@ -102,18 +107,39 @@ let
   };
 in
 {
-  systemd.services.blocky_lan = mkBlockySystemd {
-    conf = mkConfigFile {
-      ports = ["127.0.0.1:53" "192.168.178.20:53"];
-      network = data.network.lan;
-      block = true;
+  options = {
+    l3mon.blocky.mkService = mkOption {
+      type = types.anything;
+      description = lib.mdDoc ''
+        Call with a attrset with single key `conf` to produce a systemd-service
+        for starting blocky with the provided conf.
+      '';
+      readOnly = true;
+      default = mkBlockyService;
+    };
+    l3mon.blocky.mkConfig = mkOption {
+      type = types.anything;
+      description = lib.mdDoc ''
+        Generates a yaml-config for blocky.
+      '';
+      readOnly = true;
+      default = mkConfigFile;
     };
   };
-  systemd.services.blocky_wg_home2 = mkBlockySystemd {
-    conf = mkConfigFile {
-      ports = ["10.0.0.1:53"];
-      network = data.network.wireguard_home2;
-      block = false;
+  config = {
+    systemd.services.blocky_lan = mkBlockyService {
+      conf = mkConfigFile {
+        ports = ["127.0.0.1:53" "192.168.178.20:53"];
+        network = data.network.lan;
+        block = true;
+      };
+    };
+    systemd.services.blocky_wg_home2 = mkBlockyService {
+      conf = mkConfigFile {
+        ports = ["10.0.0.1:53"];
+        network = data.network.wireguard_home2;
+        block = false;
+      };
     };
   };
 }

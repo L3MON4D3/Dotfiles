@@ -77,7 +77,8 @@ in
       '';
     };
     systemd.tmpfiles.rules = [
-      "d ${statedir}                        0755 sonarr sonarr"
+      "d    ${statedir} 0755    sonarr  sonarr"
+      "Z    ${statedir} 0755    sonarr  sonarr"
     ];
     
     services.nginx.virtualHosts.sonarr = {
