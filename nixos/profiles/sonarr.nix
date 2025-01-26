@@ -72,7 +72,7 @@ in
     ];
     
     services.nginx.virtualHosts.sonarr = {
-      serverName = "sonarr sonarr.${machine}";
+      serverName = "sonarr sonarr.internal sonarr.${machine}";
       locations = {
         "/" = {
           proxyPass = "http://${wg_machine_conf.local.address}:${port}";
