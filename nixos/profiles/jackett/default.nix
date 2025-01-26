@@ -126,7 +126,7 @@ in
     };
 
     services.nginx.virtualHosts.jackett = {
-      serverName = "jackett jackett.${machine}";
+      serverName = "jackett jackett.internal jackett.${machine}";
       locations = {
         "/" = {
           proxyPass = "http://${wg_machine_conf.local.address}:${port}";

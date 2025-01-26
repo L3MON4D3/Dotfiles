@@ -115,7 +115,7 @@ in
     ];
     
     services.nginx.virtualHosts.qbittorrent = {
-      serverName = "qbittorrent qbittorrent.${machine}";
+      serverName = "qbittorrent qbittorrent.internal qbittorrent.${machine}";
       locations = {
         "/" = {
           proxyPass = "http://${wg_machine_conf.local.address}:${qb_port}";
