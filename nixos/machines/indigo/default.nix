@@ -40,13 +40,6 @@
   services.nginx.enable = true;
   services.nginx.enableReload = true;
 
-  users.users.media = {
-    isSystemUser = true;
-    uid = data.ids.media;
-    group = "media";
-  };
-  users.groups.media.gid = data.ids.media;
-
   services.mysql = {
     enable = true; 
     package = pkgs.mariadb;
@@ -83,10 +76,63 @@
     lr = "l3mon-restic";
   };
 
+  users.users.media = {
+    isSystemUser = true;
+    uid = data.ids.media;
+    group = "media";
+  };
+  users.groups.media.gid = data.ids.media;
+
+
+  # for now, need some way to access large storage devices.
+  fileSystems."/mnt/.misc" = {
+    device = "cinnabar:/misc";
+    fsType = "nfs";
+    options = [ "nfsvers=4.2" "rw" "acl" ];
+  };
+
+  # replace these with actual physical drive-mounts.
+  fileSystems."/mnt/glacier" = {
+    depends = ["/mnt/.misc"];
+    device = "/mnt/.misc/indigo_disks/glacier_img";
+    label = "glacier";
+    options = [ "rw" "_netdev"];
+  };
+  fileSystems."/mnt/torrent" = {
+    depends = ["/mnt/.misc"];
+    device = "/mnt/.misc/indigo_disks/torrent_img";
+    label = "torrent";
+    options = [ "rw" "_netdev"];
+  };
+
+  # bind-mount storage into place where stuff should not be stored on the main drive.
+  fileSystems."/srv/media" = {
+    depends = ["/mnt/glacier"];
+    device = "/mnt/glacier/media";
+    options = [ "rw" "_netdev" "bind" ];
+  };
+  fileSystems.${config.l3mon.qbittorrent.torrentDir} = {
+    depends = ["/mnt/torrent"];
+    device = "/mnt/torrent/downloads";
+    options = [ "rw" "_netdev" "bind" ];
+  };
+  
+  fileSystems."/srv/restic-l3mon" = {
+    depends = ["/mnt/torrent"];
+    device = "/mnt/torrent/restic-l3mon";
+    options = [ "rw" "_netdev" "bind" ];
+  };
+
+  systemd.tmpfiles.rules = [
+    "d  /srv/media                              2775    media   media"
+    "A  /srv/media                              -       -       -       -   d:u:media:rwX"
+    "d  /srv/media/audio                        2775    media   media"
+    "d  /srv/media/video                        2775    media   media"
+    "d  /srv/media/video/shows                  2775    media   media"
+    "d  /srv/media/video/movies                 2775    media   media"
+  ];
+
   # enable restics allowOther-flag, so any user (eg simon) can access a
   # fuser-mounted directory.
   programs.fuse.userAllowOther = true;
-  systemd.tmpfiles.rules = [
-    "d /srv/media               0755 media media"
-  ];
 }

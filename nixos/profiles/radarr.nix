@@ -32,14 +32,22 @@ let
 in
 {
   config = {
+    users.users.radarr = {
+      isSystemUser = true;
+      extraGroups = ["media"];
+      uid = config.ids.uids.radarr;
+      group = "radarr";
+    };
+    users.groups.radarr.gid = config.ids.uids.radarr;
+
     # reset settings to default, insert api-key.
     system.activationScripts = {
       radarr = {
         text = ''
-          install -d -o media -g media ${statedir}
+          install -d -o radarr -g radarr ${statedir}
           source /var/secrets/radarr_env
           RADARR_API_KEY=$RADARR_API_KEY ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${statedir}/config.xml
-          chown media:media ${statedir}/config.xml
+          chown radarr:radarr ${statedir}/config.xml
         '';
       };
     };
@@ -52,15 +60,15 @@ in
         Type = "exec";
       };
       serviceConfig = {
-        User="media";
-        Group="media";
+        User="radarr";
+        Group="radarr";
       };
       script = ''
         ${pkgs.radarr}/bin/Radarr -data=${statedir}
       '';
     };
     systemd.tmpfiles.rules = [
-      "d ${statedir} 0755 media media"
+      "d ${statedir} 0750 radarr radarr"
     ];
     
     services.nginx.virtualHosts.radarr = {
@@ -74,7 +82,7 @@ in
       };
     };
 
-    users.users.restic.extraGroups = ["media"];
+    users.users.restic.extraGroups = ["radarr"];
     l3mon.restic.specs.radarr = {
       backupDaily = {
         text = ''

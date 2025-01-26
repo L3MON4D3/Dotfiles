@@ -131,19 +131,6 @@
     (import ./packages/default.nix)
   ];
 
-  fileSystems."/mnt/misc" = {
-    device = "cinnabar:/misc";
-    fsType = "nfs";
-    options = [ "nfsvers=4.2" ];
-  };
-  fileSystems."/mnt/media" = {
-    device = "cinnabar:/media";
-    fsType = "nfs";
-    options = [ "nfsvers=4.2" ];
-  };
-  # for correct permissions on files from nfs/existing data.
-  users.groups.nfs.gid = 1000;
-
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   services.openssh.settings = {
