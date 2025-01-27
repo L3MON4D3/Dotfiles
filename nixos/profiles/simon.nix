@@ -60,7 +60,7 @@
       # May be excessive, consider removing empty snapshots to cut down on repo-size.
       # group-by is necessary afaict!
       text = ''
-        l3mon-restic forget --tag=userdata-auto --group-by=tag --keep-hourly=168 --keep-daily=120 --keep-monthly=36 --keep-yearly=unlimited
+        restic forget --tag=userdata-auto --group-by=tag --keep-hourly=168 --keep-daily=120 --keep-monthly=36 --keep-yearly=unlimited
       '';
     };
   };
