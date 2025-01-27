@@ -651,8 +651,7 @@ matchconfig.register(mdir(mc), c{
 local dotfiles_dir = "/home/simon/projects/dotfiles/nixos"
 matchconfig.register(mdir(dotfiles_dir), c{
 	run_buf = function()
-		local abspath = mc .. "/lua/matchconfig"
-		cabbrev_buf("%%", abspath)
+		cabbrev_buf("%%", dotfiles_dir)
 	end,
 	repl = {
 		run = {
