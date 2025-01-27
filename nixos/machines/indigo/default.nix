@@ -122,7 +122,10 @@
     device = "/mnt/torrent/restic-l3mon";
     options = [ "rw" "_netdev" "bind" ];
   };
+  l3mon.restic.dailyRequiredServices = ["srv-restic${''\''}x2dl3mon.mount"];
 
+  # set gid-bit on media-directories so files are created with group media.
+  # set default-permissions so write is allowed for all group-members.
   systemd.tmpfiles.rules = [
     "d  /srv/media                              2775    media   media"
     "A  /srv/media                              -       -       -       -   d:u:media:rwX"
