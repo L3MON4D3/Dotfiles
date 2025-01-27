@@ -65,10 +65,11 @@
   };
 
   home.sessionVariables = {
-    np = "~/.local/share/nvim/lazy";
-    nc = "~/projects/dotfiles/nvim";
-    mc = "~/projects/nvim/matchconfig";
-    lsn = "~/projects/nvim/luasnip";
+    np =  "/home/simon/.local/share/nvim/lazy";
+    nc =  "/home/simon/projects/dotfiles/nvim";
+    mc =  "/home/simon/projects/nvim/matchconfig";
+    lsn = "/home/simon/projects/nvim/luasnip";
+    nx =  "/home/simon/projects/dotfiles/nixos/configuration.nix";
   };
   programs.bash.enable = true;
 
