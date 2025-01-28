@@ -22,6 +22,7 @@ rec {
           "radarr"
           "sonarr"
           "qbittorrent"
+          "jellyfin"
         ];
       };
       indigo_mullvad_de = {

@@ -16,6 +16,7 @@
       ../../profiles/jackett
 
       ../../profiles/kodi.nix
+      ../../profiles/jellyfin.nix
 
       ../../profiles/blocky.nix
     ];
