@@ -33,6 +33,11 @@ in {
       description = "Services that have to be running before restic-daily can do its backup. Useful for mysqld.";
       default = [];
     };
+    dailyStopResumeServices = mkOption {
+      type = with types; listOf str;
+      description = "Services that have to be interrupted before restic-daily can do its backup.";
+      default = [];
+    };
 
     wrapper = mkOption {
       type = types.package;
@@ -147,6 +152,14 @@ in {
             {
               after = cfg.dailyRequiredServices;
               requires = cfg.dailyRequiredServices;
+
+              # stop services via `conflicts`, make sure they are stopped via
+              # `before`, and restart them via `onSuccess` or `onFailure` (so they are always restarted!).
+              conflicts = cfg.dailyStopResumeServices;
+              before = cfg.dailyStopResumeServices;
+              onSuccess = cfg.dailyStopResumeServices;
+              onFailure = cfg.dailyStopResumeServices;
+
               path = [ pkgs.restic ];
               script = script_daily;
             }
