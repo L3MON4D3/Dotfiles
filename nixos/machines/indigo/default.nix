@@ -19,6 +19,8 @@
       ../../profiles/jellyfin.nix
 
       ../../profiles/blocky.nix
+
+      # ../../profiles/cachefilesd.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -89,7 +91,7 @@
   fileSystems."/mnt/.misc" = {
     device = "cinnabar:/misc";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
   };
 
   # replace these with actual physical drive-mounts.
