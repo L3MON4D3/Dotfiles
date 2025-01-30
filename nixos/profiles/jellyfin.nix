@@ -29,6 +29,19 @@ in {
   users.users.restic.extraGroups = [ "jellyfin" ];
   # allow group read-access so restic can read everything.
   systemd.services.jellyfin.serviceConfig.UMask = mkForce 0027;
+
+  # override rules from jellyfin-module
+  systemd.tmpfiles.settings.jellyfinDirs = {
+    "${config.services.jellyfin.dataDir}"."d" = mkForce {
+      mode = "750";
+      inherit (config.services.jellyfin) user group;
+    };
+    "${config.services.jellyfin.configDir}"."d" = mkForce {
+      mode = "750";
+      inherit (config.services.jellyfin) user group;
+    };
+  };
+
   l3mon.restic = {
     dailyStopResumeServices = ["jellyfin.service"];
     specs.jellyfin = {
