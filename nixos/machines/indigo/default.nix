@@ -22,6 +22,7 @@
 
       # ../../profiles/cachefilesd.nix
       ../../profiles/ddns-updater.nix
+      ../../profiles/errormail.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -138,6 +139,8 @@
     "d  /srv/media/video/shows                  2775    media   media"
     "d  /srv/media/video/movies                 2775    media   media"
   ];
+
+  services.dbus.implementation = "broker";
 
   # enable restics allowOther-flag, so any user (eg simon) can access a
   # fuser-mounted directory.

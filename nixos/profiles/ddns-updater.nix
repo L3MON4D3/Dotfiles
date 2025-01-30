@@ -40,4 +40,3 @@ in {
   };
   systemd.services.ddns-updater.serviceConfig.LoadCredential = "conf:${runtime_conf_file}";
 }
-
