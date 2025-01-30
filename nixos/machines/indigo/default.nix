@@ -21,6 +21,7 @@
       ../../profiles/blocky.nix
 
       # ../../profiles/cachefilesd.nix
+      ../../profiles/ddns-updater.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
