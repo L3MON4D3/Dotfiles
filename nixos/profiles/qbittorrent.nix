@@ -126,7 +126,9 @@ in
       backupDaily = {
         text = ''
           cd ${qb_statedir}/qBittorrent/data/BT_backup
-          restic backup --tag=qbittorrents --skip-if-unchanged=true -- *.torrent 
+          if compgen -G "*.torrent" > /dev/null; then
+            restic backup --tag=qbittorrents --skip-if-unchanged=true -- *.torrent 
+          fi
         '';
       };
       forget = {
