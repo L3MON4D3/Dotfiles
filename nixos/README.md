@@ -35,6 +35,13 @@ Or, and this seems very flexible: use envsubst in an activationScript to
 populate secrets via env-var into some template-file!
 See `profiles/radarr.nix` for an example.
 
+## Steam
+Log into steam once with steamcmd and HOME=/var/lib/steam/cmd and enter
+steamguard-code, then it should run again for a while.
+## GOG
+Log into gog via HOME=/var/lib/gog lgogdownloader --login, then update-games can
+do its job for gog.
+
 # TODO
 * Use DHCP (Kea, dhcpcd is deprecated) for configuring ips.
   Be careful doing this in fritzbox-net, have to disable its dhcp-server.

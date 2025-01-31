@@ -23,6 +23,9 @@
       # ../../profiles/cachefilesd.nix
       ../../profiles/ddns-updater.nix
       ../../profiles/errormail.nix
+
+      ../../profiles/nfs.nix
+      ../../profiles/game-library.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
