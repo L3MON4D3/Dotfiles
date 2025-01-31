@@ -81,16 +81,11 @@ in
       "Z    ${statedir} 0755    sonarr  sonarr"
     ];
     
-    services.nginx.virtualHosts.sonarr = {
-      serverName = "sonarr sonarr.internal sonarr.${machine}";
-      locations = {
-        "/" = {
-          proxyPass = "http://${wg_machine_conf.local.address}:${port}";
-          recommendedProxySettings = true;
-          proxyWebsockets = true;
-        };
-      };
-    };
+    services.caddy.extraConfig = ''
+      http://sonarr, http://sonarr.internal, http://sonarr.${machine} {
+        reverse_proxy http://${wg_machine_conf.local.address}:${port}
+      }
+    '';
 
     users.users.restic.extraGroups = ["sonarr"];
     l3mon.restic.specs.sonarr = {

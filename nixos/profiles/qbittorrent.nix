@@ -115,15 +115,11 @@ in
       "Z    ${qb_statedir}  0750    qbittorrent qbittorrent"
     ];
     
-    services.nginx.virtualHosts.qbittorrent = {
-      serverName = "qbittorrent qbittorrent.internal qbittorrent.${machine}";
-      locations = {
-        "/" = {
-          proxyPass = "http://${wg_machine_conf.local.address}:${qb_port}";
-          recommendedProxySettings = true;
-        };
-      };
-    };
+    services.caddy.extraConfig = ''
+      http://qbittorrent, http://qbittorrent.internal, http://qbittorrent.${machine} {
+        reverse_proxy http://${wg_machine_conf.local.address}:${qb_port}
+      }
+    '';
 
     users.users.restic.extraGroups = [ "qbittorrent" ];
     l3mon.restic.specs.qbittorrent = {

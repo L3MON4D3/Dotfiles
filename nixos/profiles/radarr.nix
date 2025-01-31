@@ -72,16 +72,11 @@ in
       "Z ${statedir} 0750 radarr radarr"
     ];
     
-    services.nginx.virtualHosts.radarr = {
-      serverName = "radarr radarr.internal radarr.${machine}";
-      locations = {
-        "/" = {
-          proxyPass = "http://${wg_machine_conf.local.address}:${port}";
-          recommendedProxySettings = true;
-          proxyWebsockets = true;
-        };
-      };
-    };
+    services.caddy.extraConfig = ''
+      http://radarr, http://radarr.internal, http://radarr.${machine} {
+        reverse_proxy http://${wg_machine_conf.local.address}:${port}
+      }
+    '';
 
     users.users.restic.extraGroups = ["radarr"];
     l3mon.restic.specs.radarr = {

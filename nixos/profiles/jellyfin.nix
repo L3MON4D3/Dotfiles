@@ -11,20 +11,11 @@ in {
     pkgs.jellyfin-ffmpeg
   ];
   
-  services.nginx.virtualHosts.jellyfin = {
-    serverName = "jellyfin jellyfin.internal jellyfin.${machine}";
-    locations = {
-      "/" = {
-        proxyPass = "http://${indigo_lan_address}:${data.ports.jellyfin_web}";
-        recommendedProxySettings = true;
-      };
-      "/socket" = {
-        proxyPass = "http://${indigo_lan_address}:${data.ports.jellyfin_web}";
-        recommendedProxySettings = true;
-        proxyWebsockets = true;
-      };
-    };
-  };
+  services.caddy.extraConfig = ''
+    http://jellyfin, http://jellyfin.internal, http://jellyfin.${machine} {
+      reverse_proxy http://${indigo_lan_address}:${data.ports.jellyfin_web}
+    }
+  '';
 
   users.users.restic.extraGroups = [ "jellyfin" ];
   # allow group read-access so restic can read everything.
