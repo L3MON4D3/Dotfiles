@@ -2,7 +2,7 @@ rec {
   lan = {
     subnet_mask = "/24";
     address_range = "192.168.178.0/24";
-    dns = "192.168.178.5";
+    dns = "192.168.178.20";
     gateway = "192.168.178.1";
     peers = {
       fritzbox = {
@@ -11,6 +11,9 @@ rec {
       teal = {
         address = "192.168.178.6";
         interface = "enp34s0";
+      };
+      cinnabar = {
+        address = "192.168.178.5";
       };
       indigo = {
         machine_id = "indigo";
@@ -75,7 +78,7 @@ rec {
     peers = {
       cinnabar = {
         address = "10.0.0.1";
-        endpoint = "l3mon4.de:51822";
+        endpoint = "192.168.178.5:51822";
         pubkey = "crcxsmvCRMSSY+ixB5p07MzxSv0xDmHPHBmd2w7mNyg=";
       };
       indigo = {
