@@ -91,7 +91,7 @@
 
   # for now, need some way to access large storage devices.
   fileSystems."/mnt/.misc" = {
-    device = "cinnabar:/misc";
+    device = "192.168.178.5:/misc";
     fsType = "nfs";
     options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
   };
