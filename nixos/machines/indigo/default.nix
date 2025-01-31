@@ -42,8 +42,8 @@
     ];
   };
 
-  services.nginx.enable = true;
-  services.nginx.enableReload = true;
+  services.caddy.enable = true;
+  services.caddy.enableReload = true;
 
   services.mysql = {
     enable = true; 

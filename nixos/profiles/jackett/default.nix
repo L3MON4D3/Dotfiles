@@ -125,16 +125,11 @@ in
       '';
     };
 
-    services.nginx.virtualHosts.jackett = {
-      serverName = "jackett jackett.internal jackett.${machine}";
-      locations = {
-        "/" = {
-          proxyPass = "http://${wg_machine_conf.local.address}:${port}";
-          recommendedProxySettings = true;
-          proxyWebsockets = true;
-        };
-      };
-    };
+    services.caddy.extraConfig = ''
+      http://jackett, http://jackett.internal, http://jackett.${machine} {
+        reverse_proxy http://${wg_machine_conf.local.address}:${port}
+      }
+    '';
     
     users.users.restic.extraGroups = ["jackett"];
     l3mon.restic.specs.jackett = {
