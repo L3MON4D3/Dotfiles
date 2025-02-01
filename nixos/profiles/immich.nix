@@ -32,7 +32,7 @@ in {
 
   users.users.restic.extraGroups = [ "immich" ];
   l3mon.restic = {
-    dailyStopResumeServices = ["immich.service"];
+    dailyStopResumeServices = ["immich-server.service"];
     dailyRequiredServices = [ "postgresql.service" ];
     specs.immich = {
       backupDaily = {
