@@ -68,6 +68,7 @@ in {
 
                 [Peer]
                 PublicKey = ${wg_network.host.pubkey}
+                ${optionalString wg_network.keepalive "PersistentKeepalive 60"} 
                 AllowedIPs = ${allowed_ips}
                 Endpoint = ${wg_network.host.endpoint}
               '';
@@ -87,7 +88,7 @@ in {
                 RemainAfterExit=yes
                 Environment=WG_ENDPOINT_RESOLUTION_RETRIES=infinity
                 ExecStart=ip link add ${wg_network.name} type wireguard
-                ExecStart=${wg} set ${wg_network.name} private-key ${peerconf.privkey_file} peer ${wg_network.host.pubkey} endpoint ${wg_network.host.endpoint} allowed-ips ${allowed_ips}
+                ExecStart=${wg} set ${wg_network.name} private-key ${peerconf.privkey_file} peer ${wg_network.host.pubkey} endpoint ${wg_network.host.endpoint} allowed-ips ${allowed_ips} ${optionalString wg_network.keepalive "persistent-keepalive 60"}
                 ExecStart=ip addr add ${peerconf.address}${wg_network.subnet_mask} dev ${wg_network.name}
                 ExecStart=ip link set dev ${wg_network.name} up
                 ExecStart=ip route add default dev ${wg_network.name}

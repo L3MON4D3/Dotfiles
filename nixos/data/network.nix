@@ -43,6 +43,7 @@ rec {
     dns = "10.0.0.1";
     host = peers.indigo;
     address_range = "10.0.0.0/24";
+    keepalive = true;
     peers = {
       indigo = {
         # indigo
