@@ -4,6 +4,7 @@
   radarr = "7001";
   sonarr = "7002";
   jackett = "7003";
+  forgejo = "7004";
 
   jellyfin_web = "8096";
 }

@@ -26,6 +26,8 @@
 
       ../../profiles/nfs.nix
       ../../profiles/game-library.nix
+
+      ../../profiles/forgejo.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
