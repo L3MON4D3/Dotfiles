@@ -57,6 +57,7 @@ in {
         value = {
           text = concatStringsSep "\n" (builtins.map (peername: let
             peerconf = wg_network.peers."${peername}";
+            allowed_ips = if peerconf.route_all then "0.0.0.0/0" else wg_network.address_range;
             conf_template = pkgs.writeTextFile {
               name = "conf";
               text = ''
@@ -67,15 +68,47 @@ in {
 
                 [Peer]
                 PublicKey = ${wg_network.host.pubkey}
-                AllowedIPs = ${if peerconf.route_all then "0.0.0.0/0" else wg_network.address_range}
+                AllowedIPs = ${allowed_ips}
                 Endpoint = ${wg_network.host.endpoint}
               '';
             };
             conf_target_location = "/etc/wireguard_configs/${wg_network.name}/${peername}.conf";
+            wg = if peername == "remarkable" then "/opt/bin/wg" else "wg";
+            peer_service = pkgs.writeTextFile {
+              name = "service";
+              text = ''
+                [Unit]
+                Description=Minimal wireguard (suited for remarkable).
+                After=network-online.target nss-lookup.target
+                Requires=network-online.target nss-lookup.target
+
+                [Service]
+                Type=oneshot
+                RemainAfterExit=yes
+                Environment=WG_ENDPOINT_RESOLUTION_RETRIES=infinity
+                ExecStart=ip link add ${wg_network.name} type wireguard
+                ExecStart=${wg} set ${wg_network.name} private-key ${peerconf.privkey_file} peer ${wg_network.host.pubkey} endpoint ${wg_network.host.endpoint} allowed-ips ${allowed_ips}
+                ExecStart=ip addr add ${peerconf.address}${wg_network.subnet_mask} dev ${wg_network.name}
+                ExecStart=ip link set dev ${wg_network.name} up
+                ExecStart=ip route add default dev ${wg_network.name}
+                ExecStart=bash -c 'echo nameserver ${wg_network.dns} > /etc/resolv_${wg_network.name}'
+                ExecStart=mount --bind /etc/resolv_${wg_network.name} /etc/resolv.conf
+
+                ExecStop=ip route del default dev ${wg_network.name}
+                ExecStop=ip link del ${wg_network.name}
+                ExecStop=umount /etc/resolv.conf
+
+                [Install]
+                WantedBy=multi-user.target
+              '';
+            };
           in ''
             mkdir -p /etc/wireguard_configs/${wg_network.name}/
             PEER_PRIVKEY=$(cat ${peerconf.privkey_file}) ${pkgs.envsubst}/bin/envsubst -i ${conf_template} -o ${conf_target_location}
-            chmod 400 /etc/wireguard_configs/${wg_network.name}/${peername}.conf
+            chmod 400 ${conf_target_location}
+
+            mkdir -p /etc/wireguard_services/
+            cp ${peer_service} /etc/wireguard_services/${wg_network.name}-${peername}.service
           '') peernames);
         };
       }
