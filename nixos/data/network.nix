@@ -56,16 +56,19 @@ rec {
       };
       teal = {
         address = "10.0.0.2";
+        route_all = true;
         privkey_file = "/var/secrets/wg_home2/teal-private";
         pubkey = "zJsfvvuFCh5AK2/wl4TZZZlWz2l4SM9fEdWy2mea/0c=";
       };
       canary = {
         address = "10.0.0.3";
+        route_all = false;
         privkey_file = "/var/secrets/wg_home2/canary-private";
         pubkey = "2aaQykUGo4CQy1scam16F89flkPDMxu/qVV/cY+7tTM=";
       };
       xperia = {
         address = "10.0.0.4";
+        route_all = false;
         privkey_file = "/var/secrets/wg_home2/xperia-private";
         pubkey = "mrQt6UqR0HpJVGXp6qfVEATDVTzm80RHYks6wqETCEk=";
       };

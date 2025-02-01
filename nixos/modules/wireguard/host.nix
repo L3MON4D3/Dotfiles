@@ -67,7 +67,7 @@ in {
 
                 [Peer]
                 PublicKey = ${wg_network.host.pubkey}
-                AllowedIPs = ${wg_network.address_range}
+                AllowedIPs = ${if peerconf.route_all then "0.0.0.0/0" else wg_network.address_range}
                 Endpoint = ${wg_network.host.endpoint}
               '';
             };
