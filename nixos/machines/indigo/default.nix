@@ -28,6 +28,8 @@
       ../../profiles/game-library.nix
 
       ../../profiles/forgejo.nix
+
+      ../../profiles/immich.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
