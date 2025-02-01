@@ -6,6 +6,7 @@
   jackett = "7003";
   forgejo = "7004";
   immich = "7005";
+  paperless = "7006";
 
   jellyfin_web = "8096";
 }

@@ -28,6 +28,7 @@ rec {
           "jellyfin"
           "git"
           "immich"
+          "paperless"
         ];
       };
       indigo_mullvad_de = {
