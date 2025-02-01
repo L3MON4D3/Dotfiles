@@ -140,6 +140,9 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  security.pam.services.su.nodelay = true;
+  security.pam.services.sudo.nodelay = true;
+
   # system.copySystemConfiguration = true;
 
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
