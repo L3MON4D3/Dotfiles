@@ -72,6 +72,12 @@ rec {
         privkey_file = "/var/secrets/wg_home2/xperia-private";
         pubkey = "mrQt6UqR0HpJVGXp6qfVEATDVTzm80RHYks6wqETCEk=";
       };
+      remarkable = {
+        address = "10.0.0.5";
+        route_all = true;
+        privkey_file = "/var/secrets/wg_home2/remarkable-private";
+        pubkey = "Udk2A6dop+5xOrRmwBqkQ5CGJexC3hteTKYErhjvTTw=";
+      };
     };
   };
 
