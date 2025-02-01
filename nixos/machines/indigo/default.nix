@@ -30,6 +30,7 @@
       ../../profiles/forgejo.nix
 
       ../../profiles/immich.nix
+      ../../profiles/paperless.nix
 
       ../../profiles/kimmify.nix
     ];
