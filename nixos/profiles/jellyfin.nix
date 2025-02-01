@@ -2,7 +2,7 @@
 
 with lib;
 let
-  indigo_lan_address = data.network.lan.peers.${machine}.address;
+  machine_lan_address = data.network.lan.peers.${machine}.address;
 in {
   services.jellyfin.enable = true;
   environment.systemPackages = [
@@ -13,7 +13,7 @@ in {
   
   services.caddy.extraConfig = ''
     http://jellyfin, http://jellyfin.internal, http://jellyfin.${machine} {
-      reverse_proxy http://${indigo_lan_address}:${data.ports.jellyfin_web}
+      reverse_proxy http://${machine_lan_address}:${data.ports.jellyfin_web}
     }
   '';
 
