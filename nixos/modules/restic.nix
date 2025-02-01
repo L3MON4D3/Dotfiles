@@ -92,6 +92,9 @@ in {
         # This is set in the nixos-restic-service, and I don't think it's actually used... (does not seem like restic uses this directory)
         # RuntimeDirectory = "restic";
         CacheDirectory = "restic";
+        # make sure permissions are correct before backup.
+        # Maybe this is excessive.... But it's an easy way to enforce permissions on certain directories.
+        ExecStartPre = "+${pkgs.systemd}/bin/systemd-tmpfiles --create";
       };
     };
   in {
