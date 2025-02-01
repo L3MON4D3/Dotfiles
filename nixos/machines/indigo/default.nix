@@ -73,7 +73,9 @@
     doRepoMaintenance = true;
     maintenanceExtra = [
       {
-        text = ''echo Copying to B2!'';
+        text = ''
+          ${pkgs.rsync}/bin/rsync -rpt --progress --size-only --delete /srv/restic-l3mon /mnt/glacier/restic-l3mon
+        '';
       }
       {
         text = ''echo Copying to /mnt/misc!'';
@@ -129,6 +131,11 @@
     options = [ "rw" "_netdev" "bind" ];
   };
   
+  #
+  # Bind-mounts for services!
+  #
+
+  # restic
   fileSystems."/srv/restic-l3mon" = {
     depends = ["/mnt/torrent"];
     device = "/mnt/torrent/restic-l3mon";
@@ -154,12 +161,14 @@
   # set gid-bit on media-directories so files are created with group media.
   # set default-permissions so write is allowed for all group-members.
   systemd.tmpfiles.rules = [
-    "d  /srv/media                              2775    media   media"
-    "A  /srv/media                              -       -       -       -   d:u:media:rwX"
-    "d  /srv/media/audio                        2775    media   media"
-    "d  /srv/media/video                        2775    media   media"
-    "d  /srv/media/video/shows                  2775    media   media"
-    "d  /srv/media/video/movies                 2775    media   media"
+    "d /srv/media                2775 media  media"
+    "A /srv/media                -    -      -       -   d:u:media:rwX"
+    "d /srv/media/audio          2775 media  media"
+    "d /srv/media/video          2775 media  media"
+    "d /srv/media/video/shows    2775 media  media"
+    "d /srv/media/video/movies   2775 media  media"
+
+    "d /mnt/glacier/restic-l3mon 0750 restic restic"
   ];
 
   services.dbus.implementation = "broker";
