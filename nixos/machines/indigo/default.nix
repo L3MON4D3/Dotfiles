@@ -136,6 +136,21 @@
   };
   l3mon.restic.dailyRequiredServices = ["srv-restic${''\''}x2dl3mon.mount"];
 
+  # immich
+  fileSystems.${config.services.immich.mediaLocation} = {
+    depends = ["/mnt/torrent"];
+    device = "/mnt/torrent/immich";
+    options = [ "_netdev" "bind" ];
+  };
+
+  # assume /var/lib/immich
+  assertions = [ {
+    assertion = config.services.immich.mediaLocation == "/var/lib/immich";
+    message = "Manually change the below unit-name for the bind-mount.";
+  } ];
+  systemd.services.immich.after = [ "var-lib-immich.mount" ];
+
+
   # set gid-bit on media-directories so files are created with group media.
   # set default-permissions so write is allowed for all group-members.
   systemd.tmpfiles.rules = [

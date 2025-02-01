@@ -6,13 +6,7 @@ in {
   services.immich = {
     enable = true;
     port = lib.toInt data.ports.immich;
-    host = "192.168.178.20";
-  };
-
-  fileSystems.${config.services.immich.mediaLocation} = {
-    depends = ["/mnt/torrent"];
-    device = "/mnt/torrent/immich";
-    options = [ "_netdev" "bind" ];
+    host = machine_lan_address;
   };
 
   services.caddy.extraConfig = ''
