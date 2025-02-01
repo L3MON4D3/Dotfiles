@@ -93,7 +93,10 @@ in {
                 ExecStart=ip link set dev ${wg_network.name} up
                 ExecStart=ip route add default dev ${wg_network.name}
                 ExecStart=bash -c 'echo nameserver ${wg_network.dns} > /etc/resolv_${wg_network.name}'
-                ExecStart=mount --bind /etc/resolv_${wg_network.name} /etc/resolv.conf
+                # mount as readonly so dhcpcd may not override it!!
+                # It tries to as soon as the wifi-connection drops, which is too
+                # frequently to leave this unresolved.
+                ExecStart=mount --bind -o ro /etc/resolv_${wg_network.name} /etc/resolv.conf
 
                 ExecStop=ip route del default dev ${wg_network.name}
                 ExecStop=ip link del ${wg_network.name}
