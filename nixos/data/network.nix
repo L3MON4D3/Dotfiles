@@ -27,6 +27,7 @@ rec {
           "qbittorrent"
           "jellyfin"
           "git"
+          "immich"
         ];
       };
       indigo_mullvad_de = {
