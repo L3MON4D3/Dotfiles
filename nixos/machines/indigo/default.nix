@@ -32,6 +32,8 @@
       ../../profiles/immich.nix
       ../../profiles/paperless.nix
 
+      ../../profiles/rmfakecloud.nix
+
       ../../profiles/kimmify.nix
     ];
 

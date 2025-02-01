@@ -29,6 +29,7 @@ rec {
           "git"
           "immich"
           "paperless"
+          "rmfakecloud"
         ];
       };
       indigo_mullvad_de = {
