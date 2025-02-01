@@ -30,6 +30,8 @@
       ../../profiles/forgejo.nix
 
       ../../profiles/immich.nix
+
+      ../../profiles/kimmify.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
