@@ -3,9 +3,9 @@
 {
   services.samba = {
     enable = true;
-    securityType = "user";
     settings = {
       global = {
+        "security" = "user";
         "dns proxy" = "no";
         "server role" = "standalone server";
         "server string" = "indigo";
