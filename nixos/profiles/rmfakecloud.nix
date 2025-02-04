@@ -48,7 +48,7 @@ in {
     environment = {
       PORT = port;
       DATADIR = statedir;
-      LOGLEVEL = "debug";
+      LOGLEVEL = "warn";
       STORAGE_URL = "http://rmfakecloud.internal";
     };
     serviceConfig = {
