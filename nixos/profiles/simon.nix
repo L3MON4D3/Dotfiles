@@ -7,14 +7,10 @@
     extraGroups = [
       "wheel"
       "media"
-      "qbittorrent"
     ]; # Enable ‘sudo’ for the user and provide user-group.
-    packages = with pkgs; [
-      tree
-    ];
-    uid = 1000;
+    uid = data.ids.simon;
   };
-  users.groups.simon.gid = 1000;
+  users.groups.simon.gid = data.ids.simon;
 
   users.users.simon.openssh.authorizedKeys.keys = [
     data.pubkey
