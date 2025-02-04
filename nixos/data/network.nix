@@ -30,6 +30,7 @@ rec {
           "immich"
           "paperless"
           "rmfakecloud"
+          "zotero"
         ];
       };
       indigo_mullvad_de = {
