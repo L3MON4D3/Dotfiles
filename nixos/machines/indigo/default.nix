@@ -35,6 +35,8 @@
       ../../profiles/rmfakecloud.nix
 
       ../../profiles/kimmify.nix
+
+      ../../modules/zotero.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -177,6 +179,8 @@
   ];
 
   services.dbus.implementation = "broker";
+
+  l3mon.zotero.enable_server = true;
 
   # enable restics allowOther-flag, so any user (eg simon) can access a
   # fuser-mounted directory.
