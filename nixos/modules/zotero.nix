@@ -15,8 +15,9 @@ in
   config = mkMerge [
     (mkIf config.l3mon.zotero.enable_server {
       fileSystems."/srv/nfs/${export_name}" = {
+        depends = ["/mnt/glacier"];
         device = "/mnt/glacier/misc/zotero-data";
-        options = [ "bind" ];
+        options = [ "bind" "_netdev" ];
       };
       services.nfs.server.exports = ''
         /srv/nfs/${export_name} 192.168.178.0/24(rw,all_squash)
