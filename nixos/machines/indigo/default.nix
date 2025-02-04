@@ -18,6 +18,8 @@
       ../../profiles/kodi.nix
       ../../profiles/jellyfin.nix
 
+      ../../profiles/samba.nix
+
       ../../profiles/blocky.nix
 
       # ../../profiles/cachefilesd.nix
@@ -163,6 +165,13 @@
     message = "Manually change the below unit-name for the bind-mount.";
   } ];
   systemd.services.immich.after = [ "var-lib-immich.mount" ];
+
+  # samba
+  fileSystems."/srv/samba/christel" = {
+    depends = ["/mnt/glacier"];
+    device = "/mnt/glacier/samba/christel";
+    options = [ "_netdev" "bind" ];
+  };
 
 
   # set gid-bit on media-directories so files are created with group media.
