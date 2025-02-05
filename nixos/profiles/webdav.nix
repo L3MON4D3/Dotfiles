@@ -1,0 +1,46 @@
+{ config, lib, pkgs, pkgs-unstable, machine, data, ... }:
+
+let
+  dav_root = "/srv/http/dav";
+in {
+  # downside: can only do this once, for other plugins I'll have to make a personal caddy module or something.
+  services.caddy.package = pkgs-unstable.caddy.withPlugins {
+    plugins = ["github.com/mholt/caddy-webdav@v0.0.0-20241008162340-42168ba04c9d"];
+    hash = "sha256-Q9pocz1FE1ttUfR10J8kEykW4NTQMI4lj54PTXBZZ0M=";
+  };
+
+  services.caddy.globalConfig = ''
+    order webdav before file_server
+  '';
+
+  services.caddy.extraConfig = ''
+    http://webdav, http://webdav.internal, http://webdav.${machine} {
+      webdav * {
+        root ${dav_root}
+        prefix /
+      }
+      file_server
+    }
+  '';
+
+  systemd.tmpfiles.rules = [
+    "d ${dav_root} 0750 caddy caddy"
+  ];
+  users.users.restic.extraGroups = [ "caddy" ];
+  l3mon.restic.specs.webdav = {
+    backupDaily = {
+      text = ''
+        cd ${dav_root}
+        restic backup --tag=webdav --skip-if-unchanged=true -- *
+      '';
+    };
+    forget = {
+      text = ''
+        # Primarily stores seedvault-files, which can get rather big :|
+        # They are not plain text, but encrypted, so no good incremental sync
+        # => only keep one up-to-date backup.
+        restic forget --tag=webdav --group-by=tag --keep-last=1
+      '';
+    };
+  };
+}

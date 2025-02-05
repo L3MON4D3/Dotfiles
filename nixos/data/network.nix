@@ -32,6 +32,7 @@ rec {
           "rmfakecloud"
           "zotero"
           "radicale"
+          "webdav"
         ];
       };
       indigo_mullvad_de = {
