@@ -1,5 +1,6 @@
 {
   mysql = "3306";
+  radicale = "5232";
 
   qbittorrent = "7000";
   radarr = "7001";
