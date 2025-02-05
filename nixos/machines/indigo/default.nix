@@ -19,6 +19,7 @@
       ../../profiles/jellyfin.nix
 
       ../../profiles/samba.nix
+      ../../profiles/radicale.nix
 
       ../../profiles/blocky.nix
 

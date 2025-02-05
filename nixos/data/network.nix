@@ -31,6 +31,7 @@ rec {
           "paperless"
           "rmfakecloud"
           "zotero"
+          "radicale"
         ];
       };
       indigo_mullvad_de = {
@@ -71,7 +72,7 @@ rec {
       };
       xperia = {
         address = "10.0.0.4";
-        route_all = false;
+        route_all = true;
         privkey_file = "/var/secrets/wg_home2/xperia-private";
         pubkey = "mrQt6UqR0HpJVGXp6qfVEATDVTzm80RHYks6wqETCEk=";
       };
