@@ -24,17 +24,20 @@ in {
   '';
 
   users.users.restic.extraGroups = [ "radicale" ];
-  l3mon.restic.specs.radicale = {
-    backupDaily = {
-      text = ''
-        cd /var/lib/radicale
-        restic backup --tag=radicale --skip-if-unchanged=true -- *
-      '';
-    };
-    forget = {
-      text = ''
-        restic forget --tag=radicale --group-by=tag --keep-last=10
-      '';
+  l3mon.restic = {
+    dailyStopResumeServices = [ "radicale.service" ]; 
+    specs.radicale = {
+      backupDaily = {
+        text = ''
+          cd /var/lib/radicale
+          restic backup --tag=radicale --skip-if-unchanged=true -- *
+        '';
+      };
+      forget = {
+        text = ''
+          restic forget --tag=radicale --group-by=tag --keep-last=10
+        '';
+      };
     };
   };
 }
