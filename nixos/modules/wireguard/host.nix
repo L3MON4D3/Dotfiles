@@ -68,7 +68,7 @@ in {
 
                 [Peer]
                 PublicKey = ${wg_network.host.pubkey}
-                ${optionalString wg_network.keepalive "PersistentKeepalive 60"} 
+                ${optionalString wg_network.keepalive "PersistentKeepalive = 60"} 
                 AllowedIPs = ${allowed_ips}
                 Endpoint = ${wg_network.host.endpoint}
               '';
