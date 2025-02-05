@@ -20,6 +20,7 @@
 
       ../../profiles/samba.nix
       ../../profiles/radicale.nix
+      ../../profiles/webdav.nix
 
       ../../profiles/blocky.nix
 
