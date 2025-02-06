@@ -116,7 +116,6 @@ in {
   };
 
   fileSystems."/srv/nfs/remarkable-local" = {
-    depends = ["/mnt/glacier"];
     device = "/srv/remarkable-local";
     options = [ "_netdev" "bind" ];
   };

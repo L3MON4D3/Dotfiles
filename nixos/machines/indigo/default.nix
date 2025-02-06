@@ -132,13 +132,7 @@
 
   # bind-mount storage into place where stuff should not be stored on the main drive.
   fileSystems."/srv/media" = {
-    depends = ["/mnt/glacier"];
     device = "/mnt/glacier/media";
-    options = [ "rw" "_netdev" "bind" ];
-  };
-  fileSystems.${config.l3mon.qbittorrent.torrentDir} = {
-    depends = ["/mnt/torrent"];
-    device = "/mnt/torrent/downloads";
     options = [ "rw" "_netdev" "bind" ];
   };
   
@@ -146,32 +140,39 @@
   # Bind-mounts for services!
   #
 
+  # qbittorrent
+  fileSystems.${config.l3mon.qbittorrent.torrentDir} = {
+    device = "/mnt/torrent/downloads";
+    options = [ "rw" "_netdev" "bind" ];
+  };
+
   # restic
   fileSystems."/srv/restic-l3mon" = {
-    depends = ["/mnt/torrent"];
     device = "/mnt/torrent/restic-l3mon";
     options = [ "rw" "_netdev" "bind" ];
   };
-  l3mon.restic.dailyRequiredServices = ["srv-restic${''\''}x2dl3mon.mount"];
+  systemd.services.restic.unitConfig.RequiresMountsFor = "/srv/restic-l3mon";
 
   # immich
   fileSystems.${config.services.immich.mediaLocation} = {
-    depends = ["/mnt/torrent"];
     device = "/mnt/torrent/immich";
     options = [ "_netdev" "bind" ];
   };
-
-  # assume /var/lib/immich
-  assertions = [ {
-    assertion = config.services.immich.mediaLocation == "/var/lib/immich";
-    message = "Manually change the below unit-name for the bind-mount.";
-  } ];
-  systemd.services.immich.after = [ "var-lib-immich.mount" ];
+  systemd.services.immich.unitConfig.RequiresMountsFor = config.services.immich.mediaLocation;
 
   # samba
   fileSystems."/srv/samba/christel" = {
-    depends = ["/mnt/glacier"];
     device = "/mnt/glacier/samba/christel";
+    options = [ "_netdev" "bind" ];
+  };
+
+  # game-library
+  fileSystems."/var/lib/steam/library" = {
+    device = "/mnt/glacier/misc/games/steamlib";
+    options = [ "_netdev" "bind" ];
+  };
+  fileSystems."/srv/games/gog" = {
+    device = "/mnt/glacier/misc/games/gog";
     options = [ "_netdev" "bind" ];
   };
 
