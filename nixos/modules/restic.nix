@@ -6,6 +6,7 @@ let
 in {
   options.l3mon.restic = {
     enable = mkEnableOption (lib.mdDoc "Enable backups via restic.");
+    enable_server = mkEnableOption (lib.mdDoc "Enable restic-rest-server.");
 
     specs = mkOption {
       type = types.attrs;
@@ -59,146 +60,165 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (let
-    specs = cfg.specs;
-    shellApplicationSpecToCaller = spec: pkgs.writeShellApplication (
-        spec // {
-          name = "run";
-          runtimeInputs = (if spec ? runtimeInputs then spec.runtimeInputs else []) ++ [ pkgs.restic ];
-        } ) + "/bin/run";
+  config = mkMerge [
+    (mkIf cfg.enable (let
+      specs = cfg.specs;
+      shellApplicationSpecToCaller = spec: pkgs.writeShellApplication (
+          spec // {
+            name = "run";
+            runtimeInputs = (if spec ? runtimeInputs then spec.runtimeInputs else []) ++ [ pkgs.restic ];
+          } ) + "/bin/run";
 
-    specs_to_scriptlist = attr_name: (map (
-      name: let
-        bd = specs."${name}"."${attr_name}";
-      in shellApplicationSpecToCaller bd
-    ) (builtins.filter (name: specs."${name}" ? "${attr_name}") (builtins.attrNames specs)));
+      specs_to_scriptlist = attr_name: (map (
+        name: let
+          bd = specs."${name}"."${attr_name}";
+        in shellApplicationSpecToCaller bd
+      ) (builtins.filter (name: specs."${name}" ? "${attr_name}") (builtins.attrNames specs)));
 
-    remote_repo = (builtins.substring 0 1 cfg.repo.location) != "/";
-    envFile = pkgs.writeTextFile {
-      name = "restic-env";
-      text = ''
-        RESTIC_CACHE_DIR=/var/cache/restic
-        RESTIC_PASSWORD_FILE=${cfg.repo.passwordFile}
-        RESTIC_REPOSITORY=${cfg.repo.location}
-      '';
-    };
-    common_unit_opts = {
-      wants = if remote_repo then [ "network-online.target" ] else [];
-      after = if remote_repo then [ "network-online.target" ] else [];
-      serviceConfig = {
-        EnvironmentFile = [ "${envFile}" ];
-        Type = "oneshot";
-        User = "restic";
-        # This is set in the nixos-restic-service, and I don't think it's actually used... (does not seem like restic uses this directory)
-        # RuntimeDirectory = "restic";
-        CacheDirectory = "restic";
-        # make sure permissions are correct before backup.
-        # Maybe this is excessive.... But it's an easy way to enforce permissions on certain directories.
-        ExecStartPre = "+${pkgs.systemd}/bin/systemd-tmpfiles --create";
+      remote_repo = (builtins.substring 0 1 cfg.repo.location) != "/";
+      envFile = pkgs.writeTextFile {
+        name = "restic-env";
+        text = ''
+          RESTIC_CACHE_DIR=/var/cache/restic
+          RESTIC_PASSWORD_FILE=${cfg.repo.passwordFile}
+          RESTIC_REPOSITORY=${cfg.repo.location}
+        '';
       };
-    };
-  in {
-    users.users.restic = {
-      isSystemUser = true;
-      uid = config.ids.uids.restic;
-      group = "restic";
-    };
-    users.groups.restic.gid = config.ids.uids.restic;
+      common_unit_opts = {
+        wants = if remote_repo then [ "network-online.target" ] else [];
+        after = if remote_repo then [ "network-online.target" ] else [];
+        serviceConfig = {
+          EnvironmentFile = [ "${envFile}" ];
+          Type = "oneshot";
+          User = "restic";
+          # This is set in the nixos-restic-service, and I don't think it's actually used... (does not seem like restic uses this directory)
+          # RuntimeDirectory = "restic";
+          CacheDirectory = "restic";
+          # make sure permissions are correct before backup.
+          # Maybe this is excessive.... But it's an easy way to enforce permissions on certain directories.
+          ExecStartPre = "+${pkgs.systemd}/bin/systemd-tmpfiles --create";
+        };
+      };
+    in {
+      users.users.restic = {
+        isSystemUser = true;
+        uid = config.ids.uids.restic;
+        group = "restic";
+      };
+      users.groups.restic.gid = config.ids.uids.restic;
 
-    systemd = let
-      script_15min = concatStringsSep "\n" (specs_to_scriptlist "backup15min");
-      script_daily = concatStringsSep "\n" (
-        (specs_to_scriptlist "backupDaily") ++
-        (specs_to_scriptlist "forget") ++
-        (if cfg.doRepoMaintenance then [
-            ''
-              restic prune
-              restic check --read-data
-            ''
-          ] ++ map shellApplicationSpecToCaller cfg.maintenanceExtra else []));
-          
+      systemd = let
+        script_15min = concatStringsSep "\n" (specs_to_scriptlist "backup15min");
+        script_daily = concatStringsSep "\n" (
+          (specs_to_scriptlist "backupDaily") ++
+          (specs_to_scriptlist "forget") ++
+          (if cfg.doRepoMaintenance then [
+              ''
+                restic prune
+                restic check --read-data
+              ''
+            ] ++ map shellApplicationSpecToCaller cfg.maintenanceExtra else []));
+            
 
-      enable_15min = script_15min != "";
-      enable_daily = script_daily != "";
-    in (
-      mkMerge [
-        (if enable_15min then {
-          timers."restic-15min" = {
-            enable = true;
-            wantedBy = [ "timers.target" ];
-            timerConfig = {
-              OnBootSec = "15min";
-              OnUnitInactiveSec="15min";
-              Unit = "restic-15min.service";
+        enable_15min = script_15min != "";
+        enable_daily = script_daily != "";
+      in (
+        mkMerge [
+          (if enable_15min then {
+            timers."restic-15min" = {
+              enable = true;
+              wantedBy = [ "timers.target" ];
+              timerConfig = {
+                OnBootSec = "15min";
+                OnUnitInactiveSec="15min";
+                Unit = "restic-15min.service";
+              };
             };
-          };
-          services."restic-15min" = common_unit_opts // {
-            script = script_15min;
-          };
-        } else {})
-
-        (if enable_daily then {
-          timers."restic-daily" = {
-            enable = true;
-            wantedBy = [ "timers.target" ];
-            timerConfig = {
-              Persistent = true;
-              OnCalendar = "*-*-* " + cfg.dailyBackupTime;
-              Unit = "restic-daily.service";
+            services."restic-15min" = common_unit_opts // {
+              script = script_15min;
             };
-          };
+          } else {})
 
-          # mkMerge because we have multiple after,requires-keys, and // would
-          # override.
-          services."restic-daily" = lib.mkMerge [
-            common_unit_opts
-            {
-              after = cfg.dailyRequiredServices;
-              requires = cfg.dailyRequiredServices;
+          (if enable_daily then {
+            timers."restic-daily" = {
+              enable = true;
+              wantedBy = [ "timers.target" ];
+              timerConfig = {
+                Persistent = true;
+                OnCalendar = "*-*-* " + cfg.dailyBackupTime;
+                Unit = "restic-daily.service";
+              };
+            };
 
-              # stop services via `conflicts`, make sure they are stopped via
-              # `before`, and restart them via `onSuccess` or `onFailure` (so they are always restarted!).
-              conflicts = cfg.dailyStopResumeServices;
-              before = cfg.dailyStopResumeServices;
-              onSuccess = cfg.dailyStopResumeServices;
-              onFailure = cfg.dailyStopResumeServices;
+            # mkMerge because we have multiple after,requires-keys, and // would
+            # override.
+            services."restic-daily" = lib.mkMerge [
+              common_unit_opts
+              {
+                after = cfg.dailyRequiredServices;
+                requires = cfg.dailyRequiredServices;
 
-              path = [ pkgs.restic ];
-              script = script_daily;
-            }
-          ];
-        } else {})
-        {
-          tmpfiles.rules = [
-            "d  ${cfg.repo.location}    0755    restic  restic"
-          ];
+                # stop services via `conflicts`, make sure they are stopped via
+                # `before`, and restart them via `onSuccess` or `onFailure` (so they are always restarted!).
+                conflicts = cfg.dailyStopResumeServices;
+                before = cfg.dailyStopResumeServices;
+                onSuccess = cfg.dailyStopResumeServices;
+                onFailure = cfg.dailyStopResumeServices;
+
+                path = [ pkgs.restic ];
+                script = script_daily;
+              }
+            ];
+          } else {})
+          {
+            tmpfiles.rules = [
+              "d  ${cfg.repo.location}    0755    restic  restic"
+            ];
+          }
+        ]
+      );
+
+      l3mon.restic.wrapper = pkgs.writeShellApplication {
+        name = "l3mon-restic";
+        runtimeInputs = [ pkgs.restic pkgs.coreutils pkgs.bashInteractive ];
+        text = ''
+          set -a
+          # shellcheck disable=SC1091
+          source ${envFile}
+          if [ $# == 1 ] && [ "$1" == "mount" ]; then
+            dir=$(mktemp -d)
+            sudo chown restic:restic "$dir"
+            sudo chmod 777 "$dir"
+            sudo -E -u restic restic mount "$dir" --allow-other &
+            pid=$!
+            sleep 1.4
+            pushd "$dir"
+            bash
+            popd
+            kill -SIGINT "$pid"
+            wait
+          else
+            sudo -E -u restic restic "$@"
+          fi
+        '';
+      };
+    }))
+    (mkIf cfg.enable_server (let
+      port = data.ports.restic-rest-server;
+      machine_lan_address = data.network.lan.peers.${machine}.address;
+    in {
+      services.restic.server = {
+        enable = true;
+        listenAddress = "0.0.0.0:${port}";
+        dataDir = "/srv/restic-l3mon";
+        extraFlags = [ "--no-auth" ];
+      };
+      services.caddy.extraConfig = ''
+        http://restic, http://restic.internal, http://restic.${machine} {
+          reverse_proxy http://${machine_lan_address}:${port}
         }
-      ]
-    );
-
-    l3mon.restic.wrapper = pkgs.writeShellApplication {
-      name = "l3mon-restic";
-      runtimeInputs = [ pkgs.restic pkgs.coreutils pkgs.bashInteractive ];
-      text = ''
-        set -a
-        # shellcheck disable=SC1091
-        source ${envFile}
-        if [ $# == 1 ] && [ "$1" == "mount" ]; then
-          dir=$(mktemp -d)
-          sudo chown restic:restic "$dir"
-          sudo chmod 777 "$dir"
-          sudo -E -u restic restic mount "$dir" --allow-other &
-          pid=$!
-          sleep 1.4
-          pushd "$dir"
-          bash
-          popd
-          kill -SIGINT "$pid"
-          wait
-        else
-          sudo -E -u restic restic "$@"
-        fi
       '';
-    };
-  });
+    }))
+  ];
+
 }
