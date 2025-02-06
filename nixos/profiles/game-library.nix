@@ -107,28 +107,13 @@ let
     '';
   };
 in {
-  # provide more storage-capacity for steam and gog.
-  fileSystems."/var/lib/steam/library" = {
-    depends = ["/mnt/glacier"];
-    device = "/mnt/glacier/misc/games/steamlib";
-    options = [ "_netdev" "bind" ];
-  };
-
-  fileSystems."/srv/games/gog" = {
-    depends = ["/mnt/glacier"];
-    device = "/mnt/glacier/misc/games/gog";
-    options = [ "_netdev" "bind" ];
-  };
-
   # for clients: nfs-mount this share.
   fileSystems."/srv/nfs/steamlib" = {
-    depends = ["/mnt/glacier"];
-    device = "/mnt/glacier/misc/games/steamlib";
+    device = "/var/lib/steam/library";
     options = [ "_netdev" "bind" ];
   };
   fileSystems."/srv/nfs/gog" = {
-    depends = ["/mnt/glacier"];
-    device = "/mnt/glacier/misc/games/gog";
+    device = "/srv/games/gog";
     options = [ "_netdev" "bind" ];
   };
 
@@ -145,7 +130,6 @@ in {
   # figure out how to change that -> just place library there.
   # symlink is overwritten, use bindmount instead :/
   fileSystems."/var/lib/steam/cmd/.local/share/Steam/steamapps" = {
-    depends = ["/var/lib/steam/library"];
     device = "/var/lib/steam/library/steamapps";
     options = [ "_netdev" "bind" ];
   };
