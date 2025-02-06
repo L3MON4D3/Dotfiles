@@ -76,6 +76,7 @@
   # indigo
   l3mon.restic = {
     enable = true;
+    enable_server = true;
     repo = {
       location = "/srv/restic-l3mon";
       passwordFile = "/var/secrets/restic-l3mon";

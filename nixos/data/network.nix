@@ -33,6 +33,7 @@ rec {
           "zotero"
           "radicale"
           "webdav"
+          "restic"
         ];
       };
       indigo_mullvad_de = {
