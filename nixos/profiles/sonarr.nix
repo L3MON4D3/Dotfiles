@@ -44,9 +44,10 @@ in
     # reset settings to default, insert api-key.
     system.activationScripts = {
       sonarr = {
-        text = ''
+        text = (l3lib.assertSecret "sonarr_env") + 
+        ''
           install -d -o sonarr -g sonarr ${statedir}
-          source /var/secrets/sonarr_env
+          source ${l3lib.secret "sonarr_env"}
           SONARR_API_KEY=$SONARR_API_KEY ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${statedir}/config.xml
           chown sonarr:sonarr ${statedir}/config.xml
         '';

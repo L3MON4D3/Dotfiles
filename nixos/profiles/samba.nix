@@ -52,9 +52,11 @@
 
   system.activationScripts = {
     samba-users = {
-      text = ''
-        echo -ne "$(cat /var/secrets/smb_passwd_christel)\n$(cat /var/secrets/smb_passwd_christel)\n" | ${pkgs.samba}/bin/smbpasswd -a christel
-        echo -ne "$(cat /var/secrets/smb_passwd_simon)\n$(cat /var/secrets/smb_passwd_simon)\n" | ${pkgs.samba}/bin/smbpasswd -a simon
+      text = (l3lib.assertSecret "smb_passwd_christel") + 
+             (l3lib.assertSecret "smb_passwd_simon") + 
+      ''
+        echo -ne "$(cat ${l3lib.secret "smb_passwd_christel"})\n$(cat ${l3lib.secret "smb_passwd_christel"})\n" | ${pkgs.samba}/bin/smbpasswd -a christel
+        echo -ne "$(cat ${l3lib.secret "smb_passwd_simon"})\n$(cat ${l3lib.secret "smb_passwd_simon"})\n" | ${pkgs.samba}/bin/smbpasswd -a simon
       '';
     };
   };

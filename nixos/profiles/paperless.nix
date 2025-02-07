@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, l3lib, pkgs, machine, data, ... }:
 
 let
   machine_lan_address = data.network.lan.peers.${machine}.address;
@@ -10,7 +10,7 @@ in {
     address = "paperless.internal";
     port = lib.toInt port;
 
-    passwordFile = "/var/secrets/paperless_password";
+    passwordFile = l3lib.secret "paperless_password";
     settings = {
       PAPERLESS_OCR_LANGUAGE = "deu+eng";
       PAPERLESS_OCR_USER_ARGS = {

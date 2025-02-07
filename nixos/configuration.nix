@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, data, ... }:
+{ config, lib, l3lib, pkgs, inputs, data, ... }:
 
 {
   disabledModules = ["services/databases/mysql.nix"];
@@ -147,7 +147,7 @@
   security.pam.services.sudo.nodelay = true;
 
   users.mutableUsers = false;
-  users.users.root.hashedPasswordFile = "/var/secrets/root_password_hashed";
+  users.users.root.hashedPasswordFile = l3lib.secret "root_password_hashed";
 
   # system.copySystemConfiguration = true;
 

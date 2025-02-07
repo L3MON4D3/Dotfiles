@@ -1,4 +1,4 @@
-{ config, lib, pkgs, data, machine, ... }:
+{ config, lib, l3lib, pkgs, data, machine, ... }:
 
 {
   imports =
@@ -77,7 +77,7 @@
     enable_server = true;
     repo = {
       location = "/srv/restic-l3mon";
-      passwordFile = "/var/secrets/restic-l3mon";
+      passwordFile = l3lib.secret "restic-l3mon";
     };
     dailyBackupTime = "03:00:00";
     doRepoMaintenance = true;
