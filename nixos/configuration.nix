@@ -123,8 +123,6 @@
     lm_sensors # for `sensors` command
     pciutils # lspci
     usbutils # lsusb
-
-    l3mon.netns-exec
   ];
 
   nixpkgs.overlays = [

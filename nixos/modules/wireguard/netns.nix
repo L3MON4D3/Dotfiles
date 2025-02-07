@@ -192,6 +192,11 @@ in {
         };
       };
 
+      
+      environment.systemPackages = with pkgs; [
+        l3mon.netns-exec
+      ];
+
       l3mon.network_namespaces.mkNetnsService = (wg_network: service: lib.mkMerge [
         service
         (
