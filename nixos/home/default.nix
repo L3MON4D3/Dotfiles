@@ -1,10 +1,6 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
-  # imports = [
-    # ./profiles/zotero.nix
-  # ];
-
   home.username = "simon";
   home.homeDirectory = "/home/simon";
 
