@@ -4,11 +4,11 @@
   disabledModules = ["services/databases/mysql.nix"];
 
   imports = [
+    # supersede nixpkgs' mysql module.
     ./modules/mysql.nix
 
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
-    ./profiles/simon.nix
   ];
 
   # Set your time zone.
@@ -30,7 +30,6 @@
   # override builtin aliases like ls.
   environment.shellAliases = {
     n = "nvim";
-    re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';
     ".." = "cd ..";
     g = "git";
     # keep environment, like EDITOR.

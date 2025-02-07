@@ -9,6 +9,8 @@
       ../../modules/wireguard/host.nix
       ../../modules/restic.nix
 
+      ../../profiles/simon.nix
+
       ../../profiles/localnet.nix
       ../../profiles/qbittorrent.nix
       ../../profiles/radarr.nix
@@ -198,4 +200,8 @@
   # enable restics allowOther-flag, so any user (eg simon) can access a
   # fuser-mounted directory.
   programs.fuse.userAllowOther = true;
+
+  environment.shellAliases = {
+    re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';
+  };
 }
