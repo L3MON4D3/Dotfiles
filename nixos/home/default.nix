@@ -1,13 +1,9 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
+  imports=[ ./profiles/neovim.nix ];
   home.username = "simon";
   home.homeDirectory = "/home/simon";
-
-  # link the configuration file in current directory to the specified location in home directory
-  # home.file.".config/i3/wallpaper.jpg".source = ./wallpaper.jpg;
-
-  xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/projects/dotfiles/nvim";
 
   home.file.".ssh/id_rsa".source = config.lib.file.mkOutOfStoreSymlink "/var/secrets/id_rsa";
   home.file.".ssh/id_rsa.pub".source = config.lib.file.mkOutOfStoreSymlink "/var/secrets/id_rsa.pub";
@@ -16,21 +12,6 @@
   # home.file.".xxx".text = ''
   #     xxx
   # '';
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    extraPackages = [
-      "${pkgs.clang}"
-      "${pkgs.tree-sitter}"
-      "${pkgs.nodejs}"
-      "${pkgs.luarocks}"
-      "${pkgs.luajit}"
-      "${pkgs.lua-language-server}"
-    ];
-    package = inputs.neovim-nightly.packages.${pkgs.system}.default;
-  };
-
 
   programs.git = {
     enable = true;
