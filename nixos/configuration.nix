@@ -141,6 +141,9 @@
   security.pam.services.su.nodelay = true;
   security.pam.services.sudo.nodelay = true;
 
+  users.mutableUsers = false;
+  users.users.root.hashedPasswordFile = "/var/secrets/root_password_hashed";
+
   # system.copySystemConfiguration = true;
 
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
