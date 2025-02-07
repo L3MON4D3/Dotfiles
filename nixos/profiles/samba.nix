@@ -8,7 +8,7 @@
         "security" = "user";
         "dns proxy" = "no";
         "server role" = "standalone server";
-        "server string" = ${machine};
+        "server string" = machine;
         "idmap config * : backend" = "tdb";
         "hosts allow" = "192.168.178. 127. 10.0.0.";
         "logging" = "systemd";
