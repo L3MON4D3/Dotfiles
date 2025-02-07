@@ -34,7 +34,7 @@ in {
   systemd.tmpfiles.rules = lib.mkAfter [
     "A /var/lib/paperless - - - - g:paperless:rX"
   ];
-  users.users.restic.extraGroups = [ "paperless" ];
+  l3mon.restic.extraGroups = [ "paperless" ];
   l3mon.restic.dailyStopResumeServices = [
     "paperless-consumer.service"
     "paperless-scheduler.service"

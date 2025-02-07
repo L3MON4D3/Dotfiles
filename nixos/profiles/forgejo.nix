@@ -40,7 +40,7 @@ in {
     "z '${cfg.stateDir}/.ssh' 0750 forgejo forgejo"
   ];
 
-  users.users.restic.extraGroups = [ "forgejo" ];
+  l3mon.restic.extraGroups = [ "forgejo" ];
   l3mon.restic.dailyStopResumeServices = [ "forgejo.service" ];
   l3mon.restic.dailyRequiredServices = [ "mysql.service" ];
   l3mon.restic.specs.forgejo = {

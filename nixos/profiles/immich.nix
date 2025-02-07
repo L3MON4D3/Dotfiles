@@ -30,7 +30,7 @@ in {
     $PSQL immich -tAc 'GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO restic' || true
   '';
 
-  users.users.restic.extraGroups = [ "immich" ];
+  l3mon.restic.extraGroups = [ "immich" ];
   l3mon.restic = {
     dailyStopResumeServices = ["immich-server.service"];
     dailyRequiredServices = [ "postgresql.service" ];

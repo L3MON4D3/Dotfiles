@@ -22,7 +22,7 @@
     "d /home/simon/.config 0750 simon simon"
   ];
 
-  users.users.restic.extraGroups = ["simon"];
+  l3mon.restic.extraGroups = [ "simon" ];
   l3mon.restic.specs.simon = {
     backup15min = {
       text = ''

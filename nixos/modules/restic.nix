@@ -55,6 +55,12 @@ in {
       type = with types; listOf attrs;
       description = lib.mdDoc "Additional attrs passed to pkgs.writeShellApplication and executed during daily backup tasks.";
     };
+
+    extraGroups = mkOption {
+      type = with types; listOf str;
+      description = lib.mdDoc "Additional groups the backup-user should belong to. Use this to grant read-access to the backup-service.";
+      default = [];
+    };
   };
 
   config = mkMerge [
@@ -100,6 +106,7 @@ in {
       users.users.restic = {
         isSystemUser = true;
         uid = config.ids.uids.restic;
+        extraGroups = cfg.extraGroups;
         group = "restic";
       };
       users.groups.restic.gid = config.ids.uids.restic;
@@ -217,5 +224,4 @@ in {
       '';
     }))
   ];
-
 }

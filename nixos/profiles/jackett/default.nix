@@ -131,7 +131,7 @@ in
       }
     '';
     
-    users.users.restic.extraGroups = ["jackett"];
+    l3mon.restic.extraGroups = ["jackett"];
     l3mon.restic.specs.jackett = {
       backupDaily = {
         text = ''

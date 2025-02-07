@@ -59,7 +59,7 @@
     };
   };
 
-  users.users.restic.extraGroups = [ "christel" "samba" ];
+  l3mon.restic.extraGroups = [ "christel" "samba" ];
   l3mon.restic.specs.samba = {
     backupDaily = {
       text = ''

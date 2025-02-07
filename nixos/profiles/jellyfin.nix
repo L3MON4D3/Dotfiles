@@ -17,7 +17,7 @@ in {
     }
   '';
 
-  users.users.restic.extraGroups = [ "jellyfin" ];
+  l3mon.restic.extraGroups = [ "jellyfin" ];
   # allow group read-access so restic can read everything.
   systemd.services.jellyfin.serviceConfig.UMask = mkForce 0027;
 

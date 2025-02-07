@@ -124,7 +124,7 @@ in {
     /srv/nfs/remarkable-local 192.168.178.0/24(rw,all_squash,anonuid=${toString rmfakecloud_id},anongid=${toString rmfakecloud_id})
   '';
 
-  users.users.restic.extraGroups = [ "rmfakecloud" ];
+  l3mon.restic.extraGroups = [ "rmfakecloud" ];
   l3mon.restic.dailyStopResumeServices = [ "rmfakecloud.service" ];
   l3mon.restic.specs.rmfakecloud = {
     # create two tags, one for files and one for the database-backup.
