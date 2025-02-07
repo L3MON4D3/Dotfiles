@@ -44,6 +44,7 @@
     l = "ls";
     la = "ls -a";
     ll = "ls -la";
+    rs = "rsync -ah --progress --info=progress2";
   };
   programs.bash.interactiveShellInit = ''
     where() {
@@ -120,6 +121,7 @@
     strace # system call monitoring
     ltrace # library call monitoring
     lsof # list open files
+    rsync
 
     # system tools
     sysstat
