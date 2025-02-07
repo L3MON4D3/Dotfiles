@@ -7,6 +7,10 @@
     ./hardware-configuration.nix
   ];
 
+  environment.shellAliases = {
+    re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#carmine"'';
+  };
+
   fileSystems."/srv/misc" = {
     device = "indigo:/misc";
     fsType = "nfs";
