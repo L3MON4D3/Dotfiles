@@ -49,10 +49,7 @@ in {
       readOnly = true;
     };
 
-    doRepoMaintenance = mkOption {
-      type = types.bool;
-      description = lib.mdDoc "Whether to perform prune and check on restic repo.";
-    };
+    doRepoMaintenance = mkEnableOption "Whether to perform prune and check on restic repo.";
 
     maintenanceExtra = mkOption {
       type = with types; listOf attrs;
