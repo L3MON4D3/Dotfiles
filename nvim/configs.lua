@@ -416,6 +416,9 @@ matchconfig.register(mft"python", c{
 			name = 'launch',
 			program = '${file}',
 			cwd = '${workspaceFolder}',
+			env = {
+				PYTHONPATH = "${workspaceFolder}"
+			},
 			justMyCode = false
 		}
 	}
