@@ -5,10 +5,6 @@
     [
       ./hardware-configuration.nix
 
-      ../../modules/wireguard/netns.nix
-      ../../modules/wireguard/host.nix
-      ../../modules/restic.nix
-
       ../../profiles/simon.nix
 
       ../../profiles/localnet.nix
