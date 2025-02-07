@@ -100,14 +100,6 @@
     lr = "l3mon-restic";
   };
 
-  users.users.media = {
-    isSystemUser = true;
-    uid = data.ids.media;
-    group = "media";
-  };
-  users.groups.media.gid = data.ids.media;
-
-
   # for now, need some way to access large storage devices.
   fileSystems."/mnt/.misc" = {
     device = "192.168.178.5:/misc";
@@ -134,6 +126,25 @@
     device = "/mnt/glacier/media";
     options = [ "rw" "_netdev" "bind" ];
   };
+  
+  # nfs
+  fileSystems."/srv/nfs/media" = {
+    device = "/srv/media";
+    options = [ "bind" ];
+  };
+  fileSystems."/srv/nfs/misc" = {
+    device = "/srv/misc";
+    options = [ "bind" ];
+  };
+  # fileSystems."/srv/nfs/misc" = {
+    # device = "192.168.178.5:/misc";
+    # fsType = "nfs";
+    # options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
+  # };
+  services.nfs.server.exports = ''
+    /srv/nfs/media 192.168.178.0/24(rw)
+    /srv/nfs/misc 192.168.178.0/24(rw,no_root_squash)
+  '';
   
   #
   # Bind-mounts for services!

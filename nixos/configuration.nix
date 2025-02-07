@@ -149,6 +149,16 @@
   users.mutableUsers = false;
   users.users.root.hashedPasswordFile = l3lib.secret "root_password_hashed";
 
+  # common users
+  users.users.media = {
+    isSystemUser = true;
+    uid = data.ids.media;
+    group = "media";
+  };
+  users.groups.media.gid = data.ids.media;
+
+
+
   # system.copySystemConfiguration = true;
 
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
