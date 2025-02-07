@@ -6,6 +6,10 @@
   imports = [
     # supersede nixpkgs' mysql module.
     ./modules/mysql.nix
+    ./modules/restic.nix
+    ./modules/zotero.nix
+    ./modules/wireguard/netns.nix
+    ./modules/wireguard/host.nix
 
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
