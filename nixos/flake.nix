@@ -16,33 +16,63 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: {
-    nixosConfigurations.indigo = nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs = {
-        pkgs-unstable = import nixpkgs-unstable {
-          inherit system;
-          config.allowUnfree = true;
-        };
-      };
-      modules = [
-        ./configuration.nix
-        ./machines/indigo
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-
-          home-manager.users.simon = import ./home;
-          home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; };
-        }
-        {
-          _module.args = {
-            inherit inputs;
-            data = import ./data;
-            machine = "indigo";
+    nixosConfigurations = {
+      indigo = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          pkgs-unstable = import nixpkgs-unstable {
+            inherit system;
+            config.allowUnfree = true;
           };
-        }
-      ];
+        };
+        modules = [
+          ./configuration.nix
+          ./machines/indigo
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+
+            home-manager.users.simon = import ./home;
+            home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; };
+          }
+          {
+            _module.args = {
+              inherit inputs;
+              data = import ./data;
+              machine = "indigo";
+            };
+          }
+        ];
+      };
+      carmine = nixpkgs.lib.nixosSystem rec {
+        system = "x86_64-linux";
+        specialArgs = {
+          pkgs-unstable = import nixpkgs-unstable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        };
+        modules = [
+          ./configuration.nix
+          ./machines/carmine
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+
+            home-manager.users.simon = import ./home;
+            home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; };
+          }
+          {
+            _module.args = {
+              inherit inputs;
+              data = import ./data;
+              machine = "carmine";
+            };
+          }
+        ];
+      };
     };
   };
 }

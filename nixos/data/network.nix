@@ -12,6 +12,11 @@ rec {
         address = "192.168.178.6";
         interface = "enp34s0";
       };
+      carmine = {
+        machine_id = "carmine";
+        address = "192.168.178.21";
+        interface = "ens3";
+      };
       cinnabar = {
         address = "192.168.178.5";
       };
