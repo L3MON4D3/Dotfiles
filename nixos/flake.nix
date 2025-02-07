@@ -41,6 +41,7 @@
               inherit inputs;
               data = import ./data;
               machine = "indigo";
+              l3lib = import ./lib.nix;
             };
           }
         ];
