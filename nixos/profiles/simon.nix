@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, l3lib, pkgs, machine, data, ... }:
 
 {
   users.users.simon = {
@@ -9,13 +9,27 @@
       "media"
     ]; # Enable ‘sudo’ for the user and provide user-group.
     uid = data.ids.simon;
-    hashedPasswordFile = "/var/secrets/simon_password_hashed";
+    hashedPasswordFile = l3lib.secret "simon_password_hashed";
   };
   users.groups.simon.gid = data.ids.simon;
 
   users.users.simon.openssh.authorizedKeys.keys = [
     data.pubkey
   ];
+
+  system.activationScripts = {
+    qbittorrent = {
+      text = 
+      (l3lib.assertSecret "id_rsa") + 
+      (l3lib.assertSecret "id_rsa.pub") + 
+      ''
+        install -d -o simon -g simon /home/simon/.ssh
+        install -D -o simon -g simon -m 600 ${l3lib.secret "id_rsa"} /home/simon/.ssh/id_rsa
+        install -D -o simon -g simon -m 640 ${l3lib.secret "id_rsa.pub"} /home/simon/.ssh/id_rsa.pub
+      '';
+    };
+  };
+  
 
   systemd.tmpfiles.rules = [
     "d /home/simon 0750 simon simon"

@@ -83,7 +83,7 @@ in
     users.groups.qbittorrent.gid = data.ids.qbittorrent;
 
     system.activationScripts = {
-      radarr = {
+      qbittorrent = {
         text = ''
           install -D -o qbittorrent -g qbittorrent ${initial_qb_conf} ${qb_statedir}/qBittorrent/config/qBittorrent.conf
           chown qbittorrent:qbittorrent \

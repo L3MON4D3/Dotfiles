@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, l3lib, pkgs, machine, data, ... }:
 
 let
   update_steam = pkgs.writeShellApplication {
@@ -162,7 +162,7 @@ in {
   systemd.services.update-games = {
     description = "Update Steam and GOG-Games";
     serviceConfig = {
-      LoadCredential = "passwd:/var/secrets/steam_password";
+      LoadCredential = "passwd:${l3lib.secret "steam_password"}";
       User = "simon";
       Group = "simon";
     };

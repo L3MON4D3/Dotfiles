@@ -21,11 +21,13 @@ let
 in {
   system.activationScripts = {
     ddns-updater = {
-      text = ''
-
+      text =
+      (l3lib.assertSecret "porkbun_api_key") +
+      (l3lib.assertSecret "porkbun_secret_api_key") +
+      ''
         (umask 0077 && \
-        PORKBUN_API_KEY=$(cat /var/secrets/porkbun_api_key) \
-        PORKBUN_SECRET_API_KEY=$(cat /var/secrets/porkbun_secret_api_key) \
+        PORKBUN_API_KEY=$(cat ${l3lib.secret "porkbun_api_key"}) \
+        PORKBUN_SECRET_API_KEY=$(cat ${l3lib.secret "porkbun_secret_api_key"}) \
         ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${runtime_conf_file})
       '';
     };

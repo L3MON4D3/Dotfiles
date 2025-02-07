@@ -43,9 +43,10 @@ in
     # reset settings to default, insert api-key.
     system.activationScripts = {
       radarr = {
-        text = ''
+        text = l3lib.assertSecret "radarr_env" +
+        ''
           install -d -o radarr -g radarr ${statedir}
-          source /var/secrets/radarr_env
+          source ${l3lib.secret "radarr_env"}
           RADARR_API_KEY=$RADARR_API_KEY ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${statedir}/config.xml
           chown radarr:radarr ${statedir}/config.xml
         '';

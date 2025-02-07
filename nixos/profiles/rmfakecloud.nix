@@ -1,9 +1,9 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, l3lib, pkgs, machine, data, ... }:
 
 let 
   rmfakecloud = pkgs.rmfakecloud;
   statedir = "/var/lib/rmfakecloud";
-  secret_key_env_file = "/var/secrets/rmfakecloud_env";
+  secret_key_env_file = l3lib.secret "rmfakecloud_env";
   machine_lan_address = data.network.lan.peers.${machine}.address;
   port = data.ports.rmfakecloud;
   userprofile = pkgs.writeTextFile {

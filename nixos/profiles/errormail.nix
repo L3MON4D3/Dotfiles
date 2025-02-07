@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, l3lib, pkgs, machine, data, ... }:
 
 let
   target_email = "simon@l3mon4.de";
@@ -66,7 +66,7 @@ in {
       host = "smtp.gmail.com";
       from = "luisjakob.katz@gmail.com";
       user = "luisjakob.katz@gmail.com";
-      passwordeval = "cat /var/secrets/gmail_password";
+      passwordeval = "cat ${l3lib.secret "gmail_password"}";
     };
   };
 
@@ -83,7 +83,7 @@ in {
   systemd.services."statusmail@" = {
     description = "Send email with status of service %i to ${target_email}.";
     serviceConfig = {
-      LoadCredential = "gmail_password:/var/secrets/gmail_password";
+      LoadCredential = "gmail_password:${l3lib.secret "gmail_password"}";
       DynamicUser = true;
       ExecStart = "${notify-systemd}/bin/notify-systemd %i %d/gmail_password";
       # allow reading journal-entries for various services.

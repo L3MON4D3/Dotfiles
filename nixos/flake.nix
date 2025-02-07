@@ -69,6 +69,7 @@
               inherit inputs;
               data = import ./data;
               machine = "carmine";
+              l3lib = import ./lib.nix;
             };
           }
         ];
