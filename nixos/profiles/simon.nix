@@ -9,6 +9,7 @@
       "media"
     ]; # Enable ‘sudo’ for the user and provide user-group.
     uid = data.ids.simon;
+    hashedPasswordFile = "/var/secrets/simon_password_hashed";
   };
   users.groups.simon.gid = data.ids.simon;
 
