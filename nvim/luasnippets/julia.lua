@@ -11,8 +11,8 @@ s_add("for", fmt([[
 	end
 ]], ins_generate()))
 parse_add("d", "display(${1:$LS_SELECT_DEDENT})")
-parse_add_auto("theta", "θ")
-parse_add_auto("phi", "φ")
+-- parse_add_auto("theta", "θ")
+-- parse_add_auto("phi", "φ")
 -- parse_add_auto("alpha", "α")
 -- parse_add_auto("pi", "π")
 -- parse_add_auto("eta", "η")
