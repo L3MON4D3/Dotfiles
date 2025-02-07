@@ -26,7 +26,7 @@ in {
   systemd.tmpfiles.rules = [
     "d ${dav_root} 0750 caddy caddy"
   ];
-  users.users.restic.extraGroups = [ "caddy" ];
+  l3mon.restic.extraGroups = [ "caddy" ];
   l3mon.restic.specs.webdav = {
     backupDaily = {
       text = ''

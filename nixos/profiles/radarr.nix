@@ -78,7 +78,7 @@ in
       }
     '';
 
-    users.users.restic.extraGroups = ["radarr"];
+    l3mon.restic.extraGroups = ["radarr"];
     l3mon.restic.specs.radarr = {
       backupDaily = {
         text = ''

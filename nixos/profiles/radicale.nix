@@ -23,7 +23,7 @@ in {
     }
   '';
 
-  users.users.restic.extraGroups = [ "radicale" ];
+  l3mon.restic.extraGroups = [ "radicale" ];
   l3mon.restic = {
     dailyStopResumeServices = [ "radicale.service" ]; 
     specs.radicale = {

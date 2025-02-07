@@ -87,7 +87,7 @@ in
       }
     '';
 
-    users.users.restic.extraGroups = ["sonarr"];
+    l3mon.restic.extraGroups = ["sonarr"];
     l3mon.restic.specs.sonarr = {
       backupDaily = {
         text = ''

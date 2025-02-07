@@ -121,7 +121,7 @@ in
       }
     '';
 
-    users.users.restic.extraGroups = [ "qbittorrent" ];
+    l3mon.restic.extraGroups = [ "qbittorrent" ];
     l3mon.restic.specs.qbittorrent = {
       backupDaily = {
         text = ''
