@@ -34,7 +34,7 @@
             home-manager.useUserPackages = true;
 
             home-manager.users.simon = import ./home;
-            home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; };
+            home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; data = import ./data; };
           }
           {
             _module.args = {
@@ -63,7 +63,7 @@
             home-manager.useUserPackages = true;
 
             home-manager.users.simon = import ./home;
-            home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; };
+            home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; data = import ./data; };
           }
           {
             _module.args = {
