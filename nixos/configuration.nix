@@ -94,6 +94,7 @@
     # utils
     ripgrep
     shellcheck
+    fd
 
     # networking tools
     dig
@@ -107,7 +108,6 @@
     tree
     dust
     wireguard-tools
-    restic
 
     # nix related
     nix-output-monitor
