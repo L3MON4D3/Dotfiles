@@ -111,6 +111,10 @@ in {
       };
       users.groups.restic.gid = config.ids.uids.restic;
 
+      # enable restics allowOther-flag, so any user (eg simon) can access a
+      # fuser-mounted directory owned by restic.
+      programs.fuse.userAllowOther = true;
+
       systemd = let
         script_15min = concatStringsSep "\n" (specs_to_scriptlist "backup15min");
         script_daily = concatStringsSep "\n" (
