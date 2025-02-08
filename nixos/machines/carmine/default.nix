@@ -25,4 +25,6 @@
   };
 
   boot.loader.systemd-boot.enable = true;
+
+  services.dbus.implementation = "broker";
 }
