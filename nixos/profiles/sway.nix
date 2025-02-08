@@ -19,8 +19,10 @@
 
   # fonts.
   fonts = {
-    packages = [
-      pkgs.l3mon.iosevka
+    packages = with pkgs; [
+      l3mon.iosevka
+      julia-mono
+      nerdfonts
     ];
     enableDefaultPackages = true;
   };
@@ -58,6 +60,47 @@
         programs.foot = {
           enable = true;
           server.enable = true;
+          settings = {
+            main = {
+              font =
+                "NotoColorEmoji:size=10:antialias=true:autohint=true," +
+                "iosevka:size=10:antialias=true:autohint=true," +
+                "juliamono:size=10:antialias=true:autohint=true," +
+                "codicon:size=10:antialias=true:autohint=true," +
+                "Symbols Nerd Font Mono:size=10:antialias=true:autohint=true";
+              term = "foot-extra";
+              underline-thickness="1px";
+              underline-offset="4px";
+            };
+            cursor.underline-thickness="2px";
+            colors = {
+              foreground="fbf1c7";
+              background="1d2021";
+
+              regular0="1d2021";
+              # adjust red
+              regular1="d75151";
+              regular2="98971a";
+              regular3="d79921";
+              regular4="458588";
+              regular5="b16286";
+              regular6="689d6a";
+              regular7="a89984";
+
+              bright0="928374";
+              bright1="fb4934";
+              bright2="b8bb26";
+              bright3="fabd2f";
+              bright4="83a598";
+              bright5="d3869b";
+              bright6="8ec07c";
+              bright7="fbf1c7";
+            };
+            tweak = {
+              box-drawing-base-thickness = 0.06;
+              font-monospace-warn = "no";
+            };
+          };
         };
       }
     )
