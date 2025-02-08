@@ -92,7 +92,6 @@
       }
     ];
   };
-
   environment.systemPackages = with pkgs; [
     config.l3mon.restic.wrapper
   ];
@@ -201,12 +200,7 @@
   ];
 
   services.dbus.implementation = "broker";
-
   l3mon.zotero.enable_server = true;
-
-  # enable restics allowOther-flag, so any user (eg simon) can access a
-  # fuser-mounted directory.
-  programs.fuse.userAllowOther = true;
 
   environment.shellAliases = {
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';
