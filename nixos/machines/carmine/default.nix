@@ -5,6 +5,8 @@
     ../../profiles/simon.nix
     ../../profiles/localnet.nix
     ./hardware-configuration.nix
+
+    ../../profiles/sway.nix
   ];
 
   environment.shellAliases = {

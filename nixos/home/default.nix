@@ -1,7 +1,9 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
-  imports=[ ./profiles/neovim.nix ];
+  imports=[
+    ./profiles/neovim.nix
+  ];
   home.username = "simon";
   home.homeDirectory = "/home/simon";
 
