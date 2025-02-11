@@ -35,6 +35,16 @@ Or, and this seems very flexible: use envsubst in an activationScript to
 populate secrets via env-var into some template-file!
 See `profiles/radarr.nix` for an example.
 
+All secrets except the following are set up automatically:
+* gpg: Set these up via
+  ```
+  gpg --import /var/secrets/gpg-simljk@outlook.de.priv
+  gpg --import /var/secrets/gpg-simljk@outlook.de.priv-subkey
+  gpg --import /var/secrets/gpg-simljk@outlook.de.pub
+  gpg --edit-key <simljk-key>
+  trust 5
+  ```
+
 ## Steam
 Log into steam once with steamcmd and HOME=/var/lib/steam/cmd and enter
 steamguard-code, then it should run again for a while.
