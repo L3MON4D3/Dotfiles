@@ -13,6 +13,10 @@
       # to avoid problems caused by different versions of nixpkgs.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
   };
 
@@ -39,6 +43,7 @@
               inherit inputs nixpkgs-unstable;
               data = import ./data;
               l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
+              nur = inputs.nur.legacyPackages.${system};
             };
           }
           {
