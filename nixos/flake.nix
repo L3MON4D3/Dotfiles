@@ -16,8 +16,8 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: {
-    nixosConfigurations = {
-      indigo = nixpkgs.lib.nixosSystem rec {
+    nixosConfigurations = let
+      mkSimonConfig = machine_name: nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
         specialArgs = {
           pkgs-unstable = import nixpkgs-unstable {
@@ -27,7 +27,7 @@
         };
         modules = [
           ./configuration.nix
-          ./machines/indigo
+          ./machines/${machine_name}
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -44,45 +44,15 @@
             _module.args = {
               inherit inputs;
               data = import ./data;
-              machine = "indigo";
+              machine = machine_name;
               l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
             };
           }
         ];
       };
-      carmine = nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
-        specialArgs = {
-          pkgs-unstable = import nixpkgs-unstable {
-            inherit system;
-            config.allowUnfree = true;
-          };
-        };
-        modules = [
-          ./configuration.nix
-          ./machines/carmine
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.simon = import ./home;
-            home-manager.extraSpecialArgs = {
-              inherit inputs nixpkgs-unstable;
-              data = import ./data;
-              l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
-            };
-          }
-          {
-            _module.args = {
-              inherit inputs;
-              data = import ./data;
-              machine = "carmine";
-              l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
-            };
-          }
-        ];
-      };
+    in {
+      indigo = mkSimonConfig "indigo";
+      carmine = mkSimonConfig "carmine";
     };
   };
 }
