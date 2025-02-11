@@ -26,5 +26,12 @@
 
   boot.loader.systemd-boot.enable = true;
 
+  l3mon.network_namespaces = {
+    enable = true;
+    network_configs = [
+      data.network.wireguard_home2
+    ];
+  };
+
   services.dbus.implementation = "broker";
 }
