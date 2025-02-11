@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    netns-exec.url = "github:L3MON4D3/netns-exec";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
@@ -42,7 +43,7 @@
           }
           {
             _module.args = {
-              inherit inputs;
+              inherit inputs system;
               data = import ./data;
               machine = machine_name;
               l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };

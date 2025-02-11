@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, machine, data, inputs, system, ... }:
 
 with lib;
 let
@@ -192,9 +192,17 @@ in {
         };
       };
 
-      
+      security.wrappers = {
+        netns-exec = {
+          setuid = true;
+          owner = "root";
+          group = "root";
+          source = "${inputs.netns-exec.defaultPackage.${system}}/bin/netns-exec";
+        };
+      };
       environment.systemPackages = with pkgs; [
-        l3mon.netns-exec
+        # completions.
+        inputs.netns-exec.defaultPackage.${system}
       ];
 
       l3mon.network_namespaces.mkNetnsService = (wg_network: service: lib.mkMerge [
