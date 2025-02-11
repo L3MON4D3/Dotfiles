@@ -5,6 +5,11 @@
     # don't limit maximum-size of floating windows.
     floating_maximum_size -1 x -1
 
+    gaps inner 4
+    gaps outer 1
+
+    popup_during_fullscreen smart
+
     bindsym $mod+Return exec "$term 2> /dev/null"
 
     # kill focused window

@@ -34,14 +34,18 @@
             home-manager.useUserPackages = true;
 
             home-manager.users.simon = import ./home;
-            home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; data = import ./data; };
+            home-manager.extraSpecialArgs = {
+              inherit inputs nixpkgs-unstable;
+              data = import ./data;
+              l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
+            };
           }
           {
             _module.args = {
               inherit inputs;
               data = import ./data;
               machine = "indigo";
-              l3lib = import ./lib.nix;
+              l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
             };
           }
         ];
@@ -63,14 +67,18 @@
             home-manager.useUserPackages = true;
 
             home-manager.users.simon = import ./home;
-            home-manager.extraSpecialArgs = { inherit inputs nixpkgs-unstable; data = import ./data; };
+            home-manager.extraSpecialArgs = {
+              inherit inputs nixpkgs-unstable;
+              data = import ./data;
+              l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
+            };
           }
           {
             _module.args = {
               inherit inputs;
               data = import ./data;
               machine = "carmine";
-              l3lib = import ./lib.nix;
+              l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
             };
           }
         ];

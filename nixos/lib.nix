@@ -1,4 +1,4 @@
-{
+{pkgs}: rec {
   assertSecret = sname: ''
     if [ ! -f /var/secrets/${sname} ]; then
       echo ASSERT FAILED: Secret ${sname} is missing!
@@ -6,4 +6,28 @@
     fi
   '';
   secret = (sname: "/var/secrets/${sname}");
+
+  #
+  # lua-write from nixpkgs does not respect `libraries`.
+  #
+  makeLuaWriter =
+    lua: luaPackages: buildLuaPackages: name:
+    {
+      libraries ? [ ],
+      ...
+    }@args:
+    pkgs.writers.makeScriptWriter (
+      (builtins.removeAttrs args [ "libraries" ])
+      // {
+        interpreter = (if libraries == [] then lua.interpreter else (lua.withPackages (ps: libraries)).interpreter);
+        # This should support packages! I just cant figure out why some dependency collision happens whenever I try to run this.
+        check = (
+          pkgs.writers.writeDash "luacheck.sh" ''
+            exec ${buildLuaPackages.luacheck}/bin/luacheck "$1"
+          ''
+        );
+      }
+    ) name;
+
+  writeLuajit = makeLuaWriter pkgs.luajit pkgs.luajitPackages pkgs.buildPackages.luajitPackages;
 }
