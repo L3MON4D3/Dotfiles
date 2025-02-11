@@ -88,8 +88,9 @@ in {
         '';
       };
       common_unit_opts = {
-        wants = if remote_repo then [ "network-online.target" ] else [];
+        requires = if remote_repo then [ "network-online.target" ] else [];
         after = if remote_repo then [ "network-online.target" ] else [];
+        unitConfig.RequiresMountsFor = if !remote_repo then [ cfg.repo.location ] else [];
         serviceConfig = {
           EnvironmentFile = [ "${envFile}" ];
           Type = "oneshot";
