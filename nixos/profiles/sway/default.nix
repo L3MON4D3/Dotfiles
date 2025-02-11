@@ -89,6 +89,16 @@
           config = null;
         };
 
+        l3mon.sway-netns.wg_home2 = {
+          enable = true;
+          openPrivateWindow = false;
+          netnsKey = "h";
+          landingPage = "http://git.internal";
+          firefoxProfileSettings = {
+            id = 1;
+          };
+        };
+
         programs.foot = {
           enable = true;
           # up-to-date foot (~1.20.2+) has fix for double-trigger of Enter, Backspace, Tab

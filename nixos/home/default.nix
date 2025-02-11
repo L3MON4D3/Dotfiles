@@ -49,6 +49,15 @@
   };
   programs.bash.enable = true;
 
+  programs.firefox.enable = true;
+  programs.firefox.profiles = {
+    default = {
+      name = "default";
+      isDefault = true;
+      id = 0;
+    };
+  };
+
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [ ];
 
