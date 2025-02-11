@@ -1,6 +1,11 @@
 { config, lib, pkgs, machine, data, ... }:
 
 {
+  fonts.fontconfig.enable = true;
+  home.packages = with pkgs; [
+    inter
+  ];
+
   programs.waybar = {
     enable = true;
     systemd.enable = true;
@@ -62,9 +67,9 @@
       #clock, 
       #battery,
       #mode {
-        font-family: 'Fira Code', 'otf-font-awesome';
+        font-family: 'Inter Display';
         font-size: 11pt;
-        font-weight: bold;
+        font-feature-settings: "tnum";
         padding: 0;
       }
 
