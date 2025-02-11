@@ -89,6 +89,12 @@ rec {
         privkey_file = "/var/secrets/wg_home2/remarkable-private";
         pubkey = "Udk2A6dop+5xOrRmwBqkQ5CGJexC3hteTKYErhjvTTw=";
       };
+      carmine = {
+        address = "10.0.0.6";
+        route_all = true;
+        privkey_file = "/var/secrets/wg_home2/carmine-private";
+        pubkey = "iGurYHJ9mfYU5y1khcH6T35zIOPogUpvvqJgrY9rWSg=";
+      };
     };
   };
 
