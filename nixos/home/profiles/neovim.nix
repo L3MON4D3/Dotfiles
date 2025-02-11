@@ -2,12 +2,13 @@
 
 {
   home.activation.myNvimRepos = lib.hm.dag.entryAfter ["writeBoundary"] ''
-	run ${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online
     run mkdir -p ${config.home.homeDirectory}/projects/dotfiles/nvim
     if [ ! -d "${config.home.homeDirectory}/projects/nvim/matchconfig" ]; then
+      run ${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online
       run ${pkgs.git}/bin/git clone http://git.internal/simon/matchconfig.git ${config.home.homeDirectory}/projects/nvim/matchconfig
     fi
     if [ ! -d "${config.home.homeDirectory}/projects/nvim/luasnip" ]; then
+      run ${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online
       run ${pkgs.git}/bin/git clone http://git.internal/simon/luasnip.git ${config.home.homeDirectory}/projects/nvim/luasnip
     fi
   '';
