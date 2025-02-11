@@ -124,7 +124,7 @@ rec {
       indigo = {
         address = "10.71.192.70";
         privkey_file = "/var/secrets/wireguard_mullvad/de_unique_worm.private";
-        pubkey = "9ldhvN7r4xGZkGehbsNfYb5tpyTJ5KBb5B3TbxCwklw=";
+        pubkey = "7GMMTVf8zhDOxQYIAwDoKcd2fqwOwxrkz4ENqg3jwyQ=";
         local = lan.peers.indigo_mullvad_de;
         # for now, these are the same here and in the lan-part.
         # Maybe, at some time, I want to make services no longer accessible in
@@ -135,6 +135,24 @@ rec {
       mullvad = {
         endpoint = "146.70.117.34:51820";
         pubkey = "9ldhvN7r4xGZkGehbsNfYb5tpyTJ5KBb5B3TbxCwklw="; 
+      };
+    };
+    host = peers.mullvad;
+    keepalive = false;
+    dns = "10.64.0.1";
+  };
+  wireguard_mullvad_de2 = rec {
+    subnet_mask = "/32";
+    name = "wg_mullvad_de";
+    peers = {
+      carmine = {
+        address = "10.74.105.235";
+        privkey_file = "/var/secrets/wireguard_mullvad/de_master_tomcat.private";
+        pubkey = "RZf+O56iD/WHM4uiURYcPNtwKbL3r4QvNKSWdoEhX2g=";
+      };
+      mullvad = {
+        endpoint = "193.32.248.75:51820";
+        pubkey = "/ejdxiEsmYbeXXCN6UzvzJ0U/mLuB6baIfQRYKYHWzU="; 
       };
     };
     host = peers.mullvad;

@@ -30,6 +30,7 @@
     enable = true;
     network_configs = [
       data.network.wireguard_home2
+      data.network.wireguard_mullvad_de2
     ];
   };
 
