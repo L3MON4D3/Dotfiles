@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, nur, ... }:
 
 {
   imports=[
@@ -50,17 +50,70 @@
   };
   programs.bash.enable = true;
 
-  programs.firefox.enable = true;
-  programs.firefox.profiles = {
-    default = {
-      name = "default";
-      isDefault = true;
-      id = 0;
+  # https://discourse.nixos.org/t/hm-24-11-firefox-with-passff-host/57108
+  # reenable nativeMessagingHost once the mentioned PR is merged.
+  home.file.passff-host-workaround = {
+    target = "${config.home.homeDirectory}/.mozilla/native-messaging-hosts/passff.json";
+    source = "${pkgs.passff-host}/share/passff-host/passff.json";
+  };
+
+  programs.firefox = {
+    enable = true; 
+    # nativeMessagingHosts = [ pkgs.passff-host ];
+    package = pkgs.firefox-wayland;
+    profiles = {
+      default = {
+        name = "default";
+        isDefault = true;
+        id = 0;
+        settings = {
+          "signon.rememberSignons" = false;
+          "widget.use-xdg-desktop-portal.file-picker" = 1;
+          "browser.aboutConfig.showWarning" = false;
+          "browser.compactmode.show" = true;
+          "widget.disable-workspace-management" = true;
+          "extensions.pocket.enabled" = false;
+          "identity.fxaccounts.enabled" = false;
+          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+        };
+        search = {
+          force = true;
+          # from https://gitlab.com/usmcamp0811/dotfiles/-/blob/fb584a888680ff909319efdcbf33d863d0c00eaa/modules/home/apps/firefox/default.nix
+          engines = {
+            "Nix Packages" = {
+              urls = [{
+                template = "https://search.nixos.org/packages";
+                params = [
+                  { name = "type"; value = "packages"; }
+                  { name = "query"; value = "{searchTerms}"; }
+                ];
+              }];
+              icon = "''${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+              definedAliases = [ "@np" ];
+            };
+            "NixOS Wiki" = {
+              urls = [{ template = "https://nixos.wiki/index.php?search={searchTerms}"; }];
+              iconUpdateURL = "https://nixos.wiki/favicon.png";
+              updateInterval = 24 * 60 * 60 * 1000; # every day
+              definedAliases = [ "@nw" ];
+            };
+            "Google".metaData.alias = "@g";
+          };
+        };
+        extensions = with nur.repos.rycee.firefox-addons; [
+          ublock-origin
+          passff
+        ];
+      };
     };
   };
 
   # Packages that should be installed to the user profile.
-  home.packages = with pkgs; [ ];
+  home.packages = with pkgs; [
+    pass
+  ];
+
   services.gpg-agent = {
     enable = true;
     pinentryPackage = pkgs.pinentry-gnome3;
