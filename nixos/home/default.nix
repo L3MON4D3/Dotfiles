@@ -3,6 +3,7 @@
 {
   imports=[
     ./profiles/neovim.nix
+    ./profiles/pass.nix
   ];
   home.username = "simon";
   home.homeDirectory = "/home/simon";
@@ -60,6 +61,10 @@
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [ ];
+  services.gpg-agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-gnome3;
+  };
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
