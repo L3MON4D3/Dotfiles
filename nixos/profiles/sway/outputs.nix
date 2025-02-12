@@ -9,5 +9,7 @@
     output "Microstep MSI MAG271CQR 0x30303441" subpixel rgb
 
     output "Red Hat, Inc. QEMU Monitor Unknown" transform 0 mode 1280x800@74.994Hz position 0,0
+
+    output "Unknown Unknown Unknown" transform 0 mode 1600x1200@60.000Hz position 0,0
   '';
 }
