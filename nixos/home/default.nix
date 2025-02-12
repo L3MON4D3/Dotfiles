@@ -68,15 +68,11 @@
         isDefault = true;
         id = 0;
         settings = {
-          "signon.rememberSignons" = false;
+          # these can't be set via policies.
           "widget.use-xdg-desktop-portal.file-picker" = 1;
           "browser.aboutConfig.showWarning" = false;
           "browser.compactmode.show" = true;
           "widget.disable-workspace-management" = true;
-          "extensions.pocket.enabled" = false;
-          "identity.fxaccounts.enabled" = false;
-          "browser.newtabpage.activity-stream.showSponsored" = false;
-          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
         };
         search = {
           force = true;
