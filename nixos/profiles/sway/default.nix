@@ -49,7 +49,11 @@
     (
       { config, lib, pkgs, machine, data, ... }:
       
-      {
+      let
+        cursor_theme_name = "capitaine-cursors";
+        cursor_size = 6;
+        cursor_theme_package = pkgs.capitaine-cursors;
+      in {
         imports = [
           ./base.nix
           ./outputs.nix
@@ -58,6 +62,15 @@
           ./qbittorrent.nix
           ./waybar.nix
         ];
+
+        home.packages = with pkgs; [
+          pass
+          cursor_theme_package
+          adapta-gtk-theme
+          adapta-kde-theme
+          papirus-icon-theme
+        ];
+
         wayland.windowManager.sway = {
           enable = true;
           systemd = {
@@ -65,6 +78,7 @@
             # check teal:~/.bashrc.d/99-wm.sh
             # variables = [ ];
           };
+          wrapperFeatures.gtk = true;
           extraSessionCommands = ''
             export SDL_VIDEODRIVER=wayland
             export _JAVA_AWT_WM_NONREPARENTING=1
@@ -84,6 +98,8 @@
             set $up k
             set $right l
             set $term footclient
+
+            seat seat0 xcursor_theme "${cursor_theme_name}" ${builtins.toString cursor_size}
           '';
           checkConfig = true;
           config = null;
@@ -115,6 +131,56 @@
               passff
             ];
           };
+        };
+
+        xdg.portal = {
+          enable = true;
+          config.sway = {
+            default = [
+              "gtk"
+              "wlr"
+              "gnome"
+            ];
+            "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+            "org.freedesktop.impl.portal.Screenshot" = "wlr";
+            "org.freedesktop.impl.portal.FileChooser" = "gtk";
+            "org.freedesktop.impl.portal.AppChooser" = "gtk";
+            "org.freedesktop.impl.portal.Print" = "gtk";
+            "org.freedesktop.impl.portal.Notification" = "gtk";
+          };
+          extraPortals = with pkgs; [
+            xdg-desktop-portal-wlr
+            xdg-desktop-portal-gtk
+            xdg-desktop-portal-gnome
+          ];
+        };
+
+        # important!!! needs wrapperFeatures=gtk in sway.
+        gtk = {
+          enable = true;
+          gtk3.extraConfig = {
+            gtk-theme-name="Adapta";
+            gtk-icon-theme-name="Papirus";
+            gtk-font-name="Sans 10";
+            gtk-toolbar-style="GTK_TOOLBAR_BOTH";
+            gtk-toolbar-icon-size="GTK_ICON_SIZE_LARGE_TOOLBAR";
+            gtk-button-images="1";
+            gtk-menu-images="1";
+            gtk-enable-event-sounds="1";
+            gtk-enable-input-feedback-sounds="1";
+            gtk-xft-antialias="1";
+            gtk-xft-hinting="1";
+            gtk-xft-hintstyle="hintfull";
+            gtk-xft-rgba="rgb";
+          };
+        };
+
+        home.pointerCursor = {
+          gtk.enable = true;
+          x11.enable = true;
+          package = cursor_theme_package;
+          name = cursor_theme_name;
+          size = cursor_size;
         };
 
         programs.foot = {
