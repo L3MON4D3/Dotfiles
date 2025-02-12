@@ -52,6 +52,7 @@
               data = import ./data;
               machine = machine_name;
               l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
+              nur = inputs.nur.legacyPackages.${system};
             };
           }
         ];

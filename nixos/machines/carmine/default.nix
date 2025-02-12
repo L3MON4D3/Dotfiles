@@ -7,6 +7,8 @@
     ./hardware-configuration.nix
 
     ../../profiles/sway
+
+    ../../profiles/firefox.nix
   ];
 
   environment.shellAliases = {
