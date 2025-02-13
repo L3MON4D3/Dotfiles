@@ -9,6 +9,8 @@
     ../../profiles/sway
 
     ../../profiles/firefox.nix
+
+    ../../profiles/mxmaster3s.nix
   ];
 
   environment.shellAliases = {
