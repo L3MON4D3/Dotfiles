@@ -20,7 +20,6 @@
       (builtins.removeAttrs args [ "libraries" ])
       // {
         interpreter = (if libraries == [] then lua.interpreter else (lua.withPackages (ps: libraries)).interpreter);
-        # This should support packages! I just cant figure out why some dependency collision happens whenever I try to run this.
         check = (
           pkgs.writers.writeDash "luacheck.sh" ''
             exec ${buildLuaPackages.luacheck}/bin/luacheck "$1"
