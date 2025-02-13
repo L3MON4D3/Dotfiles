@@ -1,6 +1,8 @@
 { config, lib, l3lib, pkgs, machine, data, ... }:
 
-{
+let
+  outputs = [ "Virtual-1" ];
+in {
   programs.waybar.package = pkgs.waybar.overrideAttrs (final: previous: {
     patches = previous.patches ++ [
       (pkgs.writeText "waybar-workroom" (builtins.readFile ./waybar-workrooms.patch))
@@ -9,25 +11,31 @@
   });
   
   wayland.windowManager.sway.extraConfig = let
-      # simple writeTextFile does not work :/
-      output_conf = pkgs.luajit.pkgs.buildLuaPackage {
-        pname = "output_conf";
-        version = "1.0";
-        src = pkgs.writeText "output_conf" ''
-          return {
-            ["Virtual-1"] = 1,
+    # simple writeTextFile does not work :/
+    output_conf = pkgs.luajit.pkgs.buildLuaPackage {
+      pname = "output_conf";
+      version = "1.0";
+      src = pkgs.writeText "output_conf" ''
+        return {
+          ${lib.strings.concatLines
+            (lib.imap1 (i: v: ''["${v}"] = ${toString i},'') outputs)
           }
-        '';
-        phases = ["installPhase"];
-        installPhase = ''
-          mkdir -p $out/share/lua/5.1/
-          cp $src $out/share/lua/5.1/output_conf.lua
-        '';
-      };
-    sway-workrooms = l3lib.writeLuajit "/bin/sway-workrooms" { libraries = [ pkgs.l3mon.k-sway pkgs.luajitPackages.cjson output_conf ]; } (builtins.readFile ./sway-workrooms.lua);
-  in lib.mkAfter ''
+        }
+      '';
+      phases = ["installPhase"];
+      installPhase = ''
+        mkdir -p $out/share/lua/5.1/
+        cp $src $out/share/lua/5.1/output_conf.lua
+      '';
+    };
+    sway-workrooms = l3lib.writeLuajit "/bin/sway-workrooms" {
+      libraries = [
+        pkgs.l3mon.k-sway
+        pkgs.luajitPackages.cjson
+        output_conf
+      ]; } (builtins.readFile ./sway-workrooms.lua);
+  in lib.mkAfter (''
     set $workroom h
-    bindsym --no-warn $mod+Alt+p exec ${output_conf}
     bindsym --no-warn $mod+Alt+h exec ${sway-workrooms}/bin/sway-workrooms h
     bindsym --no-warn $mod+Alt+j exec ${sway-workrooms}/bin/sway-workrooms j
     bindsym --no-warn $mod+Alt+k exec ${sway-workrooms}/bin/sway-workrooms k
@@ -61,11 +69,14 @@
     bindsym --no-warn $mod+Shift+9 move container to workspace $$workroom9
     
     # set default workspace.
-    workspace h1 output "Unknown Unknown Unknown"
+    # workspace h1 output "Unknown Unknown Unknown"
     # workspace h2 output HDMI-A-1
     
     # show first two workspaces?
     # workspace h2
-    workspace h1
-  '';
+    # workspace h1
+  '' +
+  (lib.strings.concatLines (
+    lib.imap1 (i: v: ''workspace h${toString i} output ${v}'') outputs
+  )));
 }
