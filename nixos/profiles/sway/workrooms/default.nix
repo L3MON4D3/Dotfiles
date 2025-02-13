@@ -1,7 +1,7 @@
 { config, lib, l3lib, pkgs, machine, data, ... }:
 
 let
-  outputs = [ "Virtual-1" ];
+  outputs = [ "DP-1" "HDMI-A-1" ];
 in {
   programs.waybar.package = pkgs.waybar.overrideAttrs (final: previous: {
     patches = previous.patches ++ [
