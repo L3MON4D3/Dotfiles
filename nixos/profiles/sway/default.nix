@@ -122,7 +122,7 @@
 
         l3mon.sway-netns.wg_mullvad_de = {
           enable = true;
-          openPrivateWindow = false;
+          openPrivateWindow = true;
           netnsKey = "d";
           landingPage = "https://mullvad.net/en/check";
           firefoxProfileSettings = {
