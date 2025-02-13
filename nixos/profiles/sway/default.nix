@@ -45,6 +45,21 @@
     };
   };
 
+ xdg.portal = {
+    enable = true;
+    config = {
+      common = {
+        default = "wlr";
+      };
+    };
+    wlr.enable = true;
+    wlr.settings.screencast = {
+      output_name = "DP-1";
+      chooser_type = "simple";
+      chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -or";
+    };
+  };
+
   home-manager.sharedModules = [
     (
       { config, lib, pkgs, machine, data, ... }:
@@ -135,27 +150,27 @@
           };
         };
 
-        xdg.portal = {
-          enable = true;
-          config.sway = {
-            default = [
-              "gtk"
-              "wlr"
-              "gnome"
-            ];
-            "org.freedesktop.impl.portal.ScreenCast" = "wlr";
-            "org.freedesktop.impl.portal.Screenshot" = "wlr";
-            "org.freedesktop.impl.portal.FileChooser" = "gtk";
-            "org.freedesktop.impl.portal.AppChooser" = "gtk";
-            "org.freedesktop.impl.portal.Print" = "gtk";
-            "org.freedesktop.impl.portal.Notification" = "gtk";
-          };
-          extraPortals = with pkgs; [
-            xdg-desktop-portal-wlr
-            xdg-desktop-portal-gtk
-            xdg-desktop-portal-gnome
-          ];
-        };
+        # xdg.portal = {
+          # enable = true;
+          # config.common = {
+            # default = [
+              # "wlr"
+              # "gtk"
+              # "gnome"
+            # ];
+            # "org.freedesktop.impl.portal.ScreenCast" = "wlr";
+            # "org.freedesktop.impl.portal.Screenshot" = "wlr";
+            # "org.freedesktop.impl.portal.FileChooser" = "gtk";
+            # "org.freedesktop.impl.portal.AppChooser" = "gtk";
+            # "org.freedesktop.impl.portal.Print" = "gtk";
+            # "org.freedesktop.impl.portal.Notification" = "gtk";
+          # };
+          # extraPortals = with pkgs; [
+            # xdg-desktop-portal-wlr
+            # xdg-desktop-portal-gtk
+            # xdg-desktop-portal-gnome
+          # ];
+        # };
 
         # important!!! needs wrapperFeatures=gtk in sway.
         gtk = {
