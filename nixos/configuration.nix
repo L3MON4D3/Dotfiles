@@ -159,7 +159,7 @@
   };
   users.groups.media.gid = data.ids.media;
 
-
+  programs.dconf.enable = true;
 
   # system.copySystemConfiguration = true;
 
