@@ -1,0 +1,15 @@
+%YAML 1.3
+---
+- Key: [Back Button, pressed]
+- Set:
+  - null
+  - dpi
+  - 600
+...
+---
+- Key: [Back Button, released]
+- Set:
+  - null
+  - dpi
+  - 2800
+...
