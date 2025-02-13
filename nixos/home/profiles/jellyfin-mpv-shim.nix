@@ -130,10 +130,10 @@
 
   # target-prim=pq taken from some guide, not certain if appropriate.
   xdg.configFile."mpv/mpv.conf".text = ''
-    vo=gpu-next
-    gpu-api=vulkan
-    hwdec=yes
-    target-prim=pq
+    #vo=gpu-next
+    #gpu-api=vulkan
+    #hwdec=yes
+    # target-prim=pq
   '';
 
   systemd.user.services.jellyfin-mpv-shim = {
