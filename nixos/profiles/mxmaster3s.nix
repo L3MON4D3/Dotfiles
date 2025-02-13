@@ -1,10 +1,16 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, machine, data, inputs, system, ... }:
 
 {
   # gives special udev-rules needed by solaar.
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true;
-
+  
+  # use up-to-date solaar from flake.
+  nixpkgs.overlays = [
+    (final: prev: {
+      solaar = inputs.solaar.outputs.packages.${system}.solaar;
+    })
+  ];
   
   home-manager.sharedModules = [
     (
