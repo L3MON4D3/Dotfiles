@@ -48,7 +48,7 @@
           }
           {
             _module.args = {
-              inherit inputs system;
+              inherit inputs system self;
               data = import ./data;
               machine = machine_name;
               l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
