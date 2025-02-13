@@ -110,6 +110,7 @@
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     pass
+    legcord
   ];
 
   services.gpg-agent = {

@@ -188,6 +188,7 @@
     mode "apps" {
       bindsym b exec qutebrowser
       bindsym f exec firefox
+      bindsym d exec legcord
 
       bindsym Return mode "default"
       bindsym Escape mode "default"
