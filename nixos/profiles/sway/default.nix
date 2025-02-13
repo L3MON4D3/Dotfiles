@@ -62,6 +62,7 @@
           ./qbittorrent.nix
           ./waybar.nix
           ./workrooms
+          ./screengrab.nix
         ];
 
         home.packages = with pkgs; [
