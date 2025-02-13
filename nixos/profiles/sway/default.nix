@@ -61,7 +61,7 @@
           ./decoration.nix
           ./qbittorrent.nix
           ./waybar.nix
-          ./workrooms.nix
+          ./workrooms
         ];
 
         home.packages = with pkgs; [

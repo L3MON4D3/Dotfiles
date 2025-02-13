@@ -1,5 +1,4 @@
-diff --git a/include/modules/sway/workspaces.hpp b/include/modules/sway/workspaces.hpp
-index 4258252a..6a0ac661 100644
+index 97f4e95..02bd00a 100644
 --- a/include/modules/sway/workspaces.hpp
 +++ b/include/modules/sway/workspaces.hpp
 @@ -32,7 +32,7 @@ class Workspaces : public AModule, public sigc::trackable {
@@ -12,10 +11,10 @@ index 4258252a..6a0ac661 100644
    void updateWindows(const Json::Value&, std::string&);
    Gtk::Button& addButton(const Json::Value&);
 diff --git a/src/modules/sway/workspaces.cpp b/src/modules/sway/workspaces.cpp
-index 7517dc26..c6fb698a 100644
+index 8f27330..4a3bfd3 100644
 --- a/src/modules/sway/workspaces.cpp
 +++ b/src/modules/sway/workspaces.cpp
-@@ -233,13 +233,16 @@ void Workspaces::onCmd(const struct Ipc::ipc_response &res) {
+@@ -224,13 +224,16 @@ void Workspaces::onCmd(const struct Ipc::ipc_response &res) {
    }
  }
  
@@ -23,18 +22,18 @@ index 7517dc26..c6fb698a 100644
 +bool Workspaces::filterButtons(char current_workroom) {
    bool needReorder = false;
    for (auto it = buttons_.begin(); it != buttons_.end();) {
-	 auto ws = std::find_if(workspaces_.begin(), workspaces_.end(),
-							[it](const auto &node) { return node["name"].asString() == it->first; });
+     auto ws = std::find_if(workspaces_.begin(), workspaces_.end(),
+                            [it](const auto &node) { return node["name"].asString() == it->first; });
 +    auto workroom = it->first[0];
 +    auto is_valid = workroom == current_workroom;
-	 if (ws == workspaces_.end() ||
+     if (ws == workspaces_.end() ||
 -        (!config_["all-outputs"].asBool() && (*ws)["output"].asString() != bar_.output->name)) {
 +        (!config_["all-outputs"].asBool() && (*ws)["output"].asString() != bar_.output->name)
 +        || !is_valid) {
-	   it = buttons_.erase(it);
-	   needReorder = true;
-	 } else {
-@@ -288,13 +291,24 @@ void Workspaces::updateWindows(const Json::Value &node, std::string &windows) {
+       it = buttons_.erase(it);
+       needReorder = true;
+     } else {
+@@ -283,9 +286,16 @@ void Workspaces::updateWindows(const Json::Value &node, std::string &windows) {
  
  auto Workspaces::update() -> void {
    std::lock_guard<std::mutex> lock(mutex_);
@@ -50,24 +49,23 @@ index 7517dc26..c6fb698a 100644
 -    auto bit = buttons_.find((*it)["name"].asString());
 +    auto n = (*it)["name"].asString();
 +    auto bit = buttons_.find(n);
-	 if (bit == buttons_.end()) {
-	   needReorder = true;
-	 }
+     if (bit == buttons_.end()) {
+       needReorder = true;
+     }
+@@ -293,6 +303,8 @@ auto Workspaces::update() -> void {
+     if (needReorder) {
+       box_.reorder_child(button, it - workspaces_.begin());
+     }
 +    if ((*it)["name"].asString()[0] != current_workroom)
 +      continue;
-+
-	 auto &button = bit == buttons_.end() ? addButton(*it) : bit->second;
-+
-	 if (needReorder) {
-	   box_.reorder_child(button, it - workspaces_.begin());
-	 }
-@@ -324,6 +338,9 @@ auto Workspaces::update() -> void {
-	 } else {
-	   button.get_style_context()->remove_class("empty");
-	 }
-+
+     bool noNodes = (*it)["nodes"].empty() && (*it)["floating_nodes"].empty();
+     if (hasFlag((*it), "focused")) {
+       button.get_style_context()->add_class("focused");
+@@ -319,6 +331,7 @@ auto Workspaces::update() -> void {
+     } else {
+       button.get_style_context()->remove_class("empty");
+     }
 +    button.get_style_context()->add_class((*it)["name"].asString().substr(0,1));
-+      
-	 if ((*it)["output"].isString()) {
-	   if (((*it)["output"].asString()) == bar_.output->name) {
-		 button.get_style_context()->add_class("current_output");
+     if ((*it)["output"].isString()) {
+       if (((*it)["output"].asString()) == bar_.output->name) {
+         button.get_style_context()->add_class("current_output");
