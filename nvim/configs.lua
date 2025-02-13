@@ -994,9 +994,14 @@ matchconfig.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
 ---
 
 local proj_master_dir = "/home/simon/projects/master/glint-jl"
-repl.set_term("julia.pm", {"julia", "-q", "--threads", "11"}, {cwd = proj_master_dir, initial_keys = "using renderer, distr_test"})
-local master = matchconfig.register(matchers.dir(proj_master_dir), c{
-	repl = {run = {id = "julia.pm"}},
+repl.set_term("julia.pm", {"julia", "-q", "--threads", "11"}, {cwd = proj_master_dir, initial_keys = "using Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"})
+local master = matchconfig.register(matchers.dir(proj_master_dir) * mft("julia"), c{
+	repl = {run = {
+		mappings = {
+			["<Space>r"] = [[{args.file:match("[^/]+$"):sub(1, -4)}_main()]]
+		},
+		id = "julia.pm"
+	}},
 	run_buf = function()
 		usercommand_buf("T", function()
 			util.process_output("systemd-run --user -u tev /home/simon/.local/bin/sway_float tev")
