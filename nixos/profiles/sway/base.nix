@@ -184,5 +184,14 @@
     for_window [title="^lstopo"] floating enable
     for_window [class="^Vtk$"] floating enable
     for_window [class="^Overcooked2.x86_64$"] move container output DP-1
+
+    mode "apps" {
+      bindsym b exec qutebrowser
+      bindsym f exec firefox
+
+      bindsym Return mode "default"
+      bindsym Escape mode "default"
+    }
+    bindsym $mod+a mode "apps"
   '';
 }
