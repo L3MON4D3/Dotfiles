@@ -5,6 +5,7 @@
     ./profiles/neovim.nix
     ./profiles/pass.nix
     ./profiles/jellyfin-mpv-shim.nix
+    ./profiles/qutebrowser
   ];
   home.username = "simon";
   home.homeDirectory = "/home/simon";
