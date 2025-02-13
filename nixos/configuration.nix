@@ -1,4 +1,4 @@
-{ config, lib, l3lib, pkgs, inputs, data, ... }:
+{ config, lib, l3lib, pkgs, inputs, data, self, ... }:
 
 {
   disabledModules = ["services/databases/mysql.nix"];
@@ -133,6 +133,8 @@
   nixpkgs.overlays = [
     (import ./packages/default.nix)
   ];
+  # does what config.nixpkgs.flake.setNixPath and config.nix.channel.enable do, ad adds nixpkgs-overlay
+  nix.nixPath = lib.mkForce [ "nixpkgs=flake:nixpkgs:/nix/var/nix/profiles/per-user/root/channels:nixpkgs-overlays=${self}/overlays" ];
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
