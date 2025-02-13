@@ -133,8 +133,8 @@
   nixpkgs.overlays = [
     (import ./packages/default.nix)
   ];
-  # does what config.nixpkgs.flake.setNixPath and config.nix.channel.enable do, ad adds nixpkgs-overlay
-  nix.nixPath = lib.mkForce [ "nixpkgs=flake:nixpkgs:/nix/var/nix/profiles/per-user/root/channels:nixpkgs-overlays=${self}/overlays" ];
+  # does what config.nixpkgs.flake.setNixPath does, ad adds nixpkgs-overlay
+  nix.nixPath = lib.mkForce [ "nixpkgs=flake:nixpkgs:nixpkgs-overlays=${self}/overlays" ];
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
