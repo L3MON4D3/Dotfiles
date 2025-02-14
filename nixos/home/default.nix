@@ -7,6 +7,7 @@
     ./profiles/jellyfin-mpv-shim.nix
     ./profiles/qutebrowser
     ./profiles/mpv.nix
+    ./profiles/mpd.nix
   ];
   home.username = "simon";
   home.homeDirectory = "/home/simon";
