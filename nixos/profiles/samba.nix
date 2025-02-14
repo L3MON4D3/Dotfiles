@@ -30,10 +30,10 @@
     };
   };
 
+  # allow <other> access to /srv/samba, for cd.
   systemd.tmpfiles.rules = [
-    "d /srv/samba 0750 samba samba"
+    "d /srv/samba 0755 samba samba"
     "d /srv/samba/christel 0750 christel christel"
-    "A /srv/samba/christel - - - - g:christel:rX"
   ];
 
   users.users.samba = {
