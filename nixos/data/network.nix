@@ -23,7 +23,7 @@ rec {
       indigo = {
         machine_id = "indigo";
         address = "192.168.178.20";
-        interface = "ens3";
+        interface = "enp0s31f6";
         services = [
           "mysql"
           "jackett"

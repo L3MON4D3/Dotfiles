@@ -99,105 +99,95 @@
     lr = "l3mon-restic";
   };
 
-  # for now, need some way to access large storage devices.
-  fileSystems."/mnt/.misc" = {
-    device = "192.168.178.5:/misc";
-    fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
-  };
-
-  # replace these with actual physical drive-mounts.
-  fileSystems."/mnt/glacier" = {
-    depends = ["/mnt/.misc"];
-    device = "/mnt/.misc/indigo_disks/glacier_img";
-    label = "glacier";
-    options = [ "rw" "_netdev"];
-  };
+  # mount large storage.
   fileSystems."/mnt/torrent" = {
-    depends = ["/mnt/.misc"];
-    device = "/mnt/.misc/indigo_disks/torrent_img";
     label = "torrent";
-    options = [ "rw" "_netdev"];
+    options = ["rw"];
   };
 
-  # bind-mount storage into place where stuff should not be stored on the main drive.
+  boot.supportedFilesystems = ["zfs"];
+  boot.zfs.forceImportRoot = false;
+  # boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+  networking.hostId = "0c6280a2";
+
+  boot.zfs.extraPools = ["glacier"];
+
+  # # bind-mount storage into place where stuff should not be stored on the main drive.
   fileSystems."/srv/media" = {
     device = "/mnt/glacier/media";
-    options = [ "rw" "_netdev" "bind" ];
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
+  };
+  fileSystems."/srv/misc" = {
+    device = "/mnt/glacier/misc";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
   
-  # nfs
-  fileSystems."/srv/nfs/media" = {
-    device = "/srv/media";
-    options = [ "bind" ];
-  };
-  fileSystems."/srv/nfs/misc" = {
-    device = "/srv/misc";
-    options = [ "bind" ];
-  };
-  # fileSystems."/srv/nfs/misc" = {
-    # device = "192.168.178.5:/misc";
-    # fsType = "nfs";
-    # options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
-  # };
-  services.nfs.server.exports = ''
-    /srv/nfs/media 192.168.178.0/24(rw)
-    /srv/nfs/misc 192.168.178.0/24(rw,no_root_squash)
-  '';
-  
+
   #
   # Bind-mounts for services!
   #
 
-  # qbittorrent
-  fileSystems.${config.l3mon.qbittorrent.torrentDir} = {
+  # # qbittorrent
+  fileSystems."/var/lib/qbittorrent/qBittorrent/downloads" = {
     device = "/mnt/torrent/downloads";
-    options = [ "rw" "_netdev" "bind" ];
+    options = [ "bind" ];
   };
 
-  # restic
+  # # restic
   fileSystems."/srv/restic-l3mon" = {
     device = "/mnt/torrent/restic-l3mon";
-    options = [ "rw" "_netdev" "bind" ];
+    options = [ "bind" ];
   };
-  systemd.services.restic.unitConfig.RequiresMountsFor = "/srv/restic-l3mon";
 
-  # immich
-  fileSystems.${config.services.immich.mediaLocation} = {
+  # # immich
+  fileSystems."/var/lib/immich" = {
     device = "/mnt/torrent/immich";
-    options = [ "_netdev" "bind" ];
+    options = [ "bind" ];
   };
-  systemd.services.immich.unitConfig.RequiresMountsFor = config.services.immich.mediaLocation;
 
-  # samba
+  # # samba
   fileSystems."/srv/samba/christel" = {
     device = "/mnt/glacier/samba/christel";
-    options = [ "_netdev" "bind" ];
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
 
-  # game-library
+  # # game-library
   fileSystems."/var/lib/steam/library" = {
-    device = "/mnt/glacier/misc/games/steamlib";
-    options = [ "_netdev" "bind" ];
+    device = "/mnt/glacier/games/steamlib";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
   fileSystems."/srv/games/gog" = {
-    device = "/mnt/glacier/misc/games/gog";
-    options = [ "_netdev" "bind" ];
+    device = "/mnt/glacier/games/gog";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
 
+
+  # nfs
+  fileSystems."/srv/nfs/media" = {
+    device = "/mnt/glacier/media";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
+  };
+  fileSystems."/srv/nfs/misc" = {
+    device = "/mnt/glacier/misc";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
+  };
+  services.nfs.server.exports = ''
+    /srv/nfs/media 192.168.178.0/24(rw)
+    /srv/nfs/misc 192.168.178.0/24(rw,no_root_squash)
+  '';
 
   # set gid-bit on media-directories so files are created with group media.
   # set default-permissions so write is allowed for all group-members.
-  systemd.tmpfiles.rules = [
-    "d /srv/media                2775 media  media"
-    "A /srv/media                -    -      -       -   d:u:media:rwX"
-    "d /srv/media/audio          2775 media  media"
-    "d /srv/media/video          2775 media  media"
-    "d /srv/media/video/shows    2775 media  media"
-    "d /srv/media/video/movies   2775 media  media"
+  # systemd.tmpfiles.rules = [
+    # "d /srv/media                2775 media  media"
+    # "A /srv/media                -    -      -       -   d:u:media:rwX"
+    # "d /srv/media/audio          2775 media  media"
+    # "d /srv/media/video          2775 media  media"
+    # "d /srv/media/video/shows    2775 media  media"
+    # "d /srv/media/video/movies   2775 media  media"
 
-    "d /mnt/glacier/restic-l3mon 0750 restic restic"
-  ];
+    # "d /mnt/glacier/restic-l3mon 0750 restic restic"
+  # ];
 
   services.dbus.implementation = "broker";
   l3mon.zotero.enable_server = true;

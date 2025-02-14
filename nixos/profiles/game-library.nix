@@ -110,11 +110,11 @@ in {
   # for clients: nfs-mount this share.
   fileSystems."/srv/nfs/steamlib" = {
     device = "/var/lib/steam/library";
-    options = [ "_netdev" "bind" ];
+    options = [ "bind" ];
   };
   fileSystems."/srv/nfs/gog" = {
     device = "/srv/games/gog";
-    options = [ "_netdev" "bind" ];
+    options = [ "bind" ];
   };
 
   services.nfs.server.exports = ''
@@ -131,7 +131,7 @@ in {
   # symlink is overwritten, use bindmount instead :/
   fileSystems."/var/lib/steam/cmd/.local/share/Steam/steamapps" = {
     device = "/var/lib/steam/library/steamapps";
-    options = [ "_netdev" "bind" ];
+    options = [ "bind" ];
   };
 
   systemd.tmpfiles.rules = [
