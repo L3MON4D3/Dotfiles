@@ -5,6 +5,9 @@
   xdg.configFile."jellyfin-mpv-shim/mpv.conf".text = ''
     fs=yes
     fs-screen=0
+    vo=gpu-next
+    gpu-api=vulkan
+    hwdec=yes
   '';
 
   # changed settings from default:
@@ -125,15 +128,7 @@
 
   # maybe have to update this?
   xdg.configFile."jellyfin-mpv-shim/cred.json".text = ''
-    [{"address": "http://jellyfin.internal", "Name": "indigo", "Id": "8cd9c807cc7847feb9d675d126822703", "Version": "10.10.3", "DateLastAccessed": "2025-02-12T23:23:22Z", "UserId": "5b1192e8ffdb43a1987d988f05fe5c29", "AccessToken": "c499b459ca4f4629b4325712616fd1e9", "Users": [{"Id": "5b1192e8ffdb43a1987d988f05fe5c29", "IsSignedInOffline": true}], "uuid": "321a9b94-d960-42c0-a86e-8132c5a9ec87", "username": "simon", "connected": true}]
-  '';
-
-  # target-prim=pq taken from some guide, not certain if appropriate.
-  xdg.configFile."mpv/mpv.conf".text = ''
-    vo=gpu-next
-    gpu-api=vulkan
-    hwdec=yes
-    target-prim=pq
+    [{"address": "http://jellyfin.internal:80", "Name": "indigo", "Id": "19115077000e43dca1172812a4f96c59", "Version": "10.10.3", "DateLastAccessed": "2025-02-14T01:10:13Z", "UserId": "db65cdf9d37b4d7cb0fdfe39058c5657", "AccessToken": "5d257143d72e4e5aa5a77f111075f596", "Users": [{"Id": "db65cdf9d37b4d7cb0fdfe39058c5657", "IsSignedInOffline": true}], "uuid": "684f0a2a-1753-4bc7-aee4-62ca0553a5bd", "username": "simon", "connected": true}]
   '';
 
   systemd.user.services.jellyfin-mpv-shim = {

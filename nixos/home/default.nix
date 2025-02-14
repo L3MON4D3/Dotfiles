@@ -6,6 +6,7 @@
     ./profiles/pass.nix
     ./profiles/jellyfin-mpv-shim.nix
     ./profiles/qutebrowser
+    ./profiles/mpv.nix
   ];
   home.username = "simon";
   home.homeDirectory = "/home/simon";
@@ -111,6 +112,7 @@
   home.packages = with pkgs; [
     pass
     legcord
+    gparted
   ];
 
   services.gpg-agent = {
