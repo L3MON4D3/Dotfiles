@@ -117,7 +117,7 @@ in {
 
   fileSystems."/srv/nfs/remarkable-local" = {
     device = "/srv/remarkable-local";
-    options = [ "_netdev" "bind" ];
+    options = [ "bind" ];
   };
   # owner is rmfakecloud.
   services.nfs.server.exports = ''
