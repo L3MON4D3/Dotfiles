@@ -58,7 +58,7 @@ rec {
       indigo = {
         # indigo
         machine_id = "indigo";
-        endpoint = "192.168.178.20:51822";
+        endpoint = "l3mon4.de:51822";
         address = "10.0.0.1";
         privkey_file = "/var/secrets/wg_home2/indigo-private";
         pubkey = "UjwW2Cd7RbHlS+E7iKq1Igez+325QyxYm7wu3HseCRo=";
