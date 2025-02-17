@@ -13,7 +13,7 @@
       ../../profiles/sonarr.nix
       ../../profiles/jackett
 
-      ../../profiles/kodi.nix
+      # ../../profiles/kodi.nix
       ../../profiles/jellyfin.nix
 
       ../../profiles/samba.nix
