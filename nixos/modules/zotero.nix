@@ -19,13 +19,13 @@ in
         options = [ "bind" ];
       };
       services.nfs.server.exports = ''
-        /srv/nfs/${export_name} 192.168.178.0/24(rw,all_squash)
+        /srv/nfs/${export_name} 192.168.178.0/24(rw)
       '';
 
       l3mon.restic.specs.zotero = {
         backupDaily = {
           text = ''
-            cd /mnt/glacier/misc/zotero-data
+            cd /srv/zotero
             restic backup --tag=zotero --skip-if-unchanged=true -- *
           '';
         };

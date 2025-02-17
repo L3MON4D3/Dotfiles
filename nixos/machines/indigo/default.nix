@@ -160,6 +160,10 @@
     device = "/mnt/glacier/games/gog";
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
+  fileSystems."/srv/zotero" = {
+    device = "/mnt/glacier/misc/zotero/data";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
+  };
 
 
   # nfs
