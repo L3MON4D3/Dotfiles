@@ -95,6 +95,12 @@ rec {
         privkey_file = "/var/secrets/wg_home2/carmine-private";
         pubkey = "iGurYHJ9mfYU5y1khcH6T35zIOPogUpvvqJgrY9rWSg=";
       };
+      chromecast = {
+        address = "10.0.0.7";
+        route_all = false;
+        privkey_file = "/var/secrets/wg_home2/chromecast-private";
+        pubkey = "Ticy/93/8Mk53wysWLmkTiZpnt1i/I7mNqxJT2Dw+3Q=";
+      };
     };
   };
 
