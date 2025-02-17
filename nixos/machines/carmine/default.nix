@@ -2,6 +2,8 @@
 
 {
   imports = [
+    ../../modules/zotero.nix
+
     ../../profiles/simon.nix
     ../../profiles/localnet.nix
     ./hardware-configuration.nix
@@ -37,6 +39,14 @@
       data.network.wireguard_mullvad_de2
     ];
   };
+
+  l3mon.zotero.enable_client = true;
+
+  home-manager.sharedModules = [
+    ({ config, lib, pkgs, machine, data, ... }: {
+      l3mon.zotero.enable = true;
+    })
+  ];
 
   services.dbus.implementation = "broker";
 }
