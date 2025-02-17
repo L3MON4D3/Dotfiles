@@ -53,6 +53,11 @@
     nx =  "/home/simon/projects/dotfiles/nixos/configuration.nix";
   };
   programs.bash.enable = true;
+  # make sure profile is loaded (provides sessionVariables).
+  # This is not done by default for login-shells, I think.
+  programs.bash.bashrcExtra = ''
+    source ~/.profile
+  '';
 
   # https://discourse.nixos.org/t/hm-24-11-firefox-with-passff-host/57108
   # reenable nativeMessagingHost once the mentioned PR is merged.
