@@ -100,6 +100,7 @@ in {
     "d ${statedir}             0750 rmfakecloud rmfakecloud"
     "d ${statedir}/users       0750 rmfakecloud rmfakecloud"
     "d ${statedir}/users/admin 0750 rmfakecloud rmfakecloud"
+    "d ${statedir}/users/admin/sync 0750 rmfakecloud rmfakecloud"
     "A ${statedir} -    -           -           - g:rmfakecloud:rX"
     "d /srv/remarkable-local   0750 rmfakecloud rmfakecloud"
   ];
