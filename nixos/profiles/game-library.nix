@@ -11,14 +11,14 @@ let
         # "1131620:windows"
         # Katana ZERO
         "460950:windows"
-        # # Old World
-        # "597180:linux"
-        # # AoM
-        # "266840:windows"
+        # Old World
+        "597180:linux"
+        # AoM
+        "266840:windows"
         # Enter the Gungeon
         "311690:linux"
-        # # Fall Guys
-        # "1097150:windows"
+        # Fall Guys
+        "1097150:windows"
         # # Garrys Mod
         # "4000:linux"
         # # Human: Fall Flat
@@ -39,8 +39,8 @@ let
         # "413150:linux"
         # # Stellaris
         # "281990:linux"
-        # # Tabletop Simulator
-        # "286160:linux"
+        # Tabletop Simulator
+        "286160:linux"
         # # Undertale
         # "391540:linux"
         # Duck Game
@@ -59,6 +59,8 @@ let
         # "945360:windows"
         # # BF2042
         # "1517290:windows"
+        # PlateUp!
+        "1599600:windows"
       )
 
       export HOME=/var/lib/steam/cmd
