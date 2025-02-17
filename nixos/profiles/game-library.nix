@@ -161,8 +161,8 @@ in {
   };
   systemd.services.update-games = {
     description = "Update Steam and GOG-Games";
-    after = [ "network-online.service" "blocky_lan.service" ];
-    requires = [ "network-online.service" "blocky_lan.service" ];
+    after = [ "network-online.target" "blocky_lan.service" ];
+    requires = [ "network-online.target" "blocky_lan.service" ];
     serviceConfig = {
       LoadCredential = "passwd:${l3lib.secret "steam_password"}";
       User = "simon";
