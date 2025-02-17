@@ -33,7 +33,7 @@
 
   systemd.tmpfiles.rules = [
     "d /home/simon 0750 simon simon"
-    "d /home/simon/.config 0750 simon simon"
+    "Z /home/simon/.config 0750 simon simon"
   ];
 
   l3mon.restic.extraGroups = [ "simon" ];
