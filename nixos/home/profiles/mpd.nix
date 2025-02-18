@@ -31,4 +31,10 @@
       { key = "."; command = "show_lyrics"; }
     ];
   };
+
+  wayland.windowManager.sway.extraConfig = ''
+    mode "apps" {
+      bindsym n exec $term ${pkgs.ncmpcpp}/bin/ncmpcpp
+    }
+  '';
 }
