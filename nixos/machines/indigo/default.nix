@@ -114,8 +114,12 @@
 
   services.zfs.autoScrub = {
     enable = true;
-    interval = "weekly";
-    randomizedDelaySec = "3h";
+    interval = "Wed 03:00:00";
+  };
+
+  services.zfs.trim = {
+    enable = true;
+    interval = "Thu 03:00:00";
   };
 
   services.zfs.zed.settings = {
@@ -133,6 +137,20 @@
   };
   # not recommended? No matter, the above works well :)
   services.zfs.zed.enableMail = false;
+
+  # requires that com.sun:auto-snapshot is enabled on datasets.
+  # TODO: look into sanoid or some other more granular solution for this.
+  services.zfs.autoSnapshot = {
+    enable = true;
+    flags = "-k -p --utc";
+    frequent = 0;
+    hourly = 0;
+    # only keep snapshot for last seven days, this is mainly to prevent
+    # accidental deletion.
+    daily = 7;
+    weekly = 0;
+    monthly = 0;
+  };
 
   # # bind-mount storage into place where stuff should not be stored on the main drive.
   fileSystems."/srv/media" = {
