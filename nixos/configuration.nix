@@ -108,6 +108,7 @@
     tree
     dust
     wireguard-tools
+    ffmpeg
 
     # nix related
     nix-output-monitor
