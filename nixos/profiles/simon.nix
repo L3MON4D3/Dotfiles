@@ -63,7 +63,7 @@
           -e "/home/simon/.config/VSCodium"
           -e "/home/simon/.config/Code - OSS" )
 
-        restic backup --tag=userdata-auto --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/
+        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/
       '';
     };
     forget = {
@@ -71,7 +71,7 @@
       # May be excessive, consider removing empty snapshots to cut down on repo-size.
       # group-by is necessary afaict!
       text = ''
-        restic forget --tag=userdata-auto --group-by=tag --keep-hourly=168 --keep-daily=120 --keep-monthly=36 --keep-yearly=unlimited
+        restic forget --tag=userdata-auto-${machine} --group-by=tag --keep-hourly=168 --keep-daily=120 --keep-monthly=36 --keep-yearly=unlimited
       '';
     };
   };
