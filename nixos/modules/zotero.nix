@@ -19,7 +19,7 @@ in
         options = [ "bind" ];
       };
       services.nfs.server.exports = ''
-        /srv/nfs/${export_name} 192.168.178.0/24(rw)
+        /srv/nfs/${export_name} 192.168.178.0/24(rw,fsid=f33b9d7d-9d51-4ef4-9a00-cda22206e1a0)
       '';
 
       l3mon.restic.specs.zotero = {
