@@ -120,8 +120,8 @@ in {
   };
 
   services.nfs.server.exports = ''
-    /srv/nfs/steamlib 192.168.178.0/24(rw,all_squash,anonuid=1000,anongid=1000)
-    /srv/nfs/gog      192.168.178.0/24(rw,all_squash,anonuid=1000,anongid=1000)
+    /srv/nfs/steamlib 192.168.178.0/24(rw)
+    /srv/nfs/gog      192.168.178.0/24(rw)
   '';
 
   #
