@@ -194,5 +194,13 @@
       bindsym Escape mode "default"
     }
     bindsym $mod+a mode "apps"
+
+    mode "power" {
+      bindsym s mode "default"; exec systemd-run --user systemctl suspend
+
+      bindsym Return mode "default"
+      bindsym Escape mode "default"
+    }
+    bindsym $mod+p mode "power"
   '';
 }
