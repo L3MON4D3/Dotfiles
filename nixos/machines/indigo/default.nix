@@ -216,8 +216,8 @@
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
   services.nfs.server.exports = ''
-    /srv/nfs/media 192.168.178.0/24(rw,fsid=b8cf27e6-4514-419d-85c3-9cb6eecd1a76)
-    /srv/nfs/misc 192.168.178.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770)
+    /srv/nfs/media 192.168.178.0/24(rw,fsid=b8cf27e6-4514-419d-85c3-9cb6eecd1a76,no_root_squash)
+    /srv/nfs/misc 192.168.178.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash)
   '';
 
   # set gid-bit on media-directories so files are created with group media.
