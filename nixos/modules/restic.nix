@@ -112,6 +112,14 @@ in {
       };
       users.groups.restic.gid = config.ids.uids.restic;
 
+      environment.systemPackages = with pkgs; [
+        config.l3mon.restic.wrapper
+      ];
+      environment.shellAliases = {
+        lr = "l3mon-restic";
+      };
+
+
       # enable restics allowOther-flag, so any user (eg simon) can access a
       # fuser-mounted directory owned by restic.
       programs.fuse.userAllowOther = true;
@@ -179,11 +187,12 @@ in {
               }
             ];
           } else {})
-          {
+
+          (if !remote_repo then {
             tmpfiles.rules = [
               "d  ${cfg.repo.location}    0755    restic  restic"
             ];
-          }
+          } else {})
         ]
       );
 
