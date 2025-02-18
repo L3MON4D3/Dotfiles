@@ -29,12 +29,12 @@
     fsType = "nfs";
     options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
   };
-  fileSystems."/srv/paperless" = {
+  fileSystems."/mnt/paperless" = {
     device = "indigo:/paperless-consume";
     fsType = "nfs";
     options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
   };
-  fileSystems."/srv/steamlib" = {
+  fileSystems."/mnt/steamlib" = {
     device = "indigo:/steamlib";
     fsType = "nfs";
     options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
