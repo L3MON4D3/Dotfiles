@@ -39,6 +39,11 @@
     fsType = "nfs";
     options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
   };
+  fileSystems."/mnt/data" = {
+    device = "/dev/nvme0n1p8";
+    fsType = "btrfs";
+    options = [ "rw" ];
+  };
 
   boot.loader.systemd-boot.enable = true;
 
