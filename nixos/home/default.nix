@@ -119,6 +119,7 @@
     pass
     legcord
     gparted
+    wl-clipboard
   ];
 
   services.gpg-agent = {
