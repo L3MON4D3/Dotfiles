@@ -112,6 +112,28 @@
 
   boot.zfs.extraPools = ["glacier"];
 
+  services.zfs.autoScrub = {
+    enable = true;
+    interval = "weekly";
+    randomizedDelaySec = "3h";
+  };
+
+  services.zfs.zed.settings = {
+    ZED_EMAIL_ADDR = [ "simljk@outlook.de" ];
+    # use wrapper!
+    ZED_EMAIL_PROG = "${config.security.wrapperDir}/sendmail";
+    ZED_EMAIL_OPTS = " @ADDRESS@";
+
+    # at most every ten minutes.
+    ZED_NOTIFY_INTERVAL_SECS = 60*10;
+    ZED_NOTIFY_VERBOSE = true;
+
+    ZED_USE_ENCLOSURE_LEDS = false;
+    ZED_SCRUB_AFTER_RESILVER = true;
+  };
+  # not recommended? No matter, the above works well :)
+  services.zfs.zed.enableMail = false;
+
   # # bind-mount storage into place where stuff should not be stored on the main drive.
   fileSystems."/srv/media" = {
     device = "/mnt/glacier/media";
