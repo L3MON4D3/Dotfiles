@@ -75,6 +75,13 @@
     # only mount on-demand.
     options = [ "noauto" "nodev" "noatime" "allow_other" "ro" "IdentityFile=/var/secrets/id_rsa" "uid=1000" "gid=1000" "x-systemd-requires=openvpn-unibonn.service" ];
   };
+
+  l3mon.restic = {
+    enable = true;
+    repo = {
+      location = "rest:http://restic.internal";
+      passwordFile = "/var/secrets/restic-l3mon";
+    };
   };
 
   services.dbus.implementation = "broker";
