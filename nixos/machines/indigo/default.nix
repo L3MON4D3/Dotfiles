@@ -217,7 +217,7 @@
   };
   services.nfs.server.exports = ''
     /srv/nfs/media 192.168.178.0/24(rw)
-    /srv/nfs/misc 192.168.178.0/24(rw,no_root_squash)
+    /srv/nfs/misc 192.168.178.0/24(rw)
   '';
 
   # set gid-bit on media-directories so files are created with group media.
