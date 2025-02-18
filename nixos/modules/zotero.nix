@@ -65,7 +65,7 @@ in
 
             wayland.windowManager.sway.extraConfig = ''
               mode "apps" {
-                bindsym z exec $term ${pkgs.zotero}/bin/zotero --profile ${client_zotero_data_dir}
+                bindsym z exec ${pkgs.zotero}/bin/zotero --profile ${config.xdg.stateHome}/zotero
               }
             '';
           };
