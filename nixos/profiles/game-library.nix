@@ -169,6 +169,7 @@ in {
       LoadCredential = "passwd:${l3lib.secret "steam_password"}";
       User = "simon";
       Group = "simon";
+      Restart = "on-failure";
     };
     script = ''
       update_gog
