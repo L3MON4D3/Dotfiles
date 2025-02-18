@@ -13,6 +13,8 @@
 
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
+
+    ./profiles/history.nix
   ];
 
   # Set your time zone.
