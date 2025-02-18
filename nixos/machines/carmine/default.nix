@@ -72,7 +72,9 @@
   fileSystems."/mnt/wildhorn" = {
     device = "katz@wildhorn.cs.uni-bonn.de:/";
     fsType = "sshfs";
-    options = ["nodev" "noatime" "allow_other" "ro" "IdentityFile=/var/secrets/id_rsa" "uid=1000" "gid=1000" "x-systemd-requires=openvpn-unibonn.service" ];
+    # only mount on-demand.
+    options = [ "noauto" "nodev" "noatime" "allow_other" "ro" "IdentityFile=/var/secrets/id_rsa" "uid=1000" "gid=1000" "x-systemd-requires=openvpn-unibonn.service" ];
+  };
   };
 
   services.dbus.implementation = "broker";
