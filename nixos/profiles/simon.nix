@@ -33,7 +33,12 @@
 
   systemd.tmpfiles.rules = [
     "d /home/simon 0750 simon simon"
+
     "Z /home/simon/.config 0750 simon simon"
+
+    "d /home/simon/.thunderbird/ 0750 simon simon"
+    "z /home/simon/.thunderbird/*.default 0750 simon simon"
+    "A /home/simon/.thunderbird/*.default/ImapMail - - - - g:simon:rX"
   ];
 
   l3mon.restic.extraGroups = [ "simon" ];
@@ -65,7 +70,7 @@
           -e "/home/simon/.config/VSCodium"
           -e "/home/simon/.config/Code - OSS" )
 
-        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/ .thunderbird
+        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/ .thunderbird/*.default/ImapMail
       '';
     };
     forget = {
