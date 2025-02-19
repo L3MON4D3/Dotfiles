@@ -73,9 +73,10 @@ let
       WIDTH=$(identify "$FILE" | perl -lpe 's/.* (\d+)x\d+ .*/$1/g')
       HEIGHT=$(identify "$FILE" | perl -lpe 's/.* \d+x(\d+) .*/$1/g')
 
-      swaymsg 'for_window [title="^imv .*'"$FILE"'.*"] "resize set '"$WIDTH"' '"$HEIGHT"',move absolute position '"$X"' '"$Y"'"'
+      swaymsg 'for_window [title="^imv .*'"$FILE"'.*"] "floating enable, move absolute position '"$X"' '"$Y"'"'
 
-      imv "$FILE"
+      # none: no scaling.
+      imv "$FILE" -W "$WIDTH" -H "$HEIGHT" -s none
     '';
   };
 in {
