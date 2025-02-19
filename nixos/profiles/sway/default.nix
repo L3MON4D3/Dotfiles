@@ -1,6 +1,39 @@
 { config, lib, pkgs, pkgs-unstable, nur, machine, data, ... }:
 
-{
+let
+  sway_float = pkgs.writeShellApplication {
+    name = "sway_float";
+    runtimeInputs = with pkgs; [
+      sway
+      jq
+      # xargs
+      findutils
+      # tail
+      coreutils
+      # kill
+      util-linux
+    ];
+    text = ''
+      "$@" &
+      pid=$!
+
+      echo "$PATH"
+      swaymsg -t subscribe -m '[ "window" ]' \
+        | jq --unbuffered --argjson pid "$pid" '.container | select(.pid == $pid) | .id' \
+        | xargs -I '@' -- swaymsg '[ con_id=@ ] floating enable' &
+
+      subscription=$!
+
+      echo Going into wait state
+
+      # Wait for our process to close
+      tail --pid=$pid -f /dev/null
+
+      echo Killing subscription
+      kill $subscription
+    '';
+  };
+in {
   # system-level options.
   security.polkit.enable = true;
   security.rtkit.enable = true;
@@ -86,6 +119,7 @@
           adapta-gtk-theme
           adapta-kde-theme
           papirus-icon-theme
+          sway_float
         ];
 
         wayland.windowManager.sway = {
