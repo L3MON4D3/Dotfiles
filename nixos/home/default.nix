@@ -52,6 +52,7 @@
     mc =  "/home/simon/projects/nvim/matchconfig";
     lsn = "/home/simon/projects/nvim/luasnip";
     nx =  "/home/simon/projects/dotfiles/nixos/configuration.nix";
+    ms = "/home/simon/projects/master";
   };
   programs.bash.enable = true;
   # make sure profile is loaded (provides sessionVariables).
