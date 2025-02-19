@@ -8,6 +8,7 @@
     ./profiles/qutebrowser
     ./profiles/mpv.nix
     ./profiles/mpd.nix
+    ./profiles/julia.nix
   ];
   home.username = "simon";
   home.homeDirectory = "/home/simon";
