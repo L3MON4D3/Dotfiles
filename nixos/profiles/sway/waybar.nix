@@ -69,6 +69,7 @@
       #mode {
         font-family: 'Inter Display';
         font-size: 11pt;
+        font-weight: bold;
         font-feature-settings: "tnum";
         padding: 0;
       }

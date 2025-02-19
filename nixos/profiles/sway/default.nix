@@ -176,20 +176,41 @@
         gtk = {
           enable = true;
           gtk3.extraConfig = {
-            gtk-theme-name="Adapta";
-            gtk-icon-theme-name="Papirus";
-            gtk-font-name="Sans 10";
-            gtk-toolbar-style="GTK_TOOLBAR_BOTH";
-            gtk-toolbar-icon-size="GTK_ICON_SIZE_LARGE_TOOLBAR";
-            gtk-button-images="1";
-            gtk-menu-images="1";
-            gtk-enable-event-sounds="1";
-            gtk-enable-input-feedback-sounds="1";
-            gtk-xft-antialias="1";
-            gtk-xft-hinting="1";
-            gtk-xft-hintstyle="hintfull";
-            gtk-xft-rgba="rgb";
+            # gtk-theme-name="vimix-light-doder";
+            # gtk-icon-theme-name="Papirus";
+            # gtk-font-name="Sans 10";
+            # gtk-toolbar-style="GTK_TOOLBAR_BOTH";
+            # gtk-toolbar-icon-size="GTK_ICON_SIZE_LARGE_TOOLBAR";
+            # gtk-button-images="1";
+            # gtk-menu-images="1";
+            # gtk-enable-event-sounds="1";
+            # gtk-enable-input-feedback-sounds="1";
+            # gtk-xft-antialias="1";
+            # gtk-xft-hinting="1";
+            # gtk-xft-hintstyle="hintfull";
+            # gtk-xft-rgba="rgb";
           };
+          # rounded corners don't fit with the theme.
+          gtk3.extraCss = ''
+            /* Remove rounded corners */
+            .titlebar,
+            .titlebar .background,
+            decoration,
+            window,
+            window.background
+            {
+                border-radius: 0;
+            }
+
+            /* Remove csd shadows */
+            decoration, decoration:backdrop
+            {
+                box-shadow: none;
+            }
+          '';
+          font.name = "Inter:medium";
+          theme.name = "adw-gtk3";
+          theme.package = pkgs.adw-gtk3;
         };
 
         home.pointerCursor = {
