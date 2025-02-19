@@ -143,41 +143,42 @@ matchconfig.register(project_matchers.pkgbuild(), c{
 --
 repl.set_term("julia", {"julia", "-q", "--threads", "12"}, {})
 
+local julia_lsp_start_script = [[
+	# Load LanguageServer.jl: attempt to load from ~/.julia/environments/nvim-lspconfig
+	# with the regular load path as a fallback
+	ls_install_path = joinpath(
+		get(DEPOT_PATH, 1, joinpath(homedir(), ".julia")),
+		"environments", "nvim-lspconfig"
+	)
+	pushfirst!(LOAD_PATH, ls_install_path)
+	using LanguageServer
+	popfirst!(LOAD_PATH)
+	depot_path = get(ENV, "JULIA_DEPOT_PATH", "")
+	project_path = let
+		dirname(something(
+			## 1. Finds an explicitly set project (JULIA_PROJECT)
+			Base.load_path_expand((
+				p = get(ENV, "JULIA_PROJECT", nothing);
+				p === nothing ? nothing : isempty(p) ? nothing : p
+			)),
+			## 2. Look for a Project.toml file in the current working directory,
+			##    or parent directories, with $HOME as an upper boundary
+			Base.current_project(),
+			## 3. First entry in the load path
+			get(Base.load_path(), 1, nothing),
+			## 4. Fallback to default global environment,
+			##    this is more or less unreachable
+			Base.load_path_expand("@v#.#"),
+		))
+	end
+	@info "Running language server" VERSION pwd() project_path depot_path
+	server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path, depot_path)
+	run(server)
+]]
 local jl_lsp = matchconfig.register(mft"julia", c{
 	lsp = {
 		julials = {
-			cmd = {"julia", "--startup-file=no", "--history-file=no", "-e", [[
-				# Load LanguageServer.jl: attempt to load from ~/.julia/environments/nvim-lspconfig
-				# with the regular load path as a fallback
-				ls_install_path = joinpath(
-					get(DEPOT_PATH, 1, joinpath(homedir(), ".julia")),
-					"environments", "nvim-lspconfig"
-				)
-				pushfirst!(LOAD_PATH, ls_install_path)
-				using LanguageServer
-				popfirst!(LOAD_PATH)
-				depot_path = get(ENV, "JULIA_DEPOT_PATH", "")
-				project_path = let
-					dirname(something(
-						## 1. Finds an explicitly set project (JULIA_PROJECT)
-						Base.load_path_expand((
-							p = get(ENV, "JULIA_PROJECT", nothing);
-							p === nothing ? nothing : isempty(p) ? nothing : p
-						)),
-						## 2. Look for a Project.toml file in the current working directory,
-						##    or parent directories, with $HOME as an upper boundary
-						Base.current_project(),
-						## 3. First entry in the load path
-						get(Base.load_path(), 1, nothing),
-						## 4. Fallback to default global environment,
-						##    this is more or less unreachable
-						Base.load_path_expand("@v#.#"),
-					))
-				end
-				@info "Running language server" VERSION pwd() project_path depot_path
-				server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path, depot_path)
-				run(server)
-			]]},
+			cmd = {"julia", "--startup-file=no", "--history-file=no", "-e", julia_lsp_start_script},
 		}
 	}
 } .. lsp_generic)
@@ -994,7 +995,7 @@ matchconfig.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
 ---
 
 local proj_master_dir = "/home/simon/projects/master/glint-jl"
-repl.set_term("julia.pm", {"julia", "-q", "--threads", "11"}, {cwd = proj_master_dir, initial_keys = "using Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"})
+repl.set_term("julia.pm", {"nix", "develop", proj_master_dir}, {cwd = proj_master_dir, initial_keys = "julia -q --threads 11\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"})
 local master = matchconfig.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 	repl = {run = {
 		mappings = {
@@ -1004,7 +1005,9 @@ local master = matchconfig.register(matchers.dir(proj_master_dir) * mft("julia")
 	}},
 	run_buf = function()
 		usercommand_buf("T", function()
-			util.process_output("systemd-run --user -u tev /home/simon/.local/bin/sway_float tev")
+			-- make sure to resolve tev-path here.
+			-- systemd, where sway_float executes, may have different PATH (NixOS).
+			util.process_output("systemd-run --user -u tev sway_float $(which tev)")
 		end, {})
 	end
 })

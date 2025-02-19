@@ -22,6 +22,8 @@
       "${pkgs.luarocks}"
       "${pkgs.luajit}"
       "${pkgs.lua-language-server}"
+      # julia for random scripts I guess.
+      "${pkgs.julia-bin}"
     ];
     package = inputs.neovim-nightly.packages.${pkgs.system}.default;
   };
