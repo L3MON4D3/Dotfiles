@@ -39,6 +39,8 @@
       ../../profiles/kimmify.nix
 
       ../../modules/zotero.nix
+
+      ../../profiles/unibonn.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
