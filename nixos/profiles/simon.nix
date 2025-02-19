@@ -57,13 +57,15 @@
         CONFIG_EXCLUDE_PATTERNS=(
           -e "/home/simon/.config/discord/"
           -e "/home/simon/.config/ArmCord"
+          -e "/home/simon/.config/legcord"
+          -e "/home/simon/.config/unity3d"
           -e "/home/simon/.config/chromium"
           -e "/home/simon/.config/spotify"
           -e "/home/simon/.config/Epic"
           -e "/home/simon/.config/VSCodium"
           -e "/home/simon/.config/Code - OSS" )
 
-        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/
+        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/ .thunderbird
       '';
     };
     forget = {
