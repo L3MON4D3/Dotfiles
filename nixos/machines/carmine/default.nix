@@ -45,6 +45,15 @@
     fsType = "btrfs";
     options = [ "rw" ];
   };
+  fileSystems."/mnt/teal" = {
+    device = "/dev/nvme0n1p7";
+    fsType = "btrfs";
+    options = [ "rw" ];
+  };
+  systemd.tmpfiles.rules = [
+    "d /mnt/data 0750 simon simon"
+    "d /mnt/teal 0750 simon simon"
+  ];
 
   boot.loader.systemd-boot.enable = true;
 
