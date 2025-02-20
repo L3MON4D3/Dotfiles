@@ -1,4 +1,4 @@
-{ config, lib, l3lib, pkgs, inputs, data, self, ... }:
+{ config, lib, l3lib, pkgs, pkgs-unstable, inputs, data, self, ... }:
 
 {
   disabledModules = ["services/databases/mysql.nix"];
@@ -163,6 +163,8 @@
   users.groups.media.gid = data.ids.media;
 
   programs.dconf.enable = true;
+
+  nix.package = pkgs-unstable.nixVersions.nix_2_26;
 
   # system.copySystemConfiguration = true;
 
