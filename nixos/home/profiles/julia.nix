@@ -42,6 +42,10 @@
 
   home.packages = with pkgs; [
     imv
-    tev
+    (tev.overrideAttrs (final: prev: {
+      patches = (if prev ? patches then prev.patches else []) ++ [
+        ./tev.patch
+      ];
+    }))
   ];
 }

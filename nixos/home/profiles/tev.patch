@@ -1,0 +1,16 @@
+diff --git a/src/ImageViewer.cpp b/src/ImageViewer.cpp
+index e208d0e..0c419cf 100644
+--- a/src/ImageViewer.cpp
++++ b/src/ImageViewer.cpp
+@@ -1225,9 +1225,9 @@ void ImageViewer::insertImage(shared_ptr<Image> image, size_t index, bool shallS
+     // First image got added, let's select it.
+     if ((index == 0 && mImages.size() == 1) || shallSelect) {
+         selectImage(image);
+-        if (!isMaximized()) {
+-            resizeToFit(sizeToFitImage(image));
+-        }
++        // if (!isMaximized()) {
++        //     resizeToFit(sizeToFitImage(image));
++        // }
+     }
+ }
