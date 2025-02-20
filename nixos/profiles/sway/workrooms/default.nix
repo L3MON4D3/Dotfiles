@@ -5,7 +5,7 @@ let
 in {
   programs.waybar.package = pkgs.waybar.overrideAttrs (final: previous: {
     patches = previous.patches ++ [
-      (pkgs.writeText "waybar-workroom" (builtins.readFile ./waybar-workrooms.patch))
+      ./waybar-workrooms.patch
     ];
     hyprlandSupport = false;
   });
