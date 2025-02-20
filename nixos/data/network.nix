@@ -128,9 +128,9 @@ rec {
     name = "wg_mullvad_de";
     peers = {
       indigo = {
-        address = "10.71.192.70";
-        privkey_file = "/var/secrets/wireguard_mullvad/de_unique_worm.private";
-        pubkey = "7GMMTVf8zhDOxQYIAwDoKcd2fqwOwxrkz4ENqg3jwyQ=";
+        address = "10.74.224.236";
+        privkey_file = "/var/secrets/wireguard_mullvad/de_neat_ibex.private";
+        pubkey = "+nqH8e7xvI4+sfAt2r0Y8C1e8ZfiXDqS0b3wHm00ilU=";
         local = lan.peers.indigo_mullvad_de;
         # for now, these are the same here and in the lan-part.
         # Maybe, at some time, I want to make services no longer accessible in
@@ -139,8 +139,8 @@ rec {
         services = lan.peers.indigo_mullvad_de.services;
       };
       mullvad = {
-        endpoint = "146.70.117.34:51820";
-        pubkey = "9ldhvN7r4xGZkGehbsNfYb5tpyTJ5KBb5B3TbxCwklw="; 
+        endpoint = "146.70.117.2:51820";
+        pubkey = "Sttn2cr14dvIcCrE8qdlRGHXriqvTyvQWC7dzujH/iM="; 
       };
     };
     host = peers.mullvad;
