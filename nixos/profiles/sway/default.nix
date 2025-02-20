@@ -268,7 +268,7 @@ in {
                 "iosevka:size=10:antialias=true:autohint=true," +
                 "juliamono:size=10:antialias=true:autohint=true," +
                 "codicon:size=10:antialias=true:autohint=true," +
-                "Symbols Nerd Font Mono:size=10:antialias=true:autohint=true";
+                "Symbols Nerd Font Mono:size=9:antialias=true:autohint=true";
               underline-thickness="1px";
               underline-offset="4px";
             };
