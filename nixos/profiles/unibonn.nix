@@ -13,6 +13,6 @@
   };
 
   systemd.tmpfiles.rules = [
-    "d /mnt/wildhorn 0750 simon simon"
+    "d /mnt/wildhorn"
   ];
 }
