@@ -183,6 +183,9 @@
     for_window [class="ATCG"] floating enable
     for_window [title="^lstopo"] floating enable
     for_window [class="^Vtk$"] floating enable
+    # fontforge does not seem to handle resizing and unfloating too well -> just
+    # leave floating.
+    for_window [class="fontforge"] floating enable
     assign [class="steam.*"] workspace i1
 
     mode "apps" {
