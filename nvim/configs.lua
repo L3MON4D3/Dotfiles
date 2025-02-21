@@ -407,7 +407,7 @@ matchconfig.register(mft"cpp", c{
 -- python
 --
 repl.set_term("python", {"ipython"}, {
-	initial_keys = "%matplotlib\n%matplotlib"
+	-- initial_keys = "%matplotlib\n%matplotlib"
 })
 matchconfig.register(mft"python", c{
 	dap = {

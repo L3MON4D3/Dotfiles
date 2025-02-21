@@ -28,6 +28,8 @@
       pkgs.julia-bin
       # clangd
       pkgs.clang-tools
+      pkgs.python312Packages.ipython
+      pkgs.pyright
     ];
     package = inputs.neovim-nightly.packages.${pkgs.system}.default;
   };
