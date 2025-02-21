@@ -75,7 +75,7 @@ in {
       specs_to_scriptlist = attr_name: (map (
         name: let
           bd = specs."${name}"."${attr_name}";
-        in shellApplicationSpecToCaller bd
+        in shellApplicationSpecToCaller (bd // {text = "echo Backing up ${name}\n" + bd.text;})
       ) (builtins.filter (name: specs."${name}" ? "${attr_name}") (builtins.attrNames specs)));
 
       remote_repo = (builtins.substring 0 1 cfg.repo.location) != "/";
