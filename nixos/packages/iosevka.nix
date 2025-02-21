@@ -6,10 +6,7 @@
   writeTextFile
 }:
 
-iosevka.override (let
-  # rename to avoid recursion.
-  superBuildNpmPackage = buildNpmPackage;
-in {
+iosevka.override {
   privateBuildPlan = ''
     [buildPlans.Iosevka-l3mon]
     family = "iosevka"
@@ -25,4 +22,4 @@ in {
     number-sign = "slanted"
   '';
   set = "-l3mon";
-})
+}
