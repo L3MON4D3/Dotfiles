@@ -10,4 +10,8 @@
   home.packages = with pkgs; [
     mpv
   ];
+
+  wayland.windowManager.sway.extraConfig = ''
+    bindsym XF86AudioPlay exec ${pkgs.mpc}/bin/mpc toggle
+  '';
 }
