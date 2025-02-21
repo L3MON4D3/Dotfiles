@@ -31,7 +31,9 @@ in {
     backupDaily = {
       text = ''
         cd ${dav_root}
-        restic backup --tag=webdav --skip-if-unchanged=true -- *
+        if ls ./* &> /dev/null; then
+          restic backup --tag=webdav --skip-if-unchanged=true -- *
+        fi
       '';
     };
     forget = {
