@@ -92,7 +92,7 @@
       "http://cache.indigo.internal"
     ];
     trusted-public-keys = [
-      "cache.indigo.internal-1:"
+      "cache.indigo.internal:CA2Hg9Xq3wNRTOU/Pombi0CLc2aemwlyPw/o34zDrKA="
     ];
   };
 }
