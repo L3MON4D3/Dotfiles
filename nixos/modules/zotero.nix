@@ -26,7 +26,7 @@ in
         backupDaily = {
           text = ''
             cd /srv/zotero
-            restic backup --tag=zotero --skip-if-unchanged=true -- *
+            restic backup --tag=zotero --skip-if-unchanged=true -- storage zotero.sqlite*
           '';
         };
         forget = {
