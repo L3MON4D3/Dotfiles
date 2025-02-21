@@ -86,4 +86,13 @@
   hardware.keyboard.qmk.enable = true;
 
   services.dbus.implementation = "broker";
+
+  nix.settings = {
+    substituters = [
+      "http://cache.indigo.internal"
+    ];
+    trusted-public-keys = [
+      "cache.indigo.internal-1:"
+    ];
+  };
 }

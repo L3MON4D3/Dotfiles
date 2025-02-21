@@ -41,6 +41,8 @@
       ../../modules/zotero.nix
 
       ../../profiles/unibonn.nix
+
+      ../../profiles/cache.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
