@@ -120,6 +120,7 @@ in {
           adapta-kde-theme
           papirus-icon-theme
           sway_float
+          xdragon
         ];
 
         wayland.windowManager.sway = {
