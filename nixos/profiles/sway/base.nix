@@ -183,7 +183,6 @@
     for_window [class="ATCG"] floating enable
     for_window [title="^lstopo"] floating enable
     for_window [class="^Vtk$"] floating enable
-    for_window [class="^Overcooked2.x86_64$"] move container output DP-1
     assign [class="steam.*"] workspace i1
 
     mode "apps" {
