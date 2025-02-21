@@ -98,9 +98,9 @@ in {
       { config, lib, pkgs, machine, data, ... }:
       
       let
-        cursor_theme_name = "Posy_Cursor";
-        cursor_size = 32;
-        cursor_theme_package = pkgs.posy-cursors;
+        cursor_theme_name = "phinger-cursors-light";
+        cursor_size = 24;
+        cursor_theme_package = pkgs.phinger-cursors;
       in {
         imports = [
           ./base.nix
