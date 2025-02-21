@@ -33,6 +33,8 @@ in {
     mode "power" {
       bindsym --no-repeat d output DP-1 dpms toggle; mode "default"
       bindsym --no-repeat h output HDMI-A-1 dpms toggle; mode "default"
+
+      bindsym --no-repeat b output DP-1 dpms toggle; output HDMI-A-1 dpms toggle; mode "default"
     }
   '';
 }
