@@ -39,6 +39,7 @@ rec {
           "radicale"
           "webdav"
           "restic"
+          "cache.indigo"
         ];
       };
       indigo_mullvad_de = {
