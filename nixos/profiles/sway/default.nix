@@ -98,9 +98,9 @@ in {
       { config, lib, pkgs, machine, data, ... }:
       
       let
-        cursor_theme_name = "capitaine-cursors";
-        cursor_size = 6;
-        cursor_theme_package = pkgs.capitaine-cursors;
+        cursor_theme_name = "Posy_Cursor";
+        cursor_size = 32;
+        cursor_theme_package = pkgs.posy-cursors;
       in {
         imports = [
           ./base.nix
