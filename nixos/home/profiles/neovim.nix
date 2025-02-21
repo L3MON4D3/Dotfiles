@@ -16,19 +16,21 @@
     enable = true;
     defaultEditor = true;
     extraPackages = [
-      "${pkgs.clang}"
-      "${pkgs.tree-sitter}"
-      "${pkgs.nodejs}"
-      "${pkgs.luarocks}"
-      "${pkgs.luajit}"
-      "${pkgs.lua-language-server}"
-      # julia for random scripts I guess.
-      "${pkgs.julia-bin}"
+      pkgs.clang
+      pkgs.tree-sitter
+      pkgs.nodejs
+      pkgs.luarocks
+      pkgs.luajit
+      # julia for random scripts and lsp.
+      pkgs.lua-language-server
+      # make sure to install LanguageServer.jl, Images, Revise
+      # Maybe use with 
+      pkgs.julia-bin
+      # clangd
+      pkgs.clang-tools
     ];
     package = inputs.neovim-nightly.packages.${pkgs.system}.default;
   };
-
-
 
   # link the configuration file in current directory to the specified location in home directory
   # home.file.".config/i3/wallpaper.jpg".source = ./wallpaper.jpg;
