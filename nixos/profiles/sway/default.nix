@@ -33,6 +33,58 @@ let
       kill $subscription
     '';
   };
+  
+  gen_scaled_font = pkgs.writers.writePython3Bin "gen_scaled_font" {
+    libraries = with pkgs; [ python312Packages.fontforge ];
+  } ''
+    import fontforge
+    import psMat
+
+    symbols = fontforge.open("${pkgs.nerdfonts}/share/fonts/truetype/NerdFonts/SymbolsNerdFontMono-Regular.ttf")  # noqa: E501. The path is too long.
+
+    scaled_f = fontforge.font()
+    scaled_f.version = symbols.version
+    scaled_f.weight = symbols.weight
+    scaled_f.familyname = "Symbols Scaled"
+    scaled_f.fontname = "SymbolsScaled-Mono"
+    scaled_f.fullname = "Symbols Scaled Mono"
+    scaled_f.em = symbols.em
+    scaled_f.design_size = symbols.design_size
+    scaled_f.ascent = symbols.ascent
+    scaled_f.descent = symbols.descent
+
+    # c_x,y found manually, valid for circles.
+    c_x = 1023
+    c_y = 482+101
+    scale_by = 0.6
+    for uid in [0xea71]:
+        print(uid)
+        g = scaled_f.createChar(uid)
+        symbol = symbols[uid]
+        g.layers[0] = symbol.background
+        g.layers[1] = symbol.foreground
+        g.transform(
+            psMat.compose(psMat.compose(
+              psMat.translate(-c_x, -c_y),
+              psMat.scale(scale_by)),
+              psMat.translate(c_x, c_y))
+        )
+        g.width = symbol.width
+        g.vwidth = symbol.vwidth
+
+    scaled_f.generate("SymbolsScaled.ttf")
+  '';
+
+  symbols_scaled = pkgs.stdenv.mkDerivation {
+    name = "l3mon-symbols-scaled-ttf";
+    pname = "l3mon-symbols-scaled-ttf";
+    phases = [ "installPhase" ];
+    installPhase = ''
+      ${gen_scaled_font}/bin/gen_scaled_font
+      mkdir -p $out/share/fonts/
+      cp SymbolsScaled.ttf $out/share/fonts/
+    '';
+  };
 in {
   # system-level options.
   security.polkit.enable = true;
@@ -56,6 +108,7 @@ in {
       l3mon.iosevka
       julia-mono
       nerdfonts
+      symbols_scaled
     ];
     enableDefaultPackages = true;
   };
@@ -269,7 +322,8 @@ in {
                 "iosevka:size=10:antialias=true:autohint=true," +
                 "juliamono:size=10:antialias=true:autohint=true," +
                 "codicon:size=10:antialias=true:autohint=true," +
-                "Symbols Nerd Font Mono:size=9:antialias=true:autohint=true";
+                "Symbols Scaled:size=10:antialias=true:autohint=true," +
+                "Symbols Nerd Font Mono:size=10:antialias=true:autohint=true";
               underline-thickness="1px";
               underline-offset="4px";
             };
