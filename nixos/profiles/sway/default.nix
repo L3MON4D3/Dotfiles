@@ -163,6 +163,7 @@ in {
           ./qbittorrent.nix
           ./waybar.nix
           ./workrooms
+          ./copypaste
           ./screengrab.nix
         ];
 
