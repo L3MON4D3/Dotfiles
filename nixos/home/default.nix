@@ -129,6 +129,12 @@
     pinentryPackage = pkgs.pinentry-gnome3;
   };
 
+  xdg.configFile."nixpkgs/config.nix".text = ''
+  {
+    allowUnfree = true;
+  }
+  '';
+
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new home Manager release introduces backwards
