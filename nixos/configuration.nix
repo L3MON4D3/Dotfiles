@@ -166,6 +166,16 @@
 
   nix.package = pkgs-unstable.nixVersions.nix_2_26;
 
+  nix.settings = {
+    substituters = [
+      "http://nix-community.cachix.org"
+      "http://cache.nixos.org"
+    ];
+    trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+
   # system.copySystemConfiguration = true;
 
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
