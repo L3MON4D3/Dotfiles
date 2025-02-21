@@ -83,5 +83,7 @@
     };
   };
 
+  hardware.keyboard.qmk.enable = true;
+
   services.dbus.implementation = "broker";
 }
