@@ -23,8 +23,8 @@ let
         # "4000:linux"
         # # Human: Fall Flat
         # "477160:windows"
-        # # Humankind
-        # "1124300:windows"
+        # Humankind
+        "1124300:windows"
         # # It takes two friends pass
         # "1504980:windows"
         # # Portal 2
@@ -85,8 +85,8 @@ let
       gamedefs=(
         "mdk:windows"
         # "oxenfree:windows"
-        # "baldurs_gate_iii:windows"
-        # "cyberpunk_2077_game:windows"
+        "baldurs_gate_iii:windows"
+        "cyberpunk_2077_game:windows"
       )
 
       cd /srv/games/gog/
@@ -109,19 +109,19 @@ let
     '';
   };
 in {
-  # for clients: nfs-mount this share.
+  # for clients: nfs-mount these shares.
   fileSystems."/srv/nfs/steamlib" = {
     device = "/var/lib/steam/library";
     options = [ "bind" ];
   };
-  fileSystems."/srv/nfs/gog" = {
-    device = "/srv/games/gog";
+  fileSystems."/srv/nfs/games" = {
+    device = "/srv/games";
     options = [ "bind" ];
   };
 
   services.nfs.server.exports = ''
     /srv/nfs/steamlib 192.168.178.0/24(rw)
-    /srv/nfs/gog      192.168.178.0/24(rw)
+    /srv/nfs/games      192.168.178.0/24(rw)
   '';
 
   #
