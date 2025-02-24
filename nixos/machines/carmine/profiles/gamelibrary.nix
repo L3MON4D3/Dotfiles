@@ -3,13 +3,19 @@
 {
   programs.steam.enable = true;
 
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
   environment.systemPackages = [
     pkgs-yuzu.yuzu
     pkgs-unstable.suyu
-    pkgs.ryujinx
+    pkgs-unstable.ryujinx
+
+    pkgs.dolphin-emu
+    # pkgs.moltengamepad
 
     pkgs.winetricks
-    pkgs.wineWowPackages.waylandFull
+    # pkgs.wineWowPackages.waylandFull
+    (pkgs.wineWowPackages.stable.override { waylandSupport = true; })
 
     # make sure to disable lutris runtime (https://nixos.wiki/wiki/Lutris).
     (pkgs.lutris.override {
@@ -22,6 +28,9 @@
     })
     # pkgs.vulkan-tools
   ];
+
+  # for wii-remote.
+  services.udev.packages = [ pkgs.dolphin-emu ];
 
   systemd.tmpfiles.rules = [
     "d /mnt/steamlib 0750 simon simon"
