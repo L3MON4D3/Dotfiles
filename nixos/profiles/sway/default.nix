@@ -303,6 +303,22 @@ in {
           theme.package = pkgs.adw-gtk3;
         };
 
+        # mkForce to override import of theme in css, which breaks these
+        # user-css-settings. (at least for adw-gtk3).
+        xdg.configFile."gtk-4.0/gtk.css".text = lib.mkForce ''
+          /* Remove rounded corners */
+          window
+          {
+              border-radius: 0;
+          }
+
+          /* Remove csd shadows */
+          decoration, decoration:backdrop
+          {
+              box-shadow: none;
+          }
+        '';
+
         home.pointerCursor = {
           gtk.enable = true;
           x11.enable = true;
