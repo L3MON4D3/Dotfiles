@@ -363,6 +363,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-yuzu": {
+      "locked": {
+        "lastModified": 1702572229,
+        "narHash": "sha256-b7kRN4HbVjh/hs9dTPkGwKECBD2NnHz8n6twLaEHkeU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "125be29c4ef454788c42c28d49cb048ab0b5b548",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "125be29c4ef454788c42c28d49cb048ab0b5b548",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 0,
@@ -436,6 +452,7 @@
         "netns-exec": "netns-exec",
         "nixpkgs": "nixpkgs_4",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nixpkgs-yuzu": "nixpkgs-yuzu",
         "nur": "nur",
         "solaar": "solaar"
       }
