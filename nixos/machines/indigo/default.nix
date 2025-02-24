@@ -197,11 +197,11 @@
 
   # # game-library
   fileSystems."/var/lib/steam/library" = {
-    device = "/mnt/glacier/games/steamlib";
+    device = "/mnt/glacier/steamlib";
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
-  fileSystems."/srv/games/gog" = {
-    device = "/mnt/glacier/games/gog";
+  fileSystems."/srv/games" = {
+    device = "/mnt/glacier/games";
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
   fileSystems."/srv/zotero" = {
