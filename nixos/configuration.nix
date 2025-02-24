@@ -24,6 +24,8 @@
     "flakes"
   ];
 
+  boot.supportedFilesystems = ["ntfs"];
+
   # stable neovim for root user.
   programs.neovim = {
     enable = true;
