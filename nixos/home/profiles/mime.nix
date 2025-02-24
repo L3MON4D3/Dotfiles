@@ -3,7 +3,7 @@
 let 
   browser = ["qutebrowser.desktop"];
   associations = {
-    "inode/directory" = [ "foot.desktop" ];
+    # "inode/directory" = [ "foot.desktop" ];
     "text/html" = browser;
     "x-scheme-handler/http" = browser;
     "x-scheme-handler/https" = browser;
