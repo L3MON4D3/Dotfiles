@@ -121,7 +121,6 @@
   home.packages = with pkgs; [
     pass
     legcord
-    gparted
     wl-clipboard
   ];
 
