@@ -31,12 +31,12 @@
   fileSystems."/mnt/steamlib" = {
     device = "indigo:/steamlib";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "fsc" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
   };
 
   fileSystems."/srv/games" = {
     device = "indigo:/games";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "fsc" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
   };
 }

@@ -26,17 +26,17 @@
   fileSystems."/srv/misc" = {
     device = "indigo:/misc";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
   };
   fileSystems."/srv/media" = {
     device = "indigo:/media";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
   };
   fileSystems."/mnt/paperless" = {
     device = "indigo:/paperless-consume";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
   };
   fileSystems."/mnt/data" = {
     device = "/dev/nvme0n1p8";
