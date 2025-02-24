@@ -41,7 +41,7 @@ in
       fileSystems.${client_zotero_data_dir} = {
         device = "zotero.internal:/${export_name}";
         fsType = "nfs";
-        options = [ "nfsvers=4.2" "rw" "fsc" ];
+        options = [ "nfsvers=4.2" "rw" ];
       };
       
       home-manager.sharedModules = [

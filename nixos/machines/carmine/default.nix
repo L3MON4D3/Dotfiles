@@ -14,6 +14,9 @@
 
     ../../profiles/mxmaster3s.nix
     ../../profiles/unibonn.nix
+
+    ./profiles/gamelibrary.nix
+    ./profiles/cachefilesd.nix
   ];
 
   environment.shellAliases = {
@@ -23,36 +26,25 @@
   fileSystems."/srv/misc" = {
     device = "indigo:/misc";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
+    options = [ "nfsvers=4.2" "rw" "acl" ];
   };
   fileSystems."/srv/media" = {
     device = "indigo:/media";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
+    options = [ "nfsvers=4.2" "rw" "acl" ];
   };
   fileSystems."/mnt/paperless" = {
     device = "indigo:/paperless-consume";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
-  };
-  fileSystems."/mnt/steamlib" = {
-    device = "indigo:/steamlib";
-    fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "fsc" ];
+    options = [ "nfsvers=4.2" "rw" "acl" ];
   };
   fileSystems."/mnt/data" = {
     device = "/dev/nvme0n1p8";
     fsType = "btrfs";
     options = [ "rw" ];
   };
-  fileSystems."/mnt/teal" = {
-    device = "/dev/nvme0n1p7";
-    fsType = "btrfs";
-    options = [ "rw" ];
-  };
   systemd.tmpfiles.rules = [
     "d /mnt/data 0750 simon simon"
-    "d /mnt/teal 0750 simon simon"
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -66,8 +58,6 @@
   };
 
   l3mon.zotero.enable_client = true;
-
-  programs.steam.enable = true;
 
   home-manager.sharedModules = [
     ({ config, lib, pkgs, machine, data, ... }: {

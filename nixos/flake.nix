@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-yuzu.url = "github:NixOS/nixpkgs?rev=125be29c4ef454788c42c28d49cb048ab0b5b548";
     netns-exec.url = "github:L3MON4D3/netns-exec";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
@@ -24,7 +25,7 @@
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, home-manager, ... }: {
     nixosConfigurations = let
       mkSimonConfig = machine_name: nixpkgs.lib.nixosSystem rec {
         system = "x86_64-linux";
@@ -32,6 +33,9 @@
           pkgs-unstable = import nixpkgs-unstable {
             inherit system;
             config.allowUnfree = true;
+          };
+          pkgs-yuzu = import nixpkgs-yuzu {
+            inherit system;
           };
         };
         modules = [
