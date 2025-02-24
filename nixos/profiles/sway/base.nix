@@ -186,7 +186,9 @@
     # fontforge does not seem to handle resizing and unfloating too well -> just
     # leave floating.
     for_window [class="fontforge"] floating enable
-    assign [class="steam.*"] workspace i1
+    assign [class="^steam$"] workspace i1
+    assign [class="^steam_app_\d$"] workspace i1
+    assign [class="^steam_app_default$"] output DP-3
 
     mode "apps" {
       bindsym b exec qutebrowser
