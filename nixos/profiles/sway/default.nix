@@ -115,6 +115,7 @@ in {
 
   environment.systemPackages = with pkgs; [
     foot.terminfo
+    gparted
   ];
 
   systemd.user.services.polkit-gnome-authentication-agent-1 = {
