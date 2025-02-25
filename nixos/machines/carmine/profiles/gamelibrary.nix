@@ -58,14 +58,18 @@
           cd "$TMPDIR"
           ln -s /home/simon/.local/share/wineprefixes wineprefixes
           ln -s /home/simon/.config/Ryujinx ryujinx
+          ln -s /home/simon/.local/share/dolphin-emu dolphin
           ln -s /home/simon/.local/share/suyu suyu
           ln -s /home/simon/games games
+          ln -s /home/simon/.local/share/lutris lutris
 
           restic backup --tag=${tag} --skip-if-unchanged -- \
             ryujinx/bis/user/save \
             suyu/nand/user/save \
             wineprefixes/*/drive_c/users \
-            games/*/documents
+            games/*/documents \
+            dolphin/* \
+            lutris/games lutris/lutris.conf lutris/system.yml
           cd /
           rm -rf "$TMPDIR"
         '';
