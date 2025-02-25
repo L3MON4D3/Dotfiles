@@ -113,6 +113,7 @@
     dust
     wireguard-tools
     ffmpeg
+    just
 
     # nix related
     nix-output-monitor
