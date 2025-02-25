@@ -48,4 +48,37 @@
     fsType = "nfs";
     options = [ "nfsvers=4.2" "rw" "acl" "fsc" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
   };
+
+  l3mon.restic = {
+    specs.gamelibrary_simon = let
+      savegame_backup = tag: {
+        runtimeInputs = [ pkgs.coreutils ];
+        text = ''
+          TMPDIR="$(mktemp -d)"
+          cd "$TMPDIR"
+          ln -s /home/simon/.local/share/wineprefixes wineprefixes
+          ln -s /home/simon/.config/Ryujinx ryujinx
+          ln -s /home/simon/.local/share/suyu suyu
+          ln -s /home/simon/games games
+
+          restic backup --tag=${tag} --skip-if-unchanged -- \
+            ryujinx/bis/user/save \
+            suyu/nand/user/save \
+            wineprefixes/*/drive_c/users \
+            games/*/documents
+          cd /
+          rm -rf "$TMPDIR"
+        '';
+      };
+    in {
+      backup15min = savegame_backup "savegame-15min";
+      backupDaily = savegame_backup "savegame";
+      forget = {
+        text = ''
+          restic forget --tag=savegame-15min --group-by=tag --keep-within=2d
+          restic forget --tag=savegame --group-by=tag --keep-last=20 --keep-monthly=12 --keep-yearly=unlimited
+        '';
+      };
+    };
+  };
 }
