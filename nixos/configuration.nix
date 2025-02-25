@@ -94,6 +94,7 @@
     xz
     unzip
     p7zip
+    rar
 
     # utils
     ripgrep
