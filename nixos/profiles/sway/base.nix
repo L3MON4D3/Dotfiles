@@ -177,8 +177,6 @@
     for_window [class="^Ryujinx$"] floating enable
     for_window [app_id="^waybar$"] floating enable
     for_window [class="^exercise.*_.*$"] floating enable
-    for_window [title="^Lutris$"] floating enable
-    for_window [title="^Lutris$"] floating enable
     for_window [class="Gimp"] floating enable
     for_window [class="ATCG"] floating enable
     for_window [title="^lstopo"] floating enable
@@ -186,15 +184,10 @@
     # fontforge does not seem to handle resizing and unfloating too well -> just
     # leave floating.
     for_window [class="fontforge"] floating enable
-    assign [class="^steam$"] workspace i1
-    assign [class="^steam_app_\d$"] workspace i1
-    assign [class="^steam_app_default$"] output DP-3
 
     mode "apps" {
       bindsym b exec qutebrowser
       bindsym f exec firefox
-      bindsym d exec legcord
-      bindsym s exec steam
 
       bindsym Return mode "default"
       bindsym Escape mode "default"

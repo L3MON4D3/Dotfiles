@@ -122,7 +122,15 @@
     pass
     legcord
     wl-clipboard
+    thunderbird
   ];
+
+  wayland.windowManager.sway.extraConfig = ''
+    mode "apps" {
+      bindsym d exec legcord
+      bindsym t exec thunderbird
+    }
+  '';
 
   services.gpg-agent = {
     enable = true;
