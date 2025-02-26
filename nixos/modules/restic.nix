@@ -237,7 +237,7 @@ in {
       services.restic.server = {
         enable = true;
         listenAddress = "0.0.0.0:${port}";
-        dataDir = "/srv/restic-l3mon";
+        dataDir = "/srv/restic";
         extraFlags = [ "--no-auth" ];
       };
       services.caddy.extraConfig = ''
