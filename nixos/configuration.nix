@@ -72,14 +72,18 @@
   security.sudo = {
     enable = true;
     extraRules = [{
-      commands = [{
-        # insecure, allows arbitrary modification to system by unprivileged user.
-        # Does not matter here :D
-        command = ''${pkgs.nixos-rebuild}/bin/nixos-rebuild'';
-        options = [ "NOPASSWD" ];
-      }
+      commands = [
+        {
+          # insecure, allows arbitrary modification to system by me, CAREFUL, UP TO NO GOOD!!!.
+          command = ''${pkgs.nixos-rebuild}/bin/nixos-rebuild'';
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = ''/run/current-system/sw/bin/nixos-rebuild'';
+          options = [ "NOPASSWD" ];
+        }
       ];
-      groups = [ "wheel" ];
+      groups = [ "simon" ];
     }];
     extraConfig = with pkgs; ''
       Defaults env_keep += "SYSTEMD_EDITOR"
