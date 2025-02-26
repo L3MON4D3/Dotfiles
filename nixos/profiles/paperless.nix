@@ -35,14 +35,14 @@ in {
     "A /var/lib/paperless - - - - g:paperless:rX"
   ];
   l3mon.restic.extraGroups = [ "paperless" ];
-  l3mon.restic.dailyStopResumeServices = [
-    "paperless-consumer.service"
-    "paperless-scheduler.service"
-    "paperless-task-queue.service"
-    "paperless-web.service"
-  ];
 
   l3mon.restic.specs.paperless = {
+    backupStopResumeServices = [
+      "paperless-consumer.service"
+      "paperless-scheduler.service"
+      "paperless-task-queue.service"
+      "paperless-web.service"
+    ];
     backupDaily = {
       text = ''
         cd /var/lib/paperless

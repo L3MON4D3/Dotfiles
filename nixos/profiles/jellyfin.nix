@@ -35,9 +35,9 @@ in {
   };
 
   l3mon.restic = {
-    dailyStopResumeServices = ["jellyfin.service"];
     specs.jellyfin = {
       # stop jellyfin while backup is running, then resume.
+      backupStopResumeServices = [ "jellyfin.service" ];
       backupDaily = {
         text = ''
           cd ${config.services.jellyfin.dataDir}

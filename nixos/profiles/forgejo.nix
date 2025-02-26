@@ -41,9 +41,9 @@ in {
   ];
 
   l3mon.restic.extraGroups = [ "forgejo" ];
-  l3mon.restic.dailyStopResumeServices = [ "forgejo.service" ];
   l3mon.restic.dailyRequiredServices = [ "mysql.service" ];
   l3mon.restic.specs.forgejo = {
+    backupStopResumeServices = ["forgejo.service"];
     # create two tags, one for files and one for the database-backup.
     # I don't think both can be put into one snapshot easily if I want to use
     # the `--stdin`-option.

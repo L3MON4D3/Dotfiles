@@ -34,11 +34,6 @@ in {
       description = "Services that have to be running before restic-daily can do its backup. Useful for mysqld.";
       default = [];
     };
-    dailyStopResumeServices = mkOption {
-      type = with types; listOf str;
-      description = "Services that have to be interrupted before restic-daily can do its backup.";
-      default = [];
-    };
 
     wrapper = mkOption {
       type = types.package;
@@ -74,8 +69,16 @@ in {
 
       specs_to_scriptlist = attr_name: (map (
         name: let
-          bd = specs."${name}"."${attr_name}";
-        in shellApplicationSpecToCaller (bd // {text = "echo Backing up ${name}\n" + bd.text;})
+          namespec = specs."${name}";
+          bd = namespec."${attr_name}";
+        in shellApplicationSpecToCaller (bd // {
+          text = ''
+            echo Backing up ${name}
+            ${optionalString (namespec ? "backupStopResumeServices") "${config.security.wrapperDir}/sudo ${pkgs.systemd}/bin/systemctl stop ${builtins.toString namespec.backupStopResumeServices}"}
+            ${bd.text}
+            ${optionalString (namespec ? "backupStopResumeServices") "${config.security.wrapperDir}/sudo ${pkgs.systemd}/bin/systemctl start ${builtins.toString namespec.backupStopResumeServices}"}
+          '';
+        })
       ) (builtins.filter (name: specs."${name}" ? "${attr_name}") (builtins.attrNames specs)));
 
       remote_repo = (builtins.substring 0 1 cfg.repo.location) != "/";
@@ -117,6 +120,19 @@ in {
       ];
       environment.shellAliases = {
         lr = "l3mon-restic";
+      };
+
+      security.sudo = {
+        extraRules = [{
+          commands = let
+            start_stop_services = builtins.catAttrs "backupStopResumeServices" (builtins.attrValues specs);
+          in
+            (map (service_names: {
+              command = "${pkgs.systemd}/bin/systemctl start ${builtins.toString service_names}, ${pkgs.systemd}/bin/systemctl stop ${builtins.toString service_names}";
+              options = [ "NOPASSWD" ];
+            }) start_stop_services);
+          groups = [ "restic" ];
+        }];
       };
 
 
@@ -174,13 +190,6 @@ in {
               {
                 after = cfg.dailyRequiredServices;
                 requires = cfg.dailyRequiredServices;
-
-                # stop services via `conflicts`, make sure they are stopped via
-                # `before`, and restart them via `onSuccess` or `onFailure` (so they are always restarted!).
-                conflicts = cfg.dailyStopResumeServices;
-                before = cfg.dailyStopResumeServices;
-                onSuccess = cfg.dailyStopResumeServices;
-                onFailure = cfg.dailyStopResumeServices;
 
                 path = [ pkgs.restic ];
                 script = script_daily;
