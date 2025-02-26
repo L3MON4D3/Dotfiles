@@ -25,8 +25,8 @@ in {
 
   l3mon.restic.extraGroups = [ "radicale" ];
   l3mon.restic = {
-    dailyStopResumeServices = [ "radicale.service" ]; 
     specs.radicale = {
+      backupStopResumeServices = [ "radicale.service" ]; 
       backupDaily = {
         text = ''
           cd /var/lib/radicale

@@ -32,9 +32,9 @@ in {
 
   l3mon.restic.extraGroups = [ "immich" ];
   l3mon.restic = {
-    dailyStopResumeServices = ["immich-server.service"];
     dailyRequiredServices = [ "postgresql.service" ];
     specs.immich = {
+      backupStopResumeServices = ["immich-server.service"];
       backupDaily = {
         runtimeInputs = [ config.services.postgresql.package ];
         text = ''

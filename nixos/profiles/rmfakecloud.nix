@@ -126,8 +126,8 @@ in {
   '';
 
   l3mon.restic.extraGroups = [ "rmfakecloud" ];
-  l3mon.restic.dailyStopResumeServices = [ "rmfakecloud.service" ];
   l3mon.restic.specs.rmfakecloud = {
+    backupStopResumeServices = ["rmfakecloud.service"];
     # create two tags, one for files and one for the database-backup.
     # I don't think both can be put into one snapshot easily if I want to use
     # the `--stdin`-option.
