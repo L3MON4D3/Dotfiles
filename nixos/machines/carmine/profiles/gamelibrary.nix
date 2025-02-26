@@ -49,6 +49,7 @@
     options = [ "nfsvers=4.2" "rw" "acl" "fsc" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
   };
 
+
   l3mon.restic = {
     specs.gamelibrary_simon = let
       savegame_backup = tag: {
@@ -85,4 +86,23 @@
       };
     };
   };
+
+  home-manager.sharedModules = [
+    (
+      { config, lib, pkgs, machine, data, ... }:
+      {
+        wayland.windowManager.sway.extraConfig = ''
+          for_window [title="^Lutris$"] floating enable
+          assign [class="^steam$"] workspace i1
+          assign [class="^steam_app_\d$"] workspace i1
+          assign [class="^steam_app_default$"] output DP-3
+
+          mode "apps" {
+            bindsym l exec lutris
+            bindsym s exec steam
+          }
+        '';
+      }
+    )
+  ];
 }
