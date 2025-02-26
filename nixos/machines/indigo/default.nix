@@ -92,7 +92,9 @@
         '';
       }
       {
-        text = ''echo Copying to /mnt/misc!'';
+        text = ''
+          ${pkgs.rclone}/bin/rclone --config ${l3lib.secret "restic-rclone.conf"} --size-only sync -P /mnt/glacier/restic-l3mon b2:simon-restic2
+        '';
       }
     ];
   };
