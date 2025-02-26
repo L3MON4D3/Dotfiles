@@ -68,7 +68,7 @@
   l3mon.restic = {
     enable = true;
     repo = {
-      location = "rest:http://restic.internal";
+      location = "rest:http://restic.internal/simon";
       passwordFile = "/var/secrets/restic-l3mon";
     };
   };

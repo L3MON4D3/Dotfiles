@@ -80,7 +80,7 @@
     enable = true;
     enable_server = true;
     repo = {
-      location = "/srv/restic-l3mon";
+      location = "/srv/restic/simon";
       passwordFile = l3lib.secret "restic-l3mon";
     };
     dailyBackupTime = "03:00:00";
@@ -88,12 +88,12 @@
     maintenanceExtra = [
       {
         text = ''
-          ${pkgs.rsync}/bin/rsync -rpt --progress --size-only --delete /srv/restic-l3mon /mnt/glacier/restic-l3mon
+          ${pkgs.rsync}/bin/rsync -rpt --progress --size-only --delete /srv/restic /mnt/glacier/restic
         '';
       }
       {
         text = ''
-          ${pkgs.rclone}/bin/rclone --config ${l3lib.secret "restic-rclone.conf"} --size-only sync -P /mnt/glacier/restic-l3mon b2:simon-restic2
+          ${pkgs.rclone}/bin/rclone --config ${l3lib.secret "restic-rclone.conf"} --size-only sync -P /mnt/glacier/restic b2:simon-restic2
         '';
       }
     ];
@@ -180,8 +180,8 @@
   };
 
   # # restic
-  fileSystems."/srv/restic-l3mon" = {
-    device = "/mnt/torrent/restic-l3mon";
+  fileSystems."/srv/restic" = {
+    device = "/mnt/torrent/restic";
     options = [ "bind" ];
   };
 
@@ -225,19 +225,6 @@
     /srv/nfs/media 192.168.178.0/24(rw,fsid=b8cf27e6-4514-419d-85c3-9cb6eecd1a76,no_root_squash)
     /srv/nfs/misc 192.168.178.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash)
   '';
-
-  # set gid-bit on media-directories so files are created with group media.
-  # set default-permissions so write is allowed for all group-members.
-  # systemd.tmpfiles.rules = [
-    # "d /srv/media                2775 media  media"
-    # "A /srv/media                -    -      -       -   d:u:media:rwX"
-    # "d /srv/media/audio          2775 media  media"
-    # "d /srv/media/video          2775 media  media"
-    # "d /srv/media/video/shows    2775 media  media"
-    # "d /srv/media/video/movies   2775 media  media"
-
-    # "d /mnt/glacier/restic-l3mon 0750 restic restic"
-  # ];
 
   services.dbus.implementation = "broker";
   l3mon.zotero.enable_server = true;
