@@ -87,13 +87,14 @@
     doRepoMaintenance = true;
     maintenanceExtra = [
       {
+        # trailing slash in /srv/restic/ very important!! otherwise creates /mnt/glacier/restic/restic.
         text = ''
-          ${pkgs.rsync}/bin/rsync -rpt --progress --size-only --delete /srv/restic /mnt/glacier/restic
+          ${pkgs.rsync}/bin/rsync -rpt --progress --size-only --delete /srv/restic/ /mnt/glacier/restic
         '';
       }
       {
         text = ''
-          ${pkgs.rclone}/bin/rclone --config ${l3lib.secret "restic-rclone.conf"} --size-only sync -P /mnt/glacier/restic b2:simon-restic2
+          ${pkgs.rclone}/bin/rclone --config ${l3lib.secret "restic-rclone.conf"} --size-only sync -P /mnt/glacier/restic b2:restic-simon
         '';
       }
     ];
