@@ -1,7 +1,7 @@
-{ config, lib, l3lib, pkgs, machine, data, ... }:
+{ config, lib, l3lib, pkgs, pkgs-unstable, machine, data, ... }:
 
 let 
-  rmfakecloud = pkgs.rmfakecloud;
+  rmfakecloud = pkgs-unstable.rmfakecloud;
   statedir = "/var/lib/rmfakecloud";
   secret_key_env_file = l3lib.secret "rmfakecloud_env";
   machine_lan_address = data.network.lan.peers.${machine}.address;
