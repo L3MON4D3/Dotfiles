@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/zotero.nix
+    ../../modules/blocky.nix
 
     ../../profiles/simon.nix
     ../../profiles/localnet.nix
