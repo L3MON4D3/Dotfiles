@@ -124,7 +124,7 @@
   # mount large storage.
   fileSystems."/mnt/torrent" = {
     label = "torrent";
-    options = ["rw"];
+    options = [ "rw" "noauto" "nofail" ];
   };
 
   boot.supportedFilesystems = ["zfs"];
@@ -173,6 +173,13 @@
     weekly = 0;
     monthly = 0;
   };
+
+  # scrub btrfs at same time as zfs.
+  services.btrfs.autoScrub = {
+    enable = true;
+    interval = "Wed 03:00:00";
+  };
+
 
   # # bind-mount storage into place where stuff should not be stored on the main drive.
   fileSystems."/srv/media" = {
