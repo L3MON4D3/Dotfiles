@@ -17,6 +17,9 @@ rec {
         address = "192.168.178.21";
         interface = "enp34s0";
       };
+      carmine_mullvad_de = {
+        address = "192.168.178.41";
+      };
       cinnabar = {
         address = "192.168.178.5";
       };
@@ -156,6 +159,7 @@ rec {
         address = "10.72.47.214";
         privkey_file = "/var/secrets/wireguard_mullvad/de_honest_pigeon.private";
         pubkey = "RZf+O56iD/WHM4uiURYcPNtwKbL3r4QvNKSWdoEhX2g=";
+        local = lan.peers.carmine_mullvad_de;
       };
       mullvad = {
         endpoint = "146.70.117.2:51820";
