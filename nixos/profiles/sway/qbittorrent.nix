@@ -72,4 +72,47 @@ in {
     }
     bindsym $mod+t mode "torrent"
   '';
+
+  home.packages = with pkgs; [
+    (pkgs.writeTextFile {
+      name = "qb-magnet-add";
+      text = ''
+        [Desktop Entry]
+        Categories=Network;FileTransfer;P2P;Qt;
+        Exec=${qbt-manager}/bin/qb_manager.py addMagnet %u
+        GenericName=Add torrent
+        Comment=Download and share files over BitTorrent
+        Icon=qbittorrent
+        MimeType=x-scheme-handler/magnet;
+        Name=qBittorrent-magnet
+        Terminal=false
+        Type=Application
+        StartupNotify=false
+        Keywords=bittorrent;torrent;magnet;download;p2p;
+      '';
+      destination = "/share/applications/qb-magnet-add.desktop";
+    })
+    (pkgs.writeTextFile {
+      name = "qb-torrent-add";
+      text = ''
+        [Desktop Entry]
+        Categories=Network;FileTransfer;P2P;Qt;
+        Exec=${qbt-manager}/bin/qb_manager.py addFile %f
+        GenericName=Add torrent
+        Comment=Download and share files over BitTorrent
+        Icon=qbittorrent
+        MimeType=application/x-bittorrent
+        Name=qBittorrent-torrentfile
+        Terminal=false
+        Type=Application
+        StartupNotify=false
+        Keywords=bittorrent;torrent;magnet;download;p2p;
+      '';
+      destination = "/share/applications/qb-torrent-add.desktop";
+    })
+  ];
+  xdg.mimeApps.defaultApplications = {
+    "application/x-bittorrent" = ["qb-torrent-add.desktop"];
+    "x-scheme-handler/magnet" = ["qb-magnet-add.desktop"];
+  };
 }
