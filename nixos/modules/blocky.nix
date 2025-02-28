@@ -126,20 +126,4 @@ in
       default = mkConfigFile;
     };
   };
-  config = {
-    systemd.services.blocky_lan = mkBlockyService {
-      conf = mkConfigFile {
-        ports = ["127.0.0.1:53" "192.168.178.20:53"];
-        network = data.network.lan;
-        block = true;
-      };
-    };
-    systemd.services.blocky_wg_home2 = mkBlockyService {
-      conf = mkConfigFile {
-        ports = ["10.0.0.1:53"];
-        network = data.network.wireguard_home2;
-        block = false;
-      };
-    };
-  };
 }
