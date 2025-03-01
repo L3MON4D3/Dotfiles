@@ -18,6 +18,7 @@
 
     ./profiles/gamelibrary.nix
     ./profiles/cachefilesd.nix
+    ./profiles/remarkable.nix
   ];
 
   environment.shellAliases = {
