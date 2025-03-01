@@ -47,6 +47,28 @@
     };
   };
 
+  programs.ssh = {
+    enable = true;
+    matchBlocks = {
+      wildhorn = {
+        # host = "wildhorn";
+
+        hostname = "wildhorn.cs.uni-bonn.de";
+        identityFile = "~/.ssh/id_rsa";
+        identitiesOnly = true;
+        user = "katz";
+      };
+      rem = {
+        # host = "rem";
+
+        hostname = "remarkable";
+        # identityFile = "~/.ssh/remarkable";
+        identitiesOnly = true;
+        user = "root";
+      };
+    };
+  };
+
   home.sessionVariables = {
     np =  "/home/simon/.local/share/nvim/lazy";
     nc =  "/home/simon/projects/dotfiles/nvim";
