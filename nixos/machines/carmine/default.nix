@@ -87,4 +87,8 @@
       "cache.indigo.internal:CA2Hg9Xq3wNRTOU/Pombi0CLc2aemwlyPw/o34zDrKA="
     ];
   };
+
+  programs.wireshark.enable = true;
+  programs.wireshark.package = pkgs.wireshark;
+  users.users.simon.extraGroups = [ "wireshark" ];
 }
