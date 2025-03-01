@@ -64,7 +64,8 @@ local plugins = {
 	dbee = "kndndrj/nvim-dbee",
 	screenkey = "NStefan002/screenkey.nvim",
 	blink = "Saghen/blink.cmp",
-	flatten = "willothy/flatten.nvim"
+	flatten = "willothy/flatten.nvim",
+	rest = "rest-nvim/rest.nvim"
 }
 
 local plugins_inverse = {}
@@ -202,6 +203,7 @@ local plugin_spec = {
 		blink,
 		version = '*'
 	}),
+	use(rest)
 	-- conf_use{flatten, lazy=false, priority=1001}
 	-- conf_use{
 	-- 	dbee,

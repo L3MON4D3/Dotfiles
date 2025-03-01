@@ -6,14 +6,18 @@ cmp.setup{
 		["<C-y>"] = {'accept'}
 	},
 	sources = {
+		cmdline = {},
 		default = function()
 			return {"lsp", "snippets"}
 		end,
 	},
 	completion = {
 		trigger = {
+			prefetch_on_insert = false,
 			show_on_keyword = false,
-			show_on_trigger_character = false
+			show_on_trigger_character = false,
+			show_on_insert_on_trigger_character = false,
+			show_on_accept_on_trigger_character = false,
 		},
 		list = {
 			selection = {auto_insert = true}
