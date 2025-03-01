@@ -1,6 +1,14 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, inputs, lib, pkgs, machine, data, ... }:
 
-{
+let
+  mpdlrc = pkgs.writeShellApplication {
+      name = "mpdlrc";
+      runtimeInputs = [ inputs.mpdlrc.defaultPackage.${pkgs.system} ];
+      text = ''
+        mpdlrc --musicdir=/srv/media/audio/
+      '';
+    };
+in {
   services.mpd = {
     enable = true;
     musicDirectory = "/srv/media/audio";
@@ -13,6 +21,11 @@
       }
     '';
   };
+
+
+  home.packages = with pkgs; [
+    mpdlrc
+  ];
 
   programs.ncmpcpp = {
     enable = true;
@@ -34,7 +47,8 @@
 
   wayland.windowManager.sway.extraConfig = ''
     mode "apps" {
-      bindsym n exec $term ${pkgs.ncmpcpp}/bin/ncmpcpp
+      bindsym n exec "$term ${pkgs.ncmpcpp}/bin/ncmpcpp"
+      bindsym m exec "$term ${mpdlrc}/bin/mpdlrc"
     }
   '';
 }
