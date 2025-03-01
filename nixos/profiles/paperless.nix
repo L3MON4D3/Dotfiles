@@ -33,6 +33,7 @@ in {
 
   systemd.tmpfiles.rules = lib.mkAfter [
     "A /var/lib/paperless - - - - g:paperless:rX"
+    "Z /var/lib/paperless/index 0750 paperless paperless"
   ];
   l3mon.restic.extraGroups = [ "paperless" ];
 
@@ -46,7 +47,7 @@ in {
     backupDaily = {
       text = ''
         cd /var/lib/paperless
-        restic backup --tag=paperless --skip-if-unchanged=true -- media/documents/archive media/documents/originals db.sqlite3 index
+        restic backup --tag=paperless --skip-if-unchanged=true -- media/documents/archive media/documents/originals db.sqlite3 index src-version
       '';
     };
     forget = {
