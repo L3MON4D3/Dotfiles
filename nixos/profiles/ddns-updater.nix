@@ -1,4 +1,4 @@
-{ config, lib, l3lib, pkgs, machine, data, ... }:
+{ config, lib, l3lib, pkgs, pkgs-unstable, machine, data, ... }:
 
 let
   conf = pkgs.writeTextFile {
@@ -35,6 +35,7 @@ in {
 
   services.ddns-updater = {
     enable = true;
+    package = pkgs-unstable.ddns-updater;
     environment = {
       SERVER_ENABLED="no";
       CONFIG_FILEPATH = "%d/conf";
