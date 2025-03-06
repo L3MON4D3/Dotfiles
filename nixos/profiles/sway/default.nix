@@ -178,7 +178,6 @@ in {
           cursor_theme_package
           adapta-gtk-theme
           adapta-kde-theme
-          papirus-icon-theme
           sway_float
           xdragon
         ];
@@ -336,6 +335,8 @@ in {
           font.name = "Inter:medium";
           theme.name = "adw-gtk3";
           theme.package = pkgs.adw-gtk3;
+          iconTheme.name = "Papirus";
+          iconTheme.package = pkgs.papirus-icon-theme;
         };
 
         # mkForce to override import of theme in css, which breaks these
