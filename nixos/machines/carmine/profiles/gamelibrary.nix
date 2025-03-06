@@ -3,9 +3,36 @@
 {
   programs.steam.enable = true;
 
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        # battery!?
+        experimental = true;
+
+        
+        JustWorksRepairing = "always";
+        Class = "0x000100";
+        FastConnectable = true;
+      };
+      GATT = {
+        ReconnectIntervals="1,1,2,3,5,8,13,21,34,55";
+        AutoEnable=true;
+      };
+    };
+  };
+
+  boot = {
+    extraModulePackages = with config.boot.kernelPackages; [ xpadneo ];
+    extraModprobeConfig = ''
+      options bluetooth disable_ertm=Y
+    '';
+  };
+
   environment.systemPackages = [
+    pkgs.blueman
+
     pkgs-yuzu.yuzu
     pkgs-unstable.suyu
     pkgs-unstable.ryujinx
