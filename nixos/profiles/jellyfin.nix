@@ -1,10 +1,11 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, pkgs-unstable, machine, data, ... }:
 
 with lib;
 let
   machine_lan_address = data.network.lan.peers.${machine}.address;
 in {
   services.jellyfin.enable = true;
+  services.jellyfin.package = pkgs-unstable.jellyfin;
   environment.systemPackages = [
     pkgs.jellyfin
     pkgs.jellyfin-web
