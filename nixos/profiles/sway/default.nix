@@ -171,6 +171,7 @@ in {
           ./workrooms
           ./copypaste
           ./screengrab.nix
+          ./zathura.nix
         ];
 
         home.packages = with pkgs; [
