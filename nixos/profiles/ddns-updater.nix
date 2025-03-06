@@ -7,11 +7,11 @@ let
       settings = [
         {
           provider = "porkbun";
-          domain = "l3mon4.de";
-          host = "@";
+          domain = "l3mon4.de,wireguard.l3mon4.de";
           api_key = "$PORKBUN_API_KEY";
           secret_api_key = "$PORKBUN_SECRET_API_KEY";
           ip_version = "ipv4";
+          ipv6_suffix = "";
           ttl = 60;
         }
       ];
