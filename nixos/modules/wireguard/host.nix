@@ -7,20 +7,24 @@ in {
   options.l3mon.wg-quick-hosts = {
     enable = mkEnableOption (lib.mdDoc "Create wireguard-interfaces in global namespace.");
 
-    network_configs = mkOption {
+    specs = mkOption {
       type = with types; listOf attrs;
-      description = lib.mdDoc "List of wireguard-networks as defined in ./data/networks.";
+      description = lib.mdDoc "List of attrset with key config a wireguard-network as defined in ./data/networks, and key netns another wireguard-network, which has to enable a netns.";
       default = [];
     };
   };
 
   config = mkIf cfg.enable (let
-    lan_interface = data.network.lan."${machine}".interface;
+    # out_interface = data.network.lan.peers."${machine}".interface;
+    out_interface = "wg_mullvad_de";
   in {
     networking.nat.enable = true;
 
     networking.wg-quick.interfaces = builtins.listToAttrs (map (
-      wg_network: let
+      spec: let
+        wg_network = spec.config;
+        out_network = if spec ? netns then spec.netns else data.network.lan;
+        out_interface = out_network.peers.${machine}.interface;
         machine_conf = wg_network.host;
         full_address = machine_conf.address + wg_network.subnet_mask;
         peernames = builtins.filter (x: x != machine) (builtins.attrNames wg_network.peers);
@@ -32,11 +36,11 @@ in {
           privateKeyFile = machine_conf.privkey_file;
           postUp = ''
             ${pkgs.iptables}/bin/iptables -A FORWARD -i ${wg_network.name} -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ${full_address} -o ${data.network.lan.peers."${machine}".interface} -j MASQUERADE
+            ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ${full_address} -o ${out_interface} -j MASQUERADE
           '';
           preDown = ''
             ${pkgs.iptables}/bin/iptables -D FORWARD -i ${wg_network.name} -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ${full_address} -o ${data.network.lan.peers."${machine}".interface} -j MASQUERADE
+            ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ${full_address} -o ${out_interface} -j MASQUERADE
           '';
           peers = builtins.map (peername: let peerconf = wg_network.peers."${peername}"; in {
             publicKey = peerconf.pubkey;
@@ -45,10 +49,19 @@ in {
           }) peernames;
         };
       }
-    ) cfg.network_configs);
+    ) cfg.specs);
+
+    systemd.services = builtins.listToAttrs (map (
+      spec: let
+        wg_name = spec.config.name;
+      in {
+        name = "wg-quick-${wg_name}";
+        value = if spec ? netns then (config.l3mon.network_namespaces.mkNetnsService spec.netns {}) else {};
+      }) cfg.specs);
 
     system.activationScripts = builtins.listToAttrs (map (
-      wg_network: let
+      spec: let
+        wg_network = spec.config;
         machine_conf = wg_network.host;
         full_address = machine_conf.address + wg_network.subnet_mask;
         peernames = builtins.filter (x: x != machine) (builtins.attrNames wg_network.peers);
@@ -116,6 +129,6 @@ in {
           '') peernames);
         };
       }
-    ) cfg.network_configs);
+    ) cfg.specs);
   });
 }
