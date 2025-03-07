@@ -136,6 +136,7 @@ rec {
         privkey_file = "/var/secrets/wireguard_mullvad/de_neat_ibex.private";
         pubkey = "+nqH8e7xvI4+sfAt2r0Y8C1e8ZfiXDqS0b3wHm00ilU=";
         local = lan.peers.indigo_mullvad_de;
+        interface = name;
         # for now, these are the same here and in the lan-part.
         # Maybe, at some time, I want to make services no longer accessible in
         # both networks, at that point I'll have to keep this in sync with the
@@ -169,5 +170,28 @@ rec {
     host = peers.mullvad;
     keepalive = false;
     dns = "10.64.0.1";
+  };
+  wireguard_rec_de = rec {
+    subnet_mask = "/32";
+    name = "wg_rec_de";
+    dns = "10.0.0.1";
+    host = peers.indigo;
+    keepalive = false;
+    peers = {
+      indigo = {
+        # indigo
+        machine_id = "indigo";
+        endpoint = "wireguard.l3mon4.de:51823";
+        address = "10.0.0.1";
+        privkey_file = "/var/secrets/wg_rec_de/indigo-private";
+        pubkey = "JttJ05OOG8eT+dv/JblhpNyS3IfKiYhQ/EFCJe1hLEc=";
+      };
+      carmine = {
+        address = "10.0.0.2";
+        route_all = true;
+        privkey_file = "/var/secrets/wg_rec_de/carmine-private";
+        pubkey = "piXA8QVYisipkz2zMn7vpsZq6okSjHNwnt4sLMykRXk=";
+      };
+    };
   };
 }
