@@ -19,6 +19,7 @@ rec {
       };
       carmine_mullvad_de = {
         address = "192.168.178.41";
+        mac_address = "30:e4:58:0a:6e:fc";
       };
       cinnabar = {
         address = "192.168.178.5";
@@ -47,6 +48,7 @@ rec {
       };
       indigo_mullvad_de = {
         address = "192.168.178.40";
+        mac_address = "5e:42:b0:71:f7:1b";
       };
     };
   };
