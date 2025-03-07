@@ -231,7 +231,7 @@ in {
           };
         };
 
-        l3mon.sway-netns.wg_mullvad_de = {
+        l3mon.sway-netns.wg_rec_de = {
           enable = true;
           openPrivateWindow = true;
           netnsKey = "d";
