@@ -151,7 +151,7 @@ in {
             name = "blocky-${netns_name}";
             value = config.l3mon.network_namespaces.mkNetnsService wg_network (config.l3mon.blocky.mkService {
               conf = config.l3mon.blocky.mkConfig {
-                ports = ["127.0.0.1:53"];
+                ports = ["0.0.0.0:53"];
                 network = data.network.lan;
                 block = false;
                 upstream = [ dns ];

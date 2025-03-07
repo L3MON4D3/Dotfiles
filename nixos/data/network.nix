@@ -172,7 +172,7 @@ rec {
     dns = "10.64.0.1";
   };
   wireguard_rec_de = rec {
-    subnet_mask = "/32";
+    subnet_mask = "/24";
     name = "wg_rec_de";
     dns = "10.0.0.1";
     host = peers.indigo;

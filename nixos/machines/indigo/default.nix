@@ -59,8 +59,14 @@
 
   l3mon.wg-quick-hosts = {
     enable = true;
-    network_configs = [
-      data.network.wireguard_home2
+    specs = [
+      {
+        config = data.network.wireguard_home2;
+      }
+      {
+        config = data.network.wireguard_rec_de;
+        netns = data.network.wireguard_mullvad_de;
+      }
     ];
   };
 
