@@ -164,7 +164,7 @@ rec {
       indigo = {
         # indigo
         machine_id = "indigo";
-        endpoint = "wireguard.l3mon4.de:51823";
+        endpoint = "192.168.178.40:51823";
         address = "10.0.0.1";
         privkey_file = "/var/secrets/wg_rec_de/indigo-private";
         pubkey = "JttJ05OOG8eT+dv/JblhpNyS3IfKiYhQ/EFCJe1hLEc=";
