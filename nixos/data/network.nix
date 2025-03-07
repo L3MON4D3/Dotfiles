@@ -152,25 +152,6 @@ rec {
     keepalive = false;
     dns = "10.64.0.1";
   };
-  wireguard_mullvad_de2 = rec {
-    subnet_mask = "/32";
-    name = "wg_mullvad_de";
-    peers = {
-      carmine = {
-        address = "10.72.47.214";
-        privkey_file = "/var/secrets/wireguard_mullvad/de_honest_pigeon.private";
-        pubkey = "RZf+O56iD/WHM4uiURYcPNtwKbL3r4QvNKSWdoEhX2g=";
-        local = lan.peers.carmine_mullvad_de;
-      };
-      mullvad = {
-        endpoint = "146.70.117.2:51820";
-        pubkey = "Sttn2cr14dvIcCrE8qdlRGHXriqvTyvQWC7dzujH/iM="; 
-      };
-    };
-    host = peers.mullvad;
-    keepalive = false;
-    dns = "10.64.0.1";
-  };
   wireguard_rec_de = rec {
     subnet_mask = "/24";
     name = "wg_rec_de";
