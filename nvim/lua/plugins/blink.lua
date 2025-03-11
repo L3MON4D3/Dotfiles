@@ -5,8 +5,11 @@ cmp.setup{
 		preset = 'none',
 		["<C-y>"] = {'accept'}
 	},
+	cmdline = {
+		enabled = false,
+		sources = {}
+	},
 	sources = {
-		cmdline = {},
 		default = function()
 			return {"lsp", "snippets"}
 		end,
