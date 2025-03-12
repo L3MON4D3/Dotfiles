@@ -995,6 +995,12 @@ matchconfig.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
 ---
 
 local proj_master_dir = "/home/simon/projects/master/glint-jl"
+matchconfig.register(matchers.dir(proj_master_dir), c{
+	run_buf = function()
+		actions.cabbrev_buf("%%", proj_master_dir .. "/src")
+	end
+})
+
 repl.set_term("julia.pm", {"nix", "develop", proj_master_dir}, {cwd = proj_master_dir, initial_keys = "julia -q --threads 11\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"})
 local master = matchconfig.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 	repl = {run = {
