@@ -45,8 +45,15 @@
     fsType = "btrfs";
     options = [ "rw" ];
   };
+  fileSystems."/mnt/indigo" = {
+    device = "simon@indigo:/";
+    fsType = "sshfs";
+    # only mount on-demand.
+    options = [ "noauto" "nodev" "noatime" "allow_other" "rw" "IdentityFile=/var/secrets/id_rsa" "uid=1000" "gid=1000" ];
+  };
   systemd.tmpfiles.rules = [
     "d /mnt/data 0750 simon simon"
+    "d /mnt/indigo 0750 simon simon"
   ];
 
   boot.loader.systemd-boot.enable = true;
