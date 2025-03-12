@@ -69,7 +69,7 @@ local handler = function(virtText, lnum, endLnum, width, _, ctx)
 	local line_len = vim.fn.strdisplaywidth(virt_text_to_string(virtText))
 
 	local fold_end_virt_text = ctx.get_fold_virt_text(endLnum)
-	local suffix_virt_text = {("  %d "):format(endLnum - lnum), "DiagnosticDefaultHint"}
+	local suffix_virt_text = {("  %d "):format(endLnum - lnum), "DiagnosticDefaultHint"}
     local fold_virt_text
     -- I've removed ` and ctx.range.metadata.foldtext_start` from the if-condition, it shouldn't make a difference?
     if ctx.range and ctx.range.metadata then
