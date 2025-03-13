@@ -31,7 +31,8 @@ require'nvim-treesitter.configs'.setup {
 		"llvm",
 		"lua",
 		"cpp",
-		"proto"
+		"proto",
+		"just"
 	},
 	playground = {
 		enable = true
