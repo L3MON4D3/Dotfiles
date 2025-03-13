@@ -38,7 +38,7 @@ let
           clientGroupsBlock = {
             default = [
               "ads"
-              "porn"
+              # "porn"
             ];
           };
           loading.downloads.timeout = "30s";
