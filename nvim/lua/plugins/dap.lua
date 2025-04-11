@@ -57,12 +57,12 @@ command! DR :lua require("dap").repl.toggle()
 
 noremap <F2> :lua require"dap".toggle_breakpoint()<Cr>
 " S-F2
-noremap <F14> :lua require"dap".set_breakpoint(vim.fn.input("Breakpoint condition: "))<CR>
-noremap <F18> :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
+noremap <S-F2> :lua require"dap".set_breakpoint(vim.fn.input("Breakpoint condition: "))<CR>
+noremap <S-F6> :lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>
 noremap <F3> :lua require"dap".step_over()<Cr>
 noremap <F4> :lua require"dap".step_into()<Cr>
-noremap <F16> :lua require"dap".step_out()<Cr>
-noremap <F17> :lua require"dap".run_last()<Cr>
+noremap <S-F4> :lua require"dap".step_out()<Cr>
+noremap <S-F5> :lua require"dap".run_last()<Cr>
 noremap <F6> :lua require"dap.ui.widgets".hover()<Cr>
 noremap - :lua require"dap".up()<Cr>
 noremap + :lua require"dap".down()<Cr>
