@@ -97,6 +97,11 @@ in {
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
     #jack.enable = true;
+    extraConfig.pipewire."92-low-latency" = {
+      "context.properties" = {
+        "default.clock.min-quantum" = 1024;
+      };
+    };
   };
 
   services.gnome.gnome-keyring.enable = true;
