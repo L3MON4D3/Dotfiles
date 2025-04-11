@@ -47,9 +47,9 @@
   };
   fileSystems."/mnt/indigo" = {
     device = "simon@indigo:/";
-    fsType = "sshfs";
+    fsType = "fuse.sshfs";
     # only mount on-demand.
-    options = [ "noauto" "nodev" "noatime" "allow_other" "rw" "IdentityFile=/var/secrets/id_rsa" "uid=1000" "gid=1000" ];
+    options = [ "x-systemd.automount" "user" "idmap=user" "noauto" "nodev" "noatime" "allow_other" "rw" "IdentityFile=/var/secrets/id_rsa" "uid=1000" "gid=1000" "follow_symlinks" "default_permissions" ];
   };
   systemd.tmpfiles.rules = [
     "d /mnt/data 0750 simon simon"
