@@ -99,7 +99,7 @@ in {
     #jack.enable = true;
     extraConfig.pipewire."92-low-latency" = {
       "context.properties" = {
-        "default.clock.min-quantum" = 1024;
+        "default.clock.min-quantum" = 256;
       };
     };
   };
