@@ -36,6 +36,8 @@ c.url.searchengines = {
     '!no': 'https://search.nixos.org/options?channel=24.11&query={}',
 }
 
+c.content.pdfjs = True
+
 config.bind("pf", "spawn --userscript qute-pass --username-target=secret --username-pattern=\"[\\w]+: ?(.*)\"")
 config.bind("pp", "spawn --userscript qute-pass --username-target=secret --username-pattern=\"[\\w]+: ?(.*)\" --password-only ")
 config.bind("pu", "spawn --userscript qute-pass --username-target=secret --username-pattern=\"[\\w]+: ?(.*)\" --username-only ")

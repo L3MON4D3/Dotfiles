@@ -137,6 +137,7 @@ in {
 
       for k, v in dict_attrs(yaml_data):
           config.set(k, v)
+      c.downloads.open_dispatcher = "${pkgs.xdg-utils}/bin/xdg-open {}"
     '';
   };
 }
