@@ -55,6 +55,7 @@
       realpath $(which $1)
     }
     export -f where
+    stty -ixon
   '';
 
   environment.etc."inputrc".text = ''
