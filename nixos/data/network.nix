@@ -107,6 +107,18 @@ rec {
         privkey_file = "/var/secrets/wg_home2/chromecast-private";
         pubkey = "Ticy/93/8Mk53wysWLmkTiZpnt1i/I7mNqxJT2Dw+3Q=";
       };
+      kim-laptop = {
+        address = "10.0.0.8";
+        route_all = false;
+        privkey_file = "/var/secrets/wg_home2/kim-laptop-private";
+        pubkey = "pAvekTUd9Rbke/cPqhY+xcVVR/fdkaADAfi+7uDKrU0=";
+      };
+      kim-desktop = {
+        address = "10.0.0.9";
+        route_all = false;
+        privkey_file = "/var/secrets/wg_home2/kim-desktop-private";
+        pubkey = "SxVbXOA29ekQUJHS7yE342HFXKMRvlBiMnEgZvEPwXs=";
+      };
     };
   };
 
