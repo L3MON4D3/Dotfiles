@@ -617,7 +617,7 @@ matchconfig.register(mdir(luasnip_dir), c{
 			id = "bash.dir:" .. luasnip_dir,
 			mappings = {
 				T = function()
-					local command = "TEST_07=false TEST_09=false make test"
+					local command = "TEST_07=false TEST_09=false make test_nix"
 					local file = vim.api.nvim_buf_get_name(0)
 					if file:match("_spec%.lua$") then
 						command = "TEST_FILE=" .. file .. " " .. command
