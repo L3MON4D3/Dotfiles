@@ -144,6 +144,12 @@
     pass
     legcord
     wl-clipboard
+    # thunderbird is configured in-app, I know, bad, but email-settings are
+    # pretty much set and forget, so that's fine I guess.
+    # Settings include
+    # * GNUPG
+    # * date format https://support.mozilla.org/en-US/kb/customize-date-time-formats-thunderbird
+    # via config editor.
     thunderbird
   ];
 
