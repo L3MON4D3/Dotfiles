@@ -47,7 +47,6 @@
     # make sure to disable lutris runtime (https://nixos.wiki/wiki/Lutris).
     (pkgs.lutris.override {
       extraLibraries = pkgs: [
-        pkgs-unstable.suyu
         pkgs.vulkan-tools
         pkgs.vulkan-loader
         pkgs.amdvlk
