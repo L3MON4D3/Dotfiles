@@ -184,6 +184,7 @@ rec {
       carmine = {
         address = "10.0.0.2";
         route_all = true;
+        local = lan.peers.carmine_mullvad_de;
         privkey_file = "/var/secrets/wg_rec_de/carmine-private";
         pubkey = "piXA8QVYisipkz2zMn7vpsZq6okSjHNwnt4sLMykRXk=";
       };
