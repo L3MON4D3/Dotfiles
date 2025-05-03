@@ -118,7 +118,7 @@
     tree
     dust
     wireguard-tools
-    ffmpeg
+    (ffmpeg.override { withFdkAac = true; withUnfree = true; })
     just
 
     # nix related
