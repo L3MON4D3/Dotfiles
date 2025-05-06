@@ -77,3 +77,17 @@ parse_add("ti", "table.insert($1, $2)")
 parse_add_auto("tiaa", "table.insertaaa($1, $2)")
 
 s_add("I", fmt("I({})", {c(1, {parse(nil, "{\"$1\", $2}"), i(1)})}))
+
+local function uuid()
+	local id, _ = vim.fn.system('uuidgen'):gsub('\n', '')
+	return id
+end
+
+s_add("add_k", fmta([[
+	ls.add_snippets("all", {
+		<>
+	}, { key = "<>" })
+]], {
+	i(1),
+	f(function() return uuid() end)
+}))
