@@ -113,6 +113,7 @@
     socat
 
     # misc
+    gnumake
     file
     which
     tree
