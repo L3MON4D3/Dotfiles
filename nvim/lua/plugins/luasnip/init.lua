@@ -116,7 +116,13 @@ ls.config.setup({
 		ts_postfix = require("luasnip.extras.treesitter_postfix").treesitter_postfix,
 		conds = require("luasnip.extras.expand_conditions"),
 		k = require("luasnip.nodes.key_indexer").new_key,
-		-- opt = require("luasnip.nodes.optional_arg").new_opt
+		opt = (function()
+			if pcall(require, "luasnip.nodes.optional_arg") then
+				return require("luasnip.nodes.optional_arg").new_opt
+			else
+				return nil
+			end
+		end)(),
 	},
 	parser_nested_assembler = function(_, snippetNode)
 		function snippetNode:init_dry_run_active(dry_run)
