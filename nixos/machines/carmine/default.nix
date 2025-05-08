@@ -20,6 +20,7 @@
     ./profiles/gamelibrary.nix
     ./profiles/cachefilesd.nix
     ./profiles/remarkable.nix
+    ./profiles/ollama.nix
   ];
 
   environment.shellAliases = {
