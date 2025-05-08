@@ -7,6 +7,7 @@
 
     ../../profiles/simon.nix
     ../../profiles/localnet.nix
+    ../../profiles/cache-peers.nix
     ./hardware-configuration.nix
 
     ../../profiles/sway
@@ -86,14 +87,8 @@
 
   services.dbus.implementation = "broker";
 
-  nix.settings = {
-    substituters = [
-      "http://cache.indigo.internal"
-    ];
-    trusted-public-keys = [
-      "cache.indigo.internal:CA2Hg9Xq3wNRTOU/Pombi0CLc2aemwlyPw/o34zDrKA="
-    ];
-  };
+  services.caddy.enable = true;
+  services.caddy.enableReload = true;
 
   programs.wireshark.enable = true;
   programs.wireshark.package = pkgs.wireshark;
