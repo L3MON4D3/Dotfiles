@@ -42,7 +42,7 @@
 
       ../../profiles/unibonn.nix
 
-      ../../profiles/cache.nix
+      ../../profiles/cache-peers.nix
 
       ./profiles/nvidia.nix
     ];

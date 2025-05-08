@@ -16,6 +16,9 @@ rec {
         machine_id = "carmine";
         address = "192.168.178.21";
         interface = "enp34s0";
+        services = [
+          "cache.carmine"
+        ];
       };
       carmine_mullvad_de = {
         address = "192.168.178.41";
