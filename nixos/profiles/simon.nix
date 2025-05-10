@@ -11,6 +11,7 @@
     ]; # Enable ‘sudo’ for the user and provide user-group.
     uid = data.ids.simon;
     hashedPasswordFile = l3lib.secret "simon_password_hashed";
+    linger = true;
   };
   users.groups.simon.gid = data.ids.simon;
 
