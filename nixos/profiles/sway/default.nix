@@ -85,6 +85,36 @@ let
       cp SymbolsScaled.ttf $out/share/fonts/
     '';
   };
+
+  noto_emoji_only = pkgs.stdenv.mkDerivation {
+    name = "l3mon-noto-emoji-only-ttf";
+    pname = "l3mon-noto-emoji-only-ttf";
+    phases = [ "installPhase" ];
+    installPhase = ''
+      cp ${pkgs.noto-fonts-color-emoji}/share/fonts/noto/NotoColorEmoji.ttf .
+      ${pkgs.python3Packages.fonttools}/bin/ttx NotoColorEmoji.ttf
+      ${pkgs.gnused}/bin/sed '
+        s/<map .*name="uni0000".*//g; 
+        s/<map .*name="uni000D".*//g;  
+        s/<map .*name="numbersign".*//g;  
+        s/<map .*name="asterisk".*//g;  
+        s/<map .*name="zero".*//g;  
+        s/<map .*name="one".*//g;  
+        s/<map .*name="two".*//g;  
+        s/<map .*name="three".*//g;  
+        s/<map .*name="four".*//g;  
+        s/<map .*name="five".*//g;  
+        s/<map .*name="six".*//g;  
+        s/<map .*name="seven".*//g;  
+        s/<map .*name="eight".*//g;  
+        s/<map .*name="nine".*//g;  
+        s/<map .*name="copyright".*//g;  
+        s/<map .*name="registered".*//g
+      ' NotoColorEmoji.ttx > NotoColorEmojiOnly.ttf
+      mkdir -p $out/share/fonts/
+      cp NotoColorEmojiOnly.ttf $out/share/fonts
+    '';
+  };
 in {
   # system-level options.
   security.polkit.enable = true;
@@ -114,6 +144,7 @@ in {
       julia-mono
       nerdfonts
       symbols_scaled
+      noto_emoji_only
     ];
     enableDefaultPackages = true;
   };
@@ -390,7 +421,7 @@ in {
           settings = {
             main = {
               font =
-                "NotoColorEmoji:size=10:antialias=true:autohint=true," +
+                # "NotoColorEmojiOnly:size=10:antialias=true:autohint=true," +
                 "iosevka:size=10:antialias=true:autohint=true," +
                 "juliamono:size=10:antialias=true:autohint=true," +
                 "codicon:size=10:antialias=true:autohint=true," +
