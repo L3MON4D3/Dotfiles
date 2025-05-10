@@ -25,14 +25,22 @@ in {
 
   systemd.tmpfiles.rules = [
     "d ${dav_root} 0750 caddy caddy"
+    "d ${dav_root}/android-backup 0750 caddy caddy"
+    "d ${dav_root}/media 0750 caddy caddy"
   ];
+  # for clients: nfs-mount these shares.
+  fileSystems."${dav_root}/media" = {
+    device = "/srv/media/";
+    options = [ "bind" ];
+  };
+
   l3mon.restic.extraGroups = [ "caddy" ];
   l3mon.restic.specs.webdav = {
     backupDaily = {
       text = ''
         cd ${dav_root}
         if ls ./* &> /dev/null; then
-          restic backup --tag=webdav --skip-if-unchanged=true -- *
+          restic backup --tag=webdav --skip-if-unchanged=true -- ./android-backup/
         fi
       '';
     };
