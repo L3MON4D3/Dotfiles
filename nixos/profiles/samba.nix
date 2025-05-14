@@ -27,6 +27,13 @@
         "read only" = "yes";
         "valid users" = "simon";
       };
+      private = {
+        # make sure group has read-permission.
+        "force directory mode" = "02770";
+        "path" = "/srv/private";
+        "read only" = "yes";
+        "valid users" = "private";
+      };
     };
   };
 
@@ -50,13 +57,22 @@
   };
   users.groups.christel.gid = data.ids.christel;
 
+  users.users.private = {
+    isSystemUser = true;
+    uid = data.ids.private;
+    group = "private";
+  };
+  users.groups.private.gid = data.ids.private;
+
   system.activationScripts = {
     samba-users = {
       text = (l3lib.assertSecret "smb_passwd_christel") + 
              (l3lib.assertSecret "smb_passwd_simon") + 
+             (l3lib.assertSecret "smb_passwd_private") + 
       ''
         echo -ne "$(cat ${l3lib.secret "smb_passwd_christel"})\n$(cat ${l3lib.secret "smb_passwd_christel"})\n" | ${pkgs.samba}/bin/smbpasswd -a christel
         echo -ne "$(cat ${l3lib.secret "smb_passwd_simon"})\n$(cat ${l3lib.secret "smb_passwd_simon"})\n" | ${pkgs.samba}/bin/smbpasswd -a simon
+        echo -ne "$(cat ${l3lib.secret "smb_passwd_private"})\n$(cat ${l3lib.secret "smb_passwd_private"})\n" | ${pkgs.samba}/bin/smbpasswd -a private
       '';
     };
   };

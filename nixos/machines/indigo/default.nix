@@ -198,7 +198,10 @@
     device = "/mnt/glacier/misc";
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
-  
+  fileSystems."/srv/private" = {
+    device = "/mnt/glacier/private";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
+  };
 
   #
   # Bind-mounts for services!
