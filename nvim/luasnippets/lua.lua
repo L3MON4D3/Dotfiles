@@ -91,3 +91,5 @@ s_add("add_k", fmta([[
 	i(1),
 	f(function() return uuid() end)
 }))
+
+parse_add("vi", "vim.inspect($1)")
