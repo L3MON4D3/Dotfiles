@@ -27,7 +27,7 @@ in {
   systemd.tmpfiles.rules = [
     "d ${dav_root} 0750 caddy caddy"
     "d ${dav_root}/android-backup 0750 caddy caddy"
-    "d ${dav_root}/media 0750 caddy caddy"
+    "d ${dav_root}/media 0755"
   ];
   # for clients: nfs-mount these shares.
   fileSystems."${dav_root}/media" = {
