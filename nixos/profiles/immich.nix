@@ -30,6 +30,19 @@ in {
     $PSQL immich -tAc 'GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO restic' || true
   '';
 
+  # override settings from service-file.
+  systemd.tmpfiles.settings.immich = lib.mkForce {
+    ${config.services.immich.mediaLocation} = {
+      e = {
+        user = "immich";
+        group = "immich";
+        mode = "0750";
+      };
+    };
+  };
+  systemd.services.immich-server.serviceConfig.UMask = lib.mkForce 0072;
+  systemd.services.immich-machine-learning.serviceConfig.UMask = lib.mkForce 0072;
+
   l3mon.restic.extraGroups = [ "immich" ];
   l3mon.restic = {
     dailyRequiredServices = [ "postgresql.service" ];
