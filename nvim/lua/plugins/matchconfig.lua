@@ -18,6 +18,6 @@ require("matchconfig").setup({
 		require("matchconfig.options.lsp"),
 	}
 })
-require("matchconfig.util.log").set_loglevel("info")
+require("matchconfig.util.log").set_loglevel("debug")
 vim.api.nvim_create_user_command("C", require("matchconfig").pick_current, {})
 vim.api.nvim_create_user_command("CO", ":e " .. vim.uv.fs_realpath(require("matchconfig").get_configfile()), {})
