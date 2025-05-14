@@ -19,10 +19,6 @@
 
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
 
   boot.supportedFilesystems = ["ntfs"];
 
@@ -174,16 +170,41 @@
 
   programs.dconf.enable = true;
 
-  nix.package = pkgs-unstable.nixVersions.nix_2_26;
-
-  nix.settings = {
-    substituters = [
-      "http://nix-community.cachix.org"
-      "http://cache.nixos.org"
-    ];
-    trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
+  nix = {
+    package = pkgs-unstable.nixVersions.nix_2_26;
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ]; 
+      flake-registry = "";
+      substituters = [
+        "http://nix-community.cachix.org"
+        "http://cache.nixos.org"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+    };
+    registry = {
+     vorlagen = {
+        from = {
+          type = "indirect";
+          id = "vorlagen";
+        };
+        to = {
+          type = "git";
+          url = "http://git.internal/simon/nix-templates";
+        };
+      };
+      unstable = {
+        from = {
+          type = "indirect";
+          id = "unstable";
+        };
+        flake = self.inputs.nixpkgs-unstable;
+      };
+    };
   };
 
   # system.copySystemConfiguration = true;
