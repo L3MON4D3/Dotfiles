@@ -20,7 +20,6 @@
       pkgs.tree-sitter
       pkgs.nodejs
       pkgs.luarocks
-      pkgs.luajit
       # julia for random scripts and lsp.
       pkgs.lua-language-server
       # make sure to install LanguageServer.jl, Images, Revise
@@ -30,6 +29,12 @@
       pkgs.clang-tools
       pkgs.python312Packages.ipython
       pkgs.pyright
+
+      # preview markdown.
+      pkgs.python312Packages.grip
+    ];
+    extraLuaPackages = ps: with ps; [
+      luasocket
     ];
     package = inputs.neovim-nightly.packages.${pkgs.system}.default;
   };
