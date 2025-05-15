@@ -5,14 +5,23 @@ let
     name = "conf";
     text = builtins.toJSON {
       settings = [
+        # {
+          # provider = "porkbun";
+          # domain = "l3mon4.de,wireguard.l3mon4.de";
+          # api_key = "$PORKBUN_API_KEY";
+          # secret_api_key = "$PORKBUN_SECRET_API_KEY";
+          # ip_version = "ipv4";
+          # ipv6_suffix = "";
+          # ttl = 60;
+        # }
         {
-          provider = "porkbun";
+          provider = "cloudflare";
+          zone_identifier = "b17b3bd2466d8a209be5bc5e3c88585d"
           domain = "l3mon4.de,wireguard.l3mon4.de";
-          api_key = "$PORKBUN_API_KEY";
-          secret_api_key = "$PORKBUN_SECRET_API_KEY";
           ip_version = "ipv4";
           ipv6_suffix = "";
           ttl = 60;
+          token = "$CF_TOKEN";
         }
       ];
     };
@@ -22,12 +31,10 @@ in {
   system.activationScripts = {
     ddns-updater = {
       text =
-      (l3lib.assertSecret "porkbun_api_key") +
-      (l3lib.assertSecret "porkbun_secret_api_key") +
+      (l3lib.assertSecret "cloudflare-token-l3mon4_de-dns_edit") +
       ''
         (umask 0077 && \
-        PORKBUN_API_KEY=$(cat ${l3lib.secret "porkbun_api_key"}) \
-        PORKBUN_SECRET_API_KEY=$(cat ${l3lib.secret "porkbun_secret_api_key"}) \
+        CF_TOKEN=$(cat ${l3lib.secret "cloudflare-token-l3mon4_de-dns_edit"}) \
         ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${runtime_conf_file})
       '';
     };
