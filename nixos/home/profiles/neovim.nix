@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, inputs, data, ... }:
+{ config, lib, pkgs, pkgs-unstable, machine, inputs, data, ... }:
 
 let
   nvim = inputs.neovim-nightly.packages.${pkgs.system}.default;
@@ -26,7 +26,7 @@ in {
       pkgs.nodejs
       pkgs.luarocks
       # julia for random scripts and lsp.
-      pkgs.lua-language-server
+      pkgs-unstable.lua-language-server
       # make sure to install LanguageServer.jl, Images, Revise
       # Maybe use with 
       pkgs.julia-bin
