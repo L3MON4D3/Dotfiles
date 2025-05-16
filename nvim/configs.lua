@@ -319,13 +319,14 @@ local lsp_lua = matchconfig.register(mft"lua", c{
 	},
 } .. lsp_generic)
 
+local rtp_plugin_data = dofile(vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua")
 local nvim_config = matchconfig.register(mft"lua" * mdir"/home/simon/projects/dotfiles/nvim/lua", c{
 	lsp = {
 		lua_ls = {
 			settings = {
 				Lua = {
 					workspace = {
-						library = merge.list_extend(dofile(vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua"))
+						library = merge.list_extend(rtp_plugin_data.all_paths)
 					}
 				}
 			},
@@ -343,7 +344,10 @@ local luasnippets = matchconfig.register(mft"lua" * mpattern".*/luasnippets/", c
 			settings = {
 				Lua = {
 					workspace = {
-						library = merge.list_extend({ vim.fn.stdpath("config") .. "/meta/luasnippets/" })
+						library = merge.list_extend({
+							vim.fn.stdpath("config") .. "/meta/luasnippets/",
+							rtp_plugin_data.path_by_name.luasnip
+						})
 					}
 				}
 			},
