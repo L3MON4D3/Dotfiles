@@ -284,18 +284,19 @@ local lsp_lua = matchconfig.register(mft"lua", c{
 			enable_per_workspace_config = true,
 			cmd = {
 				"lua-language-server",
-				"--logpath",
-				"/home/simon/.cache/lua-language-server/",
-				"--metapath",
-				"/home/simon/.cache/lua-language-server/meta/"
+				"--logpath=/home/simon/.cache/lua-language-server/",
+				"--metapath=/home/simon/.cache/lua-language-server/meta/",
 			},
+			root_dir = eval(function(args)
+				-- fall back to a workspace that is just the file.
+				return vim.fs.root(args.file, ".git") or args.file
+			end),
 			settings = {
 				Lua = {
 					completion = {
 						callSnippet = "Replace"
 					},
 					runtime = {
-						-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
 						version = 'LuaJIT',
 						path = {
 							"lua/?.lua",
@@ -330,9 +331,7 @@ local nvim_config = matchconfig.register(mft"lua" * mdir"/home/simon/projects/do
 					}
 				}
 			},
-			root_dir = eval(function(args)
-				return "/home/simon/projects/dotfiles/nvim/lua"
-			end)
+			root_dir = "/home/simon/projects/dotfiles/nvim/lua"
 		}
 	}
 })
@@ -661,6 +660,22 @@ matchconfig.register(mdir(mc), c{
 	luasnip_ft_extend = {
 		lua = {"matchconfig_lua"}
 	}
+})
+
+local mc_lua_dir = mc .. "/lua/matchconfig"
+matchconfig.register(mdir(mc_lua_dir) * mft"lua", c{
+	lsp = {
+		lua_ls = {
+			settings = {
+				Lua = {
+					workspace = {
+						library = merge.list_extend({ mc_lua_dir })
+					}
+				}
+			},
+			root_dir = mc_lua_dir,
+		}
+	},
 })
 
 ---
@@ -1001,6 +1016,11 @@ matchconfig.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
 			cwd = '${workspaceFolder}',
 			justMyCode = false,
 			args = {"mnt"}
+		}
+	},
+	lsp = {
+		pyright = {
+			root_dir = "/home/simon/projects/zot7fuse"
 		}
 	}
 })
