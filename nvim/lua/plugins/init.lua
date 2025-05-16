@@ -224,9 +224,23 @@ local plugin_spec = {
 -- Make sure they are in some kind of order. This is not given naturally,
 -- lazy.plugins() is not ordered at all, so we have to sort.
 local function store_plugin_paths()
-	local plugin_paths = vim.tbl_map(function(item) return item.dir end, require("lazy").plugins())
-	table.sort(plugin_paths)
-    vim.fn.writefile({"return " .. vim.inspect(plugin_paths)}, vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua")
+	local p = vim.iter(require("lazy").plugins())
+
+	local path_by_name = p:fold({}, function(t, item)
+		t[item.name] = item.dir
+		return t
+	end)
+	local all_paths = p:map(function(item) return item.dir end):totable()
+
+	table.sort(path_by_name)
+	table.sort(all_paths)
+
+	local data = {
+		all_paths = all_paths,
+		path_by_name = path_by_name
+	}
+
+    vim.fn.writefile( vim.split(("return %s"):format(vim.inspect(data)), "\n"), vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua")
 end
 
 require("lazy").setup(plugin_spec, {
