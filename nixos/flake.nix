@@ -28,13 +28,15 @@
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, home-manager, ... }: {
     nixosConfigurations = let
+      system = "x86_64-linux";
+      pkgs-unstable = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
       mkSimonConfig = machine_name: nixpkgs.lib.nixosSystem rec {
-        system = "x86_64-linux";
+        inherit system;
         specialArgs = {
-          pkgs-unstable = import nixpkgs-unstable {
-            inherit system;
-            config.allowUnfree = true;
-          };
+          inherit pkgs-unstable;
           pkgs-yuzu = import nixpkgs-yuzu {
             inherit system;
           };
@@ -49,7 +51,7 @@
 
             home-manager.users.simon = import ./home;
             home-manager.extraSpecialArgs = {
-              inherit inputs nixpkgs-unstable;
+              inherit inputs pkgs-unstable;
               data = import ./data;
               l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
               nur = inputs.nur.legacyPackages.${system};
