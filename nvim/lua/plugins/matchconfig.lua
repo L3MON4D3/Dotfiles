@@ -1,4 +1,5 @@
-require("matchconfig").setup({
+local mc = require("matchconfig")
+mc.setup({
 	path = "configs.lua",
 	options = {
 		require("my_mc.options.repl"),
@@ -19,5 +20,8 @@ require("matchconfig").setup({
 	}
 })
 require("matchconfig.util.log").set_loglevel("debug")
-vim.api.nvim_create_user_command("C", require("matchconfig").pick_current, {})
+vim.api.nvim_create_user_command("C", mc.pick_current, {})
 vim.api.nvim_create_user_command("CO", ":e " .. vim.uv.fs_realpath(require("matchconfig").get_configfile()), {})
+vim.api.nvim_create_user_command("MC", function()
+	print(vim.inspect(mc.get_config()))
+end, {})
