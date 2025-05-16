@@ -219,8 +219,28 @@ local plugin_spec = {
 	-- use(eve_snippets)
 }
 
+-- store plugin paths in a file, so they can be easily loaded into lua-ls
+-- workspace.library.
+-- Make sure they are in some kind of order. This is not given naturally,
+-- lazy.plugins() is not ordered at all, so we have to sort.
+local function store_plugin_paths()
+	local plugin_paths = vim.tbl_map(function(item) return item.dir end, require("lazy").plugins())
+	table.sort(plugin_paths)
+    vim.fn.writefile({"return " .. vim.inspect(plugin_paths)}, vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua")
+end
+
 require("lazy").setup(plugin_spec, {
 	dev = {
 		path = "~/projects/nvim/"
 	}
 })
+
+vim.api.nvim_create_autocmd({ "User" }, {
+	pattern = { "LazyUpdate", "LazyInstall", "LazySync" },
+	callback = function()
+		-- delay a bit, make sure lazy is done with updating its stuff.
+		vim.schedule(store_plugin_paths)
+	end,
+})
+
+vim.api.nvim_create_user_command("StorePluginPaths", store_plugin_paths, { force = true })
