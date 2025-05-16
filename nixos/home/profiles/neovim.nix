@@ -2,11 +2,6 @@
 
 let
   nvim = inputs.neovim-nightly.packages.${pkgs.system}.default;
-
-  update_rtpath_file_script = pkgs.writeText "update_rtp_file" ''
-    local rtp = vim.api.nvim_get_runtime_file("", true)
-    vim.fn.writefile({"return " .. vim.inspect(rtp)}, "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/rtp_base.lua")
-  '';
 in {
   home.activation.myNvimRepos = lib.hm.dag.entryAfter ["writeBoundary"] ''
     run mkdir -p ${config.home.homeDirectory}/projects/dotfiles/nvim
@@ -19,7 +14,7 @@ in {
       run ${pkgs.git}/bin/git clone http://git.internal/simon/luasnip.git ${config.home.homeDirectory}/projects/nvim/luasnip
     fi
 
-    ${nvim}/bin/nvim -u none -l ${update_rtpath_file_script}
+    echo 'return {"${nvim}/share/nvim/runtime"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/rtp_base.lua"
   '';
 
   programs.neovim = {
