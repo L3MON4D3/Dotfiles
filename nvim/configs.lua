@@ -29,6 +29,8 @@ local repl_secondary = require("my_mc.options.repl").secondary
 local direncode = require("my_mc.options.repl").direncode
 local dirdecode = require("my_mc.options.repl").dirdecode
 
+local eval = matchconfig.eval
+
 -- bash in some directory.
 repl.set_term_generator("bash_dir", function(term_id)
 	local match = term_id:match("bash%.dir%:([^%.]+)")
@@ -275,9 +277,11 @@ require("matchconfig.options.lsp").set_default_capabilities(vim.tbl_deep_extend(
 	vim.lsp.protocol.make_client_capabilities(),
 	require("blink.cmp").get_lsp_capabilities()
 ))
+
 local lsp_lua = matchconfig.register(mft"lua", c{
 	lsp = {
 		lua_ls = {
+			enable_per_workspace_config = true,
 			cmd = {
 				"lua-language-server",
 				"--logpath",
@@ -301,18 +305,12 @@ local lsp_lua = matchconfig.register(mft"lua", c{
 							"meta/template/?/init.lua",
 						}
 					},
-					diagnostics = {
-						-- Get the language server to recognize the `vim` and luasnip globals.
-						globals = {
-							"vim",
-						},
-					},
 					workspace = {
-						-- Make the server aware of Neovim runtime files
-						library = vim.api.nvim_get_runtime_file("", true),
+						-- Make the server aware of Neovim runtime files.
+						library = dofile(vim.fn.stdpath("config") .. "/generated/rtp_base.lua"),
 						ignoreDir = {
 							".cache",
-							"deps"
+							"deps",
 						}
 					},
 				},
@@ -321,40 +319,37 @@ local lsp_lua = matchconfig.register(mft"lua", c{
 	},
 } .. lsp_generic)
 
-local luasnippets = matchconfig.register(mft"lua" * mpattern".*/luasnippets/.*", c{
+local nvim_config = matchconfig.register(mft"lua" * mdir"/home/simon/projects/dotfiles/nvim/lua", c{
 	lsp = {
 		lua_ls = {
 			settings = {
 				Lua = {
-					diagnostics = {
-						globals = merge.list_extend({
-							"s",
-							"sn",
-							"t",
-							"i",
-							"f",
-							"c",
-							"d",
-							"isn",
-							"psn",
-							"l",
-							"rep",
-							"r",
-							"p",
-							"types",
-							"events",
-							"util",
-							"fmt",
-							"ls",
-							"ins_generate",
-							"parse",
-							"parse_add",
-							"s_add",
-							"dl",
-						})
+					workspace = {
+						library = merge.list_extend(dofile(vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua"))
 					}
 				}
-			}
+			},
+			root_dir = eval(function(args)
+				return "/home/simon/projects/dotfiles/nvim/lua"
+			end)
+		}
+	}
+})
+nvim_config:after(lsp_lua)
+
+local luasnippets = matchconfig.register(mft"lua" * mpattern".*/luasnippets/", c{
+	lsp = {
+		lua_ls = {
+			settings = {
+				Lua = {
+					workspace = {
+						library = merge.list_extend({ vim.fn.stdpath("config") .. "/meta/luasnippets/" })
+					}
+				}
+			},
+			root_dir = eval(function(args)
+				return args.match_args[2]
+			end)
 		}
 	}
 })
@@ -632,6 +627,22 @@ matchconfig.register(mdir(luasnip_dir), c{
 		actions.cabbrev_buf("!!", "/home/simon/projects/nvim/luasnip/tests/integration")
 	end
 } )
+local luasnip_lua_lsp = matchconfig.register(mdir(luasnip_dir) * mft"lua", c{
+	lsp = {
+		lua_ls = {
+			settings = {
+				Lua = {
+					workspace = {
+						library = merge.list_extend({ luasnip_dir })
+					}
+				}
+			},
+			root_dir = luasnip_dir,
+		}
+	},
+})
+
+luasnip_lua_lsp:after(lsp_lua)
 
 ---
 --- Matchconfig
