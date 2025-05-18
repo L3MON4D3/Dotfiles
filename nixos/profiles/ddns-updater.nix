@@ -16,7 +16,7 @@ let
         # }
         {
           provider = "cloudflare";
-          zone_identifier = "b17b3bd2466d8a209be5bc5e3c88585d"
+          zone_identifier = "b17b3bd2466d8a209be5bc5e3c88585d";
           domain = "l3mon4.de,wireguard.l3mon4.de";
           ip_version = "ipv4";
           ipv6_suffix = "";
