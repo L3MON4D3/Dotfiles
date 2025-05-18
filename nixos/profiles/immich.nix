@@ -40,8 +40,8 @@ in {
       };
     };
   };
-  systemd.services.immich-server.serviceConfig.UMask = lib.mkForce 0072;
-  systemd.services.immich-machine-learning.serviceConfig.UMask = lib.mkForce 0072;
+  systemd.services.immich-server.serviceConfig.UMask = lib.mkForce 0027;
+  systemd.services.immich-machine-learning.serviceConfig.UMask = lib.mkForce 0027;
 
   l3mon.restic.extraGroups = [ "immich" ];
   l3mon.restic = {
