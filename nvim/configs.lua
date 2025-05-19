@@ -289,6 +289,7 @@ local lsp_lua = matchconfig.register(mft"lua", c{
 			},
 			root_dir = eval(function(args)
 				-- fall back to a workspace that is just the file.
+				-- lua_ls can handle this! Cool!!
 				return vim.fs.root(args.file, ".git") or args.file
 			end),
 			settings = {
@@ -321,7 +322,7 @@ local lsp_lua = matchconfig.register(mft"lua", c{
 } .. lsp_generic)
 
 local rtp_plugin_data = dofile(vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua")
-local nvim_config = matchconfig.register(mft"lua" * mdir"/home/simon/projects/dotfiles/nvim/lua", c{
+local full_plugin_luals = c{
 	lsp = {
 		lua_ls = {
 			settings = {
@@ -331,13 +332,16 @@ local nvim_config = matchconfig.register(mft"lua" * mdir"/home/simon/projects/do
 					}
 				}
 			},
-			root_dir = "/home/simon/projects/dotfiles/nvim/lua"
+			root_dir = eval(function(args)
+				return args.match_args[2]
+			end)
 		}
 	}
-})
-nvim_config:after(lsp_lua)
+}
+matchconfig.register(mft"lua" * mdir"/home/simon/projects/dotfiles/nvim/lua", full_plugin_luals):after(lsp_lua)
+matchconfig.register(mft"lua" * mfile"/home/simon/projects/dotfiles/nvim/configs.lua", full_plugin_luals):after(lsp_lua)
 
-local luasnippets = matchconfig.register(mft"lua" * mpattern".*/luasnippets/", c{
+local luasnippet_luals = c{
 	lsp = {
 		lua_ls = {
 			settings = {
@@ -355,8 +359,10 @@ local luasnippets = matchconfig.register(mft"lua" * mpattern".*/luasnippets/", c
 			end)
 		}
 	}
-})
-luasnippets:after(lsp_lua)
+}
+
+matchconfig.register(mft"lua" * mpattern".*/luasnippets/", luasnippet_luals):after(lsp_lua)
+matchconfig.register(mft"lua" * mdir"/home/simon/projects/nvim/luasnip-issues", luasnippet_luals):after(lsp_lua)
 
 --
 -- nix
