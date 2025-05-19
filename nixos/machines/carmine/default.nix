@@ -94,4 +94,9 @@
   programs.wireshark.enable = true;
   programs.wireshark.package = pkgs.wireshark;
   users.users.simon.extraGroups = [ "wireshark" ];
+
+  nix.optimise = {
+    automatic = true;
+    dates = [ "20:00" ];
+  };
 }
