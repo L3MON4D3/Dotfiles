@@ -3,6 +3,7 @@
 
 ; make sure assignment-statement does not work in (local_declaration
 ; (assignment_statement)), only if it is a top-level statement, or in a body.
+; root-child predicate is added by my config.
 ( (assignment_statement) @togglecomment (#root-child @togglecomment) )
 (block (assignment_statement) @togglecomment)
 
