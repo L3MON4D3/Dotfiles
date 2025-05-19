@@ -210,6 +210,15 @@
     };
   };
 
+  # networking.extraHosts = ''
+  #   0.0.0.0 ziglang.org
+  #   0.0.0.0 pkg.machengine.org
+  #   0.0.0.0 zigmirror.hryx.net
+  #   0.0.0.0 zig.linus.dev
+  #   0.0.0.0 fs.liujiacai.net
+  #   0.0.0.0 zig.nekos.space
+  # '';
+
   # system.copySystemConfiguration = true;
 
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
