@@ -34,13 +34,14 @@ let
     '';
   };
   
+  nerdfonts_symbols_only = (pkgs.nerdfonts.override (old: {fonts = [ "NerdFontsSymbolsOnly" ];}));
   gen_scaled_font = pkgs.writers.writePython3Bin "gen_scaled_font" {
     libraries = with pkgs; [ python312Packages.fontforge ];
   } ''
     import fontforge
     import psMat
 
-    symbols = fontforge.open("${pkgs.nerdfonts}/share/fonts/truetype/NerdFonts/SymbolsNerdFontMono-Regular.ttf")  # noqa: E501. The path is too long.
+    symbols = fontforge.open("${nerdfonts_symbols_only}/share/fonts/truetype/NerdFonts/SymbolsNerdFontMono-Regular.ttf")  # noqa: E501. The path is too long.
 
     scaled_f = fontforge.font()
     scaled_f.version = symbols.version
@@ -142,7 +143,7 @@ in {
     packages = with pkgs; [
       l3mon.iosevka
       julia-mono
-      nerdfonts
+      nerdfonts_symbols_only
       symbols_scaled
       noto_emoji_only
     ];
