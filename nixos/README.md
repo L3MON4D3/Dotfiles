@@ -12,10 +12,12 @@ The general structure is as follows:
 # Workflows
 
 ## Wireguard
-`/etc/secrets` contains all public and private keys, generate
+`/var/secrets` contains all public and private keys, generate
 wg-netns-consumable files from them via
 
-# Try: mount-unit with NetworkNamespacePath in Unit???
+# Cleaning /nix/store
+`nix-collect-garbage --delete-old` as regular user for home-manager-, and root
+for the system-profiles.
 
 # Conventions
 
@@ -62,7 +64,7 @@ do its job for gog.
   use systemd.tmpfiles for granular access, and run it after NixOS rebuild via
   systemd-tmpfiles-resetup.service in activationScript (After?) to make sure
   permissions are correct even when nixOS has different ACL for some directory.
-
+* mount-unit with NetworkNamespacePath in Unit???
 
 # Resources
 * [noogle](https://noogle.dev/) for searching stdlib functions and pulling the
