@@ -24,6 +24,7 @@ in {
       pkgs.clang
       pkgs.tree-sitter
       pkgs.nodejs
+      pkgs.luajit
       pkgs.luarocks
       # julia for random scripts and lsp.
       pkgs-unstable.lua-language-server
