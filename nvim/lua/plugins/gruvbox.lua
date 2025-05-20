@@ -13,21 +13,19 @@ require("gruvbox").setup({
 			bg="#1d2021",
 			fg=""
 		},
-		-- Since following master: have to swap fg and bg in these (Status*). Not sure
-		-- where bug (? def. change in behaviour) is coming from
 		Status1 = {
-			fg = "#fabd2f",
-			bg = "#1d2021",
+			bg = "#fabd2f",
+			fg = "#1d2021",
 			bold = true,
 		},
 		Status2 = {
-			fg = "#fe8019",
-			bg = "#1d2021",
+			bg = "#fe8019",
+			fg = "#1d2021",
 			bold = true,
 		},
 		Status3 = {
-			fg = "#83a598",
-			bg = "#1d2021",
+			bg = "#83a598",
+			fg = "#1d2021",
 			bold = true,
 		},
 
