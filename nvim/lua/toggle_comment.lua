@@ -150,7 +150,8 @@ local lang_prefixcomment = {
 	lua = PrefixcommentDef.new("--"),
 	cpp = PrefixcommentDef.new("//"),
 	latex = PrefixcommentDef.new("%"),
-	zig = PrefixcommentDef.new("//")
+	zig = PrefixcommentDef.new("//"),
+	vim = PrefixcommentDef.new("\"")
 }
 
 -- just compare two integers.
@@ -286,10 +287,18 @@ local LazyContiguousLinerange_mt = {__index = function(t, k)
 	end
 end}
 
-function LazyContiguousLinerange.new(idx)
+function LazyContiguousLinerange.new(opts)
+	local initial_from, initial_to
+	if opts.center then
+		initial_from = opts.center-initial_range_pm
+		initial_to = opts.center+initial_range_pm
+	else
+		initial_from = opts.from
+		initial_to = opts.to
+	end
 	-- ought to be enough for most comments.
 	local n_lines = vim.api.nvim_buf_line_count(0)
-	local from, to, lines = fetch_lines_safe(0, idx-initial_range_pm, idx+initial_range_pm, n_lines)
+	local from, to, lines = fetch_lines_safe(0, initial_from, initial_to, n_lines)
 	local o = {}
 	for i = from, to-1 do
 		o[i] = lines[i - from + 1]
@@ -303,7 +312,7 @@ end
 
 -- return range from, to-inclusive.
 local function get_linecomment_range(prefix_def, buffer_lines, linenr)
-	buffer_lines = LazyContiguousLinerange.new(linenr)
+	buffer_lines = LazyContiguousLinerange.new({center = linenr})
 
 	local pos_linetype = prefix_def:linetype(buffer_lines[linenr])
 
@@ -314,9 +323,13 @@ local function get_linecomment_range(prefix_def, buffer_lines, linenr)
 		return nil, nil
 	end
 
-	local from_linenr = linenr
-	local from_linetype = pos_linetype
+	local from_linenr = pos_linetype == PrefixcommentDef.to and linenr-1 or linenr
 	while true do
+		if from_linenr == -1 then
+			return nil,nil
+		end
+		local from_linetype = prefix_def:linetype(buffer_lines[from_linenr])
+
 		if from_linetype == nil or from_linetype == PrefixcommentDef.to or from_linetype == PrefixcommentDef.singleline then
 			-- line is not a connecting line, and we have not reached the
 			-- `from` => this is not a comment-range.
@@ -325,25 +338,21 @@ local function get_linecomment_range(prefix_def, buffer_lines, linenr)
 			break
 		end
 		from_linenr = from_linenr - 1
-		if from_linenr == -1 then
-			return nil,nil
-		end
-		from_linetype = prefix_def:linetype(buffer_lines[from_linenr])
 	end
 
-	local to_linenr = linenr
-	local to_linetype = pos_linetype
+	local to_linenr = pos_linetype == PrefixcommentDef.from and linenr+1 or linenr
 	while true do
+		if to_linenr == buffer_lines.n_lines then
+			return nil,nil
+		end
+		local to_linetype = prefix_def:linetype(buffer_lines[to_linenr])
+
 		if to_linetype == nil or to_linetype == PrefixcommentDef.from or to_linetype == PrefixcommentDef.singleline then
 			return nil,nil
 		elseif to_linetype == PrefixcommentDef.to then
 			break
 		end
 		to_linenr = to_linenr + 1
-		if to_linenr == buffer_lines.n_lines then
-			return nil,nil
-		end
-		to_linetype = prefix_def:linetype(buffer_lines[to_linenr])
 	end
 
 	return from_linenr, to_linenr
@@ -375,6 +384,29 @@ local function comment_line_range(prefix_def, buffer_lines, from, to)
 		end
 	end
 end
+
+local function trees_with_range(root_tree, range)
+	local all = {}
+	if not root_tree:contains(range) then
+		return all
+	else
+		all[1] = root_tree
+	end
+	::rep::
+	for _, tree in pairs(root_tree:children()) do
+		if tree:contains(range) then
+			table.insert(all, tree)
+			root_tree = tree
+			-- repeat immediately, I'd assume there are no other
+			-- immediate children that include this range.
+			--
+			-- maybe doing this with goto this is too hackish? :D
+			goto rep
+		end
+	end
+	return all
+end
+
 
 ---@enum ActionType
 local ActionTypes = {
@@ -440,10 +472,48 @@ end
 return function()
 	local mode = vim.fn.mode()
 	if mode:sub(1,1) == "V" then
+		local line_dot = vim.fn.getpos(".")[2]-1
+		local line_v = vim.fn.getpos("v")[2]-1
+		local from = math.min(line_dot, line_v)
+		local to = math.max(line_dot, line_v)
+
+		local range = {from, 0, to, 0}
+
+		local root_parser = vim.treesitter.get_parser(0)
+		if not root_parser then
+			error("Could not get parser!")
+		end
+
+		root_parser:parse()
+		-- for line-comments, the innermost tree should be the one we want to comment:
+		-- It does not make sense to comment out part of a vim.cmd, for example:
+		-- ```lua
+		-- vim.cmd([[
+		--     set nocompatible
+		--     set nocompatible
+		--     set nocompatible
+		--     set nocompatible
+		-- ]])
+		-- ```
+		-- if we Visually select the two inner set nocompatible-lines, and
+		-- toggle_comment, they definitely should no be commented with `-- `.
+
+		-- language_for_range descends into injections.
+		local lang = root_parser:language_for_range(range):lang()
+
+		local prefix_def = lang_prefixcomment[lang]
+		if not prefix_def then
+			-- we cannot deal with this language.
+			return
+		end
+
+		comment_line_range(prefix_def, LazyContiguousLinerange.new({from = from, to = to+1}), from, to)
+		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "x", true)
+		return
 	elseif mode == "n" then
 		local cursor = require("util").get_cursor_0ind()
 
-		local buffer_lines = LazyContiguousLinerange.new(cursor[1])
+		local buffer_lines = LazyContiguousLinerange.new({center = cursor[1]})
 
 		local continue_action = get_continuing_action()
 		if continue_action then
@@ -480,6 +550,11 @@ return function()
 		local selector = range_selector.sorted()
 		for lang, languagetree in pairs(languagetrees) do
 			local prefix_def = lang_prefixcomment[lang]
+			if not prefix_def then
+				-- we cannot deal with this language, continue.
+				goto continue
+			end
+
 			local line_comment_from, line_comment_to = get_linecomment_range(prefix_def, buffer_lines, cursor[1])
 
 			if line_comment_from then
