@@ -415,9 +415,16 @@ in {
 
         programs.foot = {
           enable = true;
-          # up-to-date foot (~1.20.2+) has fix for double-trigger of Enter, Backspace, Tab
-          # https://codeberg.org/dnkl/foot/issues/1892
-          package = pkgs-unstable.foot;
+          # up-to-date foot (~1.20.2+ from unstable) has fix for double-trigger
+          # of Enter, Backspace, Tab https://codeberg.org/dnkl/foot/issues/1892
+          # Add xdg-utils to path, s.t. xdg-open works.
+          package = pkgs-unstable.foot.overrideAttrs (old: {
+            nativeBuildInputs = old.nativeBuildInputs ++ [pkgs.makeWrapper];
+            postInstall = old.postInstall + ''
+              wrapProgram $out/bin/foot \
+                --prefix PATH : ${lib.makeBinPath [pkgs.xdg-utils]}
+            '';
+          });
           server.enable = true;
           settings = {
             main = {
