@@ -37,7 +37,18 @@ in {
       pkgs.pyright
 
       # preview markdown.
-      pkgs.python312Packages.grip
+      (pkgs.python312Packages.grip.overrideAttrs (prev: {
+        src = pkgs.fetchFromGitHub {
+          owner = "nikolavp";
+          repo = "grip";
+          rev = "add-mermaid-support";
+          hash = "sha256-cRC+vst/W0pZosZXAOey4WtcLNOL8THRJ+5bhcCRdZw=";
+        };
+        patches = [];
+        # not all checks pass on that branch :/
+        checkPhase = "";
+        installCheckPhase = "";
+      }))
     ];
     extraLuaPackages = ps: with ps; [
       luasocket
