@@ -16,12 +16,16 @@ in {
         These have to contain arguments valid for the attrset of
         writeShellApplication, and will be provided Env-args to call restic.
       '';
-      default = [];
+      default = {};
     };
     
     repo = mkOption {
       type = types.raw;
       description = lib.mdDoc "Attrset with keys `location` and `passwordFile`";
+      default = {
+        location = "/srv/restic";
+        passwordFile = "/var/secrets/restic-keys";
+      };
     };
 
     dailyBackupTime = mkOption {
