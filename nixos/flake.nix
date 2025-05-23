@@ -71,6 +71,7 @@
     in {
       indigo = mkSimonConfig "indigo";
       carmine = mkSimonConfig "carmine";
+      cobalt = mkSimonConfig "cobalt";
     };
   };
 }
