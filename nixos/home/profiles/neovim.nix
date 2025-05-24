@@ -22,7 +22,10 @@ in {
     defaultEditor = true;
     extraPackages = [
       pkgs.clang
-      pkgs.tree-sitter
+      # add tree-sitter from nvim-nightly package.
+      # we need tree-sitter for building grammars from nvim-treesitter, and the
+      # version in pkgs may be wrong.
+      (builtins.head (builtins.filter (x: x.name == "tree-sitter-bundled") inputs.neovim-nightly.packages.${pkgs.system}.neovim.buildInputs))
       pkgs.nodejs
       pkgs.luajit
       pkgs.luarocks
