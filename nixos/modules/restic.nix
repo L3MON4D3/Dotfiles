@@ -102,7 +102,8 @@ in {
           EnvironmentFile = [ "${envFile}" ];
           Type = "oneshot";
           User = "restic";
-          # This is set in the nixos-restic-service, and I don't think it's actually used... (does not seem like restic uses this directory)
+          # This is set in the nixos-restic-service, and I don't think it's
+          # actually used... (does not seem like restic uses this directory)
           # RuntimeDirectory = "restic";
           CacheDirectory = "restic";
           # make sure permissions are correct before backup.
@@ -134,7 +135,7 @@ in {
             (map (service_names: {
               command = "${pkgs.systemd}/bin/systemctl start ${builtins.toString service_names}, ${pkgs.systemd}/bin/systemctl stop ${builtins.toString service_names}";
               options = [ "NOPASSWD" ];
-            }) start_stop_services);
+            }) (start_stop_services ++ ["restic-15min.timer"]));
           groups = [ "restic" ];
         }];
       };
@@ -146,7 +147,13 @@ in {
 
       systemd = let
         script_15min = concatStringsSep "\n" (specs_to_scriptlist "backup15min");
+        enable_15min = script_15min != "";
+
+        has_daily_restic_tasks = (specs_to_scriptlist "backupDaily" != []) || (specs_to_scriptlist "forget" != []) || cfg.doRepoMaintenance;
         script_daily = concatStringsSep "\n" (
+          [''
+            ${optionalString enable_15min "${config.security.wrapperDir}/sudo ${pkgs.systemd}/bin/systemctl stop restic-15min.timer"}
+          ''] ++
           (specs_to_scriptlist "backupDaily") ++
           (specs_to_scriptlist "forget") ++
           (if cfg.doRepoMaintenance then [
@@ -154,11 +161,15 @@ in {
                 restic prune
                 restic check --read-data
               ''
-            ] ++ map shellApplicationSpecToCaller cfg.maintenanceExtra else []));
+            ] ++ map shellApplicationSpecToCaller cfg.maintenanceExtra
+          else [ ]) ++ 
+          [
+          ''
+            ${optionalString enable_15min "${config.security.wrapperDir}/sudo ${pkgs.systemd}/bin/systemctl start restic-15min.timer"}
+          ''
+          ]);
             
-
-        enable_15min = script_15min != "";
-        enable_daily = script_daily != "";
+        enable_daily = has_daily_restic_tasks;
       in (
         mkMerge [
           (if enable_15min then {
