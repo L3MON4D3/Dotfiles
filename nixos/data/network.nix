@@ -4,6 +4,7 @@ rec {
     address_range = "192.168.178.0/24";
     dns = "192.168.178.20";
     gateway = "192.168.178.1";
+    ssid = "FRITZ!Box 5590 RM";
     peers = {
       fritzbox = {
         address = "192.168.178.1";

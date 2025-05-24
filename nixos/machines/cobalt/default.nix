@@ -3,7 +3,7 @@
 {
   imports = [
     ../../profiles/simon.nix
-    ../../profiles/localnet.nix
+    ../../profiles/mobile-net.nix
     ./hardware-configuration.nix
   ];
 
