@@ -72,6 +72,8 @@
 
   home-manager.sharedModules = [
     ({ config, lib, pkgs, machine, data, ... }: {
+      imports = [ ./home ];
+
       l3mon.zotero.enable = true;
     })
   ];

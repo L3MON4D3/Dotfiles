@@ -10,6 +10,9 @@
     ./profiles/mpd.nix
     ./profiles/julia.nix
     ./profiles/mime.nix
+
+    ./modules/sway-workrooms
+    ./modules/sway.nix
   ];
   home.username = "simon";
   home.homeDirectory = "/home/simon";

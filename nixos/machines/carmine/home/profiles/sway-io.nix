@@ -1,25 +1,26 @@
 { config, lib, pkgs, machine, data, ... }:
 
-let
-  dpms_toggle = pkgs.writeShellApplication {
-    name = "dpms_toggle";
-    runtimeInputs = with pkgs; [
-      jq
-      sway
-    ];
-    text = ''
-      output=$1
-      if swaymsg -t get_outputs | jq -e ".[] | select(.name==\"''${output}\") | .dpms"; then
-        echo swaymsg output "''${output}" dpms off
-        swaymsg output "''${output}" dpms off
-      else
-        echo swaymsg output "''${output}" dpms on
-        swaymsg output "''${output}" dpms on
-      fi
-    '';
-  };
-in {
+{
   wayland.windowManager.sway.extraConfig = ''
+    input type:pointer {
+      pointer_accel -1
+    }
+
+    input 1240:60205:liliums_Lily58 {
+        repeat_delay 120
+        repeat_rate 100
+        xkb_layout "us"
+        xkb_variant "altgr-intl"
+    }
+
+    # qemu?
+    input 1:1:AT_Translated_Set_2_keyboard {
+        repeat_delay 120
+        repeat_rate 100
+        xkb_layout "us"
+        xkb_variant "altgr-intl"
+    }
+
     output "BNQ BenQ RL2455 H5G01051SL0" transform 90 resolution 1920x1080@60.000Hz position 2560,0
     output "BNQ BenQ RL2455 H5G01051SL0" subpixel vbgr
 

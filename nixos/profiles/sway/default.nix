@@ -200,12 +200,9 @@ in {
       in {
         imports = [
           ./base.nix
-          ./outputs.nix
-          ./inputs.nix
           ./decoration.nix
           ./qbittorrent.nix
           ./waybar.nix
-          ./workrooms
           ./copypaste
           ./screengrab.nix
           ./zathura.nix
