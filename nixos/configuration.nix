@@ -10,6 +10,7 @@
     ./modules/zotero.nix
     ./modules/wireguard/netns.nix
     ./modules/wireguard/host.nix
+    ./modules/blocky.nix
 
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
