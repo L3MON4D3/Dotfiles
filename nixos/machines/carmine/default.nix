@@ -104,6 +104,5 @@
 
   l3mon.peercache = {
     pull = true;
-    push = true;
   };
 }
