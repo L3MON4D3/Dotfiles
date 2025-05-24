@@ -20,6 +20,11 @@ rec {
           "cache.carmine"
         ];
       };
+      cobalt = {
+        machine_id = "cobalt";
+        address = "192.168.178.22";
+        interface = "wlo1";
+      };
       carmine_mullvad_de = {
         address = "192.168.178.41";
         mac_address = "30:e4:58:0a:6e:fc";
