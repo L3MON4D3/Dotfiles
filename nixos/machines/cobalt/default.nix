@@ -3,11 +3,20 @@
 {
   imports = [
     ../../profiles/simon.nix
+    ../../profiles/localnet.nix
     ./hardware-configuration.nix
   ];
 
   environment.shellAliases = {
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#cobalt"'';
+  };
+
+  networking.wireless = {
+    enable = true;
+    secretsFile = "/var/secrets/wifi";
+    networks = {
+      "FRITZ!Box 5590 RM".pskRaw = "ext:psk_home";
+    };
   };
 
   # fileSystems."/srv/misc" = {
