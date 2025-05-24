@@ -42,8 +42,6 @@
 
       ../../profiles/unibonn.nix
 
-      ../../profiles/cache-peers.nix
-
       ./profiles/nvidia.nix
     ];
 
@@ -265,5 +263,10 @@
 
   environment.shellAliases = {
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';
+  };
+
+  l3mon.peercache = {
+    pull = true;
+    push = true;
   };
 }

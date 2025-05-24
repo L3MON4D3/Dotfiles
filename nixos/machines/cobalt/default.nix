@@ -91,4 +91,8 @@
     automatic = true;
     dates = [ "20:00" ];
   };
+
+  l3mon.peercache = {
+    pull = true;
+  };
 }

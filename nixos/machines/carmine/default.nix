@@ -7,7 +7,6 @@
 
     ../../profiles/simon.nix
     ../../profiles/localnet.nix
-    ../../profiles/cache-peers.nix
     ./hardware-configuration.nix
 
     ../../profiles/sway
@@ -99,5 +98,10 @@
   nix.optimise = {
     automatic = true;
     dates = [ "20:00" ];
+  };
+
+  l3mon.peercache = {
+    pull = true;
+    push = true;
   };
 }

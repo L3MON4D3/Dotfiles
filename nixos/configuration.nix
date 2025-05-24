@@ -11,6 +11,7 @@
     ./modules/wireguard/netns.nix
     ./modules/wireguard/host.nix
     ./modules/blocky.nix
+    ./modules/peercache.nix
 
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
