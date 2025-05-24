@@ -10,6 +10,7 @@ with lib;
   };
   config = let
     cfg = config.l3mon.peercache;
+    machine_lan_address = data.network.lan.peers.${machine}.address;
   in mkMerge [
     (mkIf cfg.pull {
       # check configs for other machines, only put those that have push enabled.
