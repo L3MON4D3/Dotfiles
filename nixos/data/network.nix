@@ -109,6 +109,12 @@ rec {
         privkey_file = "/var/secrets/wg_home2/carmine-private";
         pubkey = "iGurYHJ9mfYU5y1khcH6T35zIOPogUpvvqJgrY9rWSg=";
       };
+      cobalt = {
+        address = "10.0.0.10";
+        route_all = false;
+        privkey_file = "/var/secrets/wg_home2/cobalt-private";
+        pubkey = "E9QdhpakA8gw0Ke0DshdcauMrV7P2MtURr4EJYEWgns=";
+      };
       chromecast = {
         address = "10.0.0.7";
         route_all = false;
