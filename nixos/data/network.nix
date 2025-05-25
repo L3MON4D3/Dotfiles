@@ -203,6 +203,12 @@ rec {
         privkey_file = "/var/secrets/wg_rec_de/carmine-private";
         pubkey = "piXA8QVYisipkz2zMn7vpsZq6okSjHNwnt4sLMykRXk=";
       };
+      cobalt = {
+        address = "10.0.0.3";
+        route_all = true;
+        privkey_file = "/var/secrets/wg_rec_de/cobalt-private";
+        pubkey = "qck0Vt58kCDrat48urQrQcQJ5/KL1dH8VtM4Niniw00=";
+      };
     };
   };
 }
