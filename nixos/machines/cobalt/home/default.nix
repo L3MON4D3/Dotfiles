@@ -3,6 +3,7 @@
 {
   imports = [
     ./profiles/sway-io.nix
+    ./profiles/jellyfin-mpv-cred.nix
   ];
 
   l3mon.sway = {
