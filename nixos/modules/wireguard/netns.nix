@@ -87,7 +87,9 @@ in {
                 echo "Failed at $lineno: $msg"
                 echo "Cleaning up"
 
-                "ip netns delete ${netns_name} || true"
+                ip -n ${netns_name} link delete macvlan_netns || true
+                ip -n ${netns_name} link delete ${interface_name} || true
+                ip netns delete ${netns_name} || true
                 ${optionalString route_local "ip route delete ${route_local_address} || true"}
               }
               trap 'failure $LINENO "$BASH_COMMAND"' ERR
