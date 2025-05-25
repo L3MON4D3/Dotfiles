@@ -187,7 +187,7 @@ rec {
     subnet_mask = "/32";
     name = "wg_mv_cb_de";
     peers = {
-      carmine = {
+      cobalt = {
         address = "10.71.102.201";
         privkey_file = "/var/secrets/wireguard_mullvad/de_bright_mole.private";
         pubkey = "kOwz+tFnMo1XcM+Qhecln5iyDg3/5TAhS4Yq46ieL00=";

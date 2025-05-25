@@ -25,7 +25,7 @@
   l3mon.network_namespaces = {
     enable = true;
     network_configs = [
-      data.network.wireguard_rec_de
+      data.network.wireguard_mv_cb_de
     ];
   };
 
