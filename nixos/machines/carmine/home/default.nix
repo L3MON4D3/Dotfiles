@@ -3,6 +3,7 @@
 {
   imports = [
     ./profiles/sway-io.nix
+    ./profiles/jellyfin-conf.nix
   ];
   l3mon.sway = {
     workrooms.enable = true;
