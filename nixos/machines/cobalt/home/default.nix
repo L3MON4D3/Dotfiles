@@ -4,6 +4,7 @@
   imports = [
     ./profiles/sway-io.nix
   ];
+
   l3mon.sway = {
     workrooms.enable = false;
     outputs = [ "eDP-1" ];
@@ -14,7 +15,7 @@
     netnsKey = "d";
     landingPage = "https://mullvad.net/en/check";
     firefoxProfileSettings = {
-      id = 2;
+      id = 1;
       extensions = with nur.repos.rycee.firefox-addons; [
         ublock-origin
         passff
