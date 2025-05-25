@@ -32,17 +32,17 @@
   fileSystems."/srv/misc" = {
     device = "indigo:/misc";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "soft" "timeo=5" "x-systemd.automount" "x-systemd.mount-timeout=5" "x-systemd.idle-timeout=5min" ];
   };
   fileSystems."/srv/media" = {
     device = "indigo:/media";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "soft" "timeo=5" "x-systemd.automount" "x-systemd.mount-timeout=5" "x-systemd.idle-timeout=5min" ];
   };
   fileSystems."/mnt/paperless" = {
     device = "indigo:/paperless-consume";
     fsType = "nfs";
-    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
+    options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "soft" "timeo=5" "x-systemd.automount" "x-systemd.mount-timeout=5" "x-systemd.idle-timeout=5min" ];
   };
   # fileSystems."/mnt/data" = {
     # label = "DATA";
