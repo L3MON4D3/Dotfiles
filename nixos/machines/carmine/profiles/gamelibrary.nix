@@ -38,6 +38,7 @@
     pkgs-unstable.ryujinx
 
     pkgs.dolphin-emu
+    pkgs.melonDS
     # pkgs.moltengamepad
 
     pkgs.winetricks
@@ -89,13 +90,16 @@
           ln -s /home/simon/.local/share/suyu suyu
           ln -s /home/simon/games games
           ln -s /home/simon/.local/share/lutris lutris
+          ln -s /home/simon/.local/state/melonDS melonDS
 
+          # Important: descend beyond symlinks!!
           restic backup --tag=${tag} --skip-if-unchanged -- \
             ryujinx/bis/user/save \
             suyu/nand/user/save \
             wineprefixes/*/drive_c/users \
             games/*/documents \
             dolphin/* \
+            melonDS/* \
             lutris/games lutris/lutris.conf lutris/system.yml
           cd /
           rm -rf "$TMPDIR"
@@ -122,6 +126,7 @@
           assign [class="^steam$"] workspace i1
           assign [class="^steam_app_\d$"] workspace i1
           assign [class="^steam_app_default$"] output DP-3
+          for_window [app_id="net.kuribo64.melonDS"] floating enable
 
           mode "apps" {
             bindsym l exec lutris
