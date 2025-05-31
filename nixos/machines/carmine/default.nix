@@ -55,7 +55,7 @@
   };
   systemd.tmpfiles.rules = [
     "d /mnt/data 0750 simon simon"
-    "d /mnt/indigo 0750 simon simon"
+    "d /mnt/indigo 0755 simon simon"
   ];
 
   boot.loader.systemd-boot.enable = true;
