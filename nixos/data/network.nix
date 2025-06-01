@@ -207,13 +207,14 @@ rec {
     subnet_mask = "/24";
     name = "wg_rec_de";
     dns = "10.0.0.1";
+    address_range = "10.0.0.0/24";
     host = peers.indigo;
     keepalive = false;
     peers = {
       indigo = {
         # indigo
         machine_id = "indigo";
-        endpoint = "192.168.178.40:51823";
+        endpoint = "wireguard.l3mon4.de:51823";
         address = "10.0.0.1";
         privkey_file = "/var/secrets/wg_rec_de/indigo-private";
         pubkey = "JttJ05OOG8eT+dv/JblhpNyS3IfKiYhQ/EFCJe1hLEc=";
