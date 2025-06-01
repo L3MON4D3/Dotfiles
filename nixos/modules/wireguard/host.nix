@@ -9,7 +9,7 @@ in {
 
     specs = mkOption {
       type = with types; listOf attrs;
-      description = lib.mdDoc "List of attrset with key config a wireguard-network as defined in ./data/networks, and key netns another wireguard-network, which has to enable a netns.";
+      description = lib.mdDoc "List of attrset with key config a wireguard-network as defined in ./data/networks, and key netns optionally another wireguard-network, which has to enable a netns.";
       default = [];
     };
   };
@@ -18,46 +18,54 @@ in {
     # out_interface = data.network.lan.peers."${machine}".interface;
     out_interface = "wg_mullvad_de";
   in {
+    # for forwarding
     networking.nat.enable = true;
 
-    networking.wg-quick.interfaces = builtins.listToAttrs (map (
-      spec: let
-        wg_network = spec.config;
-        out_network = if spec ? netns then spec.netns else data.network.lan;
-        out_interface = out_network.peers.${machine}.interface;
-        machine_conf = wg_network.host;
-        full_address = machine_conf.address + wg_network.subnet_mask;
-        peernames = builtins.filter (x: x != machine) (builtins.attrNames wg_network.peers);
-      in {
-        name = "${wg_network.name}";
-        value = {
-          address = [(machine_conf.address + wg_network.subnet_mask)];
-          listenPort = lib.strings.toInt (builtins.elemAt (builtins.split ":" machine_conf.endpoint) 2);
-          privateKeyFile = machine_conf.privkey_file;
-          postUp = ''
-            ${pkgs.iptables}/bin/iptables -A FORWARD -i ${wg_network.name} -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s ${full_address} -o ${out_interface} -j MASQUERADE
-          '';
-          preDown = ''
-            ${pkgs.iptables}/bin/iptables -D FORWARD -i ${wg_network.name} -j ACCEPT
-            ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s ${full_address} -o ${out_interface} -j MASQUERADE
-          '';
-          peers = builtins.map (peername: let peerconf = wg_network.peers."${peername}"; in {
-            publicKey = peerconf.pubkey;
-            # can usually only reach peers directly.
-            allowedIPs = ["${peerconf.address}/32"];
-          }) peernames;
+    systemd.services = builtins.listToAttrs (map (spec: let
+      wg_network = spec.config;
+      wg_name = spec.config.name;
+      wg_if_network = if spec ? netns then spec.netns else data.network.lan;
+      host_conf = wg_network.host;
+      full_address = machine_conf.address + wg_network.subnet_mask;
+      if_netns_do = if spec ? netns then "ip netns exec ${wg_if_network.name}" else "";
+      wg_link_name = "${wg_network.name}";
+      listen_port = builtins.elemAt (builtins.split ":" host_conf.endpoint) 2;
+      peer_spec_to_args = peerconf: " peer ${peerconf.pubkey} allowed-ips ${peerconf.address}/32";
+      peers = pkgs.lib.attrsets.foldlAttrs (acc: k: v: acc ++ (if k != machine then [v] else [])) [] wg_network.peers;
+    in {
+      name = "host-${wg_network.name}";
+      value = {
+        description = "Host a wireguard vpn.";
+        bindsTo = [ "network-online.target" ] ++ (if spec ? netns then [ "netns-${wg_if_network.name}.service" ] else []);
+        after = [ "network-online.target" ] ++ (if spec ? netns then [ "netns-${wg_if_network.name}.service" ] else []);
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
         };
-      }
-    ) cfg.specs);
-
-    systemd.services = builtins.listToAttrs (map (
-      spec: let
-        wg_name = spec.config.name;
-      in {
-        name = "wg-quick-${wg_name}";
-        value = if spec ? netns then (config.l3mon.network_namespaces.mkNetnsService spec.netns {}) else {};
-      }) cfg.specs);
+        path = with pkgs; [
+          iptables
+          wireguard-tools
+          iproute2
+        ];
+        script = ''
+          ip link add ${wg_link_name} type wireguard
+          ${optionalString (spec ? netns) "ip link set ${wg_link_name} netns ${wg_if_network.name}"}
+          ${if_netns_do} wg set ${wg_link_name} listen-port ${listen_port} private-key ${host_conf.privkey_file} ${builtins.toString (map peer_spec_to_args peers)}
+          ${if_netns_do} ip addr add ${host_conf.address}${wg_network.subnet_mask} dev ${wg_link_name}
+          ${if_netns_do} ip link set ${wg_link_name} up
+          ${if_netns_do} iptables -A FORWARD -i ${wg_link_name} -o ${wg_if_network.peers.${machine}.interface} -j ACCEPT
+          ${if_netns_do} iptables -A FORWARD -o ${wg_link_name} -i ${wg_if_network.peers.${machine}.interface} -j ACCEPT
+          ${if_netns_do} iptables -t nat -A POSTROUTING -s ${wg_network.address_range} -o ${wg_if_network.peers.${machine}.interface} -j MASQUERADE
+        '';
+        postStop = ''
+          ${if_netns_do} iptables -t nat -D POSTROUTING -s ${wg_network.address_range} -o ${wg_if_network.peers.${machine}.interface} -j MASQUERADE
+          ${if_netns_do} iptables -D FORWARD -i ${wg_link_name} -o ${wg_if_network.peers.${machine}.interface} -j ACCEPT
+          ${if_netns_do} iptables -D FORWARD -o ${wg_link_name} -i ${wg_if_network.peers.${machine}.interface} -j ACCEPT
+          ${if_netns_do} ip link del ${wg_link_name}
+        '';
+      };
+    }) cfg.specs);
 
     system.activationScripts = builtins.listToAttrs (map (
       spec: let
