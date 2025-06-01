@@ -137,26 +137,6 @@ rec {
     };
   };
 
-  wireguard_home = rec {
-    subnet_mask = "/24";
-    name = "wg_home";
-    host = peers.cinnabar;
-    dns = "10.0.0.1";
-    keepalive = true;
-    peers = {
-      cinnabar = {
-        address = "10.0.0.1";
-        endpoint = "192.168.178.5:51822";
-        pubkey = "crcxsmvCRMSSY+ixB5p07MzxSv0xDmHPHBmd2w7mNyg=";
-      };
-      indigo = {
-        address = "10.0.0.7";
-        privkey_file = "/var/secrets/wireguard_home/indigo_private";
-        pubkey = "ln4vj6cBDF5FuJlqpUpNOq5nubesA7bR0HQE3PV2/DI=";
-      };
-    };
-  };
-
   wireguard_mullvad_de = rec {
     subnet_mask = "/32";
     name = "wg_mullvad_de";
@@ -206,8 +186,8 @@ rec {
   wireguard_rec_de = rec {
     subnet_mask = "/24";
     name = "wg_rec_de";
-    dns = "10.0.0.1";
-    address_range = "10.0.0.0/24";
+    dns = "10.0.1.1";
+    address_range = "10.0.1.0/24";
     host = peers.indigo;
     keepalive = false;
     peers = {
@@ -215,19 +195,19 @@ rec {
         # indigo
         machine_id = "indigo";
         endpoint = "wireguard.l3mon4.de:51823";
-        address = "10.0.0.1";
+        address = "10.0.1.1";
         privkey_file = "/var/secrets/wg_rec_de/indigo-private";
         pubkey = "JttJ05OOG8eT+dv/JblhpNyS3IfKiYhQ/EFCJe1hLEc=";
       };
       carmine = {
-        address = "10.0.0.2";
+        address = "10.0.1.2";
         route_all = true;
         local = lan.peers.carmine_mullvad_de;
         privkey_file = "/var/secrets/wg_rec_de/carmine-private";
         pubkey = "piXA8QVYisipkz2zMn7vpsZq6okSjHNwnt4sLMykRXk=";
       };
       cobalt = {
-        address = "10.0.0.3";
+        address = "10.0.1.3";
         route_all = true;
         privkey_file = "/var/secrets/wg_rec_de/cobalt-private";
         pubkey = "qck0Vt58kCDrat48urQrQcQJ5/KL1dH8VtM4Niniw00=";
