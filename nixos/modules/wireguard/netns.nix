@@ -121,7 +121,6 @@ in {
 
               ${optionalString route_local ''
                 ip link add link ${lan_interface} name macvlan_netns netns ${netns_name} type macvlan mode bridge
-                ip -n ${netns_name} link set dev macvlan_netns address ${local_peer.mac_address}
                 ip -n ${netns_name} link set macvlan_netns up
 
                 ip -n ${netns_name} addr add ${local_address} dev macvlan_netns
