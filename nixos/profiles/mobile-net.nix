@@ -31,6 +31,8 @@ in {
     networkConfig.DHCP = true;
     # connect to blocky-wg_home2.
     networkConfig.DNS = blocky_address;
+    networkConfig.DNSOverTLS = false;
+    networkConfig.DNSSEC = false;
   };
 
   systemd.network.networks."30-${home_wg_net.name}" = {

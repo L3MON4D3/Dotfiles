@@ -20,6 +20,7 @@
     secretsFile = "/var/secrets/wifi";
     networks = {
       "FRITZ!Box 5590 RM".pskRaw = "ext:psk_home";
+      "AndroidAP_jBEfSJ".pskRaw = "ext:psk_phone";
     };
   };
 
