@@ -57,8 +57,8 @@ in {
           name = "netns-${netns_name}";
           value = {
             description = "Start network namespace with wireguard-connection.";
-            requires = [ "network-online.target" ] ++ (if route_local then [ "root_macvlan.service" ] else []);
-            after = [ "network-online.target" ] ++ (if route_local then ["root_macvlan.service"] else []);
+            requires = [ "systemd-networkd-wait-online.service" "nss-lookup.target" ] ++ (if route_local then [ "root_macvlan.service" ] else []);
+            after = [ "systemd-networkd-wait-online.service" "nss-lookup.target" ] ++ (if route_local then ["root_macvlan.service"] else []);
             # only start blocky once the network-namespace exists.
             before = (if route_local then ["blocky-${netns_name}.service"] else []);
             wantedBy = ["multi-user.target"];
@@ -75,6 +75,7 @@ in {
               pkgs.gnused
               pkgs.procps
               pkgs.coreutils
+              pkgs.dig
             ];
             script = ''
               set -eE -o functrace
@@ -87,6 +88,8 @@ in {
                 echo "Failed at $lineno: $msg"
                 echo "Cleaning up"
 
+                # may exist in the global namespace if we fail almost immediately.
+                ip link delete ${interface_name} || true
                 ip -n ${netns_name} link delete macvlan_netns || true
                 ip -n ${netns_name} link delete ${interface_name} || true
                 ip netns delete ${netns_name} || true
@@ -101,6 +104,9 @@ in {
               resolvectl default-route ${interface_name} false || :
               resolvectl dnssec ${interface_name} no || :
               resolvectl dnsovertls ${interface_name} no || :
+
+              # wait for dns too?
+              dig +time=5 +tries=10 @1.1.1.1 wireguard.l3mon4.de || true
 
               # send all traffic over connection.
               wg set ${interface_name} \
