@@ -6,6 +6,7 @@
     ../../profiles/sway
     ../../profiles/mobile-net.nix
     ../../profiles/firefox.nix
+    ../../profiles/mxmaster3s.nix
 
     ./hardware-configuration.nix
   ];
