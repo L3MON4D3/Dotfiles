@@ -189,7 +189,7 @@ rec {
     dns = "10.0.1.1";
     address_range = "10.0.1.0/24";
     host = peers.indigo;
-    keepalive = false;
+    keepalive = true;
     peers = {
       indigo = {
         # indigo
