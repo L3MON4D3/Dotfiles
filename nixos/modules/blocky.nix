@@ -57,6 +57,7 @@ let
           peername: peerconf:
           {
             ${peername} = peerconf.address;
+            "${peername}.internal" = peerconf.address;
           }
           // (
             if peerconf ? services then
