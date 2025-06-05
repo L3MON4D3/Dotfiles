@@ -50,7 +50,6 @@
   l3mon.network_namespaces = {
     enable = true;
     network_configs = [
-      data.network.wireguard_home
       data.network.wireguard_mullvad_de
     ];
   };
