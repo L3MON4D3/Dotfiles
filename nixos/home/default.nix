@@ -69,6 +69,19 @@
         identitiesOnly = true;
         user = "root";
       };
+      indigo = {
+        extraOptions = {
+          KexAlgorithms = "curve25519-sha256";
+        };
+      };
+      "git.internal" = {
+        extraOptions = {
+          KexAlgorithms = "curve25519-sha256";
+        };
+      };
+      # "git.internal" = {
+        # 
+      # };
     };
   };
 
