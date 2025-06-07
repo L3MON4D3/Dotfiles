@@ -13,7 +13,9 @@
 
   # mkBefore not strictly necessary, but seems nice to put the root at the top
   # :)
-  services.nfs.server.exports = lib.mkBefore ''
-    /srv/nfs          192.168.178.0/24(rw,fsid=0,no_subtree_check,no_root_squash)
-  '';
+  services.nfs.server.exports = lib.mkBefore (
+    "/srv/nfs " +
+      "192.168.178.0/24(rw,fsid=0,no_subtree_check,no_root_squash) " +
+      "10.0.0.0/24(rw,fsid=0,no_subtree_check,no_root_squash) "
+  );
 }
