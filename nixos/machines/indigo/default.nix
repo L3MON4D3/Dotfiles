@@ -252,10 +252,14 @@
     device = "/mnt/glacier/misc";
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
-  services.nfs.server.exports = ''
-    /srv/nfs/media 192.168.178.0/24(rw,fsid=b8cf27e6-4514-419d-85c3-9cb6eecd1a76,no_root_squash)
-    /srv/nfs/misc 192.168.178.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash)
-  '';
+  services.nfs.server.exports =
+    "/srv/nfs/media " +
+      "192.168.178.0/24(rw,fsid=b8cf27e6-4514-419d-85c3-9cb6eecd1a76,no_root_squash) " +
+      "10.0.0.0/24(rw,fsid=b8cf27e6-4514-419d-85c3-9cb6eecd1a76,no_root_squash)" +
+    "\n/srv/nfs/misc " +
+      "192.168.178.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash) " +
+      "10.0.0.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash)"
+  ;
 
   services.dbus.implementation = "broker";
   l3mon.zotero.enable_server = true;
