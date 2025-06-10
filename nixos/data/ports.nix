@@ -11,6 +11,7 @@
   paperless = "7006";
   rmfakecloud = "7007";
   restic-rest-server = "7008";
+  mympd = "7009";
 
   jellyfin_web = "8096";
 }

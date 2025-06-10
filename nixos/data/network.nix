@@ -53,6 +53,7 @@ rec {
           "webdav"
           "restic"
           "cache.indigo"
+          "mympd"
         ];
       };
       indigo_mullvad_de = {
