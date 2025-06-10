@@ -13,7 +13,6 @@
   "fwatch": { "branch": "main", "commit": "a691f7349dc66285cd75a1a698dd28bca45f2bf8" },
   "github_link": { "branch": "master", "commit": "9df238dbf150417772f2a1b7748750cfeda3d167" },
   "gruvbox": { "branch": "main", "commit": "00e38a379bab3389e187b3953566d67d494dfddd" },
-  "hererocks": { "branch": "master", "commit": "344c46ed54df9a4dbc2d2bf510dcd9a9d90497bf" },
   "hop": { "branch": "master", "commit": "1a1eceafe54b5081eae4cb91c723abd1d450f34b" },
   "illuminate": { "branch": "master", "commit": "fbc16dee336d8cc0d3d2382ea4a53f4a29725abf" },
   "jupytext": { "branch": "master", "commit": "f15aff4515eb6a09afa0d7f41eb23be53c1e2e14" },
