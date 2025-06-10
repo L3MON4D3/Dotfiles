@@ -156,6 +156,11 @@ local texcupairs = {
 	{"\\Bigg\\{", "\\Bigg\\}"},
 }
 
+local quotpairs = {
+	{"\"", "\""},
+	{"``", "''"},
+}
+
 local function choices_from_pairlist(ji, list)
 	local choices = {}
 	for _, pair in ipairs(list) do
@@ -174,6 +179,9 @@ s_add({trig = "[", wordTrig=false}, {
 })
 s_add({trig = "{", wordTrig=false}, {
 	choices_from_pairlist(1, texcupairs)
+})
+s_add({trig = "\"", wordTrig=false, priority = 1001}, {
+	choices_from_pairlist(1, quotpairs)
 })
 
 parse_add("comm", "\\newcommand{$1}{$2}")
