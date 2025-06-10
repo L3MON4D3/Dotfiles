@@ -671,7 +671,9 @@ cmake_generic:blacklist_by("project")
 ---
 
 local luasnip_dir = "/home/simon/projects/nvim/luasnip"
-repl.set_term("bash.dir:" .. luasnip_dir, {"bash"}, {cwd = luasnip_dir})
+
+repl.set_term("bash.dir:" .. luasnip_dir, {"nix", "develop", luasnip_dir}, {cwd = luasnip_dir})
+
 matchconfig.register(mdir(luasnip_dir), c{
 	repl = {
 		run = {
@@ -686,7 +688,8 @@ matchconfig.register(mdir(luasnip_dir), c{
 					return command
 				end
 			}
-		}
+		},
+		set_type = {id = "bash.dir:" .. luasnip_dir, type = repl_secondary}
 	},
 	run_buf = function()
 		actions.cabbrev_buf("%%", "/home/simon/projects/nvim/luasnip/lua/luasnip")
