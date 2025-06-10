@@ -598,9 +598,66 @@ matchconfig.register(mft"tex", c{
 			})
 			 )
 		end, {complete = "file", nargs = "+"})
-	end
+	end,
+	buf_opts = {
+		textwidth = 120
+	}
 })
 
+-- temporary!!
+local proposal_dir = "/home/simon/projects/master/proposal"
+matchconfig.register(mft"tex" * mdir(proposal_dir), c{
+	lsp = {texlab = {
+		cmd = { "nix", "develop", proposal_dir, "-c", "texlab" },
+		filetypes = { "tex", "bib" },
+		root_dir = proposal_dir,
+		settings = {
+			texlab = {
+				build = {
+					executable = "latexmk",
+					args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f", "-synctex=1" },
+					onSave = true,
+					onChange = false
+				},
+				forwardSearch = {
+					executable = "zathura",
+					args = {"--synctex-forward", "%l:1:%f", "%p"},
+					onSave = false
+				},
+				lint = {
+					onChange = false,
+					onSave = false
+				},
+				latexFormatter = "texlab"
+			},
+		},
+	}}
+} .. lsp_generic .. c{
+	run_buf = function(args)
+		autocmd_buf("BufWritePost", function()
+			local bufnr = args.buf
+			-- should only ever be one.
+			local client = vim.lsp.get_clients({bufnr = bufnr, name = "texlab"})[1]
+			if not client then
+				return vim.notify(('texlab client not found in bufnr %d'):format(bufnr), vim.log.levels.ERROR)
+			end
+			local win = vim.api.nvim_get_current_win()
+			local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+			client:request('textDocument/build', params, function(err, result)
+				if err then
+				  error(tostring(err))
+				end
+				local texlab_build_status = {
+				  [0] = 'Success',
+				  [1] = 'Error',
+				  [2] = 'Failure',
+				  [3] = 'Cancelled',
+				}
+				vim.notify('Build ' .. texlab_build_status[result.status], vim.log.levels.INFO)
+			end, bufnr)
+		end)
+	end
+})
 
 ---
 --- CMake
