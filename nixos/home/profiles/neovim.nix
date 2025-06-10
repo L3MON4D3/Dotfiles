@@ -21,7 +21,6 @@ in {
     enable = true;
     defaultEditor = true;
     extraPackages = [
-      pkgs.clang
       # add tree-sitter from nvim-nightly package.
       # we need tree-sitter for building grammars from nvim-treesitter, and the
       # version in pkgs may be wrong.
