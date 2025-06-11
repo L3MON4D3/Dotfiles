@@ -19,6 +19,7 @@ rec {
         interface = "enp34s0";
         services = [
           "cache.carmine"
+          "mympd"
         ];
       };
       cobalt = {
@@ -53,7 +54,6 @@ rec {
           "webdav"
           "restic"
           "cache.indigo"
-          "mympd"
         ];
       };
       indigo_mullvad_de = {
