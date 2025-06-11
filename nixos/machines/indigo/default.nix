@@ -43,7 +43,6 @@
       ../../profiles/unibonn.nix
 
       ./profiles/nvidia.nix
-      ./profiles/mympd.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
