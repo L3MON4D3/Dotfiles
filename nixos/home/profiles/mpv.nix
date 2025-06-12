@@ -5,6 +5,7 @@
     vo=gpu-next
     gpu-api=vulkan
     hwdec=yes
+    video-sync=display-resample
   '';
   
   home.packages = with pkgs; [
