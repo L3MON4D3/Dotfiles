@@ -1,8 +1,8 @@
 local repl = require("repl")
 local util = require("util")
-local matchconfig = require("matchconfig")
-local matchers = matchconfig.matchers
-local actions = matchconfig.actions
+local mc = require("matchconfig")
+local matchers = mc.matchers
+local actions = mc.actions
 
 local mft = matchers.filetype
 local mpattern = matchers.pattern
@@ -11,7 +11,7 @@ local mdir = matchers.dir
 local mgeneric = matchers.generic
 local project_matchers = require("matchconfig.extras.matchers.projects")
 
-local c = matchconfig.config
+local c = mc.config
 
 local nnoremapsilent_buf = actions.nnoremapsilent_buf
 local vnoremapsilent_buf = actions.vnoremapsilent_buf
@@ -29,7 +29,7 @@ local repl_secondary = require("my_mc.options.repl").secondary
 local direncode = require("my_mc.options.repl").direncode
 local dirdecode = require("my_mc.options.repl").dirdecode
 
-local eval = matchconfig.eval
+local eval = mc.eval
 
 -- bash in some directory.
 repl.set_term_generator("bash_dir", function(term_id)
@@ -122,14 +122,14 @@ local lsp_generic = c{
 --
 -- PKGBUILD
 --
-matchconfig.register(mft"PKGBUILD", c{
+mc.register(mft"PKGBUILD", c{
 	luasnip_ft_extend = {
 		-- treesitter parses PKGBUILD as just bash, so we have to fix that here :/
 		all = {"PKGBUILD"}
 	}
 })
 
-matchconfig.register(project_matchers.pkgbuild(), c{
+mc.register(project_matchers.pkgbuild(), c{
 	repl = {
 		run = {
 			id = "bash.dir:{direncode(args.match_args)}",
@@ -177,7 +177,7 @@ local julia_lsp_start_script = [[
 	server = LanguageServer.LanguageServerInstance(stdin, stdout, project_path, depot_path)
 	run(server)
 ]]
-local jl_lsp = matchconfig.register(mft"julia", c{
+local jl_lsp = mc.register(mft"julia", c{
 	lsp = {
 		julials = {
 			cmd = {"julia", "--startup-file=no", "--history-file=no", "-e", julia_lsp_start_script},
@@ -185,7 +185,7 @@ local jl_lsp = matchconfig.register(mft"julia", c{
 	}
 } .. lsp_generic)
 
-matchconfig.register(mft"julia" * mdir"/home/simon/projects/master/glint-jl", c{
+mc.register(mft"julia" * mdir"/home/simon/projects/master/glint-jl", c{
 	lsp = {
 		julials = {
 			root_dir = "/home/simon/projects/master/glint-jl"
@@ -193,7 +193,7 @@ matchconfig.register(mft"julia" * mdir"/home/simon/projects/master/glint-jl", c{
 	}
 }):after(jl_lsp)
 
-matchconfig.register(mft"julia", c{
+mc.register(mft"julia", c{
 	dap = {
 		launch = function(args)
 			local modulename = vim.fs.basename(args.file).sub(1, -4)
@@ -242,7 +242,7 @@ matchconfig.register(mft"julia", c{
 })
 
 -- separate out to optionally disable.
-local julia_ft_using = matchconfig.register(mft"julia", c{
+local julia_ft_using = mc.register(mft"julia", c{
 	repl = {
 		run = {
 			id = "julia",
@@ -257,7 +257,7 @@ local julia_ft_using = matchconfig.register(mft"julia", c{
 --
 -- lua
 --
-matchconfig.register(mft"lua", c{
+mc.register(mft"lua", c{
 	dap = {
 		attach = {
 			type = 'nlua',
@@ -278,7 +278,7 @@ require("matchconfig.options.lsp").set_default_capabilities(vim.tbl_deep_extend(
 	require("blink.cmp").get_lsp_capabilities()
 ))
 
-local lsp_lua = matchconfig.register(mft"lua", c{
+local lsp_lua = mc.register(mft"lua", c{
 	lsp = {
 		lua_ls = {
 			enable_per_workspace_config = true,
@@ -338,8 +338,8 @@ local full_plugin_luals = c{
 		}
 	}
 }
-matchconfig.register(mft"lua" * mdir"/home/simon/projects/dotfiles/nvim/lua", full_plugin_luals):after(lsp_lua)
-matchconfig.register(mft"lua" * mfile"/home/simon/projects/dotfiles/nvim/configs.lua", full_plugin_luals):after(lsp_lua)
+mc.register(mft"lua" * mdir"/home/simon/projects/dotfiles/nvim/lua", full_plugin_luals):after(lsp_lua)
+mc.register(mft"lua" * mfile"/home/simon/projects/dotfiles/nvim/configs.lua", full_plugin_luals):after(lsp_lua)
 
 local luasnippet_luals = c{
 	lsp = {
@@ -361,8 +361,8 @@ local luasnippet_luals = c{
 	}
 }
 
-matchconfig.register(mft"lua" * mpattern".*/luasnippets/", luasnippet_luals):after(lsp_lua)
-matchconfig.register(mft"lua" * mdir"/home/simon/projects/nvim/luasnip-issues", luasnippet_luals):after(lsp_lua)
+mc.register(mft"lua" * mpattern".*/luasnippets/", luasnippet_luals):after(lsp_lua)
+mc.register(mft"lua" * mdir"/home/simon/projects/nvim/luasnip-issues", luasnippet_luals):after(lsp_lua)
 
 --
 -- nix
@@ -378,7 +378,7 @@ repl.set_term_generator("nix_dir", function(term_id)
 		}
 	end
 end)
-matchconfig.register(mft"nix", c{
+mc.register(mft"nix", c{
 	repl = {
 		run = {
 			id = "nix.dir:{direncode(vim.fs.dirname(args.file))}",
@@ -399,7 +399,7 @@ matchconfig.register(mft"nix", c{
 --
 -- cpp
 --
-matchconfig.register(mft"cpp", c{
+mc.register(mft"cpp", c{
 	lsp = {
 		clangd = {
 			cmd = { "clangd" },
@@ -413,7 +413,7 @@ matchconfig.register(mft"cpp", c{
 repl.set_term("python", {"ipython"}, {
 	-- initial_keys = "%matplotlib\n%matplotlib"
 })
-matchconfig.register(mft"python", c{
+mc.register(mft"python", c{
 	dap = {
 		launch = {
 			type = 'python',
@@ -460,7 +460,7 @@ matchconfig.register(mft"python", c{
 	}
 })
 
-matchconfig.register(mft"python", c{
+mc.register(mft"python", c{
 	lsp = {
 		pyright = {
 			cmd = {"pyright-langserver", "--stdio"},
@@ -481,7 +481,7 @@ matchconfig.register(mft"python", c{
 -- zig
 --
 
-local zig_lsp_generic = matchconfig.register(mft"zig", c{
+local zig_lsp_generic = mc.register(mft"zig", c{
 	lsp = {
 		zls = {
 			cmd = {"zls"},
@@ -544,7 +544,7 @@ local function nix_override_zig(dir)
 	-- second succeeds.
 	-- repl.set_term(proj_repl_id, {"bash", "-c", 'eval "$(nix print-dev-env /home/simon/projects/nix-text/zig); bash"'}, {cwd = dir})
 	repl.set_term(proj_repl_id, {"nix", "develop"}, {cwd = dir})
-	local dir_mc = matchconfig.register(mdir(dir) * mft"zig", c{
+	local dir_mc = mc.register(mdir(dir) * mft"zig", c{
 		lsp = {
 			zls = {cmd = {"nix", "develop", dir, "--command", "zls"}}
 		},
@@ -570,7 +570,7 @@ nix_override_zig("/home/simon/projects/test_zig")
 --
 -- tex
 --
-matchconfig.register(mft"tex", c{
+mc.register(mft"tex", c{
 	run_buf = function()
 		usercommand_buf("IG", function(args)
 			local source = args.fargs[1]
@@ -606,7 +606,7 @@ matchconfig.register(mft"tex", c{
 
 -- temporary!!
 local proposal_dir = "/home/simon/projects/master/proposal"
-matchconfig.register(mft"tex" * mdir(proposal_dir), c{
+mc.register(mft"tex" * mdir(proposal_dir), c{
 	lsp = {texlab = {
 		cmd = { "nix", "develop", proposal_dir, "-c", "texlab" },
 		filetypes = { "tex", "bib" },
@@ -663,7 +663,7 @@ matchconfig.register(mft"tex" * mdir(proposal_dir), c{
 --- CMake
 ---
 
-local cmake_generic = matchconfig.register(project_matchers.cmake(), cmake_attach("bash.dir:{direncode(args.match_args)}"))
+local cmake_generic = mc.register(project_matchers.cmake(), cmake_attach("bash.dir:{direncode(args.match_args)}"))
 cmake_generic:blacklist_by("project")
 
 ---
@@ -674,7 +674,7 @@ local luasnip_dir = "/home/simon/projects/nvim/luasnip"
 
 repl.set_term("bash.dir:" .. luasnip_dir, {"nix", "develop", luasnip_dir}, {cwd = luasnip_dir})
 
-matchconfig.register(mdir(luasnip_dir), c{
+mc.register(mdir(luasnip_dir), c{
 	repl = {
 		run = {
 			id = "bash.dir:" .. luasnip_dir,
@@ -696,7 +696,7 @@ matchconfig.register(mdir(luasnip_dir), c{
 		actions.cabbrev_buf("!!", "/home/simon/projects/nvim/luasnip/tests/integration")
 	end
 } )
-local luasnip_lua_lsp = matchconfig.register(mdir(luasnip_dir) * mft"lua", c{
+local luasnip_lua_lsp = mc.register(mdir(luasnip_dir) * mft"lua", c{
 	lsp = {
 		lua_ls = {
 			settings = {
@@ -717,10 +717,10 @@ luasnip_lua_lsp:after(lsp_lua)
 --- Matchconfig
 ---
 
-local mc = "/home/simon/projects/nvim/matchconfig"
-matchconfig.register(mdir(mc), c{
+local mc_dir = "/home/simon/projects/nvim/matchconfig"
+mc.register(mdir(mc_dir), c{
 	run_buf = function()
-		local abspath = mc .. "/lua/matchconfig"
+		local abspath = mc_dir .. "/lua/matchconfig"
 		cabbrev_buf("%%", abspath)
 	end,
 	luasnip_ft_extend = {
@@ -728,8 +728,8 @@ matchconfig.register(mdir(mc), c{
 	}
 })
 
-local mc_lua_dir = mc .. "/lua/matchconfig"
-matchconfig.register(mdir(mc_lua_dir) * mft"lua", c{
+local mc_lua_dir = mc_dir .. "/lua/matchconfig"
+mc.register(mdir(mc_lua_dir) * mft"lua", c{
 	lsp = {
 		lua_ls = {
 			settings = {
@@ -749,7 +749,7 @@ matchconfig.register(mdir(mc_lua_dir) * mft"lua", c{
 ---
 
 local dotfiles_dir = "/home/simon/projects/dotfiles/nixos"
-matchconfig.register(mdir(dotfiles_dir), c{
+mc.register(mdir(dotfiles_dir), c{
 	run_buf = function()
 		cabbrev_buf("%%", dotfiles_dir)
 	end,
@@ -776,10 +776,10 @@ local sway_reload_on_write = c{
 	end
 }
 
-matchconfig.register(mdir"/home/simon/.config/sway", sway_reload_on_write)
-matchconfig.register(mdir"/home/simon/.config/waybar", sway_reload_on_write)
+mc.register(mdir"/home/simon/.config/sway", sway_reload_on_write)
+mc.register(mdir"/home/simon/.config/waybar", sway_reload_on_write)
 
-matchconfig.register(mdir"/home/simon/projects/termpick", c{
+mc.register(mdir"/home/simon/projects/termpick", c{
 	repl = {
 		run = {
 			type = "bash.dir:{direncode(args.match_args)}",
@@ -794,7 +794,7 @@ matchconfig.register(mdir"/home/simon/projects/termpick", c{
 	end
 })
 
-matchconfig.register(mdir"/home/simon/Packages/Anna Gebertz", c{
+mc.register(mdir"/home/simon/Packages/Anna Gebertz", c{
 	run_buf = function()
 		autocmd_buf("BufWritePost", function()
 				os.execute("qutebrowser -s new_instance_open_target tab-silent  :reload 2> /dev/null")
@@ -807,7 +807,7 @@ local cuora_dir = "/home/simon/projects/cuora"
 repl.set_term("bash.cwd:" .. cuora_dir, {"bash"}, {
 	cwd = cuora_dir
 })
-local cuora = matchconfig.register(mdir(cuora_dir), c{
+local cuora = mc.register(mdir(cuora_dir), c{
 	run_buf = function()
 		nnoremapsilent_buf("<space>s", function()
 			os.execute("imv out.svg &")
@@ -842,7 +842,7 @@ local cuora = matchconfig.register(mdir(cuora_dir), c{
 	}
 })
 
-local cuora_zig = matchconfig.register(mdir(cuora_dir) * mft"zig", c{
+local cuora_zig = mc.register(mdir(cuora_dir) * mft"zig", c{
 	lsp = {
 		zls = {
 			root_dir = cuora_dir
@@ -861,7 +861,7 @@ repl.set_term("bash.mitsuba", {"bash"}, {
 	env = {PYTHONPATH=mitsuba_lab_dir .. "/build/python:" .. mitsuba_lab_dir .. "/py_modules"}
 })
 
-local lab_mitsuba = matchconfig.register(mdir(mitsuba_lab_dir), cmake_attach("bash.mitsuba", {
+local lab_mitsuba = mc.register(mdir(mitsuba_lab_dir), cmake_attach("bash.mitsuba", {
 	debug = true,
 	cmake_args = {"MI_DEFAULT_VARIANTS=\"scalar_spectral;scalar_rgb;cuda_spectral;llvm_spectral;llvm_spectral_polarized\""},
 	mappings = {
@@ -1012,7 +1012,7 @@ local lab_mitsuba = matchconfig.register(mdir(mitsuba_lab_dir), cmake_attach("ba
 repl.set_term("python.mitsuba", {"ipython"}, {
 	env = {PYTHONPATH = mitsuba_lab_dir .. "/build/python:" .. mitsuba_lab_dir .. "/py_modules", }
 })
-local mitsuba_py = matchconfig.register(mft"python" * mdir(mitsuba_lab_dir),
+local mitsuba_py = mc.register(mft"python" * mdir(mitsuba_lab_dir),
 	c{
 		repl = {
 			run = {
@@ -1041,7 +1041,7 @@ mitsuba_py:after(lab_mitsuba)
 ---
 
 -- for PKGBUILDS of my packages.
-local pkgbuild_all = matchconfig.register(
+local pkgbuild_all = mc.register(
 	mpattern("^/home/simon/.packages/[^/]+/[^/]+/") * project_matchers.pkgbuild(),
 	c{
 		repl = {
@@ -1053,7 +1053,7 @@ local pkgbuild_all = matchconfig.register(
 			}
 		}
 	})
-local pkgbuild_local = matchconfig.register(
+local pkgbuild_local = mc.register(
 	mpattern("^/home/simon/.packages/local/[^/]+/") * project_matchers.pkgbuild(),
 	c{
 		repl = {
@@ -1072,7 +1072,7 @@ pkgbuild_all:before(pkgbuild_local)
 ---
 --- zot7fuse
 ---
-matchconfig.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
+mc.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
 	dap = {
 		launch = {
 			type = 'python',
@@ -1096,14 +1096,14 @@ matchconfig.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
 ---
 
 local proj_master_dir = "/home/simon/projects/master/glint-jl"
-matchconfig.register(matchers.dir(proj_master_dir), c{
+mc.register(matchers.dir(proj_master_dir), c{
 	run_buf = function()
 		actions.cabbrev_buf("%%", proj_master_dir .. "/src")
 	end
 })
 
 repl.set_term("julia.pm", {"nix", "develop", proj_master_dir}, {cwd = proj_master_dir, initial_keys = "julia -q --threads 11\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"})
-local master = matchconfig.register(matchers.dir(proj_master_dir) * mft("julia"), c{
+local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 	repl = {run = {
 		mappings = {
 			["<Space>r"] = [[{args.file:match("[^/]+$"):sub(1, -4)}_main()]]
@@ -1145,5 +1145,5 @@ local grip_conf = c{
 	end
 }
 
-matchconfig.register(matchers.pattern("README.md$"), grip_conf)
-matchconfig.register(matchers.pattern("DOC.md$"), grip_conf)
+mc.register(matchers.pattern("README.md$"), grip_conf)
+mc.register(matchers.pattern("DOC.md$"), grip_conf)
