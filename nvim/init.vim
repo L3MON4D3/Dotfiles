@@ -315,8 +315,10 @@ nnoremap <C-L> <C-W><C-L>
 
 nnoremap <silent> <F9> :vert res +2<Cr>
 nnoremap <silent> <S-F9> :vert res -2<Cr>
+nnoremap <silent> <F21> :vert res -2<Cr>
 nnoremap <silent> <F10> :res +2<Cr>
 nnoremap <silent> <S-F10> :res -2<Cr>
+nnoremap <silent> <F22> :res -2<Cr>
 
 nnoremap <silent> <leader>pa :call ParanAdd()<Cr>
 
@@ -338,8 +340,10 @@ tnoremap <silent> <C-N> <C-\><C-N>:let b:mode="n"<Cr>
 
 tnoremap <silent> <F9> <C-\><C-N>:vert res +2<Cr>a
 tnoremap <silent> <S-F9> <C-\><C-N>:vert res -2<Cr>a
+tnoremap <silent> <F21> <C-\><C-N>:vert res -2<Cr>a
 tnoremap <silent> <F10> <C-\><C-N>:res +2<Cr>a
 tnoremap <silent> <S-F10> <C-\><C-N>:res -2<Cr>a
+tnoremap <silent> <F22> <C-\><C-N>:res -2<Cr>a
 
 cabbr <expr> && fnameescape(expand('%:p:.:h'))
 cabbr invim /home/simon/.config/nvim/init.vim
