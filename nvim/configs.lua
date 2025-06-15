@@ -364,6 +364,29 @@ local luasnippet_luals = c{
 mc.register(mft"lua" * mpattern".*/luasnippets/", luasnippet_luals):after(lsp_lua)
 mc.register(mft"lua" * mdir"/home/simon/projects/nvim/luasnip-issues", luasnippet_luals):after(lsp_lua)
 
+local luals_mdgen_dir = "/home/simon/projects/luals-mdgen"
+local mdgen_luals = c{
+	lsp = {
+		lua_ls = {
+			settings = {
+				Lua = {
+					runtime = {
+						path = merge.list_extend({"?.lua"})
+					},
+					workspace = {
+						library = merge.list_extend({
+							luals_mdgen_dir
+						})
+					}
+				}
+			},
+			root_dir = luals_mdgen_dir
+		}
+	}
+}
+
+mc.register(mft"lua" * mdir(luals_mdgen_dir), mdgen_luals):after(lsp_lua)
+
 --
 -- nix
 --
