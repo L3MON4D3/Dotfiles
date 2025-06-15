@@ -1128,19 +1128,17 @@ master:blacklist(julia_ft_using)
 local grip_conf = c{
 	run_buf = function(args)
 		usercommand_buf("Gr", function()
-			local socket = require("socket")
-			local server = socket.bind("*", 0)
-			local _, port = server:getsockname()
-			server:close()
 
-			util.process_output(
+			-- 0: run on random port.
+			print(util.process_output(
 				"systemd-run --user -u $(systemd-escape grip_" .. args.file .. ") " ..
-				"grip -b " .. args.file .. " " .. port .. " 2> /dev/null")
+				"grip -b " .. args.file .. " 0 2> /dev/null"))
+			print("Starting grip for " .. args.file)
 		end, {})
 		usercommand_buf("S", function()
 			util.process_output(
 				"systemctl --user stop $(systemd-escape grip_" .. args.file .. ")")
-			-- util.process_output("systemd-run --user -u grip_" .. args.fname .. " grip " .. args.fname .. "")
+			print("Stopping grip for " .. args.file)
 		end, {})
 	end
 }
