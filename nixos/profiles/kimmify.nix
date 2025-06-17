@@ -29,6 +29,7 @@ let
         fi
 
         # confine ffmpeg to all but the first core.
+        # for nvenc: -hwaccel -vcodec h264_nvenc -preset p7 (for example).
         taskset -c 1-"$(lscpu | rg ^CPU.s.: | rg -o -e '\d')" ffmpeg -i "''${FILE_PATH}" \
           -map 0:V \
             -vf "scale=1920:-1,pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2,''${EXTRA_vf}format=yuv420p," \
