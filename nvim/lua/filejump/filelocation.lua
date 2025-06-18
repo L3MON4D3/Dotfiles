@@ -1,7 +1,7 @@
 local util = require("util")
 
 local pre_path_chars = {" ", "(", "="}
-local path_termination_chars = {" ", ":", ")", ";"}
+local path_termination_chars = {" ", ":", ")", ";", "#"}
 local row_col_separation_set = {[" "] = true, [":"] = true}
 
 local function char_finder(forw_delimiter, backw_delimiter)
@@ -114,16 +114,37 @@ local function find_file_location(paths, str, col)
 	end
 	local location_row, location_col
 
-	-- start looking beyond path-termination-char.
-	local row_start, row_end = str:find("(%d+)", path_to+2)
-	if row_start == path_to+2 then
-		location_row = tonumber(str:sub(row_start, row_end))
+	local sep_char = str:sub(path_to+1, path_to+1)
+	if sep_char == ":" then
+		-- row,col given as /path/to/file:row[%:% ]col
+		local row_start, row_end = str:find("(%d+)", path_to+2)
+		if row_start == path_to+2 then
+			location_row = tonumber(str:sub(row_start, row_end))
 
-		local col_start, col_end = str:find("(%d+)", row_end+2)
-		if col_start == row_end+2 and row_col_separation_set[str:sub(row_end+1, row_end+1)] then
-			location_col = tonumber(str:sub(col_start, col_end))
+			local col_start, col_end = str:find("(%d+)", row_end+2)
+			if col_start == row_end+2 and row_col_separation_set[str:sub(row_end+1, row_end+1)] then
+				location_col = tonumber(str:sub(col_start, col_end))
+			end
+		end
+	elseif sep_char == "#" then
+		local heading_from, _, heading_name = str:find("([%w_-]+)", path_to+2)
+		if heading_from == path_to+2 then
+			local file_lines = vim.fn.readfile(location_path)
+			for i, line in ipairs(file_lines) do
+				if line:lower():match("^[%s%#]*#%s*" .. heading_name .. "$") then
+					location_row = i
+					location_col = 1
+					break
+				elseif line:lower():match("<a%s*id%s*=\".*\">") and line:find(heading_name, 1, true) then
+					-- assumption: this anchor is immediately before the heading.
+					location_row = i+1
+					location_col = 1
+					break
+				end
+			end
 		end
 	end
+
 
 	return file_location(location_path, location_row, location_col)
 end
