@@ -66,7 +66,7 @@ in {
       host = "smtp.gmail.com";
       from = "luisjakob.katz@gmail.com";
       user = "luisjakob.katz@gmail.com";
-      passwordeval = "cat ${l3lib.secret "gmail_password"}";
+      passwordeval = "${pkgs.coreutils}/bin/cat ${l3lib.secret "gmail_password"}";
     };
   };
 
