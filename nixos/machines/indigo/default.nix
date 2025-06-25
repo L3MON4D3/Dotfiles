@@ -134,6 +134,7 @@
 
   boot.supportedFilesystems = ["zfs"];
   boot.zfs.forceImportRoot = false;
+
   # boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   networking.hostId = "0c6280a2";
 
@@ -185,6 +186,20 @@
     interval = "Wed 03:00:00";
   };
 
+  services.smartd = {
+    enable = true;
+    notifications = {
+      test = true;
+      mail = {
+        enable = true;
+        mailer = "${config.security.wrapperDir}/sendmail";
+        sender = "indigo";
+        recipient = "simon@l3mon4.de";
+      };
+    };
+    # short test daily, long weekly.
+    defaults.monitored = "-a -o on -s (S/../.././02|L/../../7/04)";
+  };
 
   # # bind-mount storage into place where stuff should not be stored on the main drive.
   fileSystems."/srv/media" = {
