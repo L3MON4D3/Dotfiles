@@ -55,7 +55,7 @@ events = require("luasnip.util.events")
 util = require("luasnip.util.util")
 fmt = require("luasnip.extras.fmt").fmt
 fmta = require("luasnip.extras.fmt").fmta
-ls = ls
+ls = require("luasnip")
 ins_generate = function(nodes)
 	return setmetatable(nodes or {}, {
 	__index = function(table, key)
