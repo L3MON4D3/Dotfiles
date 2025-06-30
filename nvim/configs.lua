@@ -1145,6 +1145,17 @@ master:after("filetype(julia)")
 master:blacklist(julia_ft_using)
 
 ---
+---projects/panvimdoc
+---
+mc.register(mdir("/home/simon/projects/panvimdoc"), c{
+	buf_opts = {
+		expandtab = true,
+		tabstop = 2,
+		shiftwidth = 2,
+	}
+})
+
+---
 --- Grip
 ---
 
