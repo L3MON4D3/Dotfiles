@@ -104,6 +104,7 @@
     ripgrep
     shellcheck
     fd
+    rename
 
     # networking tools
     dig
