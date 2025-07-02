@@ -15,6 +15,8 @@ let
         "597180:linux"
         # AoM
         "266840:windows"
+        # AoM Retold
+        "1934680:windows"
         # Enter the Gungeon
         "311690:linux"
         # Fall Guys
