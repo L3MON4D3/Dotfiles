@@ -20,15 +20,14 @@ let
       else
         [
           "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
+          "https://dns0.eu"
         ]
       );
-      bootstrapDns = {
-        upstream = "https://one.one.one.one/dns-query";
-        ips = [
-          "1.1.1.1"
-          "1.0.0.1"
-        ];
-      };
+      bootstrapDns = [
+        { upstream = "8.8.8.8"; }
+        { upstream = "1.1.1.1"; }
+        { upstream = "1.0.0.1"; }
+      ];
       blocking = if spec.block then
         {
           denylists = {

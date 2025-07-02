@@ -70,7 +70,7 @@ in {
       ports = [ "${blocky_address}:53" ];
       network = data.network.wireguard_home2;
       block = false;
-      upstream = [ "https://one.one.one.one/dns-query" ];
+      upstream = [ "https://one.one.one.one/dns-query" "https://dns0.eu" ];
     };
   };
 
