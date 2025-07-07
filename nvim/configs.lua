@@ -1132,7 +1132,8 @@ local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 			["<Space>r"] = [[{args.file:match("[^/]+$"):sub(1, -4)}_main()]]
 		},
 		id = "julia.pm"
-	}},
+	},
+	set_type = {id = "julia.pm", type = repl_secondary}},
 	run_buf = function()
 		usercommand_buf("T", function()
 			-- make sure to resolve tev-path here.
