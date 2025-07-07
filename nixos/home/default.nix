@@ -128,14 +128,14 @@
             };
             "NixOS Wiki" = {
               urls = [{ template = "https://nixos.wiki/index.php?search={searchTerms}"; }];
-              iconUpdateURL = "https://nixos.wiki/favicon.png";
+              icon = "https://nixos.wiki/favicon.png";
               updateInterval = 24 * 60 * 60 * 1000; # every day
               definedAliases = [ "@nw" ];
             };
-            "Google".metaData.alias = "@g";
+            google.metaData.alias = "@g";
           };
         };
-        extensions = with nur.repos.rycee.firefox-addons; [
+        extensions.packages = with nur.repos.rycee.firefox-addons; [
           ublock-origin
           passff
         ];
