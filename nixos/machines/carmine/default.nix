@@ -112,4 +112,9 @@
     enable = true;
     nssmdns4 = true;
   };
+
+  programs.nix-ld = {
+    enable = true; 
+    # libraries = with pkgs; [ zstd coreutils gtk3 pango cairo atkmm ];
+  };
 }
