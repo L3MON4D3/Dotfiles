@@ -34,14 +34,15 @@ let
     '';
   };
   
-  nerdfonts_symbols_only = (pkgs.nerdfonts.override (old: {fonts = [ "NerdFontsSymbolsOnly" ];}));
+  # nerdfonts_symbols_only = (pkgs.nerdfonts.override (old: {fonts = [ "NerdFontsSymbolsOnly" ];}));
+  nerdfonts_symbols_only = pkgs.nerd-fonts.symbols-only;
   gen_scaled_font = pkgs.writers.writePython3Bin "gen_scaled_font" {
     libraries = with pkgs; [ python312Packages.fontforge ];
   } ''
     import fontforge
     import psMat
 
-    symbols = fontforge.open("${nerdfonts_symbols_only}/share/fonts/truetype/NerdFonts/SymbolsNerdFontMono-Regular.ttf")  # noqa: E501. The path is too long.
+    symbols = fontforge.open("${nerdfonts_symbols_only}/share/fonts/truetype/NerdFonts/Symbols/SymbolsNerdFontMono-Regular.ttf")  # noqa: E501. The path is too long.
 
     scaled_f = fontforge.font()
     scaled_f.version = symbols.version
