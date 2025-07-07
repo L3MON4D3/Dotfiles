@@ -32,8 +32,8 @@ c.url.searchengines = {
     '!k': 'https://kagi.com/search?q={}',
     '!d': 'https://duckduckgo.com/?ia=web&q={}',
     '!a': 'https://annas-archive.org/search?q={}',
-    '!np': 'https://search.nixos.org/packages?channel=24.11&type=packages&query={}',
-    '!no': 'https://search.nixos.org/options?channel=24.11&query={}',
+    '!np': 'https://search.nixos.org/packages?channel=25.05&type=packages&query={}',
+    '!no': 'https://search.nixos.org/options?channel=25.05&query={}',
 }
 
 c.content.pdfjs = True
