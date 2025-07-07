@@ -16,7 +16,7 @@
     landingPage = "http://git.internal";
     firefoxProfileSettings = {
       id = 1;
-      extensions = with nur.repos.rycee.firefox-addons; [
+      extensions.packages = with nur.repos.rycee.firefox-addons; [
         ublock-origin
         passff
       ];
@@ -30,7 +30,7 @@
     landingPage = "https://mullvad.net/en/check";
     firefoxProfileSettings = {
       id = 2;
-      extensions = with nur.repos.rycee.firefox-addons; [
+      extensions.packages = with nur.repos.rycee.firefox-addons; [
         ublock-origin
         passff
       ];
