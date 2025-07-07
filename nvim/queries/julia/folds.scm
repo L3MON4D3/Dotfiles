@@ -18,6 +18,18 @@
   (#set! foldtext_end_hl "@punctuation.bracket.julia")
 )
 
+((if_statement
+  condition: (_) @cond) @if
+  ; ends with a `end`, have the folded region end just before that.
+  (#make-range-extended! "fold" @cond "end_" 0 1 @if "end_" 0 -3) 
+)
+
+((for_statement
+  (for_binding) @bind) @if
+  ; ends with a `end`, have the folded region end just before that.
+  (#make-range-extended! "fold" @bind "end_" 0 1 @if "end_" 0 -3) 
+)
+
 ; (
  ; [
   ; (for_statement
