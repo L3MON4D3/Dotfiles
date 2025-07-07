@@ -7,7 +7,7 @@ in {
   services.paperless = {
     enable = true;
 
-    address = "paperless.internal";
+    address = machine_lan_address;
     port = lib.toInt port;
 
     passwordFile = l3lib.secret "paperless_password";
