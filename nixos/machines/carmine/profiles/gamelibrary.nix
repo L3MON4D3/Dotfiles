@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-yuzu, pkgs-unstable, machine, data, ... }:
+{ config, lib, pkgs, pkgs-yuzu, pkgs-suyu, pkgs-unstable, machine, data, ... }:
 
 {
   programs.steam.enable = true;
@@ -34,7 +34,7 @@
     pkgs.blueman
 
     pkgs-yuzu.yuzu
-    pkgs-unstable.suyu
+    pkgs-suyu.suyu
     pkgs-unstable.ryujinx
 
     pkgs.dolphin-emu

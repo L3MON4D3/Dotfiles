@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-yuzu.url = "github:NixOS/nixpkgs?rev=125be29c4ef454788c42c28d49cb048ab0b5b548";
+    nixpkgs-suyu.url = "github:NixOS/nixpkgs?rev=3730d8a308f94996a9ba7c7138ede69c1b9ac4ae";
     netns-exec.url = "github:L3MON4D3/netns-exec";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
@@ -26,7 +27,7 @@
     mpdlrc.url = "github:l3mon4d3/mpdlrc";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, home-manager, ... }: {
     nixosConfigurations = let
       system = "x86_64-linux";
       pkgs-unstable = import nixpkgs-unstable {
@@ -38,6 +39,9 @@
         specialArgs = {
           inherit pkgs-unstable;
           pkgs-yuzu = import nixpkgs-yuzu {
+            inherit system;
+          };
+          pkgs-suyu = import nixpkgs-suyu {
             inherit system;
           };
         };
