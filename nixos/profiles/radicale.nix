@@ -14,6 +14,7 @@ in {
         max_content_length = 1000000000;
         timeout = 30;
       };
+      auth.type = "none";
     };
   };
 
