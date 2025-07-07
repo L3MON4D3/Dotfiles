@@ -43,25 +43,24 @@ let
 in {
   services.mako = {
     enable = true;
-    extraConfig = ''
-      font=monospace 10
+    settings = {
+      font="monospace 10";
 
-      background-color=#${data.gruvbox.bg0_h}
-      text-color=#${data.gruvbox.fg}
+      background-color="#${data.gruvbox.bg0_h}";
+      text-color="#${data.gruvbox.fg}";
 
-      border-size=1
-      border-color=#${data.gruvbox.fg}
-      border-radius=1
+      border-size=1;
+      border-color="#${data.gruvbox.fg}";
+      border-radius=1;
 
-      markup=1
+      markup=1;
+      margin=5;
 
-      margin=5
-
-      height=2000
-
-      [category="torr"]
-      format=%b
-    '';
+      height=2000;
+      "category=\"torr\"" = {
+        format="%b";
+      };
+    };
   };
   wayland.windowManager.sway.extraConfig = ''
     mode "torrent" {
