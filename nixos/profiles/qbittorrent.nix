@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, pkgs-unstable, machine, data, ... }:
 
 with lib;
 let
@@ -107,7 +107,11 @@ in
         Group="qbittorrent";
       };
       script = ''
-        ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --profile=${qb_statedir}
+        ${pkgs-unstable.qbittorrent-nox.overrideAttrs(old: {
+          patches = [
+            ./qbt_subpiece_progress.patch
+          ];
+        })}/bin/qbittorrent-nox --profile=${qb_statedir}
       '';
     };
     systemd.tmpfiles.rules = [
