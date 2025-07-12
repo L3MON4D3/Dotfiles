@@ -1,0 +1,83 @@
+diff --git a/src/base/bittorrent/torrentimpl.cpp b/src/base/bittorrent/torrentimpl.cpp
+index c3a7c0f..6e02f30 100644
+--- a/src/base/bittorrent/torrentimpl.cpp
++++ b/src/base/bittorrent/torrentimpl.cpp
+@@ -385,7 +385,7 @@ TorrentImpl::TorrentImpl(SessionImpl *session, const lt::torrent_handle &nativeH
+         m_lastSeenComplete = QDateTime::fromSecsSinceEpoch(m_nativeStatus.last_seen_complete);
+ 
+     if (hasMetadata())
+-        updateProgress();
++        updateSubpieceProgress();
+ 
+     updateState();
+ 
+@@ -1794,7 +1794,7 @@ void TorrentImpl::endReceivedMetadataHandling(const Path &savePath, const PathLi
+ 
+     m_completedFiles.fill(static_cast<bool>(p.flags & lt::torrent_flags::seed_mode), filesCount());
+     m_filesProgress.resize(filesCount());
+-    updateProgress();
++    updateSubpieceProgress();
+ 
+     for (int i = 0; i < fileNames.size(); ++i)
+     {
+@@ -2517,8 +2517,20 @@ void TorrentImpl::updateStatus(const lt::torrent_status &nativeStatus)
+
+     const lt::torrent_status oldStatus = std::exchange(m_nativeStatus, nativeStatus);
+
+-    if (m_nativeStatus.num_pieces != oldStatus.num_pieces)
+-        updateProgress();
++    // updateProgress checks which pieces of a file are complete to determine
++    // its progress. This works fine if pieces are small w.r.t. the size of the
++    // file, but some torrents have pieces that contain only a single file, so
++    // estimating file-progress from the number of finished pieces is
++    // misleading.
++    // Here, use a more accurate method for determining file-progress if
++    // piece-sizes exceed 1MiB.
++    if (pieceLength() > 0x1<<20) {
++        if (m_nativeStatus.all_time_download != oldStatus.all_time_download)
++            updateSubpieceProgress();
++    } else {
++        if (m_nativeStatus.num_pieces != oldStatus.num_pieces)
++            updateProgress();
++    }
+
+     if (m_nativeStatus.completed_time != oldStatus.completed_time)
+         m_completedTime = (m_nativeStatus.completed_time > 0) ? QDateTime::fromSecsSinceEpoch(m_nativeStatus.completed_time) : QDateTime();
+@@ -2545,6 +2557,25 @@ void TorrentImpl::updateStatus(const lt::torrent_status &nativeStatus)
+         std::invoke(m_statusUpdatedTriggers.dequeue());
+ }
+
++void TorrentImpl::updateSubpieceProgress()
++{
++    Q_ASSERT(hasMetadata());
++    if (!hasMetadata()) [[unlikely]]
++        return;
++
++    Q_ASSERT(!m_filesProgress.isEmpty());
++    if (m_filesProgress.isEmpty()) [[unlikely]]
++        m_filesProgress.resize(filesCount());
++
++    const auto progress = m_nativeHandle.file_progress();
++    for (int i = 0; i < filesCount(); i++) {
++        const auto nat_idx = m_torrentInfo.nativeIndexes().at(i);
++        const auto fname = m_torrentInfo.filePath(i).filename().toStdString();
++
++        m_filesProgress[i] = progress[nat_idx];
++    }
++}
++
+ void TorrentImpl::updateProgress()
+ {
+     Q_ASSERT(hasMetadata());
+diff --git a/src/base/bittorrent/torrentimpl.h b/src/base/bittorrent/torrentimpl.h
+index 2c1f9af..48a6b3d 100644
+--- a/src/base/bittorrent/torrentimpl.h
++++ b/src/base/bittorrent/torrentimpl.h
+@@ -293,6 +293,7 @@ namespace BitTorrent
+
+         void updateStatus(const lt::torrent_status &nativeStatus);
+         void updateProgress();
++        void updateSubpieceProgress();
+         void updateState();
+
+         bool isMoveInProgress() const;
