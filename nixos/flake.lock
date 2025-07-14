@@ -401,6 +401,22 @@
         "type": "indirect"
       }
     },
+    "nixpkgs-ddns-updater-2-7": {
+      "locked": {
+        "lastModified": 1735160951,
+        "narHash": "sha256-9h91U6BBNnzShwzlC+r/aXB+WyN3S140lYQbHH95bc0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c792c60b8a97daa7efe41a6e4954497ae410e0c1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "c792c60b8a97daa7efe41a6e4954497ae410e0c1",
+        "type": "github"
+      }
+    },
     "nixpkgs-suyu": {
       "locked": {
         "lastModified": 1746461020,
@@ -567,6 +583,7 @@
         "neovim-nightly": "neovim-nightly",
         "netns-exec": "netns-exec",
         "nixpkgs": "nixpkgs_5",
+        "nixpkgs-ddns-updater-2-7": "nixpkgs-ddns-updater-2-7",
         "nixpkgs-suyu": "nixpkgs-suyu",
         "nixpkgs-unstable": "nixpkgs-unstable_2",
         "nixpkgs-yuzu": "nixpkgs-yuzu",
