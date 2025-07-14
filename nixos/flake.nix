@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-yuzu.url = "github:NixOS/nixpkgs?rev=125be29c4ef454788c42c28d49cb048ab0b5b548";
     nixpkgs-suyu.url = "github:NixOS/nixpkgs?rev=3730d8a308f94996a9ba7c7138ede69c1b9ac4ae";
+    nixpkgs-ddns-updater-2-7.url = "github:NixOS/nixpkgs?rev=c792c60b8a97daa7efe41a6e4954497ae410e0c1";
     netns-exec.url = "github:L3MON4D3/netns-exec";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
@@ -29,7 +30,7 @@
     scientific-fhs.url = "github:l3mon4d3/scientific-fhs";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, ... }: {
     nixosConfigurations = let
       system = "x86_64-linux";
       pkgs-unstable = import nixpkgs-unstable {
@@ -44,6 +45,9 @@
             inherit system;
           };
           pkgs-suyu = import nixpkgs-suyu {
+            inherit system;
+          };
+          pkgs-ddns-updater-2-7 = import nixpkgs-ddns-updater-2-7 {
             inherit system;
           };
         };

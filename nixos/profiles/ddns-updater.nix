@@ -1,4 +1,4 @@
-{ config, lib, l3lib, pkgs, pkgs-unstable, machine, data, ... }:
+{ config, lib, l3lib, pkgs, pkgs-unstable, pkgs-ddns-updater-2-7, machine, data, ... }:
 
 let
   conf = pkgs.writeTextFile {
@@ -17,7 +17,8 @@ let
         {
           provider = "cloudflare";
           zone_identifier = "b17b3bd2466d8a209be5bc5e3c88585d";
-          domain = "l3mon4.de,wireguard.l3mon4.de";
+          domain = "l3mon4.de";
+          host = "@,wireguard";
           ip_version = "ipv4";
           ipv6_suffix = "";
           ttl = 60;
@@ -36,13 +37,14 @@ in {
         (umask 0077 && \
         CF_TOKEN=$(cat ${l3lib.secret "cloudflare-token-l3mon4_de-dns_edit"}) \
         ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${runtime_conf_file})
+
       '';
     };
   };
 
   services.ddns-updater = {
     enable = true;
-    package = pkgs-unstable.ddns-updater;
+    package = pkgs-ddns-updater-2-7.ddns-updater;
     environment = {
       SERVER_ENABLED="no";
       CONFIG_FILEPATH = "%d/conf";
