@@ -25,6 +25,8 @@ in {
       # we need tree-sitter for building grammars from nvim-treesitter, and the
       # version in pkgs may be wrong.
       (builtins.head (builtins.filter (x: x.name == "tree-sitter-bundled") inputs.neovim-nightly.packages.${pkgs.system}.neovim.buildInputs))
+      # for building treesitter grammars.
+      pkgs.zig
       pkgs.nodejs
       pkgs.luajit
       pkgs.luarocks
@@ -37,6 +39,8 @@ in {
       pkgs.clang-tools
       pkgs.python312Packages.ipython
       pkgs.pyright
+      # lldb-dap
+      pkgs.lldb
 
       # preview markdown.
       (pkgs.python312Packages.grip.overrideAttrs (prev: {

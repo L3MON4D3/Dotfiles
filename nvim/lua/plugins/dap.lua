@@ -10,7 +10,7 @@ dap.defaults.fallback.force_external_terminal = true
 
 dap.adapters.lldb = {
 	type = 'executable',
-	command = '/usr/bin/lldb-dap',
+	command = 'lldb-dap',
 	name = "lldb",
 }
 dap.adapters.julia = {
