@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, nur, ... }:
+{ config, lib, pkgs, machine, data, nur, aa-torrent-dl, ... }:
 
 {
   imports = [
@@ -33,6 +33,7 @@
       extensions.packages = with nur.repos.rycee.firefox-addons; [
         ublock-origin
         passff
+        aa-torrent-dl.extension
       ];
     };
   };
