@@ -141,6 +141,17 @@ mc.register(project_matchers.pkgbuild(), c{
 })
 
 --
+-- javascript
+--
+mc.register(mft"javascript", c{
+	buf_opts = {
+		expandtab = true,
+		tabstop = 2,
+		shiftwidth = 2,
+	}
+})
+
+--
 -- julia
 --
 repl.set_term("julia", {"julia", "-q", "--threads", "12"}, {})
@@ -428,7 +439,25 @@ mc.register(mft"cpp", c{
 			cmd = { "clangd" },
 		}
 	}
-} .. lsp_generic)
+} .. lsp_generic, {tags = {"lsp_typedefault"}})
+
+local qb_dir = "/home/simon/tmp/qBittorrent"
+mc.register(mft"cpp" * mdir(qb_dir), c{
+	lsp = {
+		clangd = {
+			cmd = { "nix", "develop", qb_dir, "--command", "clangd" }
+		}
+	},
+	dap = {
+		launch = {
+			name = "qb",
+			type = "lldb",
+			request = "launch",
+			program = "build/qbittorrent",
+			cwd = '${workspaceFolder}',
+		},
+	}
+} .. lsp_generic):after("lsp_typedefault")
 
 --
 -- python
