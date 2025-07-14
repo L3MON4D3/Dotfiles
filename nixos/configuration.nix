@@ -175,7 +175,7 @@
   programs.dconf.enable = true;
 
   nix = {
-    package = pkgs-unstable.nixVersions.nix_2_26;
+    package = pkgs-unstable.nix;
     settings = {
       experimental-features = [
         "nix-command"
