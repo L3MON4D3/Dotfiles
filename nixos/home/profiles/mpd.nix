@@ -33,7 +33,10 @@ in {
     settings = {
       media_library_primary_tag = "album_artist";
       lyrics_fetchers = "musixmatch, azlyrics, genius, sing365, metrolyrics, justsomelyrics, jahlyrics, plyrics, tekstowo, internet";
-      fetch_lyrics_for_current_song_in_background = "yes";
+      # can cause issues with long filenames, for now just disable it so
+      # ncmpcpp doesn't crash on startup, but only when switching to lyrics
+      # tab/fetching lyrics.
+      fetch_lyrics_for_current_song_in_background = "no";
       external_editor = "nvim";
       use_console_editor = "yes";
     };
