@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, nur, ... }:
+{ config, pkgs, lib, inputs, nur, aa-torrent-dl, ... }:
 
 {
   imports=[
@@ -90,14 +90,17 @@
 
   # https://discourse.nixos.org/t/hm-24-11-firefox-with-passff-host/57108
   # reenable nativeMessagingHost once the mentioned PR is merged.
-  home.file.passff-host-workaround = {
-    target = "${config.home.homeDirectory}/.mozilla/native-messaging-hosts/passff.json";
-    source = "${pkgs.passff-host}/share/passff-host/passff.json";
-  };
+  # home.file.passff-host-workaround = {
+    # target = "${config.home.homeDirectory}/.mozilla/native-messaging-hosts/passff.json";
+    # source = "${pkgs.passff-host}/share/passff-host/passff.json";
+  # };
 
   programs.firefox = {
     enable = true; 
-    # nativeMessagingHosts = [ pkgs.passff-host ];
+    nativeMessagingHosts = [
+      pkgs.passff-host
+      aa-torrent-dl.native-app
+    ];
     package = pkgs.firefox-wayland;
     profiles = {
       default = {
@@ -138,6 +141,7 @@
         extensions.packages = with nur.repos.rycee.firefox-addons; [
           ublock-origin
           passff
+          aa-torrent-dl.extension
         ];
       };
     };
