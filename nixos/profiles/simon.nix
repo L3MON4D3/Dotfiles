@@ -42,6 +42,8 @@
     "d /home/simon/.thunderbird/ 0750 simon simon"
     "z /home/simon/.thunderbird/*.default 0750 simon simon"
     "A /home/simon/.thunderbird/*.default/ImapMail - - - - g:simon:rX"
+
+    "A /home/simon/projects/dotfiles/nvim/info - - - - g:simon:r"
   ];
 
   l3mon.restic.extraGroups = [ "simon" ];
