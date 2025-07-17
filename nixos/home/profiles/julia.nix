@@ -1,7 +1,6 @@
 { config, lib, pkgs, machine, data, ... }:
 
 {
-  # only provides env for julia, not julia itself.
   home.file.".julia/config/startup.jl".text = ''
     using Revise
 
@@ -41,6 +40,7 @@
   '';
 
   home.packages = with pkgs; [
+    julia
     imv
     (tev.overrideAttrs (final: prev: {
       patches = (if prev ? patches then prev.patches else []) ++ [
