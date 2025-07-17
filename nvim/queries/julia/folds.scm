@@ -69,6 +69,7 @@
 (
  (matrix_expression) @mx
  (#make-range-extended! "fold" @mx "start" 0 1 @mx "end_" 0 -1)
+ (#set! "priority" 101)
 )
 (
  (argument_list) @ls
