@@ -54,6 +54,7 @@
       ];
     })
     # pkgs.vulkan-tools
+    pkgs.prismlauncher
   ];
 
   # for wii-remote.
@@ -62,6 +63,9 @@
   systemd.tmpfiles.rules = [
     "d /mnt/steamlib 0750 simon simon"
     "d /srv/games 0750 simon simon"
+    "z /home/simon/.local/share/PrismLauncher/instances/*/minecraft/saves/*/level.dat 644"
+    "z /home/simon/.local/share/PrismLauncher/instances/*/minecraft/saves/*/level.dat_old 644"
+    "z /home/simon/.local/share/PrismLauncher/instances/*/minecraft/saves/*/playerdata/* 644"
   ];
 
   fileSystems."/mnt/steamlib" = {
@@ -91,6 +95,7 @@
           ln -s /home/simon/games games
           ln -s /home/simon/.local/share/lutris lutris
           ln -s /home/simon/.local/state/melonDS melonDS
+          ln -s /home/simon/.local/share/PrismLauncher/instances minecraft
 
           # Important: descend beyond symlinks!!
           restic backup --tag=${tag} --skip-if-unchanged -- \
@@ -100,6 +105,7 @@
             games/*/documents \
             dolphin/* \
             melonDS/* \
+            minecraft/* \
             lutris/games lutris/lutris.conf lutris/system.yml
           cd /
           rm -rf "$TMPDIR"
@@ -122,10 +128,12 @@
       { config, lib, pkgs, machine, data, ... }:
       {
         wayland.windowManager.sway.extraConfig = ''
-          for_window [title="^Lutris$"] floating enable
           assign [class="^steam$"] workspace i1
           assign [class="^steam_app_\d$"] workspace i1
           assign [class="^steam_app_default$"] output DP-3
+
+          for_window [title="^Lutris$"] floating enable
+          for_window [app_id="^org.prismlauncher.PrismLauncher$"] floating enable
           for_window [app_id="net.kuribo64.melonDS"] floating enable
 
           mode "apps" {
