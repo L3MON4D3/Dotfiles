@@ -47,8 +47,6 @@ vim.keymap.set("n", "<S-F11>", function()
 	repl.open_unique({"bash"}, "vsplit", true)
 end, {noremap = true, silent = true})
 
-vim.keymap.set({"n","v"}, "<leader>d", require("toggle_comment"), {noremap = true, silent = true})
-
 -- apparently $MYVIMRC already resolves to realpath.
 vim.keymap.set("n", "<leader>ev", ":tabedit $MYVIMRC<Cr>:exe 'tcd'.expand('%:h')<Cr>")
 local config_dir_realpath = vim.uv.fs_realpath(vim.fn.stdpath("config"))
