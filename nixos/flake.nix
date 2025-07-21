@@ -26,6 +26,7 @@
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
     mpdlrc.url = "github:l3mon4d3/mpdlrc";
     aa-torrent-dl.url = "github:l3mon4d3/aa-torrent-dl";
+    scientific-fhs.url = "/home/simon/projects/scientific-fhs";
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, home-manager, ... }: {
@@ -61,6 +62,7 @@
               l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
               nur = inputs.nur.legacyPackages.${system};
               aa-torrent-dl = inputs.aa-torrent-dl.packages.${system};
+              scientific-fhs = inputs.scientific-fhs.packages.${system}.scientific-fhs;
             };
           }
           {

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, machine, data, scientific-fhs, ... }:
 
 {
   home.file.".julia/config/startup.jl".text = ''
@@ -40,7 +40,15 @@
   '';
 
   home.packages = with pkgs; [
-    julia
+    (pkgs.writeShellApplication (let
+      # the unsafe is okay here because we want nixos-rebuild to only build the derivation, and then `nix develop ...` will actually build the derivation.
+      fhs_path = (builtins.unsafeDiscardOutputDependency (scientific-fhs.override{ enableQuarto=true; enableJulia=true; juliaVersion = "1.11.6"; commandScript = "julia"; }).env.drvPath);
+    in {
+      name = "jl";
+      text = ''
+        nix develop "${fhs_path}" -c julia
+      '';
+    }))
     imv
     (tev.overrideAttrs (final: prev: {
       patches = (if prev ? patches then prev.patches else []) ++ [
