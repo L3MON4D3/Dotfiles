@@ -65,7 +65,8 @@ local plugins = {
 	screenkey = "NStefan002/screenkey.nvim",
 	blink = "Saghen/blink.cmp",
 	flatten = "willothy/flatten.nvim",
-	rest = "rest-nvim/rest.nvim"
+	rest = "rest-nvim/rest.nvim",
+	togglecomment = "L3MON4D3/nvim-togglecomment"
 }
 
 local plugins_inverse = {}
@@ -178,7 +179,7 @@ local plugin_spec = {
 		da_lua
 	),
 	use(vrepeat),
-	-- conf_use(friendly_snippets),
+	-- conf_use(friendly_snippets),
 	-- conf_use({
 	-- 	vim_snippets,
 	-- }),
@@ -203,7 +204,7 @@ local plugin_spec = {
 		blink,
 		version = '*'
 	}),
-	use(rest)
+	use(rest),
 	-- conf_use{flatten, lazy=false, priority=1001}
 	-- conf_use{
 	-- 	dbee,
@@ -217,6 +218,7 @@ local plugin_spec = {
 	-- conf_use(toggleterm),
 	--use(systemd),
 	-- use(eve_snippets)
+	conf_use{togglecomment, dev = true}
 }
 
 -- store plugin paths in a file, so they can be easily loaded into lua-ls
