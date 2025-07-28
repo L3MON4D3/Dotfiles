@@ -11,7 +11,7 @@
 ] @fold
 
 ((vector_expression) @expr
-  (#make-range-extended! "fold" @expr "start" 0 0 @expr "end_" 0 0)
+  (#make-range-extended! "fold" @expr "start" 0 0 @expr "end" 0 0)
   (#set! foldtext_start "[")
   (#set! foldtext_start_hl "@punctuation.bracket.julia")
   (#set! foldtext_end "]")
@@ -21,13 +21,13 @@
 ((if_statement
   condition: (_) @cond) @if
   ; ends with a `end`, have the folded region end just before that.
-  (#make-range-extended! "fold" @cond "end_" 0 1 @if "end_" 0 -3) 
+  (#make-range-extended! "fold" @cond "end" 0 1 @if "end" 0 -3) 
 )
 
 ((for_statement
   (for_binding) @bind) @if
   ; ends with a `end`, have the folded region end just before that.
-  (#make-range-extended! "fold" @bind "end_" 0 1 @if "end_" 0 -3) 
+  (#make-range-extended! "fold" @bind "end" 0 1 @if "end" 0 -3) 
 )
 
 ; (
@@ -40,7 +40,7 @@
  ; (module_definition
    ; name: (identifier) @from) @to
  ; ]
- ; (#make-range-extended! "fold" @from "end_" 0 1 @to "end_" 0 0)
+ ; (#make-range-extended! "fold" @from "end" 0 1 @to "end" 0 0)
  ; (#set! foldtext_start "")
  ; (#set! foldtext_start_hl "")
  ; (#set! foldtext_end "end")
@@ -58,20 +58,20 @@
 (
  (function_definition
    (signature) @sig) @fn
- (#make-range-extended! "fold" @sig "end_" 0 1 @fn "end_" 0 -3)
+ (#make-range-extended! "fold" @sig "end" 0 1 @fn "end" 0 -3)
 )
 
 (
  (struct_definition) @struct
- (#make-range-extended! "fold" @struct "start" 0 1000 @struct "end_" 0 -3)
+ (#make-range-extended! "fold" @struct "start" 0 1000 @struct "end" 0 -3)
 )
 
 (
  (matrix_expression) @mx
- (#make-range-extended! "fold" @mx "start" 0 1 @mx "end_" 0 -1)
+ (#make-range-extended! "fold" @mx "start" 0 1 @mx "end" 0 -1)
  (#set! "priority" 101)
 )
 (
  (argument_list) @ls
- (#make-range-extended! "fold" @ls "start" 0 1 @ls "end_" 0 -1)
+ (#make-range-extended! "fold" @ls "start" 0 1 @ls "end" 0 -1)
 )

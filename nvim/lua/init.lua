@@ -114,8 +114,8 @@ vim.treesitter.query.add_directive("make-range-extended!", function(match, patte
 	local r2 = {match[pred[7]]:range()}
 
 	-- extract correct positions
-	local p1 = pred[4] == "end_" and {r1[3], r1[4]} or {r1[1], r1[2]}
-	local p2 = pred[8] == "end_" and {r2[3], r2[4]} or {r2[1], r2[2]}
+	local p1 = pred[4] == "end" and {r1[3], r1[4]} or {r1[1], r1[2]}
+	local p2 = pred[8] == "end" and {r2[3], r2[4]} or {r2[1], r2[2]}
 
 	-- apply offsets.
 	p1[1] = p1[1] + pred[5]
