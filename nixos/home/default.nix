@@ -76,6 +76,7 @@
     np =  "/home/simon/.local/share/nvim/lazy";
     nc =  "/home/simon/projects/dotfiles/nvim";
     mc =  "/home/simon/projects/nvim/matchconfig";
+    tc =  "/home/simon/projects/nvim/togglecomment";
     lsn = "/home/simon/projects/nvim/luasnip";
     lsi = "/home/simon/projects/nvim/luasnip-issues";
     nx =  "/home/simon/projects/dotfiles/nixos/configuration.nix";
