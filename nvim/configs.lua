@@ -797,6 +797,17 @@ mc.register(mdir(mc_lua_dir) * mft"lua", c{
 })
 
 ---
+--- togglecomment
+---
+local tc_dir = "/home/simon/projects/nvim/togglecomment"
+mc.register(mdir(tc_dir), c{
+	run_buf = function()
+		local abspath = tc_dir .. "/lua/togglecomment"
+		cabbrev_buf("%%", abspath)
+	end,
+})
+
+---
 --- Dotfiles-nixos
 ---
 
