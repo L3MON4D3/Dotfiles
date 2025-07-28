@@ -12,7 +12,7 @@
   ) @outer
  ]
 
- (#make-range-extended! "fold" @comp "start" 0 0 @outer "end_" 0 0)
+ (#make-range-extended! "fold" @comp "start" 0 0 @outer "end" 0 0)
  (#set! foldtext_start "{")
  (#set! foldtext_start_hl "@punctuation.bracket")
  (#set! foldtext_end "}")
@@ -63,7 +63,7 @@
 (
  (function_definition
   (function_declarator) @decl ) @def
- (#make-range-extended! "fold" @decl "end_" 0 1 @def "end_" 0 0)
+ (#make-range-extended! "fold" @decl "end" 0 1 @def "end" 0 0)
  (#set! foldtext_start "{")
  (#set! foldtext_start_hl "@punctuation.bracket")
  (#set! foldtext_end "}")
@@ -76,7 +76,7 @@
   (access_specifier) @aspec . (_) @last . (access_specifier) )
  (#not-any-of? @last "private" "public" "protected")
  ; big col-offset so we end up at the end of the line.
- (#make-range-extended! "fold" @aspec "end_" 0 1 @last "end_" 0 0)
+ (#make-range-extended! "fold" @aspec "end" 0 1 @last "end" 0 0)
 )
 
 (
@@ -85,7 +85,7 @@
  (#not-any-of? @items "private" "public" "protected")
  (#not-any-of? @last "private" "public" "protected")
  ; big col-offset so we end up at the end of the line.
- (#make-range-extended! "fold" @aspec "end_" 0 1 @last "end_" 0 0)
+ (#make-range-extended! "fold" @aspec "end" 0 1 @last "end" 0 0)
 )
 
 ; last specifier, account for *-quantifier-bug.
@@ -94,7 +94,7 @@
   (access_specifier) @aspec . (_) @last . )
  (#not-any-of? @last "private" "public" "protected")
  ; big col-offset so we end up at the end of the line.
- (#make-range-extended! "fold" @aspec "end_" 0 1 @last "end_" 0 0)
+ (#make-range-extended! "fold" @aspec "end" 0 1 @last "end" 0 0)
 )
 
 (
@@ -103,5 +103,5 @@
  (#not-any-of? @items "private" "public" "protected")
  (#not-any-of? @last "private" "public" "protected")
  ; big col-offset so we end up at the end of the line.
- (#make-range-extended! "fold" @aspec "end_" 0 1 @last "end_" 0 0)
+ (#make-range-extended! "fold" @aspec "end" 0 1 @last "end" 0 0)
 )

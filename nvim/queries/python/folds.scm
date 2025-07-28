@@ -24,12 +24,12 @@
 
 (
  (class_definition) @class
- (#make-range-extended! "fold" @class "start" 0 300 @class "end_" 0 0)
+ (#make-range-extended! "fold" @class "start" 0 300 @class "end" 0 0)
 )
 
 (
  (function_definition (parameters) @parms) @fn
- (#make-range-extended! "fold" @parms "end_" 0 300 @fn "end_" 0 0)
+ (#make-range-extended! "fold" @parms "end" 0 300 @fn "end" 0 0)
 )
 
 [

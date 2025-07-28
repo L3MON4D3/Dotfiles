@@ -8,7 +8,7 @@
 
 (enum_specifier
   (enumerator_list) @list
-(#make-range-extended! "fold" @list "start" 0 0 @list "end_" 0 0)
+(#make-range-extended! "fold" @list "start" 0 0 @list "end" 0 0)
 (#set! foldtext_start "{")
 (#set! foldtext_start_hl "@punctuation.bracket")
 (#set! foldtext_end "}")
@@ -16,7 +16,7 @@
 
 (struct_specifier
   (field_declaration_list) @list
-(#make-range-extended! "fold" @list "start" 0 0 @list "end_" 0 0)
+(#make-range-extended! "fold" @list "start" 0 0 @list "end" 0 0)
 (#set! foldtext_start "{")
 (#set! foldtext_start_hl "@punctuation.bracket")
 (#set! foldtext_end "}")
@@ -37,7 +37,7 @@
   ) @outer
  ]
 
- (#make-range-extended! "fold" @comp "start" 0 0 @outer "end_" 0 0)
+ (#make-range-extended! "fold" @comp "start" 0 0 @outer "end" 0 0)
  (#set! foldtext_start "{")
  (#set! foldtext_start_hl "@punctuation.bracket")
  (#set! foldtext_end "}")
@@ -66,7 +66,7 @@
  (preproc_ifdef
    name: (identifier) @ident) @ifd
 
- (#make-range-extended! "fold" @ident "end_" 0 1 @ifd "end_" 0 0)
+ (#make-range-extended! "fold" @ident "end" 0 1 @ifd "end" 0 0)
  (#set! foldtext_start "")
  (#set! foldtext_start_hl "")
  (#set! foldtext_end "#endif")
