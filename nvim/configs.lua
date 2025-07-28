@@ -1154,7 +1154,7 @@ mc.register(matchers.dir(proj_master_dir), c{
 	end
 })
 
-repl.set_term("julia.pm", {"nix", "develop", proj_master_dir}, {cwd = proj_master_dir, initial_keys = "julia -q --threads 11\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"})
+repl.set_term("julia.pm", {"nix", "develop", proj_master_dir}, {cwd = proj_master_dir, initial_keys = "julia -q --threads 11 --project=./.\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"})
 local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 	repl = {run = {
 		mappings = {
