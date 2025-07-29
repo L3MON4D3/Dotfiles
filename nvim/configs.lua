@@ -24,28 +24,15 @@ local merge = require("matchconfig.options.util.merge")
 
 local nop3 = function(_,_,_) end
 
-local repl_primary = require("my_mc.options.repl").primary
-local repl_secondary = require("my_mc.options.repl").secondary
-local direncode = require("my_mc.options.repl").direncode
-local dirdecode = require("my_mc.options.repl").dirdecode
+local repl_target =require("my_mc.options.repl").repl_target
+local repl_primary = repl_target.file
+local repl_secondary = repl_target.project
+local repl_all = repl_target.all
 
 local eval = mc.eval
 
--- bash in some directory.
-repl.set_term_generator("bash_dir", function(term_id)
-	local match = term_id:match("bash%.dir%:([^%.]+)")
-	if match then
-		return {
-			cmd = {"bash"},
-			job_opts = {
-				cwd = dirdecode(match)
-			}
-		}
-	end
-end)
-
 -- takes multiple juwels-configs, each of which consists of 2 strings:
-local cmake_attach = function(repl_id, opts)
+local cmake_attach = function(opts)
 	opts = opts or {}
 
 	local cmake_args = opts.cmake_args or {}
@@ -60,33 +47,32 @@ local cmake_attach = function(repl_id, opts)
 	if not opts.debug then
 		return c{
 			repl = {
-				run = {
-					id = repl_id,
-					mappings = {
-						["<Space>b"] = [[cmake --build build]],
-						["<Space>m"] = ([[cmake -GNinja %s -B build]]):format(cmake_opts)
-					},
+				target = repl_secondary,
+				type = "bash",
+				opts = {
+					cwd = opts.cwd
 				},
-				set_type = {id = repl_id, type = repl_secondary}
+				mappings = {
+					["<Space>b"] = [[cmake --build build]],
+					["<Space>m"] = ([[cmake -GNinja %s -B build]]):format(cmake_opts)
+				},
 			}
 		}
 	end
 
 	return c{
 		repl = {
-			run = {
-				id = repl_id,
-				mappings = {
-					["<Space>b"] = [[cmake --build build]],
-					["<Space>m"] = ([[cmake -GNinja %s -B build; cmake -GNinja -DCMAKE_BUILD_TYPE=Debug %s -B build_d]]):format(cmake_opts, cmake_opts)
-				},
-				once = function(_, effective_repl_id)
-					usercommand_buf("DB", function()
-						repl.send(effective_repl_id, "cmake --build build_d")
-					end, {})
-				end
+			target = repl_secondary,
+			type = "bash",
+			mappings = {
+				["<Space>b"] = [[cmake --build build]],
+				["<Space>m"] = ([[cmake -GNinja %s -B build; cmake -GNinja -DCMAKE_BUILD_TYPE=Debug %s -B build_d]]):format(cmake_opts, cmake_opts)
 			},
-			set_type = {id = repl_id, type = repl_secondary}
+			once = function(_, effective_repl_id)
+				usercommand_buf("DB", function()
+					repl.send(effective_repl_id, "cmake --build build_d")
+				end, {})
+			end
 		}
 	}
 end
@@ -129,16 +115,21 @@ mc.register(mft"PKGBUILD", c{
 	}
 })
 
-mc.register(project_matchers.pkgbuild(), c{
-	repl = {
-		run = {
-			id = "bash.dir:{direncode(args.match_args)}",
-			mappings = {
-				M = "rm *.zst; makepkg -f && for f in *.zst; do echo $f; tar -tvf $f; done"
-			}
-		}
-	}
-})
+-- mc.register(project_matchers.pkgbuild(), c{
+	-- repl = {
+		-- primary = {
+			-- type = "bash.dir:{direncode(args.match_args)}",
+			-- opts = {
+				-- cwd = eval(function(args)
+					-- return args.match_args
+				-- end)
+			-- },
+			-- mappings = {
+				-- M = "rm *.zst; makepkg -f && for f in *.zst; do echo $f; tar -tvf $f; done"
+			-- }
+		-- }
+	-- }
+-- })
 
 --
 -- javascript
@@ -170,7 +161,7 @@ mc.register(mft"julia" * mdir"/home/simon/projects/master/glint-jl", c{
 	}
 }):after(jl_lsp)
 
-mc.register(mft"julia", c{
+local julia_ft = mc.register(mft"julia", c{
 	dap = {
 		launch = function(args)
 			local modulename = vim.fs.basename(args.file).sub(1, -4)
@@ -189,47 +180,45 @@ mc.register(mft"julia", c{
 	end
 	},
 	repl = {
-		run = {
-			id = "julia",
-			type = function(args, repl_id, spec)
-				vnoremapsilent_buf(spec.toggle_keys, function()
-					-- leave visual.
-					-- this has to be done before getting visual, since the markers (<,>) are
-					-- only set upon leaving Visual.
-					local keys = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-					-- "x" to immediately process keys.
-					vim.api.nvim_feedkeys(keys, "x", true)
+		target = repl_all,
+		type = "julia",
+		run = function(args, repl_id, toggle_keys)
+			vnoremapsilent_buf(toggle_keys, function()
+				-- leave visual.
+				-- this has to be done before getting visual, since the markers (<,>) are
+				-- only set upon leaving Visual.
+				local keys = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+				-- "x" to immediately process keys.
+				vim.api.nvim_feedkeys(keys, "x", true)
 
-					repl.send(repl_id, table.concat(require("util").get_visual(), "\n"))
-				end)
-			end,
-			once = function(args, repl_id)
-				local module_name = vim.fs.basename(args.file):sub(1, -4)
-				local module_dir = vim.fs.dirname(args.file)
-				nnoremapsilent_buf(",R", function()
-					repl.send(repl_id, ("push!(LOAD_PATH, \"%s\"); using %s"):format(module_dir, module_name))
-				end)
+				repl.send(repl_id, table.concat(require("util").get_visual(), "\n"))
+			end)
+			local module_name = vim.fs.basename(args.file):sub(1, -4)
+			local module_dir = vim.fs.dirname(args.file)
+			nnoremapsilent_buf(",R", function()
+				repl.send(repl_id, ("push!(LOAD_PATH, \"%s\"); using %s"):format(module_dir, module_name))
+			end)
 
-				nnoremapsilent_buf("<space>r", function()
-					repl.send(repl_id, module_name .. ".main()")
-				end)
-			end
-		}
+			nnoremapsilent_buf("<space>r", function()
+				repl.send(repl_id, module_name .. ".main()")
+			end)
+		end,
 	}
 })
 
 -- separate out to optionally disable.
 local julia_ft_using = mc.register(mft"julia", c{
 	repl = {
-		run = {
-			id = "julia",
-			once = function(args,repl_id)
-				local modulename = vim.fs.basename(args.file):sub(1, -4)
-				repl.send(repl_id, "using " .. modulename)
-			end
-		}
+		target = repl_target.file,
+		type = "julia",
+		run = function(args, repl_id)
+			local module_dir = vim.fs.dirname(args.file)
+			local modulename = vim.fs.basename(args.file):sub(1, -4)
+			repl.send(repl_id, ("push!(LOAD_PATH, \"%s\");using %s"):format(module_dir, modulename))
+		end
 	}
 })
+julia_ft_using:after(julia_ft)
 
 --
 -- lua
@@ -367,24 +356,20 @@ mc.register(mft"lua" * mdir(luals_mdgen_dir), mdgen_luals):after(lsp_lua)
 --
 -- nix
 --
-repl.set_term_generator("nix_dir", function(term_id)
-	local match = term_id:match("nix%.dir%:([^%.]+)")
-	if match then
-		return {
-			cmd = {"nix", "repl"},
-			job_opts = {
-				cwd = dirdecode(match)
-			}
-		}
-	end
-end)
 mc.register(mft"nix", c{
 	repl = {
-		run = {
-			id = "nix.dir:{direncode(vim.fs.dirname(args.file))}",
-			mappings = {
-				["<Space>r"] = ":r\n:p import {args.file}"
-			}
+		target = repl_primary,
+		type = "nix",
+		mappings = {
+			["<Space>r"] = eval(function(args)
+				return ":r\n:p import " .. args.file
+			end)
+		},
+		cmd = {"nix", "repl"},
+		opts = {
+			cwd = eval(function(args)
+				return vim.fs.dirname(args.file)
+			end)
 		}
 	},
 	buf_opts = {
@@ -428,9 +413,6 @@ mc.register(mft"cpp" * mdir(qb_dir), c{
 --
 -- python
 --
-repl.set_term("python", {"ipython"}, {
-	-- initial_keys = "%matplotlib\n%matplotlib"
-})
 mc.register(mft"python", c{
 	dap = {
 		launch = {
@@ -447,33 +429,32 @@ mc.register(mft"python", c{
 	}
 } .. c{
 	repl = {
-		run = {
-			id = "python",
-			type = function(_, repl_id, spec)
-				vnoremapsilent_buf(spec.toggle_keys, function()
-					-- leave visual.
-					-- this has to be done before getting visual, since the markers (<,>) are
-					-- only set upon leaving Visual.
-					local keys = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
-					-- "x" to immediately process keys.
-					vim.api.nvim_feedkeys(keys, "x", true)
+		target = repl_all,
+		type = "python",
+		run = function(_, repl_id, toggle_keys)
+			vnoremapsilent_buf(toggle_keys, function()
+				-- leave visual.
+				-- this has to be done before getting visual, since the markers (<,>) are
+				-- only set upon leaving Visual.
+				local keys = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+				-- "x" to immediately process keys.
+				vim.api.nvim_feedkeys(keys, "x", true)
 
-					local vis = util.get_visual()
-					local lines = ""
-					-- regular concat omits empty lines, we don't want that.
-					for _, line in ipairs(vis) do
-						-- remove leading whitespace, ipython takes care of indentation.
-						lines = lines .. line:gsub("^%s*", "") .. "\n"
-					end
-					-- remove trailing \n.
-					lines = lines:sub(1,-2)
-					repl.send(repl_id, lines)
-				end)
-			end,
-			-- send to most-recently registered python-repl (most likely the correct one.)
-			mappings = {
-				["<space>r"] = [[exec(open("{args.file:gsub("ipynb", "py")}").read())]]
-			}
+				local vis = util.get_visual()
+				local lines = ""
+				-- regular concat omits empty lines, we don't want that.
+				for _, line in ipairs(vis) do
+					-- remove leading whitespace, ipython takes care of indentation.
+					lines = lines .. line:gsub("^%s*", "") .. "\n"
+				end
+				-- remove trailing \n.
+				lines = lines:sub(1,-2)
+				repl.send(repl_id, lines)
+			end)
+		end,
+		-- send to most-recently registered python-repl (most likely the correct one.)
+		mappings = {
+			["<space>r"] = [[exec(open("{args.file:gsub("ipynb", "py")}").read())]]
 		}
 	}
 })
@@ -553,28 +534,23 @@ local zig_lsp_generic = mc.register(mft"zig", c{
 } .. lsp_generic)
 
 local function nix_override_zig(dir)
-	local proj_repl_id = "zig-" .. dir
-
 	-- load dev-env.
 	-- Preserves completions, and overrides PATH.
 	-- For some reason (probably loading-order or something, not surprising
 	-- tbh) the first invocation fails in preserving completions, while the
 	-- second succeeds.
-	-- repl.set_term(proj_repl_id, {"bash", "-c", 'eval "$(nix print-dev-env /home/simon/projects/nix-text/zig); bash"'}, {cwd = dir})
-	repl.set_term(proj_repl_id, {"nix", "develop"}, {cwd = dir})
 	local dir_mc = mc.register(mdir(dir) * mft"zig", c{
 		lsp = {
 			zls = {cmd = {"nix", "develop", dir, "--command", "zls"}}
 		},
 		repl = {
-			run = {
-				id = proj_repl_id,
-				mappings = {
-					["<Space>b"] = "zig build",
-					["<Space>r"] = "zig build run"
-				}
+			target = repl_secondary,
+			type = "bash",
+			cmd = {"nix", "develop"},
+			mappings = {
+				["<Space>b"] = "zig build",
+				["<Space>r"] = "zig build run"
 			},
-			set_type = {id = proj_repl_id, type = repl_secondary},
 		},
 	})
 	dir_mc:after(zig_lsp_generic)
@@ -681,7 +657,7 @@ mc.register(mft"tex" * mdir(proposal_dir), c{
 --- CMake
 ---
 
-local cmake_generic = mc.register(project_matchers.cmake(), cmake_attach("bash.dir:{direncode(args.match_args)}"))
+local cmake_generic = mc.register(project_matchers.cmake(), cmake_attach({dir = eval(function(args) return args.match_args end)}))
 cmake_generic:blacklist_by("project")
 
 ---
@@ -690,24 +666,24 @@ cmake_generic:blacklist_by("project")
 
 local luasnip_dir = "/home/simon/projects/nvim/luasnip"
 
-repl.set_term("bash.dir:" .. luasnip_dir, {"nix", "develop", luasnip_dir}, {cwd = luasnip_dir})
-
 mc.register(mdir(luasnip_dir), c{
 	repl = {
-		run = {
-			id = "bash.dir:" .. luasnip_dir,
-			mappings = {
-				T = function()
-					local command = "TEST_07=false TEST_09=false make test_nix"
-					local file = vim.api.nvim_buf_get_name(0)
-					if file:match("_spec%.lua$") then
-						command = "TEST_FILE=" .. file .. " " .. command
-					end
-					return command
-				end
-			}
+		target = repl_secondary,
+		type = "bash",
+		opts = {
+			cmd = {"nix", "develop", luasnip_dir},
+			cwd = luasnip_dir
 		},
-		set_type = {id = "bash.dir:" .. luasnip_dir, type = repl_secondary}
+		mappings = {
+			T = eval(function(args)
+				local command = "TEST_07=false TEST_09=false make test_nix"
+				local file = args.file
+				if file:match("_spec%.lua$") then
+					command = "TEST_FILE=" .. file .. " " .. command
+				end
+				return command
+			end)
+		},
 	},
 	run_buf = function()
 		actions.cabbrev_buf("%%", "/home/simon/projects/nvim/luasnip/lua/luasnip")
@@ -783,13 +759,14 @@ mc.register(mdir(dotfiles_dir), c{
 		cabbrev_buf("%%", dotfiles_dir)
 	end,
 	repl = {
-		run = {
-			id = "bash.dir:" .. direncode(dotfiles_dir),
-			mappings = {
-				["R"] = "re"
-			}
+		target = repl_secondary,
+		type = "bash",
+		opts = {
+			cwd = dotfiles_dir
 		},
-		set_type = {id = "bash.dir:" .. direncode(dotfiles_dir), type = repl_secondary}
+		mappings = {
+			["R"] = "re"
+		}
 	}
 })
 
@@ -810,11 +787,15 @@ mc.register(mdir"/home/simon/.config/waybar", sway_reload_on_write)
 
 mc.register(mdir"/home/simon/projects/termpick", c{
 	repl = {
-		run = {
-			type = "bash.dir:{direncode(args.match_args)}",
-			mappings = {
-				["<Space>r"] = "zig build run"
-			}
+		target = repl_secondary,
+		type = "bash",
+		opts = {
+			cwd = eval(function(args)
+				return args.match_args
+			end)
+		},
+		mappings = {
+			["<Space>r"] = "zig build run"
 		}
 	},
 	run_buf = function()
@@ -833,9 +814,6 @@ mc.register(mdir"/home/simon/Packages/Anna Gebertz", c{
 })
 
 local cuora_dir = "/home/simon/projects/cuora"
-repl.set_term("bash.cwd:" .. cuora_dir, {"bash"}, {
-	cwd = cuora_dir
-})
 local cuora = mc.register(mdir(cuora_dir), c{
 	run_buf = function()
 		nnoremapsilent_buf("<space>s", function()
@@ -854,19 +832,21 @@ local cuora = mc.register(mdir(cuora_dir), c{
 		}
 	},
 	repl = {
-		run = {
-			id = "bash.cwd:" .. cuora_dir,
-			once = function(_, term_id)
-				nnoremapsilent_buf("<space>r", function()
-					repl.send(term_id, "zig build run")
-					if util.process_output("pidof imv-wayland") == "" then
-						repl.send(term_id, "imv out.svg &")
-					end
-				end)
-			end,
-			mappings = {
-				["<space>b"] = "zig build"
-			}
+		target = repl_secondary,
+		type = "bash",
+		opts = {
+			cwd = cuora_dir
+		},
+		once = function(_, term_id)
+			nnoremapsilent_buf("<space>r", function()
+				repl.send(term_id, "zig build run")
+				if util.process_output("pidof imv-wayland") == "" then
+					repl.send(term_id, "imv out.svg &")
+				end
+			end)
+		end,
+		mappings = {
+			["<space>b"] = "zig build"
 		}
 	}
 })
@@ -885,12 +865,10 @@ cuora_zig:after(zig_lsp_generic)
 ---
 
 local mitsuba_lab_dir =  "/mnt/misc/old_stuff/s10/lab/mitsuba3"
-repl.set_term("bash.mitsuba", {"bash"}, {
-	cwd = mitsuba_lab_dir .. "",
-	env = {PYTHONPATH=mitsuba_lab_dir .. "/build/python:" .. mitsuba_lab_dir .. "/py_modules"}
-})
-
-local lab_mitsuba = mc.register(mdir(mitsuba_lab_dir), cmake_attach("bash.mitsuba", {
+local lab_mitsuba = mc.register(mdir(mitsuba_lab_dir), cmake_attach({
+	opts = {
+		cwd = mitsuba_lab_dir
+	},
 	debug = true,
 	cmake_args = {"MI_DEFAULT_VARIANTS=\"scalar_spectral;scalar_rgb;cuda_spectral;llvm_spectral;llvm_spectral_polarized\""},
 	mappings = {
@@ -1038,26 +1016,20 @@ local lab_mitsuba = mc.register(mdir(mitsuba_lab_dir), cmake_attach("bash.mitsub
 	}
 }, {tags = {"project"}})
 
-repl.set_term("python.mitsuba", {"ipython"}, {
-	env = {PYTHONPATH = mitsuba_lab_dir .. "/build/python:" .. mitsuba_lab_dir .. "/py_modules", }
-})
 local mitsuba_py = mc.register(mft"python" * mdir(mitsuba_lab_dir),
 	c{
 		repl = {
-			run = {
-				id = "bash.mitsuba",
-				mappings = {
-					["<space>r"] = "make build && python {args.file} 2> /dev/null"
-				}
+			target = repl_secondary,
+			type = "bash",
+			opts = {
+				env = { PYTHONPATH = mitsuba_lab_dir .. "/build/python:" .. mitsuba_lab_dir .. "/py_modules" }
 			},
+			mappings = {
+				["<space>r"] = eval(function(args)
+					return "make build && python " .. args.file .. " 2> /dev/null"
+				end)
+			}
 		}
-	} .. c{
-		repl = {
-			run = {
-				-- register override
-				id = "python.mitsuba",
-			},
-		},
 	}
 )
 
@@ -1074,11 +1046,15 @@ local pkgbuild_all = mc.register(
 	mpattern("^/home/simon/.packages/[^/]+/[^/]+/") * project_matchers.pkgbuild(),
 	c{
 		repl = {
-			run = {
-				id = "bash.dir:{direncode(args.match_args[2])}",
-				mappings = {
-					U = "dbpush *.zst"
-				}
+			target = repl_secondary,
+			type = "bash",
+			opts = {
+				cwd = eval(function(args)
+					return args.match_args[2]
+				end)
+			},
+			mappings = {
+				U = "dbpush *.zst"
 			}
 		}
 	})
@@ -1086,11 +1062,15 @@ local pkgbuild_local = mc.register(
 	mpattern("^/home/simon/.packages/local/[^/]+/") * project_matchers.pkgbuild(),
 	c{
 		repl = {
-			run = {
-				id =  "bash.dir:{direncode(args.match_args[2])}",
-				mappings = {
-					U = "p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm && dbpush *.zst"
-				}
+			type = "bash",
+			target = repl_secondary,
+			opts = {
+				cwd = eval(function(args)
+					return args.match_args[2]
+				end)
+			},
+			mappings = {
+				U = "p -U $(l *.zst -t | head -n 1) --dbonly --noconfirm && dbpush *.zst"
 			}
 		}
 	})
@@ -1131,15 +1111,21 @@ mc.register(matchers.dir(proj_master_dir), c{
 	end
 })
 
-repl.set_term("julia.pm", {"nix", "develop", proj_master_dir}, {cwd = proj_master_dir, initial_keys = "julia -q --threads 11 --project=./.\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"})
 local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
-	repl = {run = {
-		mappings = {
-			["<Space>r"] = [[{args.file:match("[^/]+$"):sub(1, -4)}_main()]]
+	repl = {
+		type = "julia",
+		target = repl_secondary,
+		cmd = {"nix", "develop", proj_master_dir},
+		opts = {
+			cwd = proj_master_dir,
+			initial_keys = "julia -q --threads 11 --project=./.\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"
 		},
-		id = "julia.pm"
+		mappings = {
+			["<Space>r"] = eval(function(args)
+				return args.file:match("[^/]+$"):sub(1, -4) .. "_main()"
+			end)
+		}
 	},
-	set_type = {id = "julia.pm", type = repl_secondary}},
 	run_buf = function()
 		usercommand_buf("T", function()
 			-- make sure to resolve tev-path here.
