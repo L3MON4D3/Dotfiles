@@ -2,7 +2,7 @@
 
 {
   imports=[
-    ./profiles/neovim.nix
+    ./profiles/neovim/default.nix
     ./profiles/pass.nix
     ./profiles/jellyfin-mpv-shim.nix
     ./profiles/qutebrowser

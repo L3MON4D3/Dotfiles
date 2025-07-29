@@ -30,15 +30,16 @@ in {
       pkgs.nodejs
       pkgs.luajit
       pkgs.luarocks
-      # julia for random scripts and lsp.
+
       pkgs-unstable.lua-language-server
+      pkgs.pyright
       # make sure to install LanguageServer.jl, Images, Revise
-      # Maybe use with 
-      pkgs.julia-bin
       # clangd
       pkgs.clang-tools
       pkgs.python312Packages.ipython
-      pkgs.pyright
+
+      (import ./julia-lsp.nix { pkgs = pkgs; })
+
       # lldb-dap
       pkgs.lldb
 
