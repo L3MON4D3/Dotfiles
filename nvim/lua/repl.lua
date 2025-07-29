@@ -212,6 +212,32 @@ function M.stop(term_id)
 	terminals[term_id] = nil
 end
 
+
+local repl_specs = {}
+local function compatible(specA, specB)
+	-- cmd and opts have to match exactly.
+	for k, v in pairs(specA.env or {}) do
+		if specB[k] and specB[k] ~= v then
+			return false
+		end
+	end
+	return
+		vim.deep_equal(specA.cmd, specB.cmd) and
+		vim.F.if_nil(specA.clear_env, false) == vim.F.if_nil(specB.clear_env, false)
+end
+
+function M.get_id(spec)
+	for id, repl_spec in ipairs(repl_specs) do
+		if compatible(repl_spec, spec) then
+			return id
+		end
+	end
+	local new_id = #repl_specs+1
+	M.set_term(new_id, spec.cmd, spec.job_opts)
+	repl_specs[new_id] = spec
+	return new_id
+end
+
 function M.set_term(term_id, cmd, job_opts)
 	-- if term_specs[term_id] then
 		-- error("Trying to add term with duplicated term_id " .. term_id .. ", aborting!")
