@@ -13,6 +13,10 @@ in {
       run ${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online
       run ${pkgs.git}/bin/git clone http://git.internal/simon/luasnip.git ${config.home.homeDirectory}/projects/nvim/luasnip
     fi
+    if [ ! -d "${config.home.homeDirectory}/projects/nvim/togglecomment" ]; then
+      run ${pkgs.systemd}/lib/systemd/systemd-networkd-wait-online
+      run ${pkgs.git}/bin/git clone http://git.internal/simon/togglecomment.git ${config.home.homeDirectory}/projects/nvim/togglecomment
+    fi
 
     echo 'return {"${nvim}/share/nvim/runtime"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/rtp_base.lua"
   '';
