@@ -226,6 +226,7 @@ in {
           # * date format https://support.mozilla.org/en-US/kb/customize-date-time-formats-thunderbird
           # via config editor.
           thunderbird
+          puddletag
         ];
 
         wayland.windowManager.sway.extraConfig = ''
