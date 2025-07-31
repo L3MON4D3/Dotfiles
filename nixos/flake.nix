@@ -26,7 +26,7 @@
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
     mpdlrc.url = "github:l3mon4d3/mpdlrc";
     aa-torrent-dl.url = "github:l3mon4d3/aa-torrent-dl";
-    scientific-fhs.url = "/home/simon/projects/scientific-fhs";
+    scientific-fhs.url = "github:l3mon4d3/scientific-fhs";
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, home-manager, ... }: {

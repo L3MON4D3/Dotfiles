@@ -580,14 +580,17 @@
         "nixpkgs": "nixpkgs_6"
       },
       "locked": {
-        "lastModified": 1752754638,
-        "narHash": "sha256-PyUmERtveBZ5TOtLLyOKxhLdzLNZSbwHohxGNjc4wKQ=",
-        "path": "/home/simon/projects/scientific-fhs",
-        "type": "path"
+        "lastModified": 1753800489,
+        "narHash": "sha256-erLZ4TJCrjX0eOwYF5qzFfuLR9rtYUHPkqPWj0IClkc=",
+        "owner": "l3mon4d3",
+        "repo": "scientific-fhs",
+        "rev": "708429d53d7c079263903badf644121f2984b8aa",
+        "type": "github"
       },
       "original": {
-        "path": "/home/simon/projects/scientific-fhs",
-        "type": "path"
+        "owner": "l3mon4d3",
+        "repo": "scientific-fhs",
+        "type": "github"
       }
     },
     "snowfall-lib": {
