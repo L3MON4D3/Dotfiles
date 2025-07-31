@@ -81,6 +81,8 @@
     lsi = "/home/simon/projects/nvim/luasnip-issues";
     nx =  "/home/simon/projects/dotfiles/nixos/configuration.nix";
     ms = "/home/simon/projects/master";
+    au = "/srv/media/audio";
+    vi = "/srv/media/video";
   };
   programs.bash.enable = true;
   # make sure profile is loaded (provides sessionVariables).
