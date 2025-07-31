@@ -17,6 +17,7 @@ rec {
         machine_id = "carmine";
         address = "192.168.178.21";
         interface = "enp34s0";
+        mac = "00:d8:61:53:a8:63";
         services = [
           "cache.carmine"
           "mympd"
@@ -38,6 +39,7 @@ rec {
         machine_id = "indigo";
         address = "192.168.178.20";
         interface = "enp0s31f6";
+        mac = "70:85:c2:01:58:04";
         services = [
           "mysql"
           "jackett"

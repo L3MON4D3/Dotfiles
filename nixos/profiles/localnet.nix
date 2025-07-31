@@ -2,11 +2,17 @@
 
 let 
   lan = data.network.lan;
+  lan_machine = lan.peers.${machine};
 in
 {
   networking.hostName = machine;
   networking.useDHCP = false;
   networking.firewall.enable = false;
+
+  networking.interfaces.${lan_machine.interface} = {
+    macAddress = lan_machine.mac; 
+    wakeOnLan.enable = true;
+  };
 
   systemd.network.enable = true;
   systemd.network.networks."10-lan" = {
