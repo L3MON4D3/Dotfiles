@@ -18,6 +18,7 @@
     ./profiles/bash-dircolors.nix
 
     ./profiles/history.nix
+    ./profiles/wakeonlan.nix
   ];
 
   # Set your time zone.
