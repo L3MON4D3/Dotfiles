@@ -192,7 +192,7 @@ in {
 
   home-manager.sharedModules = [
     (
-      { config, lib, pkgs, machine, data, ... }:
+      { config, lib, pkgs, machine, data, nur, aa-torrent-dl, ... }:
       
       let
         cursor_theme_name = "phinger-cursors-light";
@@ -216,7 +216,81 @@ in {
           adapta-kde-theme
           sway_float
           xdragon
+
+          wl-clipboard
+          legcord
+          # thunderbird is configured in-app, I know, bad, but email-settings are
+          # pretty much set and forget, so that's fine I guess.
+          # Settings include
+          # * GNUPG
+          # * date format https://support.mozilla.org/en-US/kb/customize-date-time-formats-thunderbird
+          # via config editor.
+          thunderbird
         ];
+
+        wayland.windowManager.sway.extraConfig = ''
+          mode "apps" {
+            bindsym d exec legcord
+            bindsym t exec thunderbird
+          }
+        '';
+
+        programs.firefox = {
+          enable = true; 
+          nativeMessagingHosts = [
+            pkgs.passff-host
+            aa-torrent-dl.native-app
+          ];
+          package = pkgs.firefox-wayland;
+          profiles = {
+            default = {
+              name = "default";
+              isDefault = true;
+              id = 0;
+              settings = {
+                # these can't be set via policies.
+                "widget.use-xdg-desktop-portal.file-picker" = 1;
+                "browser.aboutConfig.showWarning" = false;
+                "browser.compactmode.show" = true;
+                "widget.disable-workspace-management" = true;
+              };
+              search = {
+                force = true;
+                # from https://gitlab.com/usmcamp0811/dotfiles/-/blob/fb584a888680ff909319efdcbf33d863d0c00eaa/modules/home/apps/firefox/default.nix
+                engines = {
+                  "Nix Packages" = {
+                    urls = [{
+                      template = "https://search.nixos.org/packages";
+                      params = [
+                        { name = "type"; value = "packages"; }
+                        { name = "query"; value = "{searchTerms}"; }
+                      ];
+                    }];
+                    icon = "''${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                    definedAliases = [ "@np" ];
+                  };
+                  "NixOS Wiki" = {
+                    urls = [{ template = "https://nixos.wiki/index.php?search={searchTerms}"; }];
+                    icon = "https://nixos.wiki/favicon.png";
+                    updateInterval = 24 * 60 * 60 * 1000; # every day
+                    definedAliases = [ "@nw" ];
+                  };
+                  google.metaData.alias = "@g";
+                };
+              };
+              extensions.packages = with nur.repos.rycee.firefox-addons; [
+                ublock-origin
+                passff
+                aa-torrent-dl.extension
+              ];
+            };
+          };
+        };
+
+        services.gpg-agent = {
+          enable = true;
+          pinentry.package = pkgs.pinentry-gnome3;
+        };
 
         wayland.windowManager.sway = {
           enable = true;
