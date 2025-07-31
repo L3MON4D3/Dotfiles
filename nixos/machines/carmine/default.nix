@@ -59,6 +59,9 @@
     "d /mnt/indigo 0755 simon simon"
   ];
 
+  # required for the sshfs_mount above.
+  programs.fuse.userAllowOther = true;
+
   boot.loader.systemd-boot.enable = true;
 
   l3mon.network_namespaces = {
