@@ -670,8 +670,8 @@ mc.register(mdir(luasnip_dir), c{
 	repl = {
 		target = repl_secondary,
 		type = "bash",
+		cmd = {"nix", "develop", luasnip_dir},
 		opts = {
-			cmd = {"nix", "develop", luasnip_dir},
 			cwd = luasnip_dir
 		},
 		mappings = {
