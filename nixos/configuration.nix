@@ -70,27 +70,6 @@
     MANWIDTH = "100";
   };
 
-  security.sudo = {
-    enable = true;
-    extraRules = [{
-      commands = [
-        {
-          # insecure, allows arbitrary modification to system by me, CAREFUL, UP TO NO GOOD!!!.
-          command = ''${pkgs.nixos-rebuild}/bin/nixos-rebuild'';
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = ''/run/current-system/sw/bin/nixos-rebuild'';
-          options = [ "NOPASSWD" ];
-        }
-      ];
-      groups = [ "simon" ];
-    }];
-    extraConfig = with pkgs; ''
-      Defaults env_keep += "SYSTEMD_EDITOR"
-    '';
-  };
-
   # programs.firefox.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -189,9 +168,6 @@
       ];
       trusted-public-keys = [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
-      trusted-users = [
-        "simon"
       ];
     };
     registry = {
