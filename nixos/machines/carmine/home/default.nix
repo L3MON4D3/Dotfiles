@@ -4,6 +4,7 @@
   imports = [
     ./profiles/sway-io.nix
     ./profiles/jellyfin-conf.nix
+    ./profiles/store-secrets.nix
   ];
   l3mon.sway = {
     workrooms.enable = true;
