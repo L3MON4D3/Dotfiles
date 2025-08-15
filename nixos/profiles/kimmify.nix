@@ -3,7 +3,7 @@
 let 
   kimmify = pkgs.writeShellApplication {
     name = "kimmify";
-    runtimeInputs = with pkgs; [ ffmpeg util-linux ripgrep coreutils ];
+    runtimeInputs = with pkgs; [ (ffmpeg.override {withPlacebo=true;}) util-linux ripgrep coreutils ];
     text = ''
       TARGET_DIR=/srv/media/video/kim
 
@@ -22,17 +22,11 @@ let
         #
         # 0:V to exclude cover art.
 
-        IS_HDR=$(ffmpeg -i "''${FILE_PATH}" 2>&1 | rg -o bt2020) || true
-        EXTRA_vf=""
-        if [[ -n "''${IS_HDR}" ]]; then
-          EXTRA_vf="zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=reinhard:desat=0,zscale=t=bt709:m=bt709:r=tv,"
-        fi
-
         # confine ffmpeg to all but the first core.
         # for nvenc: -hwaccel -vcodec h264_nvenc -preset p7 (for example).
-        taskset -c 1-"$(lscpu | rg ^CPU.s.: | rg -o -e '\d')" ffmpeg -i "''${FILE_PATH}" \
+        taskset -c 1-"$(lscpu | rg ^CPU.s.: | rg -o -e '\d+')" ffmpeg -init_hw_device vulkan -i "''${FILE_PATH}" \
           -map 0:V \
-            -vf "scale=1920:-1,pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2,''${EXTRA_vf}format=yuv420p," \
+            -vf "hwupload,libplacebo=w=1920:h=1080:force_original_aspect_ratio=decrease:normalize_sar=true:upscaler=ewa_lanczos:downscaler=ewa_lanczos,pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2,format=yuv420p" \
             -profile:v high \
             -level:v 4.1 \
             -vcodec libx264 \
