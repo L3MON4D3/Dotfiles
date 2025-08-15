@@ -414,20 +414,6 @@ mc.register(mft"cpp" * mdir(qb_dir), c{
 -- python
 --
 mc.register(mft"python", c{
-	dap = {
-		launch = {
-			type = 'python',
-			request = 'launch',
-			name = 'launch',
-			program = '${file}',
-			cwd = '${workspaceFolder}',
-			env = {
-				PYTHONPATH = "${workspaceFolder}"
-			},
-			justMyCode = false
-		}
-	}
-} .. c{
 	repl = {
 		target = repl_all,
 		type = "python",
@@ -1136,6 +1122,24 @@ local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 })
 master:after("filetype(julia)")
 master:blacklist(julia_ft_using)
+
+---
+--- projects/clarkesworld-epub
+---
+local cw_epub = "/home/simon/projects/clarkesworld-epub"
+mc.register(mdir(cw_epub) * mft"python", c{
+	dap = {
+		launch = {
+			type = 'python',
+			request = 'launch',
+			name = 'launch',
+			program = '${file}',
+			cwd = '${workspaceFolder}',
+			justMyCode = false,
+			subProcess = false
+		}
+	}
+})
 
 ---
 ---projects/panvimdoc

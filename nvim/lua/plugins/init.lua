@@ -197,7 +197,7 @@ local plugin_spec = {
 	use(yuck),
 	use(promise),
 	conf_use(oil),
-	conf_use(dap_py),
+	-- conf_use(dap_py),
 	conf_use(tele_bibtex),
 	use(screenkey),
 	conf_use({

@@ -1,4 +1,4 @@
-require('dap-python').setup('/usr/bin/python')
+require('dap-python').setup('python')
 
 table.insert(require('dap').configurations.python, {
   type = 'python',
