@@ -5,8 +5,13 @@ let
   secondary = "HDMI-A-1";
 in {
   wayland.windowManager.sway.extraConfig = ''
-    input type:pointer {
+    input 1133:50504:Logitech_USB_Receiver_Mouse {
       pointer_accel -1
+    }
+
+    input 1240:60205:liliums_Lily58_Mouse {
+      pointer_accel 1
+      scroll_factor 0.06
     }
 
     input 1240:60205:liliums_Lily58 {
