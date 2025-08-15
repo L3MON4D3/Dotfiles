@@ -13,6 +13,14 @@ dap.adapters.lldb = {
 	command = 'lldb-dap',
 	name = "lldb",
 }
+dap.adapters.python = {
+	type = "executable",
+	command = "python",
+	args = {"-m", "debugpy.adapter"};
+	options = {
+		source_filetype = "python"
+	}
+}
 dap.adapters.julia = {
 	type = "server",
 	port = "${port}",
