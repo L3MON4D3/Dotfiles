@@ -83,6 +83,7 @@ in {
       # show first two workspaces?
       # workspace h2
       # workspace h1
+      exec ${sway-workrooms}/bin/sway-workrooms h
     '' +
     (lib.strings.concatLines (
       lib.imap1 (i: v: ''workspace h${toString i} output ${v}'') outputs
