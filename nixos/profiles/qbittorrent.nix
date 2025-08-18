@@ -95,35 +95,139 @@ in
     };
 
 
-    systemd.services.qbittorrent_de = config.l3mon.network_namespaces.mkNetnsService wg_network {
-      enable = true;
-      description = "Run qbittorrent in network namespace de";
-      wantedBy = ["multi-user.target"];
-      serviceConfig = {
-        Type = "exec";
-      };
-      serviceConfig = {
-        User="qbittorrent";
-        Group="qbittorrent";
-      };
-      script = ''
-        ${pkgs-unstable.qbittorrent-nox.overrideAttrs(old: {
-          patches = [
-            ./qbt_subpiece_progress.patch
-          ];
-        })}/bin/qbittorrent-nox --profile=${qb_statedir}
-      '';
-    };
-    systemd.tmpfiles.rules = [
-      "d    ${qb_statedir}  0750    qbittorrent qbittorrent"
-      "Z    ${qb_statedir}  0750    qbittorrent qbittorrent"
-    ];
-    
     services.caddy.extraConfig = ''
       http://qbittorrent, http://qbittorrent.internal, http://qbittorrent.${machine} {
         reverse_proxy http://${wg_machine_conf.local.address}:${qb_port}
       }
     '';
+
+    systemd = let
+      qb_control = pkgs.writers.writePython3 "qb_control" {
+        libraries = [ pkgs.python3Packages.qbittorrent-api ];
+      } ''
+        import qbittorrentapi
+        from enum import Enum
+        from functools import reduce
+
+        client = qbittorrentapi.Client(host="qbittorrent.internal:80")
+
+
+        class QBTTorrent:
+            def __init__(self, hash=None):
+                assert hash
+                self.hash = hash
+
+            @classmethod
+            def from_hash(cls, hash):
+                return cls(hash=hash)
+
+            def stop(self):
+                client.torrents_stop(self.hash)
+
+            def info(self):
+                return client.torrents_info(torrent_hashes=self.hash)[0]
+
+            def limit_download(self) :
+                client.torrents_set_download_limit(torrent_hashes=self.hash, limit=1)
+
+            def unlimit_download(self) :
+                client.torrents_set_download_limit(torrent_hashes=self.hash, limit=-1)
+
+        class APITorrentState(Enum):
+            ERROR = "error"
+            MISSING_FILES = "missingFiles"
+            UPLOADING = "uploading"
+            STOPPED_UPLOAD = "stoppedUP"
+            QUEUED_UPLOAD = "queuedUP"
+            STALLED_UPLOAD = "stalledUP"
+            CHECKING_UPLOAD = "checkingUP"
+            FORCED_UPLOAD = "forcedUP"
+            ALLOCATING = "allocating"
+            DOWNLOADING = "downloading"
+            METADATA_DOWNLOAD = "metaDL"
+            FORCED_METADATA_DOWNLOAD = "forcedMetaDL"
+            STOPPED_DOWNLOAD = "stoppedDL"
+            QUEUED_DOWNLOAD = "queuedDL"
+            FORCED_DOWNLOAD = "forcedDL"
+            STALLED_DOWNLOAD = "stalledDL"
+            CHECKING_DOWNLOAD = "checkingDL"
+            CHECKING_RESUME_DATA = "checkingResumeData"
+            MOVING = "moving"
+            UNKNOWN = "unknown"
+
+        # not sure about the statuses here..
+        def get_torrents(state, category):
+            return reduce(
+                lambda list, info:
+                    list + ([QBTTorrent.from_hash(info.hash)]
+                            if info.state in state else []),
+                client.torrents_info(category=category), [])
+
+        # only stop if movie is actually downloading!
+        movie_downloading_states = frozenset({
+            APITorrentState.FORCED_DOWNLOAD.value,
+            APITorrentState.DOWNLOADING.value
+        })
+
+        # collect states to stop.
+        aa_downloading_states = frozenset({
+            APITorrentState.FORCED_DOWNLOAD.value,
+            APITorrentState.STALLED_DOWNLOAD.value,
+            APITorrentState.DOWNLOADING.value
+        })
+
+        priority_dl_torrents = get_torrents(movie_downloading_states, "radarr") + get_torrents(movie_downloading_states, "tv-sonarr")
+        if len(priority_dl_torrents) > 0 :
+            for t in get_torrents(aa_downloading_states, "aa") :
+                t.limit_download()
+        else :
+            for t in get_torrents(aa_downloading_states, "aa") :
+                t.unlimit_download()
+      '';
+    in {
+      tmpfiles.rules = [
+        "d    ${qb_statedir}  0750    qbittorrent qbittorrent"
+        "Z    ${qb_statedir}  0750    qbittorrent qbittorrent"
+      ];
+      timers.qb_control = {
+        enable = true;
+        wantedBy = ["timers.target"];
+        timerConfig = {
+          OnBootSec = "5min";
+          OnUnitInactiveSec = "1min";
+          Unit = "qb_control.service";
+        };
+      };
+      services = {
+        qb_control = {
+          requires = ["qbittorrent_de.service"];
+          Type = "oneshot";
+          dynamicUser = true;
+          script = ''
+            ${qb_control}/bin/qb_control
+          '';
+        };
+        qbittorrent_de = config.l3mon.network_namespaces.mkNetnsService wg_network {
+          enable = true;
+          description = "Run qbittorrent in network namespace de";
+          wantedBy = ["multi-user.target"];
+          serviceConfig = {
+            Type = "exec";
+          };
+          serviceConfig = {
+            User="qbittorrent";
+            Group="qbittorrent";
+          };
+          script = ''
+            ${pkgs-unstable.qbittorrent-nox.overrideAttrs(old: {
+              patches = [
+                ./qbt_subpiece_progress.patch
+              ];
+            })}/bin/qbittorrent-nox --profile=${qb_statedir}
+          '';
+        };
+      };
+    };
 
     l3mon.restic.extraGroups = [ "qbittorrent" ];
     l3mon.restic.specs.qbittorrent = {
