@@ -7,7 +7,18 @@ rec {
     ssid = "FRITZ!Box 5590 RM";
     peers = {
       fritzbox = {
+        machine_id = "fritzbox";
         address = "192.168.178.1";
+        services = [
+          "fritzbox"
+        ];
+      };
+      prusamini = {
+        machine_id = "prusamini";
+        address = "192.168.178.13";
+        services = [
+          "prusamini"
+        ];
       };
       teal = {
         address = "192.168.178.6";
