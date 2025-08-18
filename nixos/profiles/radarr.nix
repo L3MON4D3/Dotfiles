@@ -29,6 +29,16 @@ let
       </Config>
     '';
   };
+  radarr-import = pkgs.writeShellApplication {
+    name = "radarr-import";
+    runtimeInputs = with pkgs; [ coreutils ];
+    text = ''
+      # shellcheck disable=SC2154
+      mkdir -p "$radarr_movie_path"
+      # shellcheck disable=SC2154
+      cp --reflink=auto "$radarr_sourcepath" "$radarr_moviefile_path"
+    '';
+  };
 in
 {
   config = {
@@ -49,6 +59,7 @@ in
           source ${l3lib.secret "radarr_env"}
           RADARR_API_KEY=$RADARR_API_KEY ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${statedir}/config.xml
           chown radarr:radarr ${statedir}/config.xml
+          ln -sf ${radarr-import}/bin/radarr-import ${statedir}/import.sh
         '';
       };
     };

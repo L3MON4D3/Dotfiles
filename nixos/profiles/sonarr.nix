@@ -29,6 +29,16 @@ let
       </Config>
     '';
   };
+  sonarr-import = pkgs.writeShellApplication {
+    name = "sonarr-import";
+    runtimeInputs = with pkgs; [ coreutils ];
+    text = ''
+      # shellcheck disable=SC2154
+      mkdir -p "$(dirname "$sonarr_destinationpath")"
+      # shellcheck disable=SC2154
+      cp --reflink=auto "$sonarr_sourcepath" "$sonarr_destinationpath"
+    '';
+  };
 in
 {
   config = {
@@ -50,6 +60,7 @@ in
           source ${l3lib.secret "sonarr_env"}
           SONARR_API_KEY=$SONARR_API_KEY ${pkgs.envsubst}/bin/envsubst -i ${conf} -o ${statedir}/config.xml
           chown sonarr:sonarr ${statedir}/config.xml
+          ln -sf ${sonarr-import}/bin/sonarr-import ${statedir}/import.sh
         '';
       };
     };
