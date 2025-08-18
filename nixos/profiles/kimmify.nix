@@ -30,8 +30,8 @@ let
             -profile:v high \
             -level:v 4.1 \
             -vcodec libx264 \
-            -crf 18 \
-            -preset slow \
+            -crf 19 \
+            -preset veryslow \
           -map 0:a \
             -acodec aac \
           -map 0:s? \
