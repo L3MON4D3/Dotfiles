@@ -11,10 +11,10 @@ let
     text = ''
       [BitTorrent]
       Session\CreateTorrentSubfolder=true
-      Session\DisableAutoTMMByDefault=true
+      Session\DisableAutoTMMByDefault=false
       Session\DisableAutoTMMTriggers\CategoryChanged=false
-      Session\DisableAutoTMMTriggers\CategorySavePathChanged=true
-      Session\DisableAutoTMMTriggers\DefaultSavePathChanged=true
+      Session\DisableAutoTMMTriggers\CategorySavePathChanged=false
+      Session\DisableAutoTMMTriggers\DefaultSavePathChanged=false
       Session\AnonymousModeEnabled=true
 
       Session\AlternativeGlobalDLSpeedLimit=0
