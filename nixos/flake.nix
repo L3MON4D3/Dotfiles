@@ -28,9 +28,14 @@
     mpdlrc.url = "github:l3mon4d3/mpdlrc";
     aa-torrent-dl.url = "github:l3mon4d3/aa-torrent-dl";
     scientific-fhs.url = "github:l3mon4d3/scientific-fhs";
+    microvm = {
+      url = "github:microvm-nix/microvm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    merigold.url = "git+http://git.internal/simon/merigold.git";
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, microvm, merigold, ... }: {
     nixosConfigurations = let
       system = "x86_64-linux";
       pkgs-unstable = import nixpkgs-unstable {
@@ -54,6 +59,7 @@
         modules = [
           ./configuration.nix
           ./machines/${machine_name}
+          microvm.nixosModules.host
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
