@@ -24,9 +24,9 @@ let
 
         # confine ffmpeg to all but the first core.
         # for nvenc: -hwaccel -vcodec h264_nvenc -preset p7 (for example).
-        taskset -c 1-"$(lscpu | rg ^CPU.s.: | rg -o -e '\d+')" ffmpeg -init_hw_device vulkan -i "''${FILE_PATH}" \
+        taskset -c 1-"$(lscpu | rg ^CPU.s.: | rg -o -e '\d+')" ffmpeg -y -init_hw_device vulkan=vk -filter_hw_device vk -hwaccel vulkan -i "''${FILE_PATH}" \
           -map 0:V \
-            -vf "hwupload,libplacebo=w=1920:h=1080:force_original_aspect_ratio=decrease:normalize_sar=true:upscaler=ewa_lanczos:downscaler=ewa_lanczos:colorspace=bt709:color_primaries=bt709:color_trc=bt709:range=tv,pad=width=ceil(iw/2)*2:height=ceil(ih/2)*2,format=yuv420p" \
+            -vf "libplacebo=w=1920:h=1080:force_original_aspect_ratio=decrease:normalize_sar=true:upscaler=ewa_lanczos:downscaler=ewa_lanczos:colorspace=bt709:color_primaries=bt709:color_trc=bt709:range=tv:format=yuv420p" \
             -profile:v high \
             -level:v 4.1 \
             -vcodec libx264 \
