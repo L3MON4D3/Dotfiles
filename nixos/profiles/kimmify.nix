@@ -13,11 +13,11 @@ let
 
         # map video, audio, and subtitle-streams.
         # copy subtitles, transcode video to h264 1080p, transcode audio to aac.
-        # use crf23 for a bitrate appropriate to that TV.
+        # use crf19 for a good bitrate.
         # use veryslow so the files are as small as possible (transcoding happens overnight anyway, so that should be fine :D)
         # profile high and level 4.1 are recommended [here](https://developers.google.com/cast/docs/media)
         #
-        # Apply tonemapping (reinhard) and keep 4:2:0 chroma planes.
+        # Apply tonemapping via libplacebo, and crop video so width|height % 2 == 0 (for yuv420p).
         # The resulting video is not profile high but profile constrained baseline, but that seems fine :)
         #
         # 0:V to exclude cover art.
@@ -26,7 +26,7 @@ let
         # for nvenc: -hwaccel -vcodec h264_nvenc -preset p7 (for example).
         taskset -c 1-"$(lscpu | rg ^CPU.s.: | rg -o -e '\d+')" ffmpeg -y -init_hw_device vulkan=vk -filter_hw_device vk -hwaccel vulkan -i "''${FILE_PATH}" \
           -map 0:V \
-            -vf "libplacebo=w=1920:h=1080:force_original_aspect_ratio=decrease:normalize_sar=true:upscaler=ewa_lanczos:downscaler=ewa_lanczos:colorspace=bt709:color_primaries=bt709:color_trc=bt709:range=tv:format=yuv420p" \
+            -vf "libplacebo=w=1920:h=1080:force_original_aspect_ratio=decrease:normalize_sar=true:upscaler=ewa_lanczos:downscaler=ewa_lanczos:colorspace=bt709:color_primaries=bt709:color_trc=bt709:range=tv:format=yuv420p,crop=trunc(iw/2)*2:trunc(ih/2)*2" \
             -profile:v high \
             -level:v 4.1 \
             -vcodec libx264 \
