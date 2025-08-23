@@ -73,6 +73,19 @@ rec {
         address = "192.168.178.40";
         mac_address = "5e:42:b0:71:f7:1b";
       };
+      merigold = {
+        machine_id = "merigold";
+        address = "192.168.178.30";
+        mac_address = "02:46:6b:e0:7d:24";
+      };
+      merigold-test = {
+        machine_id = "merigold-test";
+        address = "192.168.178.31";
+        mac_address = "02:b6:c0:23:7f:08";
+        services = [
+          "nix-cache.internal"
+        ];
+      };
     };
   };
 
