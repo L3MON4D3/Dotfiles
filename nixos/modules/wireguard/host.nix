@@ -21,6 +21,7 @@ in {
     # for forwarding
     networking.nat.enable = true;
 
+    networking.firewall.allowedUDPPorts = map (spec: lib.strings.toInt (builtins.elemAt (builtins.split ":" spec.config.host.endpoint) 2 )) cfg.specs;
     systemd.services = builtins.listToAttrs (map (spec: let
       wg_network = spec.config;
       wg_name = spec.config.name;

@@ -54,6 +54,9 @@
     ];
   };
 
+  networking.nftables.enable = true;
+  networking.firewall.enable = lib.mkForce true;
+
   l3mon.wg-quick-hosts = {
     enable = true;
     specs = [
@@ -69,6 +72,7 @@
 
   services.caddy.enable = true;
   services.caddy.enableReload = true;
+  networking.firewall.allowedTCPPorts = [80];
 
   services.mysql = {
     enable = true; 
@@ -118,6 +122,7 @@
       block = true;
     };
   };
+  networking.firewall.allowedUDPPorts = [53];
   systemd.services.blocky_wg_home2 = config.l3mon.blocky.mkService {
     conf = config.l3mon.blocky.mkConfig {
       ports = ["10.0.0.1:53"];

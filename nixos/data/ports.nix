@@ -12,6 +12,8 @@
   rmfakecloud = "7007";
   restic-rest-server = "7008";
   mympd = "7009";
+  wireguard_rec_de = "7010";
+  wireguard_home = "7011";
 
   jellyfin_web = "8096";
 }
