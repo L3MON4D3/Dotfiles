@@ -56,6 +56,10 @@
 
   networking.nftables.enable = true;
   networking.firewall.enable = lib.mkForce true;
+  # ssh dns dnsovertls caddy nfs portmapper statd mountd
+  networking.firewall.allowedTCPPorts = [ 22 53 80 853 2049 111 (lib.strings.toInt data.ports.statd) (lib.strings.toInt data.ports.mountd) ];
+  # dns statd mountd
+  networking.firewall.allowedUDPPorts = [ 53 (lib.strings.toInt data.ports.statd) (lib.strings.toInt data.ports.mountd) ];
 
   l3mon.wg-quick-hosts = {
     enable = true;
@@ -72,7 +76,6 @@
 
   services.caddy.enable = true;
   services.caddy.enableReload = true;
-  networking.firewall.allowedTCPPorts = [80];
 
   services.mysql = {
     enable = true; 
@@ -122,7 +125,6 @@
       block = true;
     };
   };
-  networking.firewall.allowedUDPPorts = [53];
   systemd.services.blocky_wg_home2 = config.l3mon.blocky.mkService {
     conf = config.l3mon.blocky.mkConfig {
       ports = ["10.0.0.1:53"];
@@ -135,6 +137,12 @@
   fileSystems."/mnt/torrent" = {
     label = "torrent";
     options = [ "rw" "noauto" "nofail" ];
+  };
+
+  # mount bad storage.
+  fileSystems."/mnt/compressed" = {
+    label = "compress";
+    options = [ "rw" "noauto" "nofail" "compress=zstd:15" ];
   };
 
   boot.supportedFilesystems = ["zfs"];
@@ -280,6 +288,8 @@
       "192.168.178.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash) " +
       "10.0.0.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash)"
   ;
+  services.nfs.server.statdPort = lib.strings.toInt data.ports.statd;
+  services.nfs.server.mountdPort = lib.strings.toInt data.ports.mountd;
 
   services.dbus.implementation = "broker";
   l3mon.zotero.enable_server = true;

@@ -9,25 +9,25 @@ in
   networking.useDHCP = false;
   networking.firewall.enable = false;
 
-  networking.interfaces.${lan_machine.interface} = {
-    macAddress = lan_machine.mac; 
+  networking.interfaces.${lan_machine.phys_interface} = {
+    macAddress = lan_machine.phys_mac; 
     wakeOnLan.enable = true;
   };
 
   systemd.network.enable = true;
   systemd.network.networks = {
     "10-lan" = {
-      matchConfig.Name = lan.peers."${machine}".interface;
+      matchConfig.Name = lan.peers."${machine}".phys_interface;
       # prevent systemd-wait-online for waiting on an ip for this interface.
       linkConfig.RequiredForOnline = "carrier";
       # don't wait for ip-assignment via DHCP.
       networkConfig.DHCP = false;
       networkConfig.IPv6AcceptRA = false;
       networkConfig.LinkLocalAddressing = false;
-      networkConfig.MACVLAN = "v${lan.peers."${machine}".interface}";
+      networkConfig.MACVLAN = "${lan.peers."${machine}".interface}";
     };
     "20-vlan" = {
-      matchConfig.Name = "v${lan.peers.${machine}.interface}";
+      matchConfig.Name = "${lan.peers.${machine}.interface}";
       linkConfig.RequiredForOnline = "routable";
       networkConfig.Address = lan.peers."${machine}".address + lan.subnet_mask;
       networkConfig.Gateway = lan.gateway;
@@ -37,14 +37,15 @@ in
       networkConfig.DNS = lan.dns;
       networkConfig.DNSOverTLS = false;
       networkConfig.DNSSEC = false;
-      networkConfig.BindCarrier = "${lan.peers.${machine}.interface}";
+      networkConfig.BindCarrier = "${lan.peers.${machine}.phys_interface}";
     };
   };
 
   systemd.network.netdevs."10-macvlan" = {
     netdevConfig = {
-      Name = "v${lan.peers."${machine}".interface}";
+      Name = "${lan.peers."${machine}".interface}";
       Kind = "macvlan";
+      MACAddress = "${lan.peers."${machine}".mac}";
     };
     macvlanConfig.Mode = "bridge";
   };

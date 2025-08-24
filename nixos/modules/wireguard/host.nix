@@ -33,6 +33,14 @@ in {
       listen_port = builtins.elemAt (builtins.split ":" host_conf.endpoint) 2;
       peer_spec_to_args = peerconf: " peer ${peerconf.pubkey} allowed-ips ${peerconf.address}/32";
       peers = pkgs.lib.attrsets.foldlAttrs (acc: k: v: acc ++ (if k != machine then [v] else [])) [] wg_network.peers;
+      rules = pkgs.writeText "nft-rules" ''
+        table inet ${wg_name}-nat {
+            chain postrouting {
+                type nat hook postrouting priority 100; policy accept;
+                iifname ${wg_link_name} oifname ${wg_if_network.peers.${machine}.interface} masquerade
+            }
+        }
+      '';
     in {
       name = "host-${wg_network.name}";
       value = {
@@ -45,9 +53,9 @@ in {
           RemainAfterExit = true;
         };
         path = with pkgs; [
-          iptables
           wireguard-tools
           iproute2
+          nftables
         ];
         script = ''
           ip link add ${wg_link_name} type wireguard
@@ -55,15 +63,12 @@ in {
           ${if_netns_do} wg set ${wg_link_name} listen-port ${listen_port} private-key ${host_conf.privkey_file} ${builtins.toString (map peer_spec_to_args peers)}
           ${if_netns_do} ip addr add ${host_conf.address}${wg_network.subnet_mask} dev ${wg_link_name}
           ${if_netns_do} ip link set ${wg_link_name} up
-          ${if_netns_do} iptables -A FORWARD -i ${wg_link_name} -o ${wg_if_network.peers.${machine}.interface} -j ACCEPT
-          ${if_netns_do} iptables -A FORWARD -o ${wg_link_name} -i ${wg_if_network.peers.${machine}.interface} -j ACCEPT
-          ${if_netns_do} iptables -t nat -A POSTROUTING -s ${wg_network.address_range} -o ${wg_if_network.peers.${machine}.interface} -j MASQUERADE
+
+          ${if_netns_do} nft -f ${rules}
         '';
         postStop = ''
-          ${if_netns_do} iptables -t nat -D POSTROUTING -s ${wg_network.address_range} -o ${wg_if_network.peers.${machine}.interface} -j MASQUERADE
-          ${if_netns_do} iptables -D FORWARD -i ${wg_link_name} -o ${wg_if_network.peers.${machine}.interface} -j ACCEPT
-          ${if_netns_do} iptables -D FORWARD -o ${wg_link_name} -i ${wg_if_network.peers.${machine}.interface} -j ACCEPT
           ${if_netns_do} ip link del ${wg_link_name}
+          ${if_netns_do} nft flush table inet ${wg_name}-nat
         '';
       };
     }) cfg.specs);

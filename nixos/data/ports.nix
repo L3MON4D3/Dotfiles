@@ -14,6 +14,8 @@
   mympd = "7009";
   wireguard_rec_de = "7010";
   wireguard_home = "7011";
+  statd = "7012";
+  mountd = "7013";
 
   jellyfin_web = "8096";
 }

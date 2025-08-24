@@ -29,8 +29,10 @@ in rec {
       carmine = {
         machine_id = "carmine";
         address = "192.168.178.21";
-        interface = "enp34s0";
-        mac = "00:d8:61:53:a8:63";
+        phys_interface = "enp34s0";
+        phys_mac = "00:d8:61:53:a8:63";
+        interface = "venp34s0";
+        mac = "02:44:3a:85:35:ae";
         services = [
           "cache.carmine"
           "mympd"
@@ -51,8 +53,10 @@ in rec {
       indigo = {
         machine_id = "indigo";
         address = "192.168.178.20";
-        interface = "enp0s31f6";
-        mac = "70:85:c2:01:58:04";
+        phys_interface = "enp0s31f6";
+        phys_mac = "70:85:c2:01:58:04";
+        interface = "venp0s31f6";
+        mac = "02:b5:0d:d2:90:a5";
         services = [
           "mysql"
           "jackett"
