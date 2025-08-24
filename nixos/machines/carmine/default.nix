@@ -72,6 +72,11 @@
     ];
   };
 
+  networking.nftables.enable = true;
+  networking.firewall.enable = lib.mkForce true;
+  # mpd
+  networking.firewall.allowedTCPPorts = [6600];
+
   l3mon.zotero.enable_client = true;
 
   home-manager.sharedModules = [
