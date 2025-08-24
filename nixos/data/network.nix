@@ -35,7 +35,6 @@ in rec {
         mac = "02:44:3a:85:35:ae";
         services = [
           "cache.carmine"
-          "mympd"
         ];
       };
       cobalt = {

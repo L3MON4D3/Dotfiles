@@ -21,7 +21,7 @@
     ./profiles/remarkable.nix
     ./profiles/ollama.nix
     ./profiles/cardinal.nix
-    ./profiles/mympd.nix
+    # ./profiles/mympd.nix
   ];
 
   environment.shellAliases = {
@@ -93,9 +93,6 @@
   hardware.keyboard.qmk.enable = true;
 
   services.dbus.implementation = "broker";
-
-  services.caddy.enable = true;
-  services.caddy.enableReload = true;
 
   programs.wireshark.enable = true;
   programs.wireshark.package = pkgs.wireshark;
