@@ -94,7 +94,6 @@ in
       };
     };
 
-
     services.caddy.extraConfig = ''
       http://qbittorrent, http://qbittorrent.internal, http://qbittorrent.${machine} {
         reverse_proxy http://${wg_machine_conf.local.address}:${qb_port}
@@ -127,11 +126,12 @@ in
             def info(self):
                 return client.torrents_info(torrent_hashes=self.hash)[0]
 
-            def limit_download(self) :
+            def limit_download(self):
                 client.torrents_set_download_limit(torrent_hashes=self.hash, limit=1)
 
-            def unlimit_download(self) :
+            def unlimit_download(self):
                 client.torrents_set_download_limit(torrent_hashes=self.hash, limit=-1)
+
 
         class APITorrentState(Enum):
             ERROR = "error"
@@ -155,6 +155,7 @@ in
             MOVING = "moving"
             UNKNOWN = "unknown"
 
+
         # not sure about the statuses here..
         def get_torrents(state, category):
             return reduce(
@@ -162,6 +163,7 @@ in
                     list + ([QBTTorrent.from_hash(info.hash)]
                             if info.state in state else []),
                 client.torrents_info(category=category), [])
+
 
         # only stop if movie is actually downloading!
         movie_downloading_states = frozenset({
@@ -176,12 +178,13 @@ in
             APITorrentState.DOWNLOADING.value
         })
 
-        priority_dl_torrents = get_torrents(movie_downloading_states, "radarr") + get_torrents(movie_downloading_states, "tv-sonarr")
-        if len(priority_dl_torrents) > 0 :
-            for t in get_torrents(aa_downloading_states, "aa") :
+        
+        priority_dl_torrents = get_torrents(movie_downloading_states, "radarr") + get_torrents(movie_downloading_states, "tv-sonarr")  # noqa: E501.
+        if len(priority_dl_torrents) > 0:
+            for t in get_torrents(aa_downloading_states, "aa"):
                 t.limit_download()
-        else :
-            for t in get_torrents(aa_downloading_states, "aa") :
+        else:
+            for t in get_torrents(aa_downloading_states, "aa"):
                 t.unlimit_download()
       '';
     in {
@@ -201,10 +204,12 @@ in
       services = {
         qb_control = {
           requires = ["qbittorrent_de.service"];
-          Type = "oneshot";
-          dynamicUser = true;
+          serviceConfig = {
+            Type = "oneshot";
+            dynamicUser = true;
+          };
           script = ''
-            ${qb_control}/bin/qb_control
+            ${qb_control}
           '';
         };
         qbittorrent_de = config.l3mon.network_namespaces.mkNetnsService wg_network {
