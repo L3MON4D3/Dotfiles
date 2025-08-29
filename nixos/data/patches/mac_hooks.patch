@@ -1,0 +1,85 @@
+diff --git a/nixos/modules/services/networking/wpa_supplicant.nix b/nixos/modules/services/networking/wpa_supplicant.nix
+index f4caf21dc3b2..22ecd273ec1f 100644
+--- a/nixos/modules/services/networking/wpa_supplicant.nix
++++ b/nixos/modules/services/networking/wpa_supplicant.nix
+@@ -133,7 +133,14 @@ let
+       serviceConfig.RuntimeDirectory = "wpa_supplicant";
+       serviceConfig.RuntimeDirectoryMode = "700";
+ 
+-      script = ''
++      script = let
++        maccmdspec_to_case_lfold = acc: k: v: acc + ''
++          ${if v.mac == null then "*" else v.mac})
++            printf Running config for ${k}
++            ${v.cmd}
++            ;;
++        '';
++      in ''
+         ${optionalString (configIsGenerated && !cfg.allowAuxiliaryImperativeNetworks) ''
+           if [ -f /etc/wpa_supplicant.conf ]; then
+             echo >&2 "<3>/etc/wpa_supplicant.conf present but ignored. Generated ${configFile} is used instead."
+@@ -145,7 +152,7 @@ let
+           touch /etc/wpa_supplicant.conf
+         ''}
+ 
+-        iface_args="-s ${optionalString cfg.dbusControlled "-u"} -D${cfg.driver} ${configStr}"
++        iface_args="${optionalString cfg.dbusControlled "-u"} -D${cfg.driver} ${configStr}"
+ 
+         ${
+           if iface == null then
+@@ -178,7 +185,20 @@ let
+         }
+ 
+         # finally start daemon
+-        exec wpa_supplicant $args
++        wpa_supplicant $args | while IFS= read -r line
++          do
++            echo $line
++            re='Associated with ([a-f0-9:]+)$'
++            if [[ $line =~ $re ]]; then
++              printf "Running command for access point ''${BASH_REMATCH[1]}\n"
++              case "''${BASH_REMATCH[1]}" in
++                # non-default hooks
++                ${lib.attrsets.foldlAttrs maccmdspec_to_case_lfold "" (lib.attrsets.filterAttrs (k: v: v.mac != null) cfg.mac_hooks)}
++                # default hook(s).
++                ${lib.attrsets.foldlAttrs maccmdspec_to_case_lfold "" (lib.attrsets.filterAttrs (k: v: v.mac == null) cfg.mac_hooks)}
++              esac
++            fi
++          done
+       '';
+     };
+ 
+@@ -517,6 +537,34 @@ in
+           for available options.
+         '';
+       };
++      mac_hooks = mkOption {
++        type = types.attrsOf (
++          types.submodule {
++            options = {
++              mac = mkOption {
++                type = types.nullOr types.str;
++                default = null;
++                example = "aa:bb:cc:dd:ee:ff";
++                description = ''
++                  The mac address the cmd should be executed for. If no mac is
++                  set, this cmd will be executed for associated mac that have
++                  not yet matched a mac_hook.
++                '';
++              };
++              cmd = mkOption {
++                type = types.str;
++                default = null;
++                example = "echo Associated with home!";
++                description = ''
++                  This string is inserted verbatim into a bash script, and
++                  executed when wpa_supplicant associates with a router
++                  matching `mac`.
++                '';
++              };
++            };
++          }
++        );
++      };
+     };
+   };

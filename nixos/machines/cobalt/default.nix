@@ -1,7 +1,11 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, machine, data, self, inputs, patched_wpa_supplicant, ... }:
 
 {
+  disabledModules = ["services/networking/wpa_supplicant.nix"];
+
   imports = [
+    "${patched_wpa_supplicant}/wpa_supplicant.nix"
+
     ../../profiles/simon.nix
     ../../profiles/sway
     ../../profiles/mobile-net.nix
@@ -22,6 +26,29 @@
       "FRITZ!Box 5590 RM".pskRaw = "ext:psk_home";
       "AndroidAP_jBEfSJ".pskRaw = "ext:psk_phone";
       "Alpakas zu verkaufen - speed".pskRaw = "ext:psk_kim";
+    };
+    interfaces = ["wlo1"];
+    mac_hooks = {
+      "home" = {
+        mac = "04:b4:fe:ab:a7:6a";
+        cmd = ''
+          ${pkgs.iproute2}/bin/ip link set dev wg_home2 mtu 1420
+          /nix/var/nix/profiles/system/bin/switch-to-configuration switch
+        '';
+      };
+      "alpakas-kim" = {
+        mac = "3c:37:12:e0:34:f5";
+        cmd = ''
+          ${pkgs.iproute2}/bin/ip link set dev wg_home2 mtu 1400
+          /nix/var/nix/profiles/system/specialisation/nonhomenet/bin/switch-to-configuration switch
+        '';
+      };
+      default = {
+        cmd = ''
+          ${pkgs.iproute2}/bin/ip link set dev wg_home2 mtu 1420
+          /nix/var/nix/profiles/system/specialisation/nonhomenet/bin/switch-to-configuration switch
+        '';
+      };
     };
   };
 
@@ -78,6 +105,11 @@
     pull = true;
   };
 
+  specialisation = {
+    nonhomenet.configuration = {
+      l3mon.peercache = lib.mkForce { pull = false; };
+    }; 
+  };
   home-manager.sharedModules = [
     ({ config, lib, pkgs, machine, data, ... }: {
       imports = [ ./home ];

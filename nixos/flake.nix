@@ -37,6 +37,7 @@
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, microvm, merigold, ... }: {
     nixosConfigurations = let
+      pkgs = import nixpkgs { inherit system; };
       system = "x86_64-linux";
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
@@ -55,6 +56,12 @@
           pkgs-ddns-updater-2-7 = import nixpkgs-ddns-updater-2-7 {
             inherit system;
           };
+          patched_wpa_supplicant = pkgs.runCommand "patched-wpa-supplicant" {} ''
+            mkdir -p $out
+            echo ${nixpkgs.outPath}
+            cp ${nixpkgs.outPath}/nixos/modules/services/networking/wpa_supplicant.nix $out/wpa_supplicant.nix
+            patch -p1 $out/wpa_supplicant.nix ${./.}/data/patches/mac_hooks.patch
+          '';
         };
         modules = [
           ./configuration.nix
@@ -69,7 +76,7 @@
             home-manager.extraSpecialArgs = {
               inherit inputs pkgs-unstable;
               data = import ./data;
-              l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
+              l3lib = import ./lib.nix { inherit pkgs; };
               nur = inputs.nur.legacyPackages.${system};
               aa-torrent-dl = inputs.aa-torrent-dl.packages.${system};
               scientific-fhs = inputs.scientific-fhs.packages.${system}.scientific-fhs;
@@ -80,7 +87,7 @@
               inherit inputs system self;
               data = import ./data;
               machine = machine_name;
-              l3lib = import ./lib.nix { pkgs = import inputs.nixpkgs { inherit system; }; };
+              l3lib = import ./lib.nix { inherit pkgs; };
               nur = inputs.nur.legacyPackages.${system};
             };
           }
