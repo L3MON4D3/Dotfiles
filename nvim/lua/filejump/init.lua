@@ -6,7 +6,7 @@ local function t(x) return vim.api.nvim_replace_termcodes(x, true, true, true)  
 local function binding_valid_buf(bufnr)
 	-- only for buffer
 	local bufname = vim.api.nvim_buf_get_name(bufnr)
-	return bufname:match("^/") or vim.bo[bufnr].filetype == "repl" or vim.bo[bufnr].filetype == "term"
+	return (bufnr == 1 and bufname == "") or bufname:match("^/") or vim.bo[bufnr].filetype == "repl" or vim.bo[bufnr].filetype == "term"
 end
 
 -- whether this window can be used for displaying some file.
