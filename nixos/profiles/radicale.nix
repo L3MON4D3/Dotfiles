@@ -9,7 +9,7 @@ in {
     settings = {
       storage.filesystem_folder = "/var/lib/radicale/collections";
       server = {
-        hosts = "0.0.0.0:${port}";
+        hosts = "0.0.0.0:${toString port}";
         max_connections = 20;
         max_content_length = 1000000000;
         timeout = 30;

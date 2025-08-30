@@ -19,7 +19,7 @@ let
   name = "conf";
   text = ''
     {
-      "Port": ${port},
+      "Port": ${toString port},
       "LocalBindAddress": "127.0.0.1",
       "AllowExternal": true,
       "AllowCORS": false,
@@ -127,7 +127,7 @@ in
 
     services.caddy.extraConfig = ''
       http://jackett, http://jackett.internal, http://jackett.${machine} {
-        reverse_proxy http://${wg_machine_conf.local.address}:${port}
+        reverse_proxy http://${wg_machine_conf.local.address}:${toString port}
       }
     '';
     

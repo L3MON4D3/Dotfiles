@@ -14,7 +14,7 @@ in {
       server = {
         DOMAIN = "git.internal";
         ROOT_URL = "http://${srv.DOMAIN}";
-        HTTP_PORT = lib.strings.toInt port;
+        HTTP_PORT = port;
       };
       service.DISABLE_REGISTRATION = true;
     };
@@ -30,7 +30,7 @@ in {
 
   services.caddy.extraConfig = ''
     http://git, http://git.internal, http://git.${machine} {
-      reverse_proxy http://${machine_lan_address}:${port}
+      reverse_proxy http://${machine_lan_address}:${toString port}
     }
   '';
 

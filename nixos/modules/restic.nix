@@ -251,13 +251,13 @@ in {
     in {
       services.restic.server = {
         enable = true;
-        listenAddress = "0.0.0.0:${port}";
+        listenAddress = "0.0.0.0:${toString port}";
         dataDir = "/srv/restic";
         extraFlags = [ "--no-auth" ];
       };
       services.caddy.extraConfig = ''
         http://restic, http://restic.internal, http://restic.${machine} {
-          reverse_proxy http://${machine_lan_address}:${port}
+          reverse_proxy http://${machine_lan_address}:${toString port}
         }
       '';
     }))

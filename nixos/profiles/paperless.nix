@@ -8,7 +8,7 @@ in {
     enable = true;
 
     address = machine_lan_address;
-    port = lib.toInt port;
+    port = port;
 
     passwordFile = l3lib.secret "paperless_password";
     settings = {
@@ -28,7 +28,7 @@ in {
   # 315 is id of paperless.
   # make sure client has id 315 for paperless as well, and user belongs to paperless-group.
   services.nfs.server.exports = ''
-    /srv/nfs/paperless-consume 192.168.178.0/24(rw,all_squash,anonuid=${builtins.toString config.ids.uids.paperless},anongid=${builtins.toString config.ids.gids.paperless})
+    /srv/nfs/paperless-consume 192.168.178.0/24(rw,all_squash,anonuid=${toString config.ids.uids.paperless},anongid=${toString config.ids.gids.paperless})
   '';
 
   systemd.tmpfiles.rules = lib.mkAfter [
@@ -59,7 +59,7 @@ in {
 
   services.caddy.extraConfig = ''
     http://paperless, http://paperless.internal, http://paperless.${machine} {
-      reverse_proxy http://${machine_lan_address}:${port}
+      reverse_proxy http://${machine_lan_address}:${toString port}
     }
   '';
 }

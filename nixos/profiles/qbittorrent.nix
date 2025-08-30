@@ -59,7 +59,7 @@ let
       MailNotification\enabled=false
 
       WebUI\Address=*
-      WebUI\Port=${qb_port}
+      WebUI\Port=${toString qb_port}
       WebUI\AlternativeUIEnabled=false
       WebUI\CSRFProtection=false
       WebUI\ClickjackingProtection=true
@@ -96,7 +96,7 @@ in
 
     services.caddy.extraConfig = ''
       http://qbittorrent, http://qbittorrent.internal, http://qbittorrent.${machine} {
-        reverse_proxy http://${wg_machine_conf.local.address}:${qb_port}
+        reverse_proxy http://${wg_machine_conf.local.address}:${toString qb_port}
       }
     '';
 

@@ -56,10 +56,8 @@
 
   networking.nftables.enable = true;
   networking.firewall.enable = lib.mkForce true;
-  # ssh dns dnsovertls caddy nfs portmapper statd mountd
-  networking.firewall.allowedTCPPorts = [ 22 53 80 853 2049 111 (lib.strings.toInt data.ports.statd) (lib.strings.toInt data.ports.mountd) ];
-  # dns statd mountd
-  networking.firewall.allowedUDPPorts = [ 53 (lib.strings.toInt data.ports.statd) (lib.strings.toInt data.ports.mountd) ];
+  networking.firewall.allowedTCPPorts = with data.ports; [ ssh dns http dnstls smb rpcbind nfsv4 statd mountd ];
+  networking.firewall.allowedUDPPorts = with data.ports; [ dns statd mountd rpcbind nbt-ns nbd jellyfin_discovery ];
 
   l3mon.wg-quick-hosts = {
     enable = true;
@@ -288,8 +286,8 @@
       "192.168.178.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash) " +
       "10.0.0.0/24(rw,fsid=b833bef7-1307-4a3e-a580-258b21f51770,no_root_squash)"
   ;
-  services.nfs.server.statdPort = lib.strings.toInt data.ports.statd;
-  services.nfs.server.mountdPort = lib.strings.toInt data.ports.mountd;
+  services.nfs.server.statdPort = data.ports.statd;
+  services.nfs.server.mountdPort = data.ports.mountd;
 
   services.dbus.implementation = "broker";
   l3mon.zotero.enable_server = true;

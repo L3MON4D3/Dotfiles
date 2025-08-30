@@ -12,7 +12,7 @@ let
     text = ''
       <Config>
         <BindAddress>*</BindAddress>
-        <Port>${port}</Port>
+        <Port>${toString port}</Port>
         <SslPort>9898</SslPort>
         <EnableSsl>False</EnableSsl>
         <LaunchBrowser>False</LaunchBrowser>
@@ -95,7 +95,7 @@ in
     
     services.caddy.extraConfig = ''
       http://sonarr, http://sonarr.internal, http://sonarr.${machine} {
-        reverse_proxy http://${wg_machine_conf.local.address}:${port}
+        reverse_proxy http://${wg_machine_conf.local.address}:${toString port}
       }
     '';
 

@@ -5,7 +5,7 @@ let
   statedir = "/var/lib/rmfakecloud";
   secret_key_env_file = l3lib.secret "rmfakecloud_env";
   machine_lan_address = data.network.lan.peers.${machine}.address;
-  port = data.ports.rmfakecloud;
+  port = toString data.ports.rmfakecloud;
   userprofile = pkgs.writeTextFile {
     name = "userprofile";
     text = ''

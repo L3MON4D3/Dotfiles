@@ -2,16 +2,17 @@
 
 let
   machine_lan_address = data.network.lan.peers.${machine}.address;
+  port = data.ports.immich;
 in {
   services.immich = {
     enable = true;
-    port = lib.toInt data.ports.immich;
+    port = port;
     host = machine_lan_address;
   };
 
   services.caddy.extraConfig = ''
     http://immich, http://immich.internal, http://immich.${machine} {
-      reverse_proxy http://${machine_lan_address}:${data.ports.immich}
+      reverse_proxy http://${machine_lan_address}:${toString port}
     }
   '';
 

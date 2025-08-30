@@ -30,11 +30,12 @@ with lib;
       services.nix-serve = {
         enable = true;
         secretKeyFile = l3lib.secret "cache-priv-key.pem";
+        port = data.ports.nix-serve;
       };
 
       services.caddy.extraConfig = ''
         http://cache.${machine}.internal {
-          reverse_proxy http://${machine_lan_address}:${builtins.toString config.services.nix-serve.port}
+          reverse_proxy http://${machine_lan_address}:${toString data.ports.nix-serve}
         }
       '';
     })

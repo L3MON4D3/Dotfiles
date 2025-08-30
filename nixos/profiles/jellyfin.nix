@@ -14,7 +14,7 @@ in {
   
   services.caddy.extraConfig = ''
     http://jellyfin, http://jellyfin.internal, http://jellyfin.${machine} {
-      reverse_proxy http://${machine_lan_address}:${data.ports.jellyfin_web}
+      reverse_proxy http://${machine_lan_address}:${toString data.ports.jellyfin_web}
     }
   '';
 

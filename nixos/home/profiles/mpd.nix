@@ -12,7 +12,10 @@ in {
   services.mpd = {
     enable = true;
     musicDirectory = "/srv/media/audio";
-    network.listenAddress = "any";
+    network = {
+      listenAddress = "any"; 
+      port = data.ports.mpd;
+    };
 
     extraConfig = ''
       audio_output {
@@ -22,7 +25,6 @@ in {
       }
     '';
   };
-
 
   home.packages = with pkgs; [
     mpdlrc

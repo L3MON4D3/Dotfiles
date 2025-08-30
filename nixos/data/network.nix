@@ -108,7 +108,7 @@ in rec {
       indigo = {
         # indigo
         machine_id = "indigo";
-        endpoint = "wireguard.l3mon4.de:${ports.wireguard_home}";
+        endpoint = "wireguard.l3mon4.de:${toString ports.wireguard_home}";
         address = "10.0.0.1";
         privkey_file = "/var/secrets/wg_home2/indigo-private";
         pubkey = "UjwW2Cd7RbHlS+E7iKq1Igez+325QyxYm7wu3HseCRo=";
@@ -229,7 +229,7 @@ in rec {
       indigo = {
         # indigo
         machine_id = "indigo";
-        endpoint = "wireguard.l3mon4.de:${ports.wireguard_rec_de}";
+        endpoint = "wireguard.l3mon4.de:${toString ports.wireguard_rec_de}";
         address = "10.0.1.1";
         privkey_file = "/var/secrets/wg_rec_de/indigo-private";
         pubkey = "JttJ05OOG8eT+dv/JblhpNyS3IfKiYhQ/EFCJe1hLEc=";
