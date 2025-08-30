@@ -74,6 +74,9 @@ in rec {
           "cache.indigo"
         ];
       };
+      remarkable = {
+        address = "192.168.178.10";
+      };
       indigo_mullvad_de = {
         address = "192.168.178.40";
         mac_address = "5e:42:b0:71:f7:1b";
