@@ -11,7 +11,7 @@ in {
           case "$1" in
         '' + (lib.attrsets.foldlAttrs (acc: k: v: acc + (if v ? "mac" then ''
           ${k})
-            wakeonlan ${v.mac}
+            wakeonlan ${v.phys_mac}
             ;;
         '' else "") ) "" lan.peers) + ''
           *)
