@@ -8,10 +8,11 @@
       ../../profiles/simon.nix
 
       ../../profiles/localnet.nix
-      ../../profiles/qbittorrent.nix
       ../../profiles/radarr.nix
       ../../profiles/sonarr.nix
       ../../profiles/jackett
+
+      ../../modules/qbittorrent.nix
 
       # ../../profiles/kodi.nix
       ../../profiles/jellyfin.nix
@@ -299,5 +300,13 @@
   l3mon.peercache = {
     pull = true;
     push = true;
+  };
+
+  l3mon.qbittorrent = {
+    enable = true;
+    category_savepaths = {
+      aa = "/mnt/compressed/downloads";
+      aa-torrent-dl = "";
+    };
   };
 }

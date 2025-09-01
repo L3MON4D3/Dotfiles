@@ -50,6 +50,8 @@ in
     };
     users.groups.radarr.gid = config.ids.uids.radarr;
 
+    l3mon.qbittorrent.category_savepaths.radarr = "/mnt/glacier/downloads";
+
     # reset settings to default, insert api-key.
     system.activationScripts = {
       radarr = {

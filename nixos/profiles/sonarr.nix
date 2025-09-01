@@ -51,6 +51,8 @@ in
     };
     users.groups.sonarr.gid = config.ids.uids.sonarr;
 
+    l3mon.qbittorrent.category_savepaths.tv-sonarr = "/mnt/glacier/downloads";
+
     # reset settings to default, insert api-key.
     system.activationScripts = {
       sonarr = {
