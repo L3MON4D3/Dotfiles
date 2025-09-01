@@ -4,7 +4,7 @@ let
   dav_root = "/srv/http/dav";
 in {
   # downside: can only do this once, for other plugins I'll have to make a personal caddy module or something.
-  services.caddy.package = pkgs-unstable.caddy.withPlugins {
+  services.caddy.package = pkgs.caddy.withPlugins {
     plugins = ["github.com/mholt/caddy-webdav@v0.0.0-20241008162340-42168ba04c9d"];
     # May have to update this whenever a new nixpkgs is used!
     hash = "sha256-rrkUDnTPKehdKMBDaZdFbaEL2QOsHb3tn6dst2UclE8=";
