@@ -38,6 +38,9 @@
     mountd = 7013;
     karakeep = 7014;
     meilisearch = 7015;
+    readeck = 7016;
+    mealie = 7017;
+    pinchflat = 7018;
 
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;

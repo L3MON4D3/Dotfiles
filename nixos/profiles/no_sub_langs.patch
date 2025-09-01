@@ -1,0 +1,17 @@
+diff --git a/lib/pinchflat/downloading/download_option_builder.ex b/lib/pinchflat/downloading/download_option_builder.ex
+index ab2b56a..11b1444 100644
+--- a/lib/pinchflat/downloading/download_option_builder.ex
++++ b/lib/pinchflat/downloading/download_option_builder.ex
+@@ -97,12 +97,6 @@ defmodule Pinchflat.Downloading.DownloadOptionBuilder do
+         {{:embed_subs, true}, %{preferred_resolution: pr}} when pr != :audio ->
+           acc ++ [:embed_subs]
+ 
+-        {{:sub_langs, sub_langs}, %{download_subs: true}} ->
+-          acc ++ [sub_langs: sub_langs]
+-
+-        {{:sub_langs, sub_langs}, %{embed_subs: true}} ->
+-          acc ++ [sub_langs: sub_langs]
+-
+         _ ->
+           acc
+       end

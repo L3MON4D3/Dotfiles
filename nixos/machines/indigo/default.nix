@@ -35,6 +35,12 @@
       ../../profiles/immich.nix
       ../../profiles/paperless.nix
 
+      ../../profiles/karakeep.nix
+      ../../profiles/readeck.nix
+      ../../profiles/mealie.nix
+      ../../profiles/pinchflat.nix
+
+
       ../../profiles/rmfakecloud.nix
 
       ../../profiles/kimmify.nix
