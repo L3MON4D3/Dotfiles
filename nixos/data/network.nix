@@ -76,6 +76,7 @@ in rec {
           "readeck"
           "mealie"
           "pinchflat"
+          "kiwix"
         ];
       };
       remarkable = {

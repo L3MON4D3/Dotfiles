@@ -12,4 +12,5 @@
   readeck     = 10006;
   mealie      = 10007;
   pinchflat   = 10008;
+  kiwix       = 10009;
 }

@@ -32,6 +32,8 @@
 
       ../../profiles/forgejo.nix
 
+      ../../profiles/kiwix.nix
+
       ../../profiles/immich.nix
       ../../profiles/paperless.nix
 
@@ -45,11 +47,13 @@
 
       ../../profiles/kimmify.nix
 
+
       ../../modules/zotero.nix
 
       ../../profiles/unibonn.nix
 
       ./profiles/nvidia.nix
+
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -272,6 +276,11 @@
   };
   fileSystems."/srv/zotero" = {
     device = "/mnt/glacier/misc/zotero/data";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
+  };
+
+  fileSystems."/srv/zim" = {
+    device = "/mnt/glacier/zim";
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
 
