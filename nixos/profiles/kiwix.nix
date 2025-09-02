@@ -19,6 +19,13 @@ let
     "devdocs_en_zig*"
     "devdocs_en_nix*"
   ];
+  zimit_img = pkgs.dockerTools.pullImage {
+    imageName = "ghcr.io/openzim/zimit";
+    imageDigest = "sha256:98c2c214c19e3e1530c12463aeb076674b970191a0967cbea4aa1ddd8fe6205e";
+    hash = "sha256-QY80DldwGOYPfAzu+Cpl4CHuRo6TroN68l0hgnmlXgE=";
+    finalImageName = "zimit";
+    finalImageTag = "system";
+  };
 in {
   systemd.tmpfiles.settings.kiwixdirs = {
     ${zimdir}.d = lib.mkForce {
@@ -28,6 +35,38 @@ in {
     };
   };
 
+  virtualisation.podman = {
+    enable = true;
+    defaultNetwork.settings.dns_enabled = true;
+  };
+
+  environment.systemPackages = with pkgs; [
+    (pkgs.writeShellApplication {
+      name = "zimit";
+      runtimeInputs = with pkgs; [ podman kiwix-tools coreutils gnused perl ];
+      text = ''
+        podman load -i ${zimit_img}
+        TMPDIR=$(mktemp -d)
+        SEED=$1
+        shift
+        NAME=$1
+        shift
+        podman run -v "$TMPDIR":/output -p ${toString data.ports.zimit}:8080 zimit:system zimit --screencastPort 8080 --seeds "$SEED" --name "$NAME" "$@"
+        cd "$TMPDIR"
+        ZIMFILES=(*.zim)
+        ZIMFILE="''${ZIMFILES[*]}"
+        cp "$ZIMFILE" "${zimdir}/$ZIMFILE"
+        if [[ -e "${zimlib}" ]]; then
+          # remove existing zims for this name from the library.
+          # Assumes that one book occupies one line.
+          ZIMNAME="$(echo "$ZIMFILE" | perl -lpe 's/_\d{4}-\d{2}.zim//g')"
+          sed -i 's/.*'"$ZIMNAME"'.*//g' "${zimlib}"
+        fi
+        kiwix-manage "${zimlib}" add "${zimdir}/$ZIMFILE"
+      '';
+    })
+  ];
+
   users.users.kiwix  = {
     isSystemUser = true;
     uid = data.ids.kiwix;
@@ -36,6 +75,7 @@ in {
   users.groups.kiwix.gid = data.ids.kiwix;
   # allow writing to directory+file (lib.xml) owned by kiwix.
   users.users.qbittorrent.extraGroups = [ "kiwix" ];
+  users.users.simon.extraGroups = [ "kiwix" ];
 
 
   l3mon.qbittorrent = {
@@ -113,6 +153,9 @@ in {
   services.caddy.extraConfig = ''
     http://kiwix, http://kiwix.internal, http://kiwix.${machine} {
       reverse_proxy http://localhost:${toString data.ports.kiwix-serve}
+    }
+    http://zimit, http://zimit.internal, http://zimit.${machine} {
+      reverse_proxy http://localhost:${toString data.ports.zimit}
     }
   '';
 }

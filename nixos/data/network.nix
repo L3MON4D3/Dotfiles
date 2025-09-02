@@ -77,6 +77,7 @@ in rec {
           "mealie"
           "pinchflat"
           "kiwix"
+          "zimit"
         ];
       };
       remarkable = {
