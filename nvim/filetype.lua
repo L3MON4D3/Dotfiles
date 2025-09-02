@@ -11,6 +11,7 @@ vim.filetype.add({
 		zon = "zig",
 		ush = "c",
 		usf = "c",
+		nftables = "nftables"
 	},
 	filename = {
 		PKGBUILD = "PKGBUILD",
