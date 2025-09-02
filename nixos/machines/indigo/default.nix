@@ -41,6 +41,7 @@
       ../../profiles/readeck.nix
       ../../profiles/mealie.nix
       ../../profiles/pinchflat.nix
+      ../../profiles/linkding.nix
 
 
       ../../profiles/rmfakecloud.nix

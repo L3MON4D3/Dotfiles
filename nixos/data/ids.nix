@@ -13,4 +13,5 @@
   mealie      = 10007;
   pinchflat   = 10008;
   kiwix       = 10009;
+  linkding    = 10010;
 }

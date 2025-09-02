@@ -78,6 +78,7 @@ in rec {
           "pinchflat"
           "kiwix"
           "zimit"
+          "linkding"
         ];
       };
       remarkable = {
