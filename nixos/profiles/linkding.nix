@@ -61,4 +61,20 @@ in {
       reverse_proxy http://localhost:${toString data.ports.linkding}
     }
   '';
+
+  l3mon.restic.extraGroups = [ "linkding" ];
+  l3mon.restic.specs.linkding = {
+    backupStopResumeServices = ["linkding.service"];
+    backupDaily = {
+      text = ''
+        cd /var/lib/linkding/data
+        restic backup --tag=linkding --skip-if-unchanged=true -- ./*
+      '';
+    };
+    forget = {
+      text = ''
+        restic forget --tag=linkding --group-by=tag --keep-daily=7 --keep-monthly=12
+      '';
+    };
+  };
 }
