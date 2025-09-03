@@ -33,6 +33,11 @@ in {
       user = "kiwix";
       group = "kiwix";
     };
+    "${zimlib}".z = lib.mkForce {
+      mode = "660";
+      user = "kiwix";
+      group = "kiwix";
+    };
   };
 
   virtualisation.podman = {
