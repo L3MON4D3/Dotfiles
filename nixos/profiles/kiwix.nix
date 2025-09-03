@@ -43,7 +43,8 @@ in {
   environment.systemPackages = with pkgs; [
     (pkgs.writeShellApplication {
       name = "zimit";
-      runtimeInputs = with pkgs; [ podman kiwix-tools coreutils gnused perl ];
+      # securitywrappers for newuidmap.
+      runtimeInputs = with pkgs; [ podman kiwix-tools coreutils gnused perl "${config.security.wrapperDir}" ];
       text = ''
         podman load -i ${zimit_img}
         TMPDIR=$(mktemp -d)
