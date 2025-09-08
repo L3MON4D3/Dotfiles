@@ -34,6 +34,7 @@
     };
     merigold.url = "git+http://git.internal/simon/merigold.git";
     kiwix-seeder.url = "github:l3mon4d3/seeder";
+    dirmap.url = "github:l3mon4d3/dirmap";
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, microvm, merigold, ... }: {
