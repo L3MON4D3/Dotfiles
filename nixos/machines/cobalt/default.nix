@@ -52,6 +52,10 @@
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    inputs.dirmap.packages.${system}.default
+  ];
+
   l3mon.network_namespaces = {
     enable = true;
     network_configs = [
