@@ -5,19 +5,19 @@ let
   zimlib = zimdir + "/lib.xml";
   zimglobs = [
     "archlinux_en*"
+    "wikipedia_en_all_maxi*"
     "devdocs_en_css*"
     "devdocs_en_julia*"
-    "wikipedia_en_all_maxi*"
     "devdocs_en_bash*"
     "devdocs_en_vulkan*"
     "devdocs_en_python*"
+    "devdocs_en_zig*"
+    "devdocs_en_nix*"
     "kochwiki.org_de*_maxi_*"
     "minecraftwiki_en*"
     "stardewvalleywiki*"
     "100r.co_en_all*"
     "devhints.io_en_all*"
-    "devdocs_en_zig*"
-    "devdocs_en_nix*"
   ];
   zimit_img = pkgs.dockerTools.pullImage {
     imageName = "ghcr.io/openzim/zimit";
@@ -30,13 +30,10 @@ in {
   systemd.tmpfiles.settings.kiwixdirs = {
     ${zimdir}.d = lib.mkForce {
       mode = "2770";
-      user = "kiwix";
       group = "kiwix";
     };
     "${zimlib}".z = lib.mkForce {
       mode = "660";
-      user = "kiwix";
-      group = "kiwix";
     };
   };
 
@@ -81,7 +78,6 @@ in {
   users.groups.kiwix.gid = data.ids.kiwix;
   # allow writing to directory+file (lib.xml) owned by kiwix.
   users.users.qbittorrent.extraGroups = [ "kiwix" ];
-  users.users.simon.extraGroups = [ "kiwix" ];
 
 
   l3mon.qbittorrent = {
