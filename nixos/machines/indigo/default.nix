@@ -171,7 +171,8 @@
 
   services.zfs.trim = {
     enable = true;
-    interval = "Thu 03:00:00";
+    # arbitrarily on the 11th and 26th of every month.
+    interval = "*-*-11,26 03:00:00";
   };
 
   services.zfs.zed.settings = {
@@ -207,7 +208,7 @@
   # scrub btrfs at same time as zfs.
   services.btrfs.autoScrub = {
     enable = true;
-    interval = "Wed 03:00:00";
+    interval = "*-*-11,26 03:00:00";
   };
 
   services.smartd = {
@@ -221,8 +222,8 @@
         recipient = "simon@l3mon4.de";
       };
     };
-    # short test daily, long weekly.
-    defaults.monitored = "-a -o on -s (S/../.././02|L/../../7/04)";
+    # short test daily at 02:00, long every 9th and 24th day of the month at 04:00.
+    defaults.monitored = "-a -o on -s (S/../.././02|L/../(9|24)/./04)";
   };
 
   # # bind-mount storage into place where stuff should not be stored on the main drive.
