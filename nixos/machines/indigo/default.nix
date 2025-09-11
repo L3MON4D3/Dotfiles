@@ -34,6 +34,8 @@
 
       ../../profiles/kiwix.nix
 
+      ../../profiles/opus-fs.nix
+
       ../../profiles/immich.nix
       ../../profiles/paperless.nix
 
