@@ -6,11 +6,11 @@
         "nixpkgs-unstable": "nixpkgs-unstable"
       },
       "locked": {
-        "lastModified": 1755785076,
-        "narHash": "sha256-joerP3vVkc1+FjkFN/QctAGasmqcKbvX2qhjm1bOZao=",
+        "lastModified": 1756494145,
+        "narHash": "sha256-eYKlyjPa3TsSp5qV4LFyqHIrL59kWs8CcC2K+sAlKzg=",
         "owner": "l3mon4d3",
         "repo": "aa-torrent-dl",
-        "rev": "a5162a3aeb4974a2e6bdb7c594c41fce04826aa0",
+        "rev": "b8f25e27588cfc9236d5525e6a6075b728a2d73c",
         "type": "github"
       },
       "original": {
