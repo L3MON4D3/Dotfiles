@@ -35,11 +35,14 @@ with lib;
         port = data.ports.nix-serve;
       };
 
-      services.caddy.extraConfig = ''
-        http://cache.${machine}.internal {
-          reverse_proxy http://${machine_lan_address}:${toString data.ports.nix-serve}
-        }
-      '';
+      services.caddy = {
+        enable = true;
+        extraConfig = ''
+          http://cache.${machine}.internal {
+            reverse_proxy http://${machine_lan_address}:${toString data.ports.nix-serve}
+          }
+        '';
+      };
     })
   ];
 }
