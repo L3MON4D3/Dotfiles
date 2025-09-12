@@ -15,6 +15,8 @@ with lib;
     (mkIf cfg.pull {
       # check configs for other machines, only put those that have push enabled.
       nix.settings = {
+        # low timeout in case one of my machines is offline.
+        connect-timeout = 1;
         substituters = lib.attrsets.foldlAttrs (acc: name: os:
           if os.config.l3mon.peercache.push then
             acc ++ ["http://cache.${name}.internal"]

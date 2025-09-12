@@ -110,6 +110,7 @@
 
   l3mon.peercache = {
     pull = true;
+    push = true;
   };
 
   services.printing.enable = true;
