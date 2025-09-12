@@ -33,7 +33,7 @@ in {
       mode = "2770";
       group = "kiwix";
     };
-    "${zimlib}".z = lib.mkForce {
+    "${zimlib}".f = lib.mkForce {
       mode = "660";
     };
   };
