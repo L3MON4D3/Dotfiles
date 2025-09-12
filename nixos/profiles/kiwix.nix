@@ -18,6 +18,7 @@ let
     "stardewvalleywiki*"
     "100r.co_en_all*"
     "devhints.io_en_all*"
+    "ifixit_en_all*"
   ];
   zimit_img = pkgs.dockerTools.pullImage {
     imageName = "ghcr.io/openzim/zimit";
