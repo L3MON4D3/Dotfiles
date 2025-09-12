@@ -17,12 +17,12 @@ with lib;
       nix.settings = {
         # low timeout in case one of my machines is offline.
         connect-timeout = 1;
-        substituters = lib.attrsets.foldlAttrs (acc: name: os:
-          if os.config.l3mon.peercache.push then
+        substituters = lib.mkBefore (lib.attrsets.foldlAttrs (acc: name: os:
+          if os.config.l3mon.peercache.push && name != machine then
             acc ++ ["http://cache.${name}.internal"]
-          else acc) [] self.outputs.nixosConfigurations;
+          else acc) [] self.outputs.nixosConfigurations);
         trusted-public-keys = lib.attrsets.foldlAttrs (acc: name: os:
-          if os.config.l3mon.peercache.push then
+          if os.config.l3mon.peercache.push && name != machine then
             # we only use this key for signing.
             acc ++ ["cache.${name}.internal:CA2Hg9Xq3wNRTOU/Pombi0CLc2aemwlyPw/o34zDrKA="]
           else acc) [] self.outputs.nixosConfigurations;
@@ -31,7 +31,7 @@ with lib;
     (mkIf cfg.push {
       services.nix-serve = {
         enable = true;
-        secretKeyFile = l3lib.secret "cache-priv-key.pem";
+        secretKeyFile = l3lib.secret "cache-key-${machine}.pem";
         port = data.ports.nix-serve;
       };
 
