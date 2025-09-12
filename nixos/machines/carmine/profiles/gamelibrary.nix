@@ -35,7 +35,7 @@
 
     pkgs-yuzu.yuzu
     pkgs-suyu.suyu
-    pkgs-unstable.ryujinx
+    pkgs-unstable.ryubing
 
     pkgs.dolphin-emu
     pkgs.melonDS
