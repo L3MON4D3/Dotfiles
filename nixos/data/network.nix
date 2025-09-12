@@ -94,14 +94,16 @@ in rec {
         machine_id = "merigold";
         address = "192.168.178.30";
         mac_address = "02:46:6b:e0:7d:24";
+        services = [
+          "nix-cache"
+          "nix-tarballs"
+        ];
       };
       merigold-test = {
         machine_id = "merigold-test";
         address = "192.168.178.31";
         mac_address = "02:b6:c0:23:7f:08";
-        services = [
-          "nix-cache"
-        ];
+        services = peers.merigold.services;
       };
     };
   };

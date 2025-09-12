@@ -39,6 +39,8 @@
       ../../profiles/immich.nix
       ../../profiles/paperless.nix
 
+      ../../profiles/vms.nix
+
       # ../../profiles/karakeep.nix
       ../../profiles/readeck.nix
       ../../profiles/mealie.nix

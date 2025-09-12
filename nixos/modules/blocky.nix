@@ -74,6 +74,10 @@ let
                     name = "${service_name}.internal";
                     value = peerconf.address;
                   }
+                  {
+                    name = "${service_name}.${peerconf.machine_id}.internal";
+                    value = peerconf.address;
+                  }
                 ]) peerconf.services
               ))
             else

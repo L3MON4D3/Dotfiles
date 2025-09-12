@@ -424,11 +424,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1755949613,
-        "narHash": "sha256-pLurFLk1v+pc7NcOEpw3SDrUdRCyGP7lJiVzxfBvs2c=",
+        "lastModified": 1757697492,
+        "narHash": "sha256-DBlrlPH5suaT+lvaZfvpk6gKDr8Ds9TtA1vG1ezU40I=",
         "ref": "refs/heads/main",
-        "rev": "fc944d1b581ce29bc08535c31619c294458fbd9c",
-        "revCount": 6,
+        "rev": "545798021a9a20fb0429089df755a8c434c60c88",
+        "revCount": 13,
         "type": "git",
         "url": "http://git.internal/simon/merigold.git"
       },
