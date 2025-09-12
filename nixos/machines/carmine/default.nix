@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, machine, data, inputs, ... }:
 
 {
   imports = [
@@ -27,6 +27,10 @@
   environment.shellAliases = {
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#carmine"'';
   };
+
+  environment.systemPackages = with pkgs; [
+    inputs.dirmap.packages.${system}.default
+  ];
 
   fileSystems."/srv/misc" = {
     device = "indigo:/misc";
