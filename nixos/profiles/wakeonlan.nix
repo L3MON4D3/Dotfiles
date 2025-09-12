@@ -9,7 +9,7 @@ in {
         runtimeInputs = [ pkgs.wakeonlan ];
         text = ''
           case "$1" in
-        '' + (lib.attrsets.foldlAttrs (acc: k: v: acc + (if v ? "mac" then ''
+        '' + (lib.attrsets.foldlAttrs (acc: k: v: acc + (if v ? "phys_mac" then ''
           ${k})
             wakeonlan ${v.phys_mac}
             ;;

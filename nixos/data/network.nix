@@ -1,16 +1,17 @@
 let
   ports = import ./ports.nix;
 in rec {
-  lan = {
+  lan = rec {
     subnet_mask = "/24";
     address_range = "192.168.178.0/24";
     dns = "192.168.178.20";
-    gateway = "192.168.178.1";
+    gateway_peer = peers.fritzbox;
     ssid = "FRITZ!Box 5590 RM";
     peers = {
       fritzbox = {
         machine_id = "fritzbox";
         address = "192.168.178.1";
+        mac = "0c:72:74:fc:b9:de";
         services = [
           "fritzbox"
         ];
@@ -87,6 +88,7 @@ in rec {
       indigo_mullvad_de = {
         address = "192.168.178.40";
         mac_address = "5e:42:b0:71:f7:1b";
+        services = [];
       };
       merigold = {
         machine_id = "merigold";
@@ -98,7 +100,7 @@ in rec {
         address = "192.168.178.31";
         mac_address = "02:b6:c0:23:7f:08";
         services = [
-          "nix-cache.internal"
+          "nix-cache"
         ];
       };
     };
