@@ -191,6 +191,12 @@
     };
   };
 
+  environment.etc."nixos-data" = {
+    enable = true;
+    text = builtins.toJSON data;
+    mode = "0444";
+  };
+
   # networking.extraHosts = ''
   #   0.0.0.0 ziglang.org
   #   0.0.0.0 pkg.machengine.org
