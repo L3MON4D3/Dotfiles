@@ -32,6 +32,8 @@
         gpg --output "$UPDATE_SCRATCHDIR"/gpgkeys/simon-private.pgp --armor --export-secret-key simon@l3mon4.de
         gpg --output "$UPDATE_SCRATCHDIR"/gpgkeys/simljk-public.pgp --armor --export simljk@outlook.de
         gpg --output "$UPDATE_SCRATCHDIR"/gpgkeys/simljk-private.pgp --armor --export-secret-key simljk@outlook.de
+        gpg --output "$UPDATE_SCRATCHDIR"/gpgkeys/s6sikatz-public.pgp --armor --export s6sikatz@uni-bonn.de
+        gpg --output "$UPDATE_SCRATCHDIR"/gpgkeys/s6sikatz-private.pgp --armor --export-secret-key s6sikatz@uni-bonn.de
 
         cd /var/secrets
         sudo tar -cvf "$UPDATE_SCRATCHDIR"/secrets.tar.gz ./*
@@ -56,6 +58,8 @@
         gpg --import "$VERIFY_SCRATCHDIR/gpgkeys/simon-private.pgp"
         gpg --import "$VERIFY_SCRATCHDIR/gpgkeys/simljk-public.pgp"
         gpg --import "$VERIFY_SCRATCHDIR/gpgkeys/simljk-private.pgp"
+        gpg --import "$VERIFY_SCRATCHDIR/gpgkeys/s6sikatz-public.pgp"
+        gpg --import "$VERIFY_SCRATCHDIR/gpgkeys/s6sikatz-private.pgp"
 
 
         if ! diff -qr "$VERIFY_SCRATCHDIR/.password-store" /home/simon/.password-store; then
