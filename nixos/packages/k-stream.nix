@@ -3,7 +3,7 @@ buildLuarocksPackage {
   pname = "k-stream";
   version = "0.1-2";
   knownRockspec = (fetchurl {
-    url    = "mirror://luarocks/k-stream-0.1-2.rockspec";
+    url    = "https://luarocks.org/k-stream-0.1-2.rockspec";
     sha256 = "1b060m01438ybgdm2r1csxpxjmmrsp9blby94rlfg90shjlqi3qq";
   }).outPath;
   src = fetchFromGitHub {
