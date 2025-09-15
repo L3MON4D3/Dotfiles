@@ -197,14 +197,15 @@
     mode = "0444";
   };
 
-  # networking.extraHosts = ''
-  #   0.0.0.0 ziglang.org
-  #   0.0.0.0 pkg.machengine.org
-  #   0.0.0.0 zigmirror.hryx.net
-  #   0.0.0.0 zig.linus.dev
-  #   0.0.0.0 fs.liujiacai.net
-  #   0.0.0.0 zig.nekos.space
-  # '';
+  # networking.extraHosts = ''
+    # 0.0.0.0 pkg.machengine.org
+    # 0.0.0.0 zigmirror.hryx.net
+    # 0.0.0.0 zig.linus.dev
+    # 0.0.0.0 zig.squirl.dev
+    # 0.0.0.0 zig.florent.dev
+    # 0.0.0.0 zig.mirror.mschae23.de
+    # 0.0.0.0 zigmirror.meox.dev
+  # '';
 
   # system.copySystemConfiguration = true;
 
