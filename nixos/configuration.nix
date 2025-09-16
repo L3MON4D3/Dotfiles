@@ -130,10 +130,14 @@
   nix.nixPath = lib.mkForce [ "nixpkgs=flake:nixpkgs:nixpkgs-overlays=${self}/overlays" ];
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-  services.openssh.settings = {
-    # login only via public key.
-    PasswordAuthentication = false;
+  services.openssh = {
+    enable = true;
+    settings = {
+      # login only via public key.
+      PasswordAuthentication = false;
+      AllowAgentForwarding = true;
+      StreamLocalBindUnlink = true;
+    };
   };
 
   nixpkgs.config.allowUnfree = true;
