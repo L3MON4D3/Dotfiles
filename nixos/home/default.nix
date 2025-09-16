@@ -36,6 +36,7 @@
         rebase = false;
       };
     };
+    signing.signByDefault = true;
     aliases = {
       log1 = "log --pretty='%C(auto)%h: %s'";
       l    = "log --pretty='%C(auto)%h: %s'";
@@ -70,6 +71,12 @@
         user = "root";
       };
     };
+  };
+
+  services.gpg-agent = {
+    enable = true;
+    enableExtraSocket = true;
+    enableSshSupport = true;
   };
 
   home.sessionVariables = {
