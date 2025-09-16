@@ -70,13 +70,22 @@
         identitiesOnly = true;
         user = "root";
       };
+      indigo = {
+        hostname = "indigo";
+        remoteForwards = [
+          {
+            bind.address = "/run/user/1000/gnupg/S.gpg-agent";
+            host.address = "/run/user/1000/gnupg/S.gpg-agent.extra";
+          }
+        ];
+      };
     };
   };
 
   services.gpg-agent = {
     enable = true;
     enableExtraSocket = true;
-    enableSshSupport = true;
+    # enableSshSupport = true;
   };
 
   home.sessionVariables = {
