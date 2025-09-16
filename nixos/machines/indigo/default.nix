@@ -151,13 +151,15 @@
   # mount large storage.
   fileSystems."/mnt/torrent" = {
     label = "torrent";
-    options = [ "rw" "noauto" "nofail" ];
+    fsType = "btrfs";
+    options = [ "rw" "auto" "nofail" ];
   };
 
   # mount bad storage.
   fileSystems."/mnt/compressed" = {
     label = "compress";
-    options = [ "rw" "noauto" "nofail" "compress=zstd:15" ];
+    fsType = "btrfs";
+    options = [ "rw" "auto" "nofail" "compress=zstd:15" ];
   };
 
   boot.supportedFilesystems = ["zfs"];
