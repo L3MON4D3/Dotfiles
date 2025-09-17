@@ -11,6 +11,8 @@
 
     ../../profiles/sway
 
+    ../../profiles/home-mpd.nix
+
     ../../profiles/firefox.nix
 
     ../../profiles/mxmaster3s.nix
@@ -21,7 +23,6 @@
     ./profiles/remarkable.nix
     ./profiles/ollama.nix
     ./profiles/cardinal.nix
-    # ./profiles/mympd.nix
   ];
 
   environment.shellAliases = {

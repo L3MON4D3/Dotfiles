@@ -7,7 +7,6 @@
     ./profiles/jellyfin-mpv-shim.nix
     ./profiles/qutebrowser
     ./profiles/mpv.nix
-    ./profiles/mpd.nix
     ./profiles/julia.nix
     ./profiles/mime.nix
 
