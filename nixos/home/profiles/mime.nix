@@ -2,26 +2,27 @@
 
 let 
   qutebrowser = ["org.qutebrowser.qutebrowser.desktop"];
+  firefox = ["firefox.desktop"];
   zathura = ["org.pwmt.zathura-pdf-mupdf.desktop"];
   thunderbird = ["userapp-Thunderbird-D15E22.desktop"];
 
   associations = {
     # "inode/directory" = [ "foot.desktop" ];
-    "text/html" = qutebrowser;
+    "text/html" = firefox;
 
-    "x-scheme-handler/http" = qutebrowser;
-    "x-scheme-handler/https" = qutebrowser;
-    "x-scheme-handler/about" = qutebrowser;
-    "x-scheme-handler/unknown" = qutebrowser;
-    "x-scheme-handler/ftp" = qutebrowser;
-    "x-scheme-handler/chrome" = qutebrowser;
+    "x-scheme-handler/http" = firefox;
+    "x-scheme-handler/https" = firefox;
+    "x-scheme-handler/about" = firefox;
+    "x-scheme-handler/unknown" = firefox;
+    "x-scheme-handler/ftp" = firefox;
+    "x-scheme-handler/chrome" = firefox;
 
-    "application/x-extension-htm" = qutebrowser;
-    "application/x-extension-html" = qutebrowser;
-    "application/x-extension-shtml" = qutebrowser;
-    "application/xhtml+xml" = qutebrowser;
-    "application/x-extension-xhtml" = qutebrowser;
-    "application/x-extension-xht" = qutebrowser;
+    "application/x-extension-htm" = firefox;
+    "application/x-extension-html" = firefox;
+    "application/x-extension-shtml" = firefox;
+    "application/xhtml+xml" = firefox;
+    "application/x-extension-xhtml" = firefox;
+    "application/x-extension-xht" = firefox;
 
     "application/pdf" = zathura;
 
