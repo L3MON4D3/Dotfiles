@@ -8,13 +8,13 @@
           name = "mpdlrc";
           runtimeInputs = [ inputs.mpdlrc.defaultPackage.${pkgs.system} ];
           text = ''
-            mpdlrc --musicdir=/srv/media/audio/
+            mpdlrc --musicdir=/srv/media/audio/original
           '';
         };
     in {
       services.mpd = {
         enable = true;
-        musicDirectory = "/srv/media/audio";
+        musicDirectory = "/srv/media/audio/original";
         network = {
           listenAddress = "any"; 
           port = data.ports.mpd;

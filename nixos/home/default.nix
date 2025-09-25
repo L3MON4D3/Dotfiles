@@ -96,7 +96,7 @@
     lsi = "/home/simon/projects/nvim/luasnip-issues";
     nx =  "/home/simon/projects/dotfiles/nixos/configuration.nix";
     ms = "/home/simon/projects/master";
-    au = "/srv/media/audio";
+    au = "/srv/media/audio/original";
     vi = "/srv/media/video";
   };
   programs.bash.enable = true;
