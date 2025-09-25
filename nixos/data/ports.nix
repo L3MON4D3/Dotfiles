@@ -44,6 +44,7 @@
     kiwix-serve = 7019;
     zimit = 7020;
     linkding = 7021;
+    ddns-updater = 7022;
 
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;

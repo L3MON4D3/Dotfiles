@@ -47,9 +47,17 @@ in {
     enable = true;
     package = pkgs.ddns-updater;
     environment = {
-      SERVER_ENABLED="no";
+      SERVER_ENABLED="yes";
       CONFIG_FILEPATH = "%d/conf";
+      LISTENING_ADDRESS=":${toString data.ports.ddns-updater}";
+      RESOLVER_ADDRESS="1.1.1.1:53";
     };
   };
   systemd.services.ddns-updater.serviceConfig.LoadCredential = "conf:${runtime_conf_file}";
+
+  services.caddy.extraConfig = ''
+    http://ddns-updater, http://ddns-updater.internal, http://ddns-updater.${machine} {
+      reverse_proxy http://localhost:${toString data.ports.ddns-updater}
+    }
+  '';
 }

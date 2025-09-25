@@ -80,6 +80,7 @@ in rec {
           "kiwix"
           "zimit"
           "linkding"
+          "ddns-updater"
         ];
       };
       remarkable = {
