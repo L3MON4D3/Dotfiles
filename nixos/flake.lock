@@ -25,11 +25,11 @@
         "nixpkgs-unstable": "nixpkgs-unstable_2"
       },
       "locked": {
-        "lastModified": 1757604818,
-        "narHash": "sha256-hsQDQECBxTauSoX22iXTEndY3HG9vuBOzNS6eyYUPNw=",
+        "lastModified": 1758809239,
+        "narHash": "sha256-4MCIt6elvDU7DmHZITRmSUrBsefvO8Pl+32lsI5IVRg=",
         "owner": "l3mon4d3",
         "repo": "dirmap",
-        "rev": "2ee64f4e8711071c71d872de54264f58d3d2cdb6",
+        "rev": "e6ba851350b7b99689c16a0b5ebe7c063522c992",
         "type": "github"
       },
       "original": {

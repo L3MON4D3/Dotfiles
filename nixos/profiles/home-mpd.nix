@@ -1,6 +1,10 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, machine, data, inputs, system, ... }:
 
-{
+let
+  audio_dir = "/srv/media/audio/original";
+  playlist_dir = "/srv/media/audio/playlists";
+  lossy_playlist_dir = "/srv/media/audio/lossy_playlists";
+in {
   home-manager.sharedModules = [(
     { config, lib, pkgs, machine, data, inputs, ... }:
     let
@@ -8,13 +12,14 @@
           name = "mpdlrc";
           runtimeInputs = [ inputs.mpdlrc.defaultPackage.${pkgs.system} ];
           text = ''
-            mpdlrc --musicdir=/srv/media/audio/original
+            mpdlrc --musicdir=${audio_dir}
           '';
         };
     in {
       services.mpd = {
         enable = true;
-        musicDirectory = "/srv/media/audio/original";
+        musicDirectory = audio_dir;
+        playlistDirectory = playlist_dir;
         network = {
           listenAddress = "any"; 
           port = data.ports.mpd;
@@ -63,17 +68,45 @@
     }
   )];
 
+  # for opus-fs.
+  programs.fuse.userAllowOther = true;
+
+  systemd.services.playlist-fs = {
+    enable = true;
+    unitConfig.RequiresMountsFor = [ audio_dir playlist_dir lossy_playlist_dir ];
+    serviceConfig = {
+      Type = "exec";
+      User = "simon";
+      Group = "simon";
+    };
+    path = [ inputs.dirmap.packages.${system}.default ];
+    environment = {
+      ORIGINAL_AUDIO_ROOT = audio_dir;
+      PLAYLIST_TARGET_ROOT = playlist_dir;
+      LOSSY_PLAYLIST_ROOT = lossy_playlist_dir;
+      ANDROID_AUDIO_ROOT_PATTERN = "FF7F-A5BA/media/audio";
+    };
+    script = ''
+      mkdir -p ${playlist_dir}
+      chown simon:media ${playlist_dir}
+      playlist-fs -f -o ro,allow_other
+    '';
+    preStop = ''
+      ${config.security.wrapperDir}/fusermount -u ${playlist_dir}
+    '';
+  };
+
   l3mon.restic.extraGroups = [ "simon" ];
   l3mon.restic.specs.mpd = {
     backup15min = {
       text = ''
-        cd /home/simon/.local/share/mpd
-        restic backup --tag=mpd-${machine} -- ./playlists
+        cd /srv/media/audio
+        restic backup --tag=playlists -- playlists
       '';
     };
     forget = {
       text = ''
-        restic forget --tag=mpd-${machine} --group-by=tag --keep-weekly=4 --keep-monthly=12 --keep-yearly=unlimited
+        restic forget --tag=playlists --group-by=tag --keep-weekly=4 --keep-monthly=12 --keep-yearly=unlimited
       '';
     };
   };
