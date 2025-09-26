@@ -281,6 +281,16 @@ in {
                     icon = "''${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
                     definedAliases = [ "@no" ];
                   };
+                  "Home Manager Options" = {
+                    urls = [{
+                      template = "https://home-manager-options.extranix.com";
+                      params = [
+                        { name = "query"; value = "{searchTerms}"; }
+                      ];
+                    }];
+                    icon = "''${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                    definedAliases = [ "@ho" ];
+                  };
                   "NixOS Wiki" = {
                     urls = [{ template = "https://nixos.wiki/index.php?search={searchTerms}"; }];
                     icon = "https://nixos.wiki/favicon.png";
