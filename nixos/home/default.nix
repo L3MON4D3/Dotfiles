@@ -117,6 +117,86 @@
   }
   '';
 
+  accounts.email = {
+    accounts."simon@l3mon4.de" = {
+      realName = "Simon Katz";
+      address = "simon@l3mon4.de";
+
+      primary = true;
+
+      gpg = {
+        key = "8F58312A929C1830A5E209C5076E7AE78280FE63";
+        signByDefault = true;
+      };
+
+      imap = {
+        host = "imap.mailbox.org";
+        tls.useStartTls = true;
+      };
+
+      smtp = {
+        host = "smtp.mailbox.org";
+        tls.useStartTls = true;
+      };
+      userName = "simon@l3mon4.de";
+
+      thunderbird.enable = true;
+    };
+    accounts."simljk@outlook.de" = {
+      realName = "Simon Katz";
+      address = "simljk@outlook.de";
+
+      gpg = {
+        key = "A2F3259407BA024D2827C8D64C6CA567EADBAF46";
+        signByDefault = true;
+      };
+
+      imap = {
+        host = "outlook.office365.com";
+        tls.useStartTls = true;
+      };
+
+      smtp = {
+        host = "smtp-mail.outlook.com";
+        tls.useStartTls = true;
+      };
+      userName = "simljk@outlook.de";
+
+      thunderbird = {
+        enable = true;
+        settings = id: {
+          # oauth.
+          "mail.server.server_${id}.authMethod" = 10;
+          "mail.smtpserver.smtp_${id}.authMethod" = 10;
+        };
+      };
+    };
+    accounts."s6sikatz@uni-bonn.de" = {
+      realName = "Simon Katz";
+      address = "s6sikatz@uni-bonn.de";
+
+      gpg = {
+        key = "539486C322FDF9A5204718D66F6AA8BDF1F8BD04";
+        signByDefault = true;
+      };
+
+      imap = {
+        host = "email.uni-bonn.de";
+        port = 993;
+        tls.enable = true;
+      };
+
+      smtp = {
+        host = "email.uni-bonn.de";
+        port = 465;
+        tls.enable = true;
+      };
+      userName = "s6sikatz";
+
+      thunderbird.enable = true;
+    };
+  };
+
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new home Manager release introduces backwards

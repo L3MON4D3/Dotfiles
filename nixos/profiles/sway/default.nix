@@ -192,7 +192,7 @@ in {
 
   home-manager.sharedModules = [
     (
-      { config, lib, pkgs, machine, data, nur, aa-torrent-dl, ... }:
+      { config, lib, pkgs, machine, data, nur, aa-torrent-dl, l3lib, ... }:
       
       let
         cursor_theme_name = "phinger-cursors-light";
@@ -219,15 +219,29 @@ in {
 
           wl-clipboard
           legcord
-          # thunderbird is configured in-app, I know, bad, but email-settings are
-          # pretty much set and forget, so that's fine I guess.
-          # Settings include
-          # * GNUPG
-          # * date format https://support.mozilla.org/en-US/kb/customize-date-time-formats-thunderbird
-          # via config editor.
-          thunderbird
           puddletag
         ];
+
+        home.activation.my-thunderbird = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          if [ ! -f "${config.home.homeDirectory}/.thunderbird/default/pubring.gpg" ]; then
+            run ${pkgs.gnupg}/bin/gpg --dearmor >  ${config.home.homeDirectory}/.thunderbird/default/pubring.gpg < ${l3lib.secret "gpg-simon@l3mon4.de.pub"}
+            run ${pkgs.gnupg}/bin/gpg --dearmor >> ${config.home.homeDirectory}/.thunderbird/default/pubring.gpg < ${l3lib.secret "gpg-simljk@outlook.de.pub"}
+            run ${pkgs.gnupg}/bin/gpg --dearmor >> ${config.home.homeDirectory}/.thunderbird/default/pubring.gpg < ${l3lib.secret "gpg-s6sikatz@uni-bonn.de.pub"}
+          fi
+        '';
+
+        programs.thunderbird = {
+          enable = true;
+          profiles = {
+            default = {
+              withExternalGnupg = true;
+              isDefault = true;
+              settings = {
+                "intl.date_time.pattern_override.date_short" = "yyyy-MM-dd";
+              };
+            };
+          };
+        };
 
         wayland.windowManager.sway.extraConfig = ''
           mode "apps" {
