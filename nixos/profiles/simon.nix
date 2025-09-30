@@ -98,7 +98,7 @@
           -e "/home/simon/.config/VSCodium"
           -e "/home/simon/.config/Code - OSS" )
 
-        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/ .thunderbird/*.default/ImapMail
+        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/ .thunderbird/*.default/ImapMail ./notes
       '';
     };
     forget = {
