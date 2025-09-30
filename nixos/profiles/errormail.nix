@@ -34,9 +34,6 @@ let
       Journal of unit starting at T-60s:
 
       $(journalctl -u "$1" --since=-60)
-
-      adf
-
       ERRMAIL
     '';
   };
@@ -63,10 +60,10 @@ in {
     accounts.default = {
       auth = true;
       tls = true;
-      host = "smtp.gmail.com";
-      from = "luisjakob.katz@gmail.com";
-      user = "luisjakob.katz@gmail.com";
-      passwordeval = "${pkgs.coreutils}/bin/cat ${l3lib.secret "gmail_password"}";
+      host = "smtp.mailbox.org";
+      from = "simon@l3mon4.de";
+      user = "simon@l3mon4.de";
+      passwordeval = "${pkgs.coreutils}/bin/cat ${config.l3mon.secgen.secrets.mailbox_msmtp.file_abs}";
     };
   };
 
@@ -83,13 +80,33 @@ in {
   systemd.services."statusmail@" = {
     description = "Send email with status of service %i to ${target_email}.";
     serviceConfig = {
-      LoadCredential = "gmail_password:${l3lib.secret "gmail_password"}";
+      LoadCredential = "smtp_password:${config.l3mon.secgen.secrets.mailbox_msmtp.file_abs}";
       DynamicUser = true;
-      ExecStart = "${notify-systemd}/bin/notify-systemd %i %d/gmail_password";
+      ExecStart = "${notify-systemd}/bin/notify-systemd %i %d/smtp_password";
       # allow reading journal-entries for various services.
       Group = "systemd-journal";
     };
   };
+
+  l3mon.secgen.secrets.mailbox_msmtp = rec {
+    file_rel = "mailbox_msmtp";
+    file_abs = "${config.l3mon.secgen.secret_dir}/${file_rel}";
+    backup_relfiles = [ file_rel ];
+    gen = pkgs.writeShellApplication {
+      name = "gen";
+      text = ''
+        echo 'Open mailbox.org and create a new email-app password with SMTP access.'
+        echo 'Enter it here:'
+        read -r PASSWORD
+        echo "Read password $PASSWORD from stdin"
+        # passwordfile has to be \n-terminated!
+        echo "$PASSWORD" > ${file_abs}
+        chown root:root ${file_abs}
+        chmod 400 ${file_abs}
+      '';
+    };
+  };
+
 
   systemd.packages = [
     (pkgs.writeTextDir "etc/systemd/system/service.d/errormail.conf" (lib.generators.toINI {}

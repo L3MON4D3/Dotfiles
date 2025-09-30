@@ -19,6 +19,7 @@
 
     ./profiles/history.nix
     ./profiles/wakeonlan.nix
+    ./modules/secgen.nix
   ];
 
   # Set your time zone.
