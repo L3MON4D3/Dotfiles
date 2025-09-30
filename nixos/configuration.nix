@@ -147,7 +147,35 @@
   security.pam.services.sudo.nodelay = true;
 
   users.mutableUsers = false;
-  users.users.root.hashedPasswordFile = l3lib.secret "root_password_hashed";
+  users.users.root.hashedPasswordFile = config.l3mon.secgen.secrets.local_root_password.hashed;
+
+  l3mon.secgen.secrets.local_root_password = rec {
+    cleartext_rel = "local_root_pw";
+    cleartext = "${config.l3mon.secgen.secret_dir}/${cleartext_rel}";
+
+    hashed_rel = "local_root_pw_hashed";
+    hashed = "${config.l3mon.secgen.secret_dir}/${hashed_rel}";
+
+    backup_relfiles = [ cleartext_rel hashed_rel ];
+    gen = pkgs.writeShellApplication {
+      name = "gen";
+      text =
+      ''
+        echo 'Enter new password:'
+        read -r PASSWORD
+        echo "Read password $PASSWORD from stdin"
+        HASHED=$(echo "$PASSWORD" | mkpasswd -s)
+
+        echo -n "$PASSWORD" > ${cleartext}
+        chown root:root ${cleartext}
+        chmod 400 ${cleartext}
+
+        echo -n "$HASHED" > ${hashed}
+        chown root:root ${hashed}
+        chmod 400 ${hashed}
+      '';
+    };
+  };
 
   # common users
   users.users.media = {
