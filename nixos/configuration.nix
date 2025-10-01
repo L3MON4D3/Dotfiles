@@ -265,6 +265,58 @@
     # 0.0.0.0 zigmirror.meox.dev
   # '';
 
+  l3mon.secgen.secrets = {
+    mailbox_msmtp = rec {
+      file_rel = "mailbox_msmtp";
+      file_abs = "${config.l3mon.secgen.secret_dir}/${file_rel}";
+
+      microvm_file_rel = "mailbox_msmtp_microvm";
+      microvm_file_abs = "${config.l3mon.secgen.secret_dir}/${microvm_file_rel}";
+
+      backup_relfiles = [ file_rel ];
+      gen = pkgs.writeShellApplication {
+        name = "gen";
+        text = ''
+          echo 'Open mailbox.org and create a new email-app password with SMTP access.'
+          echo 'Enter it here:'
+          read -r PASSWORD
+          echo "Read password $PASSWORD from stdin"
+
+          # passwordfile has to be \n-terminated!
+          echo "$PASSWORD" > ${file_abs}
+          chown root:root ${file_abs}
+          chmod 400 ${file_abs}
+
+          echo "$PASSWORD" > ${microvm_file_abs}
+          chown microvm:kvm ${microvm_file_abs}
+          chmod 440 ${microvm_file_abs}
+        '';
+      };
+    };
+    id_rsa = rec {
+      key_rel = "id_rsa";
+      key_abs = "${config.l3mon.secgen.secret_dir}/${key_rel}";
+
+      pubkey_rel = "id_rsa.pub";
+      pubkey_abs = "${config.l3mon.secgen.secret_dir}/${pubkey_rel}";
+
+      microvm_file_rel = "mailbox_msmtp_microvm";
+      microvm_file_abs = "${config.l3mon.secgen.secret_dir}/${microvm_file_rel}";
+
+      backup_relfiles = [ key_rel pubkey_rel ];
+      gen = pkgs.writeShellApplication {
+        name = "gen";
+        runtimeInputs = with pkgs; [ openssh ];
+        text = ''
+          ssh-keygen -N "" -f ${key_abs} -C ""
+
+          chown root:root ${key_abs}
+          chmod 400 ${key_abs}
+        '';
+      };
+    };
+  };
+
   # system.copySystemConfiguration = true;
 
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,

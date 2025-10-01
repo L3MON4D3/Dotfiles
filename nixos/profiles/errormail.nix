@@ -77,11 +77,14 @@ in {
     assertion = config.services.dbus.implementation == "broker";
     message = "Enable dbus-broker to make sure that dynamicUser is allowed access to dbus.";
   } ];
+
   systemd.services."statusmail@" = {
     description = "Send email with status of service %i to ${target_email}.";
     serviceConfig = {
       LoadCredential = "smtp_password:${config.l3mon.secgen.secrets.mailbox_msmtp.file_abs}";
       DynamicUser = true;
+      # file in passwordeval is only accessible to root, pass it through for
+      # this service.
       ExecStart = "${notify-systemd}/bin/notify-systemd %i %d/smtp_password";
       # allow reading journal-entries for various services.
       Group = "systemd-journal";
@@ -91,6 +94,10 @@ in {
   l3mon.secgen.secrets.mailbox_msmtp = rec {
     file_rel = "mailbox_msmtp";
     file_abs = "${config.l3mon.secgen.secret_dir}/${file_rel}";
+
+    microvm_file_rel = "mailbox_msmtp_microvm";
+    microvm_file_abs = "${config.l3mon.secgen.secret_dir}/${microvm_file_rel}";
+
     backup_relfiles = [ file_rel ];
     gen = pkgs.writeShellApplication {
       name = "gen";
@@ -99,10 +106,15 @@ in {
         echo 'Enter it here:'
         read -r PASSWORD
         echo "Read password $PASSWORD from stdin"
+
         # passwordfile has to be \n-terminated!
         echo "$PASSWORD" > ${file_abs}
         chown root:root ${file_abs}
         chmod 400 ${file_abs}
+
+        echo "$PASSWORD" > ${microvm_file_abs}
+        chown microvm:kvm ${microvm_file_abs}
+        chmod 440 ${microvm_file_abs}
       '';
     };
   };

@@ -98,6 +98,7 @@ in rec {
         services = [
           "nix-cache"
           "nix-tarballs"
+          "pds"
         ];
       };
       merigold-test = {

@@ -7,6 +7,9 @@
     nbd = 138;
 
     smb_old = 139;
+
+    https = 443;
+
     smb = 445;
 
     dnstls = 853;
@@ -45,6 +48,7 @@
     zimit = 7020;
     linkding = 7021;
     ddns-updater = 7022;
+    pds = 7023;
 
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;

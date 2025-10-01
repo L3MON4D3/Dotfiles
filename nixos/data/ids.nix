@@ -14,4 +14,5 @@
   pinchflat   = 10008;
   kiwix       = 10009;
   linkding    = 10010;
+  msmtp-user  = 10011;
 }
