@@ -326,7 +326,24 @@ in {
         };
 
         services.gpg-agent = {
+          enable = true;
+          enableExtraSocket = true;
           pinentry.package = pkgs.pinentry-gnome3;
+          # enableSshSupport = true;
+        };
+
+        programs.ssh = {
+          matchBlocks = {
+            indigo = {
+              hostname = "indigo";
+              remoteForwards = [
+                {
+                  bind.address = "/run/user/1000/gnupg/S.gpg-agent";
+                  host.address = "/run/user/1000/gnupg/S.gpg-agent.extra";
+                }
+              ];
+            };
+          };
         };
 
         wayland.windowManager.sway = {
