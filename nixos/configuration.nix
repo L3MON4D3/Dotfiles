@@ -1,4 +1,4 @@
-{ config, lib, l3lib, pkgs, pkgs-unstable, inputs, data, self, ... }:
+{ config, lib, l3lib, pkgs, pkgs-unstable, inputs, data, self, system, ... }:
 
 {
   disabledModules = ["services/databases/mysql.nix"];
@@ -228,6 +228,31 @@
     enable = true;
     text = builtins.toJSON data;
     mode = "0444";
+  };
+
+  l3mon.secgen.secrets.atproto = rec {
+    key_rel = "atproto_key";
+    key_abs = "${config.l3mon.secgen.secret_dir}/${key_rel}";
+    pubkey_rel = "atproto_pubkey";
+    pubkey_abs = "${config.l3mon.secgen.secret_dir}/${pubkey_rel}";
+
+    backup_relfiles = [ key_rel pubkey_rel ];
+    gen = pkgs.writeShellApplication {
+      name = "gen";
+      runtimeInputs = [ inputs.didweb.packages.${system}.default ];
+      text = ''
+        KEY=$(bsky-did-web genkey)
+        PUBKEY=$(echo -n "$KEY" | bsky-did-web pubkey)
+
+        echo -n "$KEY" > ${key_abs}
+        chown root:root ${key_abs}
+        chmod 400 ${key_abs}
+
+        echo -n "$PUBKEY" > ${pubkey_abs}
+        chown root:root ${pubkey_abs}
+        chmod 400 ${pubkey_abs}
+      '';
+    };
   };
 
   # networking.extraHosts = ''
