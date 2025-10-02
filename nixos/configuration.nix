@@ -86,6 +86,7 @@
     shellcheck
     fd
     rename
+    xxd
 
     # networking tools
     dig
