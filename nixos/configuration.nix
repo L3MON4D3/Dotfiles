@@ -50,6 +50,7 @@
     la = "ls -a";
     ll = "ls -la";
     rs = "rsync -ah --progress --info=progress2";
+    cat = "bat";
   };
   programs.bash.interactiveShellInit = ''
     where() {
@@ -69,6 +70,7 @@
     # if 999 (recommended default), the doc is much to wide for my taste.
     # this gives it a better appearance
     MANWIDTH = "100";
+    BAT_STYLE = "header-filename,header-filesize,numbers";
   };
 
   # programs.firefox.enable = true;
@@ -87,6 +89,7 @@
     fd
     rename
     xxd
+    bat
 
     # networking tools
     dig
