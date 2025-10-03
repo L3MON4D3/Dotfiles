@@ -60,7 +60,7 @@ let w:stFn=""
 let w:fpRel=""
 "add WinEnter for floating windows.
 "BufEnter for <C-O>/<C-I>
-autocmd mine QuickFixCmdPost,BufRead,WinNew,TermOpen,SourcePost,WinEnter,BufWinEnter * 
+autocmd mine QuickFixCmdPost,BufRead,BufFilePost,WinNew,TermOpen,SourcePost,WinEnter,BufWinEnter * 
             \let w:stFt=FiletypeClean() |
             \let w:stFn=FilenameClean() |
             \let w:fpRel=FilepathClean() |
