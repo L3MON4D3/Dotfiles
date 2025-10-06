@@ -54,18 +54,19 @@
     enable = true;
     matchBlocks = {
       wildhorn = {
-        # host = "wildhorn";
-
         hostname = "wildhorn.cs.uni-bonn.de";
         identityFile = "~/.ssh/id_rsa";
         identitiesOnly = true;
         user = "katz";
       };
       rem = {
-        # host = "rem";
-
         hostname = "remarkable";
-        # identityFile = "~/.ssh/remarkable";
+        identityFile = "~/.ssh/id_rsa";
+        identitiesOnly = true;
+        user = "root";
+      };
+      merigold = {
+        identityFile = "~/.ssh/id_rsa";
         identitiesOnly = true;
         user = "root";
       };
