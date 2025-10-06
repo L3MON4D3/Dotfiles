@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, nur, aa-torrent-dl, ... }:
+{ config, lib, pkgs, machine, data, nur, inputs, ... }:
 
 {
   imports = [
@@ -34,7 +34,8 @@
       extensions.packages = with nur.repos.rycee.firefox-addons; [
         ublock-origin
         passff
-        aa-torrent-dl.extension
+        inputs.aa-torrent-dl.packages.${pkgs.system}.extension
+        inputs.nvim-browseredit.packages.${pkgs.system}.extension
       ];
     };
   };

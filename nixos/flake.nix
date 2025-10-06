@@ -27,6 +27,7 @@
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
     mpdlrc.url = "github:l3mon4d3/mpdlrc";
     aa-torrent-dl.url = "github:l3mon4d3/aa-torrent-dl";
+    nvim-browseredit.url = "github:l3mon4d3/nvim-browseredit";
     scientific-fhs.url = "github:l3mon4d3/scientific-fhs";
     microvm = {
       url = "github:microvm-nix/microvm.nix";

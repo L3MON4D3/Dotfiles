@@ -192,7 +192,7 @@ in {
 
   home-manager.sharedModules = [
     (
-      { config, lib, pkgs, machine, data, nur, aa-torrent-dl, l3lib, ... }:
+      { config, lib, pkgs, machine, data, nur, inputs, l3lib, ... }:
       
       let
         cursor_theme_name = "phinger-cursors-light";
@@ -254,7 +254,8 @@ in {
           enable = true; 
           nativeMessagingHosts = [
             pkgs.passff-host
-            aa-torrent-dl.native-app
+            inputs.aa-torrent-dl.packages.${pkgs.system}.native-app
+            inputs.nvim-browseredit.packages.${pkgs.system}.native-app
           ];
           package = pkgs.firefox-wayland;
           profiles = {
@@ -317,7 +318,8 @@ in {
               extensions.packages = with nur.repos.rycee.firefox-addons; [
                 ublock-origin
                 passff
-                aa-torrent-dl.extension
+                inputs.aa-torrent-dl.packages.${pkgs.system}.extension
+                inputs.nvim-browseredit.packages.${pkgs.system}.extension
                 linkding-extension
                 single-file
               ];
