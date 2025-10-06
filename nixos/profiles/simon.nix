@@ -22,7 +22,7 @@
   ];
 
   system.activationScripts = {
-    qbittorrent = {
+    simon = {
       text = 
       (l3lib.assertSecret "id_rsa") + 
       (l3lib.assertSecret "id_rsa.pub") + 
