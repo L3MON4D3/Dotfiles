@@ -69,6 +69,23 @@
     "A /home/simon/projects/dotfiles/nvim/info - - - - g:simon:r"
   ];
 
+  l3mon.automount = {
+    enable = true;
+    spec = {
+      "PRUSA-THUMB" = {
+        at = "/mnt/prusa-thumb";
+        options = "uid=1000,gid=1000";
+      };
+      "SAMSUNG-THUMB" = {
+        at = "/mnt/samsung-thumb";
+      };
+      "ANDROID" = {
+        at = "/mnt/android";
+        options = "uid=1000,gid=1000";
+      };
+    }; 
+  };
+
   l3mon.restic.extraGroups = [ "simon" ];
   l3mon.restic.specs.simon = {
     backup15min = {

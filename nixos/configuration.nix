@@ -7,6 +7,7 @@
     # supersede nixpkgs' mysql module.
     ./modules/mysql.nix
     ./modules/restic.nix
+    ./modules/automount.nix
     ./modules/zotero.nix
     ./modules/wireguard/netns.nix
     ./modules/wireguard/host.nix
