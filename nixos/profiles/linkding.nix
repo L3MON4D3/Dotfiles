@@ -46,7 +46,7 @@ in {
     # podman.user = "linkding";
     imageFile = linkding_img;
     image = "linkding:system";
-    extraOptions = [ "--userns" "keep-id:uid=${toString data.ids.linkding},gid=${toString data.ids.linkding}" ];
+    extraOptions = [ "--userns" "keep-id:uid=${toString data.ids.linkding},gid=${toString data.ids.linkding}" "--no-healthcheck"];
     volumes = ["${linkding_dir}/data:/etc/linkding/data"];
     environment = {
       LD_SUPERUSER_NAME = "l3mon";
