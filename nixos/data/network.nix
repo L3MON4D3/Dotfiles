@@ -81,6 +81,7 @@ in rec {
           "zimit"
           "linkding"
           "ddns-updater"
+          "zotero-serve"
         ];
       };
       remarkable = {

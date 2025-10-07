@@ -37,6 +37,7 @@
     kiwix-seeder.url = "github:l3mon4d3/seeder";
     dirmap.url = "github:l3mon4d3/dirmap";
     didweb.url = "github:l3mon4d3/bsky-did-web";
+    zotero-serve.url = "github:l3mon4d3/zotero-serve";
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, microvm, merigold, ... }: {

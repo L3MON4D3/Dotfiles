@@ -49,6 +49,7 @@
     linkding = 7021;
     ddns-updater = 7022;
     pds = 7023;
+    zotero-serve = 7024;
 
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;

@@ -1,5 +1,5 @@
 # from https://www.reddit.com/r/NixOS/comments/1dtgavp/combining_global_and_homemanager_options_in_a/
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, machine, data, inputs, system, ... }:
 
 with lib;
 let
@@ -36,6 +36,33 @@ in
           '';
         };
       };
+
+      systemd.services."zotero-serve" = {
+        enable = true;
+        unitConfig.RequiresMountsFor = [ "/srv/zotero" ];
+        wantedBy = ["multi-user.target"];
+        serviceConfig = {
+          Type = "exec";
+          User = "zotero";
+          Group = "zotero";
+        };
+        path = [ inputs.zotero-serve.packages.${system}.default ];
+        environment = {
+          ZOTERO_STORAGE_DIR = "/srv/zotero/storage";
+          DBPATH_ORIG = "/srv/zotero/zotero.sqlite";
+          GRANIAN_HOST = "127.0.0.1";
+          GRANIAN_PORT = toString data.ports.zotero-serve;
+        };
+        script = ''
+          zotero-serve
+        '';
+      };
+
+      services.caddy.extraConfig = ''
+        http://zotero-serve, http://zotero-serve.internal, http://zotero-serve.${machine} {
+          reverse_proxy http://127.0.0.1:${toString data.ports.zotero-serve}
+        }
+      '';
     })
     (mkIf config.l3mon.zotero.enable_client {
       fileSystems.${client_zotero_data_dir} = {

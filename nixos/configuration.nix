@@ -190,6 +190,13 @@
   };
   users.groups.media.gid = data.ids.media;
 
+  users.users.zotero = {
+    isSystemUser = true;
+    uid = data.ids.zotero;
+    group = "zotero";
+  };
+  users.groups.zotero.gid = data.ids.zotero;
+
   programs.dconf.enable = true;
 
   nix = {

@@ -15,4 +15,5 @@
   kiwix       = 10009;
   linkding    = 10010;
   msmtp-user  = 10011;
+  zotero      = 10012;
 }
