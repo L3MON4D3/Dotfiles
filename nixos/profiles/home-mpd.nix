@@ -74,6 +74,7 @@ in {
   systemd.services.playlist-fs = {
     enable = true;
     unitConfig.RequiresMountsFor = [ audio_dir playlist_dir lossy_playlist_dir ];
+    wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "exec";
       User = "simon";
