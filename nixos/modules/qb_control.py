@@ -78,6 +78,8 @@ max_tries = 5
 tries = 0
 retry_timeout_s = 10
 while True:
+    tries += 1
+    print(f"Try {tries}")
     try:
         priority_dl_torrents = get_torrents(movie_downloading_states, "radarr") + get_torrents(movie_downloading_states, "tv-sonarr")  # noqa: E501.
         if len(priority_dl_torrents) > 0:
@@ -86,8 +88,8 @@ while True:
         else:
             for t in get_torrents(aa_downloading_states, "aa"):
                 t.unlimit_download()
+        break
     except qbittorrentapi.exceptions.InternalServerError500Error as ex:
-        tries += 1
         if tries >= max_tries:
             ex.add_note(f"The exception occured {max_tries} times!")
             raise
