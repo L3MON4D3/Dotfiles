@@ -1285,11 +1285,11 @@
         "nixpkgs-unstable": "nixpkgs-unstable_7"
       },
       "locked": {
-        "lastModified": 1759853677,
-        "narHash": "sha256-35MhO7dWzDl8UwUOQZdcR5TDpXq1uyTEgiE2xLmh2Lo=",
+        "lastModified": 1759855150,
+        "narHash": "sha256-I+/PZF2Saoj9E1zK4vMkqbMlKOpjRP6w1H2MEWMebC0=",
         "owner": "l3mon4d3",
         "repo": "zotero-serve",
-        "rev": "9607fae4bfd931450ed697e02cc7ed3039615bd6",
+        "rev": "01118042a9a05ea5e29e5c201c3b28a22c820512",
         "type": "github"
       },
       "original": {
