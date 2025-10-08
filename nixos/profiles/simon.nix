@@ -18,7 +18,7 @@
   users.groups.simon.gid = data.ids.simon;
 
   users.users.simon.openssh.authorizedKeys.keys = [
-    data.pubkey
+    data.pubkeys.simon-ssh
   ];
 
   system.activationScripts = {

@@ -31,7 +31,7 @@ with lib;
     (mkIf cfg.push {
 
       l3mon.secgen.secrets.peercache = rec {
-        backup_relfiles = [];
+        backup_files = [];
         gen = pkgs.writeShellApplication {
           name = "gen";
           text =
@@ -45,7 +45,7 @@ with lib;
             KEY=$(cat "$tmpkey")
             PUBKEY=$(cat "$tmppubkey")
 
-            echo "Update pubkey to $PUBKEY in peercache.nix"
+            echo "Update 'peercache-raw' to $PUBKEY in data/pubkeys.nix"
 
             rm "$tmpkey"
             rm "$tmppubkey"
@@ -54,7 +54,7 @@ with lib;
               echo -n "cache.${name}.internal$KEY" > /var/secrets/nix-serve-key-${name}
             '') "" self.outputs.nixosConfigurations;
         };
-      } // lib.attrsets.concatMapAttrs (name: os: {"key-${name}" = "/var/secrets/nix-serve-key-${name}";}) self.outputs.nixosConfigurations;
+      } // lib.attrsets.concatMapAttrs (name: os: {"key-${name}" = "${config.l3mon.secgen.secret_dir}/nix-serve-key-${name}";}) self.outputs.nixosConfigurations;
 
       services.nix-serve = {
         enable = true;

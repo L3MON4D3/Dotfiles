@@ -16,12 +16,12 @@ let
       lan.peers.carmine
       lan.peers.indigo
     ];
-    pubkey = data.pubkey; # allowed ssh-pubkey
+    pubkey = data.pubkeys.simon-ssh; # allowed ssh-pubkey
 
     guest_keyfile = l3lib.secret "merigold-key";
     guest_pubkeyfile = l3lib.secret "merigold-pubkey";
-    pds_env = config.l3mon.secgen.secrets.pds_env.file_abs;
-    smtp_passwordfile = config.l3mon.secgen.secrets.mailbox_msmtp.microvm_file_abs;
+    pds_env = config.l3mon.secgen.secrets.pds_env.file;
+    smtp_passwordfile = config.l3mon.secgen.secrets.mailbox_msmtp.microvm_file;
 
     share_store = false;
     password = null; # set to null on production server!!
@@ -35,7 +35,7 @@ let
   nftable = inputs.merigold.lib.${system}.mkRuleset mgconf;
 
   remote_sync_dir = "/var/lib/remote-services/merigold";
-  rsa_key_file = "${config.l3mon.secgen.secrets.id_rsa.key_abs}";
+  rsa_key_file = "${config.l3mon.secgen.secrets.id_rsa.key}";
   sync_pds_merigold = pkgs.writeShellApplication {
     name = "sync-pds-merigold";
     runtimeInputs = with pkgs; [ openssh rsync coreutils ];
@@ -60,10 +60,9 @@ in {
   };
 
   l3mon.secgen.secrets.pds_env = rec {
-    file_rel = "pds_env";
-    file_abs = "${config.l3mon.secgen.secret_dir}/${file_rel}";
+    file = "${config.l3mon.secgen.secret_dir}/pds_env";
 
-    backup_relfiles = [ file_rel ];
+    backup_files = [ file ];
     gen = pkgs.writeShellApplication {
       name = "gen";
       runtimeInputs = with pkgs; [ openssl tinyxxd ];
@@ -80,10 +79,10 @@ in {
           # Generate PLC rotation key
           PLC_KEY=$(openssl ecparam --name secp256k1 --genkey --noout --outform DER | tail --bytes=+8 | head --bytes=32 | xxd --plain --cols 32)
           echo "PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX=$PLC_KEY"
-        } > ${file_abs}
+        } > ${file}
         # passwordfile has to be \n-terminated!
-        chown microvm:kvm ${file_abs}
-        chmod 440 ${file_abs}
+        chown microvm:kvm ${file}
+        chmod 440 ${file}
       '';
     };
   };

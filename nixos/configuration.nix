@@ -155,13 +155,10 @@
   users.users.root.hashedPasswordFile = config.l3mon.secgen.secrets.local_root_password.hashed;
 
   l3mon.secgen.secrets.local_root_password = rec {
-    cleartext_rel = "local_root_pw";
-    cleartext = "${config.l3mon.secgen.secret_dir}/${cleartext_rel}";
+    cleartext = "${config.l3mon.secgen.secret_dir}/local_root_pw";
+    hashed = "${config.l3mon.secgen.secret_dir}/local_root_pw_hashed";
 
-    hashed_rel = "local_root_pw_hashed";
-    hashed = "${config.l3mon.secgen.secret_dir}/${hashed_rel}";
-
-    backup_relfiles = [ cleartext_rel hashed_rel ];
+    backup_files = [ cleartext hashed ];
     gen = pkgs.writeShellApplication {
       name = "gen";
       text =
@@ -212,7 +209,7 @@
         "http://cache.nixos.org"
       ];
       trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        data.pubkeys.cachix-community
       ];
     };
     registry = {
@@ -243,12 +240,10 @@
   };
 
   l3mon.secgen.secrets.atproto = rec {
-    key_rel = "atproto_key";
-    key_abs = "${config.l3mon.secgen.secret_dir}/${key_rel}";
-    pubkey_rel = "atproto_pubkey";
-    pubkey_abs = "${config.l3mon.secgen.secret_dir}/${pubkey_rel}";
+    key = "${config.l3mon.secgen.secret_dir}/atproto_key";
+    pubkey = "${config.l3mon.secgen.secret_dir}/atproto_pubkey";
 
-    backup_relfiles = [ key_rel pubkey_rel ];
+    backup_files = [ key pubkey ];
     gen = pkgs.writeShellApplication {
       name = "gen";
       runtimeInputs = [ inputs.didweb.packages.${system}.default ];
@@ -256,13 +251,13 @@
         KEY=$(bsky-did-web genkey)
         PUBKEY=$(echo -n "$KEY" | bsky-did-web pubkey)
 
-        echo -n "$KEY" > ${key_abs}
-        chown root:root ${key_abs}
-        chmod 400 ${key_abs}
+        echo -n "$KEY" > ${key}
+        chown root:root ${key}
+        chmod 400 ${key}
 
-        echo -n "$PUBKEY" > ${pubkey_abs}
-        chown root:root ${pubkey_abs}
-        chmod 400 ${pubkey_abs}
+        echo -n "$PUBKEY" > ${pubkey}
+        chown root:root ${pubkey}
+        chmod 400 ${pubkey}
       '';
     };
   };
@@ -279,13 +274,10 @@
 
   l3mon.secgen.secrets = {
     mailbox_msmtp = rec {
-      file_rel = "mailbox_msmtp";
-      file_abs = "${config.l3mon.secgen.secret_dir}/${file_rel}";
+      file = "${config.l3mon.secgen.secret_dir}/mailbox_msmtp";
+      microvm_file = "${config.l3mon.secgen.secret_dir}/mailbox_msmtp_microvm";
 
-      microvm_file_rel = "mailbox_msmtp_microvm";
-      microvm_file_abs = "${config.l3mon.secgen.secret_dir}/${microvm_file_rel}";
-
-      backup_relfiles = [ file_rel ];
+      backup_files = [ file ];
       gen = pkgs.writeShellApplication {
         name = "gen";
         text = ''
@@ -295,35 +287,29 @@
           echo "Read password $PASSWORD from stdin"
 
           # passwordfile has to be \n-terminated!
-          echo "$PASSWORD" > ${file_abs}
-          chown root:root ${file_abs}
-          chmod 400 ${file_abs}
+          echo "$PASSWORD" > ${file}
+          chown root:root ${file}
+          chmod 400 ${file}
 
-          echo "$PASSWORD" > ${microvm_file_abs}
-          chown microvm:kvm ${microvm_file_abs}
-          chmod 440 ${microvm_file_abs}
+          echo "$PASSWORD" > ${microvm_file}
+          chown microvm:kvm ${microvm_file}
+          chmod 440 ${microvm_file}
         '';
       };
     };
     id_rsa = rec {
-      key_rel = "id_rsa";
-      key_abs = "${config.l3mon.secgen.secret_dir}/${key_rel}";
+      key = "${config.l3mon.secgen.secret_dir}/id_rsa";
+      pubkey = "${config.l3mon.secgen.secret_dir}/id_rsa.pub";
 
-      pubkey_rel = "id_rsa.pub";
-      pubkey_abs = "${config.l3mon.secgen.secret_dir}/${pubkey_rel}";
-
-      microvm_file_rel = "mailbox_msmtp_microvm";
-      microvm_file_abs = "${config.l3mon.secgen.secret_dir}/${microvm_file_rel}";
-
-      backup_relfiles = [ key_rel pubkey_rel ];
+      backup_files = [ key pubkey ];
       gen = pkgs.writeShellApplication {
         name = "gen";
         runtimeInputs = with pkgs; [ openssh ];
         text = ''
-          ssh-keygen -N "" -f ${key_abs} -C ""
+          ssh-keygen -N "" -f ${key} -C ""
 
-          chown root:root ${key_abs}
-          chmod 400 ${key_abs}
+          chown root:root ${key}
+          chmod 400 ${key}
         '';
       };
     };

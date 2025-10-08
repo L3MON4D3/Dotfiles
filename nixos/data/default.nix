@@ -1,5 +1,5 @@
 {
-  pubkey = import ./pubkey.nix;
+  pubkeys = import ./pubkeys.nix;
   network = import ./network.nix;
   ids = import ./ids.nix;
   ports = import ./ports.nix;

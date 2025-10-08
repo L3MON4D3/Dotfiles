@@ -33,13 +33,13 @@ with lib; {
   in {
     environment.systemPackages = with pkgs; [
       (writeShellApplication (let
-        secbackup = relpath:
+        secbackup = secpath:
         # bash 
         ''
-          if [[ -f "/var/secrets/${relpath}" ]]; then
-            mkdir -p "$(dirname /var/secrets/.old/${relpath})"
-            BACKUP_PATH="/var/secrets/.old/${relpath}-$(date +%s)"
-            install -D -o root -g root -m 400 "/var/secrets/${relpath}" "$BACKUP_PATH"
+          if [[ -f "${secpath}" ]]; then
+            mkdir -p "$(dirname /var/secrets/.old/${secpath})"
+            BACKUP_PATH="/var/secrets/.old/${secpath}-$(date +%s)"
+            install -D -o root -g root -m 400 "${secpath}" "$BACKUP_PATH"
           fi
         '';
       in {
@@ -53,7 +53,7 @@ with lib; {
           case "$1" in
         '' + (attrsets.foldlAttrs (acc: k: v: acc + ''
             ${k})
-              ${builtins.concatStringsSep "\n" (builtins.map (relpath: secbackup relpath) v.backup_relfiles)}
+              ${builtins.concatStringsSep "\n" (builtins.map (secpath: secbackup secpath) v.backup_files)}
               ${v.gen}/bin/gen
               ;;
           '')  "" config.l3mon.secgen.secrets) +

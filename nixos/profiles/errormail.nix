@@ -63,7 +63,7 @@ in {
       host = "smtp.mailbox.org";
       from = "simon@l3mon4.de";
       user = "simon@l3mon4.de";
-      passwordeval = "${pkgs.coreutils}/bin/cat ${config.l3mon.secgen.secrets.mailbox_msmtp.file_abs}";
+      passwordeval = "${pkgs.coreutils}/bin/cat ${config.l3mon.secgen.secrets.mailbox_msmtp.file}";
     };
   };
 
@@ -81,7 +81,7 @@ in {
   systemd.services."statusmail@" = {
     description = "Send email with status of service %i to ${target_email}.";
     serviceConfig = {
-      LoadCredential = "smtp_password:${config.l3mon.secgen.secrets.mailbox_msmtp.file_abs}";
+      LoadCredential = "smtp_password:${config.l3mon.secgen.secrets.mailbox_msmtp.file}";
       DynamicUser = true;
       # file in passwordeval is only accessible to root, pass it through for
       # this service.
@@ -90,35 +90,6 @@ in {
       Group = "systemd-journal";
     };
   };
-
-  l3mon.secgen.secrets.mailbox_msmtp = rec {
-    file_rel = "mailbox_msmtp";
-    file_abs = "${config.l3mon.secgen.secret_dir}/${file_rel}";
-
-    microvm_file_rel = "mailbox_msmtp_microvm";
-    microvm_file_abs = "${config.l3mon.secgen.secret_dir}/${microvm_file_rel}";
-
-    backup_relfiles = [ file_rel ];
-    gen = pkgs.writeShellApplication {
-      name = "gen";
-      text = ''
-        echo 'Open mailbox.org and create a new email-app password with SMTP access.'
-        echo 'Enter it here:'
-        read -r PASSWORD
-        echo "Read password $PASSWORD from stdin"
-
-        # passwordfile has to be \n-terminated!
-        echo "$PASSWORD" > ${file_abs}
-        chown root:root ${file_abs}
-        chmod 400 ${file_abs}
-
-        echo "$PASSWORD" > ${microvm_file_abs}
-        chown microvm:kvm ${microvm_file_abs}
-        chmod 440 ${microvm_file_abs}
-      '';
-    };
-  };
-
 
   systemd.packages = [
     (pkgs.writeTextDir "etc/systemd/system/service.d/errormail.conf" (lib.generators.toINI {}
