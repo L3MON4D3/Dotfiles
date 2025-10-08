@@ -82,6 +82,7 @@ in rec {
           "linkding"
           "ddns-updater"
           "zotero-serve"
+          "ncps"
         ];
       };
       remarkable = {

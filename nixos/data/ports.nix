@@ -50,6 +50,7 @@
     ddns-updater = 7022;
     pds = 7023;
     zotero-serve = 7024;
+    ncps = 7025;
 
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;

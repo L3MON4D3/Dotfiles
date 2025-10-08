@@ -17,7 +17,7 @@ with lib;
       nix.settings = {
         # low timeout in case one of my machines is offline.
         connect-timeout = 1;
-        substituters = lib.mkBefore (lib.attrsets.foldlAttrs (acc: name: os:
+        substituters = lib.mkOrder data.ordering.peercache-substituters (lib.attrsets.foldlAttrs (acc: name: os:
           if os.config.l3mon.peercache.push && name != machine then
             acc ++ ["http://cache.${name}.internal"]
           else acc) [] self.outputs.nixosConfigurations);

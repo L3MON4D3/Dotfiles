@@ -12,6 +12,8 @@
       ../../profiles/sonarr.nix
       ../../profiles/jackett
 
+      ../../profiles/ncps.nix
+
       ../../modules/qbittorrent.nix
 
       # ../../profiles/kodi.nix
