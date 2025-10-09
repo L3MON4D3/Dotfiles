@@ -13,14 +13,15 @@
     };
     server.addr = "127.0.0.1:${toString data.ports.ncps}";
     upstream = {
-      caches = [
+      # if possible, pull from local caches.
+      caches = (lib.attrsets.foldlAttrs (acc: name: os:
+          if os.config.l3mon.peercache.push && {"carmine"=null; "indigo"=null;} ? ${name} then
+            acc ++ ["http://cache.${name}.internal"]
+          else acc) [] self.outputs.nixosConfigurations)
+      ++ [
         "https://cache.nixos.org"
         "https://nix-community.cachix.org"
-      ]
-      ++ lib.attrsets.foldlAttrs (acc: name: os:
-          if os.config.l3mon.peercache.push && {"carmine"=null; "indigo"=null;} ? name then
-            acc ++ ["http://cache.${name}.internal"]
-          else acc) [] self.outputs.nixosConfigurations;
+      ];
       publicKeys = with data.pubkeys; [
         cachix-community
         nixos-org
