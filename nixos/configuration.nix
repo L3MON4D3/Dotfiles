@@ -91,6 +91,7 @@
     rename
     xxd
     bat
+    jq
 
     # networking tools
     dig
