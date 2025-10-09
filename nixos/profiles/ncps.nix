@@ -5,8 +5,6 @@
     enable = true;
     cache = {
       hostName = "ncps.internal";
-      lru.schedule = "0 4 * * *"; # Clean up daily at 4 AM
-      maxSize = "500G";
       allowPutVerb = true;
       allowDeleteVerb = true;
       secretKeyPath = config.l3mon.secgen.secrets.ncps.key;
@@ -46,11 +44,9 @@
       # bash 
       ''
         tmppubkey=$(mktemp)
-
         nix-store --generate-binary-cache-key "ncps.internal" "${key}" "$tmppubkey"
 
         PUBKEY=$(cat "$tmppubkey")
-
         echo "Update 'ncps' to \"$PUBKEY\" in data/pubkeys.nix"
 
         rm "$tmppubkey"
