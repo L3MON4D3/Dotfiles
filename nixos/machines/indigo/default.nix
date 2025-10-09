@@ -247,6 +247,10 @@
     device = "/mnt/glacier/private";
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
+  fileSystems."/var/lib/ncps/store" = {
+    device = "/mnt/glacier/ncps-store";
+    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
+  };
 
   #
   # Bind-mounts for services!
@@ -326,6 +330,13 @@
   l3mon.peercache = {
     pull = true;
     push = true;
+  };
+
+  nix.settings = {
+    substituters = lib.mkOrder (data.ordering.peercache-substituters - 1) ["http://ncps.internal"];
+    trusted-public-keys = [
+      data.pubkeys.ncps
+    ];
   };
 
   l3mon.qbittorrent = {
