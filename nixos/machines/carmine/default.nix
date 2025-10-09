@@ -18,6 +18,8 @@
     ../../profiles/mxmaster3s.nix
     ../../profiles/unibonn.nix
 
+    ../../profiles/flake-preserve.nix
+
     ./profiles/gamelibrary.nix
     ./profiles/cachefilesd.nix
     ./profiles/remarkable.nix
