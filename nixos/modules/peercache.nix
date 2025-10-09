@@ -55,17 +55,19 @@ with lib;
         };
       } // lib.attrsets.concatMapAttrs (name: os: {"key-${name}" = "${config.l3mon.secgen.secret_dir}/nix-serve-key-${name}";}) self.outputs.nixosConfigurations;
 
-      services.nix-serve = {
+      services.harmonia = {
         enable = true;
-        secretKeyFile = config.l3mon.secgen.secrets.peercache."key-${machine}";
-        port = data.ports.nix-serve;
+        signKeyPaths = [config.l3mon.secgen.secrets.peercache."key-${machine}"];
+        settings = {
+          bind = "127.0.0.1:${toString data.ports.harmonia}";
+        };
       };
 
       services.caddy = {
         enable = true;
         extraConfig = ''
           http://cache.${machine}.internal {
-            reverse_proxy http://${machine_lan_address}:${toString data.ports.nix-serve}
+            reverse_proxy http://127.0.0.1:${toString data.ports.harmonia}
           }
         '';
       };
