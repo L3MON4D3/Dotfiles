@@ -123,7 +123,7 @@
   nix.settings = {
     substituters = lib.mkOrder (data.ordering.peercache-substituters - 1) ["http://ncps.internal"];
     trusted-public-keys = [
-      data.pubkeys.cachix-community
+      data.pubkeys.ncps
     ];
   };
 
