@@ -537,6 +537,7 @@ in {
                 "Symbols Nerd Font Mono:size=10:antialias=true:autohint=true";
               underline-thickness="1px";
               underline-offset="4px";
+              resize-by-cells="no";
             };
             cursor.underline-thickness="2px";
             colors = {
