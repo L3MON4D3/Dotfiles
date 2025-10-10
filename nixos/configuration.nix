@@ -205,6 +205,7 @@
         "flakes"
       ]; 
       flake-registry = "";
+      keep-derivations = true;
       substituters = [
         "http://nix-community.cachix.org"
         "http://cache.nixos.org"
