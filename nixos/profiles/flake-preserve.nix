@@ -9,15 +9,15 @@
         preserve-flake-srcs = pkgs.writeText "preserve-flake-srcs"
         # nix
         ''
-          flake: shell_drv: let
-            pkgs = (import <nixpkgs> {});
+          flake: shell_drv_path: let
+            pkgs = import ${pkgs.path} {};
             collectFlakeInputs = input:
               ([ input ] ++ pkgs.lib.concatMap collectFlakeInputs (builtins.attrValues (input.inputs or {})));
-            all_inputs = (collectFlakeInputs flake) ++ [ flake.outputs.devShells.x86_64-linux.default ] ++ [ (import shell_drv).man (import shell_drv).out ];
-          in pkgs.writeTextFile {
-            name = "keep-devshell-full";
-            text = builtins.concatStringsSep "," all_inputs;
-          }
+            shell_drv = import shell_drv_path;
+          in (flake.outputs.devShells.x86_64-linux.default.overrideAttrs (old: {
+            inputSrcs = (if old ? "inputSrcs" then old.inputSrcs else []) ++ (builtins.tail (collectFlakeInputs flake));
+            inputDrvs = (if old ? "inputDrvs" then old.inputDrvs else []) ++ [ shell_drv.man shell_drv.out ];
+          }))
         '';
       in
       # bash
@@ -26,8 +26,8 @@
         # shellcheck disable=2016
         shellpath=$(echo 'readlink /proc/$$/exe' | nix develop)
         shell_drvpath="$(nix-store --query --deriver "$shellpath")"
-        keep_flake_full="$(nix build --expr '{extra_deps}: import ./a.nix (builtins.getFlake (toString ./.)) extra_deps' --argstr extra_deps "$shell_drvpath" --impure --print-out-paths --no-link)"
-        nix-store --add-root ./profile --indirect --realise "$keep_flake_full"
+        # pipe into devshells prevents interactive session.
+        echo exit 0 | nix develop --expr 'import ${preserve-flake-srcs} (builtins.getFlake "git+file://'"$(pwd)"'") '"$shell_drvpath" --impure --profile ./profile
       '');
     })
   ];
