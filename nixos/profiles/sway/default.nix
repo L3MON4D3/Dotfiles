@@ -247,6 +247,7 @@ in {
           mode "apps" {
             bindsym d exec legcord
             bindsym t exec thunderbird
+            bindsym p exec puddletag
           }
         '';
 
