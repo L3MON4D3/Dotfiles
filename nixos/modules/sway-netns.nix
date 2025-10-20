@@ -52,7 +52,7 @@ in {
               }
 
               mode "${netns_name}" {
-                bindsym Return exec $term ${ns_exec} bash; mode "default"
+                bindsym Return exec $term ${ns_exec} ${netns_name} bash; mode "default"
                 ${lib.optionalString config.programs.firefox.enable "bindsym f exec ${ns_exec} ${netns_name} ${config.programs.firefox.finalPackage}/bin/firefox -no-remote -P ${ff_profile_name} ${lib.optionalString cfg.openPrivateWindow "--private-window"} ${cfg.landingPage}; mode default"}
 
                 bindsym Escape mode "default"
