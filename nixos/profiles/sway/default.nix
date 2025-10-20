@@ -270,7 +270,17 @@ in {
                 "browser.aboutConfig.showWarning" = false;
                 "browser.compactmode.show" = true;
                 "widget.disable-workspace-management" = true;
+                "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
               };
+              userContent = ''
+                // by default this is crispEdges, but this makes straight lines
+                // disappear when zooming in too far.
+                @-moz-document domain("songsterr.com") {
+                  path {
+                    shape-rendering: geometricprecision !important;
+                  }
+                }
+              '';
               search = {
                 force = true;
                 # from https://gitlab.com/usmcamp0811/dotfiles/-/blob/fb584a888680ff909319efdcbf33d863d0c00eaa/modules/home/apps/firefox/default.nix
