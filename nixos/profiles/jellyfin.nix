@@ -3,6 +3,57 @@
 with lib;
 let
   machine_lan_address = data.network.lan.peers.${machine}.address;
+  custom-css =
+  (
+    # hide long video-descriptions.
+    # css
+    ''
+      .listItem-overview bdi *:nth-child(n+2) {
+        display: none !important;
+      }
+
+      .listItem-bottomoverview { display: none !important; }
+    ''
+  ) +
+  (
+    # hide played and a few manually-chosen skipped items in the Star Trek
+    # playlist.
+    # css
+    ''
+      .listItem[data-playlistid="91e612868ac3fa441f89b7ca3e1e9f26"]:has(.playedIndicator) {
+          display: none !important;
+      }
+
+      .listItem[data-playlistid="91e612868ac3fa441f89b7ca3e1e9f26"]:where(
+          [data-playlistitemid="b047f5e899026561ef2135e877bfbf75"],
+          [data-playlistitemid="071a84c41284043d0676b82cfd8ced7c"],
+          [data-playlistitemid="4b38016786d908e35b142119b4c6c789"],
+          [data-playlistitemid="5260fa9bb841f8ee4bcefce4c0bb30fb"],
+          [data-playlistitemid="57e3ea8f66203d531f0c435bbe312d29"],
+          [data-playlistitemid="6db6497146313c81b4be2249eee04394"],
+          [data-playlistitemid="6db6497146313c81b4be2249eee04394"],
+          [data-playlistitemid="164417f2c0134b14ca9b588a463e36f8"],
+          [data-playlistitemid="927bd8a614f25b948e97ec256fa48999"]
+      ) {
+          display: none !important;
+      }
+    ''
+  );
+  branding_file = pkgs.writeTextFile {
+    name = "jellyfin-custom-css";
+    text =
+    # xml
+    ''
+      <?xml version="1.0" encoding="utf-8"?>
+      <BrandingOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <LoginDisclaimer />
+        <CustomCss>
+      ${custom-css}
+        </CustomCss>
+        <SplashscreenEnabled>false</SplashscreenEnabled>
+      </BrandingOptions>
+    '';
+  };
 in {
   services.jellyfin.enable = true;
   services.jellyfin.package = pkgs-unstable.jellyfin;
@@ -11,6 +62,16 @@ in {
     pkgs.jellyfin-web
     pkgs.jellyfin-ffmpeg
   ];
+
+  system.activationScripts = {
+    jellyfin-branding = {
+      text =
+      # bash
+      ''
+        install -D -o jellyfin -g jellyfin ${branding_file} ${config.services.jellyfin.configDir}/branding.xml
+      '';
+    };
+  };
   
   services.caddy.extraConfig = ''
     http://jellyfin, http://jellyfin.internal, http://jellyfin.${machine} {
