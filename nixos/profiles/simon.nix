@@ -83,6 +83,9 @@
         at = "/mnt/android";
         options = "uid=1000,gid=1000";
       };
+      "SANDISK-AA" = {
+        at = "/mnt/sandisk-aa";
+      };
     }; 
   };
 
