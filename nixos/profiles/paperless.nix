@@ -39,9 +39,9 @@ in {
 
   l3mon.restic.specs.paperless = {
     backupStopResumeServices = [
+      "paperless-task-queue.service"
       "paperless-consumer.service"
       "paperless-scheduler.service"
-      "paperless-task-queue.service"
       "paperless-web.service"
     ];
     backupDaily = {
