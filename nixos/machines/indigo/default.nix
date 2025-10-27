@@ -346,4 +346,11 @@
       aa-torrent-dl = "";
     };
   };
+
+  home-manager.sharedModules = [
+    ({ config, lib, pkgs, machine, data, ... }: {
+      imports = [ ./home ];
+    })
+  ];
+
 }

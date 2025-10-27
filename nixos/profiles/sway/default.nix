@@ -351,7 +351,12 @@ in {
               hostname = "indigo";
               remoteForwards = [
                 {
-                  bind.address = "/run/user/1000/gnupg/S.gpg-agent";
+                  # https://gnupg-users.gnupg.narkive.com/1aY1lXWm/change-agent-socket-path
+                  # if the gnupg-home is not ~/.gnupg, gnugp will look for
+                  # sockets in a subdir whose name is derived from the
+                  # gnupg-home path.
+                  # for /run/user/1000/gnupg this is d.cpwgsr1yrynbs7nu683b3gty
+                  bind.address = "/run/user/1000/gnupg/d.cpwgsr1yrynbs7nu683b3gty/S.gpg-agent";
                   host.address = "/run/user/1000/gnupg/S.gpg-agent.extra";
                 }
               ];
