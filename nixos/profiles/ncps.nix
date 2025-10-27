@@ -29,6 +29,11 @@
     };
   };
 
+  systemd.services.ncps = {
+    after = [ "blocky_lan.service" ];
+    serviceConfig.RestartSec = "30s";
+  };
+
   services.caddy.extraConfig = ''
     http://ncps, http://ncps.internal, http://ncps.${machine} {
       reverse_proxy http://127.0.0.1:${toString data.ports.ncps}
