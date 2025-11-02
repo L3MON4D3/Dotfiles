@@ -272,9 +272,11 @@ in {
                 "widget.disable-workspace-management" = true;
                 "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
               };
-              userContent = ''
-                // by default this is crispEdges, but this makes straight lines
-                // disappear when zooming in too far.
+              userContent = 
+              # css
+              ''
+                /* by default this is crispEdges, but this makes straight lines
+                disappear when zooming in too far. */
                 @-moz-document domain("songsterr.com") {
                   path {
                     shape-rendering: geometricprecision !important;
