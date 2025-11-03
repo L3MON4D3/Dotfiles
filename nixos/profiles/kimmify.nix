@@ -27,11 +27,9 @@ let
         taskset -c 1-"$(lscpu | rg ^CPU.s.: | rg -o -e '\d+')" ffmpeg -y -init_hw_device vulkan=vk -filter_hw_device vk -i "''${FILE_PATH}" \
           -map 0:V \
             -vf "libplacebo=w=1920:h=1080:force_original_aspect_ratio=decrease:normalize_sar=true:upscaler=ewa_lanczos:downscaler=ewa_lanczos:colorspace=bt709:color_primaries=bt709:color_trc=bt709:range=tv:format=yuv420p,crop=trunc(iw/2)*2:trunc(ih/2)*2" \
-            -profile:v high \
-            -level:v 4.1 \
-            -vcodec libx264 \
+            -vcodec libx265 \
             -crf 19 \
-            -preset veryslow \
+            -preset slow \
           -map 0:a \
             -acodec aac \
           -map 0:s? \
