@@ -1,49 +1,19 @@
 ---@meta
 
 ms = require("luasnip").multi_snippet
-ms_add = function(...)
-	local m_s = require("luasnip").multi_snippet(...)
-	table.insert(getfenv(2).ls_file_snippets, m_s)
-end
-s_add = function(...)
-	local snip = require("luasnip").s(...)
-	snip.metadata = debug.getinfo(2)
-	table.insert(getfenv(2).ls_file_snippets, snip)
-end
-s_add_auto = function(...)
-	local snip = require("luasnip").s(...)
-	table.insert(getfenv(2).ls_file_autosnippets, snip)
-end
-ts_px_add = function(...)
-	local ts_postfix = require("luasnip.extras.treesitter_postfix").treesitter_postfix
-	local snip = ts_postfix(...)
-	table.insert(getfenv(2).ls_file_snippets, snip)
-end
-px_add = function(...)
-	local postfix = require("luasnip.extras.postfix").postfix
-	local snip = postfix(...)
-	table.insert(getfenv(2).ls_file_snippets, snip)
-end
+ms_add = require("luasnip").multi_snippet
+s_add = require("luasnip").s
+s_add_auto = require("luasnip").s
+ts_px_add = require("luasnip.extras.treesitter_postfix").treesitter_postfix
+px_add = require("luasnip.extras.postfix").postfix
 s = require("luasnip").s
 sn = require("luasnip").sn
 t = require("luasnip").t
 i = require("luasnip").i
-f = function(func, argnodes, ...)
-	return require("luasnip").f(function(args, imm_parent, user_args)
-		return func(args, imm_parent.snippet, user_args)
-	end, argnodes, ...)
-end
+f = require("luasnip").f
 -- override to enable restore_cursor.
-c = function(pos, nodes, opts)
-	opts = opts or {}
-	opts.restore_cursor = true
-	return require("luasnip").c(pos, nodes, opts)
-end
-d = function(pos, func, argnodes, ...)
-	return require("luasnip").d(pos, function(args, imm_parent, old_state, ...)
-		return func(args, imm_parent.snippet, old_state, ...)
-	end, argnodes, ...)
-end
+c = require("luasnip").c
+d = require("luasnip").d
 isn = require("luasnip.nodes.snippet").ISN
 l = require'luasnip.extras'.lambda
 dl = require'luasnip.extras'.dynamic_lambda
@@ -67,17 +37,9 @@ ins_generate = function(nodes)
 		end
 	end})
 end
-parse_add = function(...)
-	local p = require("luasnip").extend_decorator.apply(require("luasnip").parser.parse_snippet, {}, {dedent = true, trim_empty = true})
-	local snip = p(...)
-	table.insert(getfenv(2).ls_file_snippets, snip)
-end
-parse_add_auto = function(...)
-	local p = require("luasnip").extend_decorator.apply(require("luasnip").parser.parse_snippet, {}, {dedent = true, trim_empty = true})
-	local snip = p(...)
-	table.insert(getfenv(2).ls_file_autosnippets, snip)
-end
-parse = require("luasnip").extend_decorator.apply(require("luasnip").parser.parse_snippet, {}, {dedent = true, trim_empty = true})
+parse_add = require("luasnip").parser.parse_snippet
+parse_add_auto = require("luasnip").parser.parse_snippet
+parse = require("luasnip").parser.parse_snippet
 n = require("luasnip.extras").nonempty
 m = require("luasnip.extras").match
 ai = require("luasnip.nodes.absolute_indexer")
