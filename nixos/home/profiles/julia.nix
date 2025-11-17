@@ -9,7 +9,7 @@
     global imv_proc
     global imv_pid = -1
     fname_png = "/tmp/julia_image.png"
-    function Base.display(i::Matrix{RGBA{N0f8}})
+    function Base.display(i::AbstractArray{RGBA{N0f8}, 2})
       save(fname_png, i)
       if imv_pid == -1
         global imv_proc = run(`imv $fname_png`, wait = false)
@@ -19,7 +19,7 @@
         end
       end
     end
-    function Base.display(i::Matrix{RGB{N0f8}})
+    function Base.display(i::AbstractArray{RGB{N0f8}, 2})
       save(fname_png, i)
       if imv_pid == -1
         global imv_proc = run(`imv $fname_png`, wait = false)
@@ -33,7 +33,7 @@
     global tev_proc
     global tev_pid = -1
     fname_exr = "/tmp/julia_image.exr"
-    function Base.display(i::Matrix{RGB{Float16}})
+    function Base.display(i::AbstractArray{RGB{Float16}, 2})
       save(fname_exr, i)
       run(`tev $fname_exr`, wait = false)
     end
