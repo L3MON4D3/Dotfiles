@@ -14,7 +14,7 @@ in {
     umount_command = partlabel: "${config.security.wrapperDir}/umount /dev/disk/by-label/${partlabel}";
   in {
     services.udev.extraRules = lib.attrsets.foldlAttrs (acc: partlabel: spec: acc + ''
-      ACTION=="add", SUBSYSTEMS=="usb", SUBSYSTEM=="block", ENV{ID_FS_USAGE}=="filesystem" ENV{ID_FS_LABEL}=="${partlabel}", RUN{program}+="${pkgs.systemd}/bin/systemd-mount --no-block --automount=yes --collect $devnode ${spec.at} ${if spec ? options then "-o ${spec.options}" else ""}"
+      ACTION=="add", SUBSYSTEMS=="usb", SUBSYSTEM=="block", ENV{ID_FS_USAGE}=="filesystem" ENV{ID_FS_LABEL}=="${partlabel}", RUN{program}+="${pkgs.systemd}/bin/systemd-mount --no-block --automount=yes --collect $devnode ${spec.at} -o x-systemd.idle-timeout=600${if spec ? options then ",${spec.options}" else ""}"
     '') "" cfg.spec;
 
     systemd.tmpfiles.rules = lib.attrsets.foldlAttrs (acc: _: spec: acc ++ [
