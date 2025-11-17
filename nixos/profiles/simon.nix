@@ -76,8 +76,9 @@
         at = "/mnt/prusa-thumb";
         options = "uid=1000,gid=1000";
       };
-      "SAMSUNG-THUMB" = {
-        at = "/mnt/samsung-thumb";
+      "RESCUE-DATA" = {
+        at = "/mnt/rescue-data";
+        options = "uid=1000,gid=1000";
       };
       "ANDROID" = {
         at = "/mnt/android";
