@@ -87,10 +87,13 @@ in {
       bindsym s exec ${slurpscreen}/bin/slurpscreen
       bindsym d exec ${pkgs.xdragon}/bin/dragon-drop "/tmp/screen.png"
       bindsym w exec ${windowshot}/bin/windowshot
+      bindsym k exec ${pkgs.ksnip}/bin/ksnip -e "/tmp/screen.png"
       bindsym p exec ${popout}/bin/popout
         bindsym Return mode "default"
         bindsym Escape mode "default"
     }
     bindsym $mod+s mode "screen"
+
+    for_window [app_id="org.ksnip.ksnip"] floating enable
   '';
 }
