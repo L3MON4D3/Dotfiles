@@ -218,7 +218,7 @@ in {
           xdragon
 
           wl-clipboard
-          legcord
+          pkgs-unstable.legcord
           puddletag
         ];
 
