@@ -127,14 +127,43 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
     extraConfig.pipewire."92-low-latency" = {
       "context.properties" = {
-        "default.clock.min-quantum" = 256;
+        "default.clock.rate" = 48000;
+        "default.clock.quantum" = 128;
+        "default.clock.min-quantum" = 128;
+        "default.clock.max-quantum" = 2048;
       };
     };
   };
+
+  security.pam.loginLimits = [
+  {
+    domain = "@audio";
+    item = "memlock";
+    type = "-";
+    value = "unlimited";
+  }
+  {
+    domain = "@audio";
+    item = "rtprio";
+    type = "-";
+    value = "99";
+  }
+  {
+    domain = "@audio";
+    item = "nofile";
+    type = "soft";
+    value = "99999";
+  }
+  {
+    domain = "@audio";
+    item = "nofile";
+    type = "hard";
+    value = "99999";
+  }
+];
 
   services.gnome.gnome-keyring.enable = true;
   hardware.graphics.enable = true;
