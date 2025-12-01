@@ -25,9 +25,9 @@ local merge = require("matchconfig.options.util.merge")
 local nop3 = function(_,_,_) end
 
 local repl_target =require("my_mc.options.repl").repl_target
-local repl_primary = repl_target.file
-local repl_secondary = repl_target.project
-local repl_all = repl_target.all
+local file_repl = repl_target.file
+local project_repl = repl_target.project
+local combined_repl = repl_target.all
 
 local eval = mc.eval
 
@@ -47,7 +47,7 @@ local cmake_attach = function(opts)
 	if not opts.debug then
 		return c{
 			repl = {
-				target = repl_secondary,
+				target = project_repl,
 				type = "bash",
 				opts = {
 					cwd = opts.cwd
@@ -62,7 +62,7 @@ local cmake_attach = function(opts)
 
 	return c{
 		repl = {
-			target = repl_secondary,
+			target = project_repl,
 			type = "bash",
 			mappings = {
 				["<Space>b"] = [[cmake --build build]],
@@ -180,7 +180,7 @@ local julia_ft = mc.register(mft"julia", c{
 	end
 	},
 	repl = {
-		target = repl_all,
+		target = combined_repl,
 		type = "julia",
 		run = function(args, repl_id, toggle_keys)
 			vnoremapsilent_buf(toggle_keys, function()
@@ -317,6 +317,9 @@ local luasnippet_luals = c{
 							vim.fn.stdpath("config") .. "/meta/luasnippets/",
 							rtp_plugin_data.path_by_name.luasnip
 						})
+					},
+					hover = {
+						expandAlias = false
 					}
 				}
 			},
@@ -348,7 +351,10 @@ local mdgen_luals = c{
 			},
 			root_dir = luals_mdgen_dir
 		}
-	}
+	},
+	run_buf = function()
+		actions.cabbrev_buf("%%", luals_mdgen_dir .. "/mdgen")
+	end
 }
 
 mc.register(mft"lua" * mdir(luals_mdgen_dir), mdgen_luals):after(lsp_lua)
@@ -358,7 +364,7 @@ mc.register(mft"lua" * mdir(luals_mdgen_dir), mdgen_luals):after(lsp_lua)
 --
 mc.register(mft"nix", c{
 	repl = {
-		target = repl_primary,
+		target = file_repl,
 		type = "nix",
 		mappings = {
 			["<Space>r"] = eval(function(args)
@@ -415,7 +421,7 @@ mc.register(mft"cpp" * mdir(qb_dir), c{
 --
 mc.register(mft"python", c{
 	repl = {
-		target = repl_all,
+		target = combined_repl,
 		type = "python",
 		run = function(_, repl_id, toggle_keys)
 			vnoremapsilent_buf(toggle_keys, function()
@@ -530,7 +536,7 @@ local function nix_override_zig(dir)
 			zls = {cmd = {"nix", "develop", dir, "--command", "zls"}}
 		},
 		repl = {
-			target = repl_secondary,
+			target = project_repl,
 			type = "bash",
 			cmd = {"nix", "develop"},
 			mappings = {
@@ -562,6 +568,7 @@ mc.register(mft"tex", c{
 				source_new = source
 			end
 
+			local ls = require("luasnip")
 			ls.snip_expand(
 			ls.s("", {
 				ls.c(1, {
@@ -584,60 +591,76 @@ mc.register(mft"tex", c{
 	}
 })
 
--- temporary!!
-local proposal_dir = "/home/simon/projects/master/proposal"
-mc.register(mft"tex" * mdir(proposal_dir), c{
-	lsp = {texlab = {
-		cmd = { "nix", "develop", proposal_dir, "-c", "texlab" },
-		filetypes = { "tex", "bib" },
-		root_dir = proposal_dir,
-		settings = {
-			texlab = {
-				build = {
-					executable = "latexmk",
-					args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f", "-synctex=1" },
-					onSave = true,
-					onChange = false
+local function tex_project(dirname, extra_config)
+	local config = c{
+		lsp = {texlab = {
+			cmd = { "nix", "develop", dirname, "-c", "texlab" },
+			filetypes = { "tex", "bib" },
+			root_dir = dirname,
+			settings = {
+				texlab = {
+					build = {
+						executable = "latexmk",
+						args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f", "-synctex=1" },
+						onSave = true,
+						onChange = false
+					},
+					forwardSearch = {
+						executable = "zathura",
+						args = {"--synctex-forward", "%l:1:%f", "%p"},
+						onSave = false
+					},
+					lint = {
+						onChange = false,
+						onSave = false
+					},
+					latexFormatter = "texlab"
 				},
-				forwardSearch = {
-					executable = "zathura",
-					args = {"--synctex-forward", "%l:1:%f", "%p"},
-					onSave = false
-				},
-				lint = {
-					onChange = false,
-					onSave = false
-				},
-				latexFormatter = "texlab"
 			},
+		}},
+		repl = {
+			target = project_repl,
+			type = "bash",
+			cmd = {"nix", "develop"},
+			opts = {
+				cwd = dirname
+			},
+			mappings = {
+				["<space>b"] = "latexmk -shell-escape -pdf -interaction=nonstopmode -synctex=1"
+			}
 		},
-	}}
-} .. lsp_generic .. c{
-	run_buf = function(args)
-		autocmd_buf("BufWritePost", function()
-			local bufnr = args.buf
-			-- should only ever be one.
-			local client = vim.lsp.get_clients({bufnr = bufnr, name = "texlab"})[1]
-			if not client then
-				return vim.notify(('texlab client not found in bufnr %d'):format(bufnr), vim.log.levels.ERROR)
-			end
-			local win = vim.api.nvim_get_current_win()
-			local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
-			client:request('textDocument/build', params, function(err, result)
-				if err then
-				  error(tostring(err))
+		run_buf = function(args)
+			autocmd_buf("BufWritePost", function()
+				local bufnr = args.buf
+				-- should only ever be one.
+				local client = vim.lsp.get_clients({bufnr = bufnr, name = "texlab"})[1]
+				if not client then
+					return vim.notify(('texlab client not found in bufnr %d'):format(bufnr), vim.log.levels.ERROR)
 				end
-				local texlab_build_status = {
-				  [0] = 'Success',
-				  [1] = 'Error',
-				  [2] = 'Failure',
-				  [3] = 'Cancelled',
-				}
-				vim.notify('Build ' .. texlab_build_status[result.status], vim.log.levels.INFO)
-			end, bufnr)
-		end)
+				local win = vim.api.nvim_get_current_win()
+				local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+				client:request('textDocument/build', params, function(err, result)
+					if err then
+					  error(tostring(err))
+					end
+					local texlab_build_status = {
+					  [0] = 'Success',
+					  [1] = 'Error',
+					  [2] = 'Failure',
+					  [3] = 'Cancelled',
+					}
+					vim.notify('Build ' .. texlab_build_status[result.status], vim.log.levels.INFO)
+				end, bufnr)
+			end)
+		end
+	} .. lsp_generic
+
+	if extra_config then
+		config = config .. extra_config
 	end
-})
+
+	return mc.register(mft"tex" * mdir(dirname), config)
+end
 
 ---
 --- CMake
@@ -654,7 +677,7 @@ local luasnip_dir = "/home/simon/projects/nvim/luasnip"
 
 mc.register(mdir(luasnip_dir), c{
 	repl = {
-		target = repl_secondary,
+		target = project_repl,
 		type = "bash",
 		cmd = {"nix", "develop", luasnip_dir},
 		opts = {
@@ -692,6 +715,33 @@ local luasnip_lua_lsp = mc.register(mdir(luasnip_dir) * mft"lua", c{
 })
 
 luasnip_lua_lsp:after(lsp_lua)
+
+---
+--- LuaSnip2
+---
+local luasnip2_dir = "/home/simon/projects/nvim/luasnip2"
+
+mc.register(mdir(luasnip2_dir), c{
+	run_buf = function()
+		actions.cabbrev_buf("%%", "/home/simon/projects/nvim/luasnip2/lua/luasnip2")
+	end
+} )
+local luasnip2_lua_lsp = mc.register(mdir(luasnip2_dir) * mft"lua", c{
+	lsp = {
+		lua_ls = {
+			settings = {
+				Lua = {
+					workspace = {
+						library = merge.list_extend({ luasnip2_dir })
+					}
+				}
+			},
+			root_dir = luasnip2_dir,
+		}
+	},
+})
+
+luasnip2_lua_lsp:after(lsp_lua)
 
 ---
 --- Matchconfig
@@ -745,7 +795,7 @@ mc.register(mdir(dotfiles_dir), c{
 		cabbrev_buf("%%", dotfiles_dir)
 	end,
 	repl = {
-		target = repl_secondary,
+		target = project_repl,
 		type = "bash",
 		opts = {
 			cwd = dotfiles_dir
@@ -754,6 +804,64 @@ mc.register(mdir(dotfiles_dir), c{
 			["R"] = "re"
 		}
 	}
+})
+
+---
+--- CV
+---
+
+local cv_dir = "/home/simon/projects/cv"
+mc.register(mft"tex" * mdir(cv_dir), c{
+	lsp = {texlab = {
+		cmd = { "nix", "develop", cv_dir, "-c", "texlab" },
+		filetypes = { "tex", "bib" },
+		root_dir = cv_dir,
+		settings = {
+			texlab = {
+				build = {
+					executable = "latexmk",
+					args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f", "-synctex=1" },
+					onSave = true,
+					onChange = false
+				},
+				forwardSearch = {
+					executable = "zathura",
+					args = {"--synctex-forward", "%l:1:%f", "%p"},
+					onSave = false
+				},
+				lint = {
+					onChange = false,
+					onSave = false
+				},
+				latexFormatter = "texlab"
+			},
+		},
+	}}
+} .. lsp_generic .. c{
+	run_buf = function(args)
+		autocmd_buf("BufWritePost", function()
+			local bufnr = args.buf
+			-- should only ever be one.
+			local client = vim.lsp.get_clients({bufnr = bufnr, name = "texlab"})[1]
+			if not client then
+				return vim.notify(('texlab client not found in bufnr %d'):format(bufnr), vim.log.levels.ERROR)
+			end
+			local win = vim.api.nvim_get_current_win()
+			local params = vim.lsp.util.make_position_params(win, client.offset_encoding)
+			client:request('textDocument/build', params, function(err, result)
+				if err then
+				  error(tostring(err))
+				end
+				local texlab_build_status = {
+				  [0] = 'Success',
+				  [1] = 'Error',
+				  [2] = 'Failure',
+				  [3] = 'Cancelled',
+				}
+				vim.notify('Build ' .. texlab_build_status[result.status], vim.log.levels.INFO)
+			end, bufnr)
+		end)
+	end
 })
 
 ---
@@ -773,7 +881,7 @@ mc.register(mdir"/home/simon/.config/waybar", sway_reload_on_write)
 
 mc.register(mdir"/home/simon/projects/termpick", c{
 	repl = {
-		target = repl_secondary,
+		target = project_repl,
 		type = "bash",
 		opts = {
 			cwd = eval(function(args)
@@ -818,7 +926,7 @@ local cuora = mc.register(mdir(cuora_dir), c{
 		}
 	},
 	repl = {
-		target = repl_secondary,
+		target = project_repl,
 		type = "bash",
 		opts = {
 			cwd = cuora_dir
@@ -1005,7 +1113,7 @@ local lab_mitsuba = mc.register(mdir(mitsuba_lab_dir), cmake_attach({
 local mitsuba_py = mc.register(mft"python" * mdir(mitsuba_lab_dir),
 	c{
 		repl = {
-			target = repl_secondary,
+			target = project_repl,
 			type = "bash",
 			opts = {
 				env = { PYTHONPATH = mitsuba_lab_dir .. "/build/python:" .. mitsuba_lab_dir .. "/py_modules" }
@@ -1032,7 +1140,7 @@ local pkgbuild_all = mc.register(
 	mpattern("^/home/simon/.packages/[^/]+/[^/]+/") * project_matchers.pkgbuild(),
 	c{
 		repl = {
-			target = repl_secondary,
+			target = project_repl,
 			type = "bash",
 			opts = {
 				cwd = eval(function(args)
@@ -1049,7 +1157,7 @@ local pkgbuild_local = mc.register(
 	c{
 		repl = {
 			type = "bash",
-			target = repl_secondary,
+			target = project_repl,
 			opts = {
 				cwd = eval(function(args)
 					return args.match_args[2]
@@ -1100,11 +1208,11 @@ mc.register(matchers.dir(proj_master_dir), c{
 local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 	repl = {
 		type = "julia",
-		target = repl_secondary,
+		target = project_repl,
 		cmd = {"nix", "develop", proj_master_dir},
 		opts = {
 			cwd = proj_master_dir,
-			initial_keys = "julia -q --threads 11 --project=./.\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"
+			initial_keys = "julia -q --threads 12 --project=./.\nusing Pkg; Pkg.activate(\"" .. proj_master_dir .. "\"); using glint"
 		},
 		mappings = {
 			["<Space>r"] = eval(function(args)
@@ -1122,6 +1230,16 @@ local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 })
 master:after("filetype(julia)")
 master:blacklist(julia_ft_using)
+
+tex_project("/home/simon/projects/master/proposal")
+
+local thesis_dir = "/home/simon/projects/master/thesis"
+tex_project(thesis_dir, c{
+	run_buf = function()
+		cabbrev_buf("%%", thesis_dir)
+		cabbrev_buf("!!", thesis_dir .. "/tex/chapter")
+	end,
+})
 
 ---
 --- projects/clarkesworld-epub
