@@ -2,7 +2,7 @@
 
 {
   home.shellAliases = {
-    za = "zathura";
+    za = "zathura --fork";
   };
   programs.zathura = {
     enable = true;
