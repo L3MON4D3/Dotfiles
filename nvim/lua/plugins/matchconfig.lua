@@ -25,3 +25,17 @@ vim.api.nvim_create_user_command("CO", ":e " .. vim.uv.fs_realpath(require("matc
 vim.api.nvim_create_user_command("MC", function()
 	print(vim.inspect(mc.get_config()))
 end, {})
+
+vim.api.nvim_create_user_command("LspRestart", function()
+	local servers = require("matchconfig.options.lsp").lsp_client_pool.clients
+	local servercommands = vim.tbl_map(function(server)
+		return table.concat(server.cmd, " ")
+	end, servers)
+	vim.ui.select(
+		servercommands,
+		{ kind = "matchconfig_lsp_restart" },
+		function(_, idx)
+			servers[idx]:restart()
+		end
+	)
+end, {})
