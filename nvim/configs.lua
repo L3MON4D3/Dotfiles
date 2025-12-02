@@ -591,12 +591,32 @@ mc.register(mft"tex", c{
 	}
 })
 
-local function tex_project(dirname, extra_config)
+local function texlab_buf_search()
+    local bufnr = vim.api.nvim_get_current_buf()
+	local client = vim.lsp.get_clients({bufnr = bufnr, name = "texlab"})[1]
+    local params = {
+        textDocument = { uri = vim.uri_from_bufnr(bufnr) },
+        position = { line = vim.fn.line '.' - 1, character = vim.fn.col '.' },
+    }
+    if client then
+        client:request('textDocument/forwardSearch', params, function(err, result)
+            if err then
+                error(tostring(err))
+            end
+        end, bufnr)
+    else
+        print('method textDocument/forwardSearch is not supported by any servers active on the current buffer')
+    end
+end
+
+local function tex_project(dirname, pdfname, extra_config)
 	local config = c{
 		lsp = {texlab = {
 			cmd = { "nix", "develop", dirname, "-c", "texlab" },
 			filetypes = { "tex", "bib" },
 			root_dir = dirname,
+			-- texlab does not support this.
+			enable_per_workspace_config = false,
 			settings = {
 				texlab = {
 					build = {
@@ -630,6 +650,18 @@ local function tex_project(dirname, extra_config)
 			}
 		},
 		run_buf = function(args)
+			usercommand_buf("Z", function()
+				-- set synctex command here.
+				-- This means there is no synctex when zathura is not started
+				-- from neovim, which seems fine.
+				-- The synctex-editor-command
+				-- * jumps to the correct file via `:edit`
+				-- * moves to the correct line via `%{line}Gk`, where we have to
+				--   correct for 1-based vs 0-based offsets with the `k`
+				-- * centers the buffer on the line with `zz`
+				os.execute(([[zathura %s --synctex-editor-command 'nvim --server "%s" --remote-send ":edit %%{input}<Cr>%%{line}Gk<Cr>zz"' --fork]]):format(pdfname, vim.v.servername))
+			end, {})
+			usercommand_buf("TexlabView", texlab_buf_search, { desc = 'TexlabView' })
 			autocmd_buf("BufWritePost", function()
 				local bufnr = args.buf
 				-- should only ever be one.
@@ -1231,10 +1263,10 @@ local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 master:after("filetype(julia)")
 master:blacklist(julia_ft_using)
 
-tex_project("/home/simon/projects/master/proposal")
+tex_project("/home/simon/projects/master/proposal", "proposal.pdf")
 
 local thesis_dir = "/home/simon/projects/master/thesis"
-tex_project(thesis_dir, c{
+tex_project(thesis_dir, "thesis.pdf", c{
 	run_buf = function()
 		cabbrev_buf("%%", thesis_dir)
 		cabbrev_buf("!!", thesis_dir .. "/tex/chapter")
