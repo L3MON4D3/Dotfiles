@@ -1003,7 +1003,7 @@ local lab_mitsuba = mc.register(mdir(mitsuba_lab_dir), cmake_attach({
 }) .. c{
 	run_buf = function()
 		usercommand_buf("T", function()
-			util.process_output("systemd-run --user -u tev /home/simon/.local/bin/sway_float tev")
+			os.execute("systemd-run --user -u tev /home/simon/.local/bin/sway_float tev")
 		end, {})
 		cabbrev_buf("%%", mitsuba_lab_dir .. "/src")
 		cabbrev_buf("##", mitsuba_lab_dir .. "/scripts")
