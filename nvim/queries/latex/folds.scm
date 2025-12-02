@@ -1,5 +1,4 @@
 [
-  (chapter)
   (part)
   (paragraph)
   (subparagraph)
@@ -8,13 +7,19 @@
   (displayed_equation)
 ] @fold
 
+(
+	(chapter text: (curly_group) @chap_id) @chap
+	(#make-range-extended! fold @chap_id "end" 0 0 @chap "end" 0 0)
+)
+
+
 ((brack_group_key_value) @group
   (#make-range-extended! fold @group "start" 0 1 @group "end" 0 -1) )
 
 (generic_environment
   (begin) @beg
   end: (end) @end
-  (#make-range-extended! "fold" @beg "end" 0 1 @end "start" 0 1) )
+  (#make-range-extended! "fold" @beg "end" 0 0 @end "start" 0 0) )
 
 (generic_environment
   (begin name: (_ text: (_) @name)) @beg
