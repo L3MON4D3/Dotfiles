@@ -19,6 +19,8 @@ mc.setup({
 		require("matchconfig.options.lsp"),
 	}
 })
+mc.log.set_loglevel("debug")
+
 require("matchconfig.util.log").set_loglevel("debug")
 
 require("ltex").register_ltex_commands(function()
