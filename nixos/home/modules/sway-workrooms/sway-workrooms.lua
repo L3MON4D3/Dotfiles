@@ -81,9 +81,7 @@ function State:activate_workroom(id)
 
   for _, output in ipairs(ordered_output_names) do
     local workspace = new_workspaces[output]
-    sway:msg(("focus output %s"):format(output))
-    os.execute("sleep 0.001")
-    sway:msg(("workspace %s"):format(workspace))
+    sway:msg(("focus output %s; workspace %s"):format(output, workspace))
   end
   write(statefile_path, cjson.encode(self))
 end
