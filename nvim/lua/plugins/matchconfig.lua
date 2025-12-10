@@ -20,6 +20,13 @@ mc.setup({
 	}
 })
 require("matchconfig.util.log").set_loglevel("debug")
+
+require("ltex").register_ltex_commands(function()
+	vim.schedule(function()
+		require("matchconfig.session").reload_same_opts(false)
+	end)
+end)
+
 vim.api.nvim_create_user_command("C", mc.pick_current, {})
 vim.api.nvim_create_user_command("CO", ":e " .. vim.uv.fs_realpath(require("matchconfig").get_configfile()), {})
 vim.api.nvim_create_user_command("MC", function()

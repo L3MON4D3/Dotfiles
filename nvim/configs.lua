@@ -611,33 +611,47 @@ end
 
 local function tex_project(dirname, pdfname, extra_config)
 	local config = c{
-		lsp = {texlab = {
-			cmd = { "nix", "develop", dirname, "-c", "texlab" },
-			filetypes = { "tex", "bib" },
-			root_dir = dirname,
-			-- texlab does not support this.
-			enable_per_workspace_config = false,
-			settings = {
-				texlab = {
-					build = {
-						executable = "latexmk",
-						args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f", "-synctex=1" },
-						onSave = true,
-						onChange = false
+		lsp = {
+			texlab = {
+				cmd = { "nix", "develop", dirname .. "#editor-support", "-c", "texlab" },
+				filetypes = { "tex", "bib" },
+				root_dir = dirname,
+				-- texlab does not support this. (does not send workspace_dir in settings request)
+				enable_per_workspace_config = false,
+				settings = {
+					texlab = {
+						build = {
+							executable = "latexmk",
+							args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f", "-synctex=1" },
+							onSave = true,
+							onChange = false
+						},
+						forwardSearch = {
+							executable = "zathura",
+							args = {"--synctex-forward", "%l:1:%f", "%p"},
+							onSave = false
+						},
+						lint = {
+							onChange = false,
+							onSave = false
+						},
+						latexFormatter = "texlab"
 					},
-					forwardSearch = {
-						executable = "zathura",
-						args = {"--synctex-forward", "%l:1:%f", "%p"},
-						onSave = false
-					},
-					lint = {
-						onChange = false,
-						onSave = false
-					},
-					latexFormatter = "texlab"
 				},
 			},
-		}},
+			ltex = {
+				cmd = { "nix", "develop", dirname .. "#editor-support", "-c", "ltex-ls-plus" },
+				filetypes = { "tex", "bib" },
+				root_dir = dirname,
+				enable_per_workspace_config = true,
+				settings = {
+					ltex = {
+						enabled = {"tex", "latex", "bibtex"},
+						language = "en-US",
+					}
+				},
+			}
+		},
 		repl = {
 			target = project_repl,
 			type = "bash",
@@ -685,7 +699,21 @@ local function tex_project(dirname, pdfname, extra_config)
 				end, bufnr)
 			end)
 		end
-	} .. lsp_generic
+	} .. lsp_generic .. c{
+		lsp = {
+			ltex = {
+				settings = eval(function()
+					local ltex_extra_config = require("ltex").get_workspace_conf(dirname)
+					for _, lang_setting in pairs(ltex_extra_config) do
+						for lang, item_list in pairs(lang_setting) do
+							lang_setting[lang] = merge.list_extend(item_list)
+						end
+					end
+					return { ltex = ltex_extra_config }
+				end)
+			}
+		}
+	}
 
 	if extra_config then
 		config = config .. extra_config
@@ -1266,10 +1294,13 @@ master:blacklist(julia_ft_using)
 tex_project("/home/simon/projects/master/proposal", "proposal.pdf")
 
 local thesis_dir = "/home/simon/projects/master/thesis"
-tex_project(thesis_dir, "thesis.pdf", c{
+tex_project(thesis_dir, "thesis.pdf")
+
+mc.register(mdir(thesis_dir), c{
 	run_buf = function()
 		cabbrev_buf("%%", thesis_dir)
 		cabbrev_buf("!!", thesis_dir .. "/tex/chapter")
+		cabbrev_buf("@@", thesis_dir .. "/tex")
 	end,
 })
 
