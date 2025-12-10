@@ -83,6 +83,10 @@ in {
       # show first two workspaces?
       # workspace h2
       # workspace h1
+
+      # clear state on every restart of sway.
+      exec rm /tmp/sway_workrooms
+
       exec ${sway-workrooms}/bin/sway-workrooms h
     '' +
     (lib.strings.concatLines (
