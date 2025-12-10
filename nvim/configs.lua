@@ -659,7 +659,7 @@ local function tex_project(dirname, pdfname, extra_config)
 				-- * moves to the correct line via `%{line}Gk`, where we have to
 				--   correct for 1-based vs 0-based offsets with the `k`
 				-- * centers the buffer on the line with `zz`
-				os.execute(([[zathura %s --synctex-editor-command 'nvim --server "%s" --remote-send ":edit %%{input}<Cr>%%{line}Gk<Cr>zz"' --fork]]):format(pdfname, vim.v.servername))
+				os.execute(([[zathura '%s/%s' --synctex-editor-command 'nvim --server "%s" --remote-send ":edit %%{input}<Cr>%%{line}Gk<Cr>zz"' --fork]]):format(dirname, pdfname, vim.v.servername))
 			end, {})
 			usercommand_buf("TexlabView", texlab_buf_search, { desc = 'TexlabView' })
 			autocmd_buf("BufWritePost", function()
