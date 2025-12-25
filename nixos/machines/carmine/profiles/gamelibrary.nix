@@ -103,6 +103,11 @@
     }))
   ];
 
+  # not the cleanest thing here.
+  security.pam.loginLimits = lib.mkOrder (data.ordering.audio-pam-limits - 1) [
+    { domain = "simon"; item = "nofile"; type = "-"; value = "524288"; }
+  ];
+
   # for wii-remote.
   services.udev.packages = [ pkgs.dolphin-emu ];
 
