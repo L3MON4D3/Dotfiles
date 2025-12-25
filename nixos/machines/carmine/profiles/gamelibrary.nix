@@ -81,6 +81,26 @@
     })
     # pkgs.vulkan-tools
     pkgs.prismlauncher
+
+    (pkgs.snes9x-gtk.overrideAttrs (old: {
+      propagatedBuildInputs = (if old ? propagatedBuildInputs then old.propagatedBuildInputs else []) ++ [
+        # find paths via `nix path-info --derivation $(where snes9x-gtk) --json | jq`
+        # /nix/store/0il77pxksdqx9irvzlv123gzmvdv121v-source
+        (pkgs.fetchFromGitHub {
+          owner = "libretro";
+          repo = "glsl-shaders";
+          rev = "468f67b6f6788e2719d1dd28dfb2c9b7c3db3cc7";
+          hash = "sha256-zdls0sFSd3ciLeWQX7vScE7mdVejdn8Gk1NhGYOif1Y=";
+        })
+        # /nix/store/rqqxf5r96a0yvzk3lvlkvjbmnjas6j57-source
+        (pkgs.fetchFromGitHub {
+          owner = "libretro";
+          repo = "slang-shaders";
+          rev = "d298697e9870d06a86d05db0ead8f1a2a680eb3c";
+          hash = "sha256-OckymZJaIhSn5mV4N4spGngPt5YeQG0TBFJ5b1hpdGY=";
+        })
+      ];
+    }))
   ];
 
   # for wii-remote.
@@ -123,6 +143,8 @@
           ln -s /home/simon/.local/share/lutris lutris
           ln -s /home/simon/.local/state/melonDS melonDS
           ln -s /home/simon/.local/share/PrismLauncher/instances minecraft
+          ln -s /home/simon/.local/share/snes9x snes9x-share
+          ln -s /home/simon/.config/snes9x snes9x-config
 
           # Important: descend beyond symlinks!!
           restic backup --tag=${tag} --skip-if-unchanged -- \
@@ -133,6 +155,8 @@
             dolphin/* \
             melonDS/* \
             minecraft/* \
+            snes9x-share/* \
+            snes9x-config/* \
             lutris/games lutris/lutris.conf lutris/system.yml
           cd /
           rm -rf "$TMPDIR"
