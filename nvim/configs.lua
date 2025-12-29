@@ -167,7 +167,7 @@ local julia_ft = mc.register(mft"julia", c{
 			local modulename = vim.fs.basename(args.file).sub(1, -4)
 			local file_directory = vim.fs.dirname(args.file)
 			-- set up debug-file.
-			os.execute(([[echo 'push!(LOAD_PATH, "%s"); using %s; %s.main()' > /tmp/%s.jl]]):format(file_directory, modulename, modulename, modulename))
+			util.process_output(([[echo 'push!(LOAD_PATH, "%s"); using %s; %s.main()' > /tmp/%s.jl]]):format(file_directory, modulename, modulename, modulename))
 
 			return {
 				type = "julia",
@@ -673,7 +673,7 @@ local function tex_project(dirname, pdfname, extra_config)
 				-- * moves to the correct line via `%{line}Gk`, where we have to
 				--   correct for 1-based vs 0-based offsets with the `k`
 				-- * centers the buffer on the line with `zz`
-				os.execute(([[zathura '%s/%s' --synctex-editor-command 'nvim --server "%s" --remote-send ":edit %%{input}<Cr>%%{line}Gk<Cr>zz"' --fork]]):format(dirname, pdfname, vim.v.servername))
+				os.execute(([[zathura '%s/%s' --synctex-editor-command 'nvim --server "%s" --remote-send ":edit %%{input}<Cr>%%{line}Gk<Cr>zz"' --fork >/dev/null 2>&1]]):format(dirname, pdfname, vim.v.servername))
 			end, {})
 			usercommand_buf("TexlabView", texlab_buf_search, { desc = 'TexlabView' })
 			autocmd_buf("BufWritePost", function()
