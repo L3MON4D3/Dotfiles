@@ -88,6 +88,10 @@
       "SANDISK-AA" = {
         at = "/mnt/sandisk-aa";
       };
+      "KOOTION" = {
+        at = "/mnt/kootion";
+        options = "uid=1000,gid=1000";
+      };
     }; 
   };
 
