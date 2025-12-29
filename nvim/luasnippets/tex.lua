@@ -194,3 +194,5 @@ parse_add({trig = ".inv", wordTrig = false}, "^{-1}")
 -- 		{t"{", r(1, "bot", i(1)), t"}"}
 -- 	})
 -- })
+
+parse_add("til", "\\todo[inline]{$1}")
