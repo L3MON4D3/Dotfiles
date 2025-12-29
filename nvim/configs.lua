@@ -446,7 +446,9 @@ mc.register(mft"python", c{
 		end,
 		-- send to most-recently registered python-repl (most likely the correct one.)
 		mappings = {
-			["<space>r"] = [[exec(open("{args.file:gsub("ipynb", "py")}").read())]]
+			["<space>r"] = eval(function(args)
+				return ([[exec(open("%s").read())]]):format(args.file:gsub("ipynb", "py"))
+			end)
 		}
 	}
 })
