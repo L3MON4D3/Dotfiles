@@ -63,6 +63,16 @@
     ];
   };
 
+  l3mon.zotero.enable_client = true;
+
+  l3mon.restic = {
+    enable = true;
+    repo = {
+      location = "rest:http://restic.internal/simon";
+      passwordFile = "/var/secrets/restic-l3mon";
+    };
+  };
+
   fileSystems."/srv/misc" = {
     device = "indigo:/misc";
     fsType = "nfs";
@@ -117,6 +127,8 @@
   home-manager.sharedModules = [
     ({ config, lib, pkgs, machine, data, ... }: {
       imports = [ ./home ];
+
+      l3mon.zotero.enable = true;
     })
   ];
   programs.wireshark.enable = true;
