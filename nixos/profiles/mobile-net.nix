@@ -30,7 +30,12 @@ in {
     matchConfig.Name = lan.peers."${machine}".interface;
     networkConfig.DHCP = true;
     dhcpV4Config.UseDNS = false;
-    dhcpV6Config.UseDNS = false;
+    dhcpV6Config = {
+      UseDNS = false;
+    };
+    ipv6AcceptRAConfig = {
+      UseDNS = false;
+    };
     # connect to blocky-wg_home2.
     networkConfig.DNS = blocky_address;
     networkConfig.DNSOverTLS = false;
