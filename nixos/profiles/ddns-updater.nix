@@ -7,7 +7,7 @@ let
       settings = [
         {
           provider = "porkbun";
-          domain = "l3mon4.de,wireguard.l3mon4.de,nix-cache.l3mon4.de,nix-tarballs.l3mon4.de";
+          domain = "l3mon4.de,wireguard.l3mon4.de,nix-cache.l3mon4.de,nix-tarballs.l3mon4.de,pds.l3mon4.de";
           api_key = "$PORKBUN_API_KEY";
           secret_api_key = "$PORKBUN_SECRET_API_KEY";
           ip_version = "ipv4";
