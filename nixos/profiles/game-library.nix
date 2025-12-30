@@ -121,10 +121,15 @@ in {
     options = [ "bind" ];
   };
 
-  services.nfs.server.exports = ''
-    /srv/nfs/steamlib 192.168.178.0/24(rw,fsid=0c30d332-14b7-474d-b39b-9e7e7875e745)
-    /srv/nfs/games      192.168.178.0/24(rw,fsid=40ce5cbf-e801-4b6a-9c29-855d77d963a2)
-  '';
+  services.nfs.server.exports = toString [
+    "/srv/nfs/steamlib"
+    "192.168.178.0/24(rw,fsid=0c30d332-14b7-474d-b39b-9e7e7875e745)"
+    "     10.0.0.0/24(rw,fsid=0c30d332-14b7-474d-b39b-9e7e7875e745)"
+    "\n"
+    "/srv/nfs/games"
+    "192.168.178.0/24(rw,fsid=40ce5cbf-e801-4b6a-9c29-855d77d963a2)"
+    "     10.0.0.0/24(rw,fsid=40ce5cbf-e801-4b6a-9c29-855d77d963a2)"
+  ];
 
   #
   # Prepare env for steamcmd and gog

@@ -27,9 +27,11 @@ in {
 
   # 315 is id of paperless.
   # make sure client has id 315 for paperless as well, and user belongs to paperless-group.
-  services.nfs.server.exports = ''
-    /srv/nfs/paperless-consume 192.168.178.0/24(rw,all_squash,anonuid=${toString config.ids.uids.paperless},anongid=${toString config.ids.gids.paperless})
-  '';
+  services.nfs.server.exports = toString [
+    "/srv/nfs/paperless-consume"
+      "192.168.178.0/24(rw,all_squash,anonuid=${toString config.ids.uids.paperless},anongid=${toString config.ids.gids.paperless})"
+           "10.0.0.0/24(rw,all_squash,anonuid=${toString config.ids.uids.paperless},anongid=${toString config.ids.gids.paperless})"
+  ];
 
   systemd.tmpfiles.rules = lib.mkAfter [
     "A /var/lib/paperless - - - - g:paperless:rX"

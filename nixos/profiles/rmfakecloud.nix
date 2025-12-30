@@ -121,9 +121,11 @@ in {
     options = [ "bind" ];
   };
   # owner is rmfakecloud.
-  services.nfs.server.exports = ''
-    /srv/nfs/remarkable-local 192.168.178.0/24(rw,all_squash,anonuid=${toString rmfakecloud_id},anongid=${toString rmfakecloud_id})
-  '';
+  services.nfs.server.exports = toString [
+    "/srv/nfs/remarkable-local"
+      "192.168.178.0/24(rw,all_squash,anonuid=${toString rmfakecloud_id},anongid=${toString rmfakecloud_id})"
+      "     10.0.0.0/24(rw,all_squash,anonuid=${toString rmfakecloud_id},anongid=${toString rmfakecloud_id})"
+  ];
 
   l3mon.restic.extraGroups = [ "rmfakecloud" ];
   l3mon.restic.specs.rmfakecloud = {
