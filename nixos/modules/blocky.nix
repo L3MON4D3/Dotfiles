@@ -20,8 +20,8 @@ let
       else
         [
           "https://one.one.one.one/dns-query" # Using Cloudflare's DNS over HTTPS server for resolving queries.
-          "https://dns0.eu"
-          "https://dns.sb"
+          "https://dns0.eu/dns-query"
+          "https://dns.sb/dns-query"
         ]
       );
       bootstrapDns = [
