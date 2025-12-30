@@ -19,6 +19,8 @@ let
     "100r.co_en_all*"
     "devhints.io_en_all*"
     "ifixit_en_all*"
+    "xkcd.com_en_all*"
+    "explainxkcd_en_all_maxi*"
   ];
   zimit_img = pkgs.dockerTools.pullImage {
     imageName = "ghcr.io/openzim/zimit";
@@ -140,6 +142,7 @@ in {
       requires = [ "network-online.target" ];
       unitConfig.RequiresMountsFor = [ zimdir ];
       after = [ "network-online.target" ];
+      wantedBy = ["multi-user.target"];
       serviceConfig = {
         Type = "exec";
         User = "kiwix";
