@@ -1,28 +1,18 @@
--- asssumes both of these are loaded.
-local snippet_collections = {
-	-- lua-snippets
-	{
-		dir = "/home/simon/.config/nvim/luasnippets",
-		extension = "lua"
-	},
-	{
-		dir = vim.fn.getcwd() .. "/.luasnippets",
-		extension = "lua"
-	},
-	-- snipmate-snippets
-	-- this would edit snippets provided by vim-snippets.
-	{
-		dir = "/home/simon/.local/share/nvim/site/pack/packer/start/vim-snippets/snippets/",
-		extension = "snippets"
-	}
-	-- vscode would be more involved
-}
+local util = require("util")
 
 return function()
 	require("luasnip.loaders").edit_snippet_files({
 		extend = function(ft, files)
 			local extend_items = {}
 
+			local snippet_collections = {}
+			local coll_paths = util.list_to_set(vim.iter(require("luasnip.loaders.data").lua_collections):map(function(item) return item.root end):totable())
+			for coll_path, _ in pairs(coll_paths) do
+				table.insert(snippet_collections, {
+					dir = coll_path,
+					extension = "lua"
+				})
+			end
 			for _, collection in ipairs(snippet_collections) do
 				for _, file in ipairs(files) do
 					if file:match(collection.dir) then
