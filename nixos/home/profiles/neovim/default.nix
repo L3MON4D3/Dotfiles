@@ -2,6 +2,15 @@
 
 let
   nvim = inputs.neovim-nightly.packages.${pkgs.system}.default;
+  ngram_zip = pkgs.fetchurl {
+    url = "https://languagetool.org/download/ngram-data/ngrams-en-20150817.zip";
+    hash = "sha256-EOVIcx2fWBifw2pVP39oVwO+MNoNm7QtH3tb9fi7Iyw=";
+  };
+  ngrams = pkgs.runCommand "ngrams-unzip" {} ''
+    mkdir -p $out
+    ${pkgs.unzip}/bin/unzip ${ngram_zip} -d $out
+    ln -s $out/en $out/en-US
+  '';
 in {
   home.activation.myNvimRepos = lib.hm.dag.entryAfter ["writeBoundary"] ''
     run mkdir -p ${config.home.homeDirectory}/projects/dotfiles/nvim
@@ -19,6 +28,7 @@ in {
     fi
 
     echo 'return {"${nvim}/share/nvim/runtime"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/rtp_base.lua"
+    echo 'return "${ngrams}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/ngram_path.lua"
   '';
 
   programs.neovim = {

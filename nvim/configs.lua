@@ -650,6 +650,9 @@ local function tex_project(dirname, pdfname, extra_config)
 					ltex = {
 						enabled = {"tex", "latex", "bibtex"},
 						language = "en-US",
+						additionalRules = {
+							languageModel = dofile(vim.fn.stdpath("config") .. "/generated/ngram_path.lua"),
+						}
 					}
 				},
 			}

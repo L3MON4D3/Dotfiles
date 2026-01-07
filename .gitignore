@@ -1,1 +1,3 @@
 /nvim/info*
+/nvim/generated/*
+!/nvim/generated/.gitkeep
