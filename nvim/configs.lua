@@ -307,7 +307,7 @@ local full_plugin_luals = c{
 mc.register(mft"lua" * mdir"/home/simon/projects/dotfiles/nvim/lua", full_plugin_luals):after(lsp_lua)
 mc.register(mft"lua" * mfile"/home/simon/projects/dotfiles/nvim/configs.lua", full_plugin_luals):after(lsp_lua)
 
-local luasnippet_luals = c{
+local luasnippet_conf = c{
 	lsp = {
 		lua_ls = {
 			settings = {
@@ -327,11 +327,14 @@ local luasnippet_luals = c{
 				return args.match_args[2]
 			end)
 		}
+	},
+	luasnip_ft_extend = {
+		lua = {"luasnippet"}
 	}
 }
 
-mc.register(mft"lua" * mpattern".*/luasnippets/", luasnippet_luals):after(lsp_lua)
-mc.register(mft"lua" * mdir"/home/simon/projects/nvim/luasnip-issues", luasnippet_luals):after(lsp_lua)
+mc.register(mft"lua" * mpattern".*/.?luasnippets/", luasnippet_conf):after(lsp_lua)
+mc.register(mft"lua" * mdir"/home/simon/projects/nvim/luasnip-issues", luasnippet_conf):after(lsp_lua)
 
 local luals_mdgen_dir = "/home/simon/projects/luals-mdgen"
 local mdgen_luals = c{
