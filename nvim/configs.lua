@@ -31,6 +31,18 @@ local combined_repl = repl_target.all
 
 local eval = mc.eval
 
+local function project_snippets(dir)
+	return c{
+		run_session = function()
+			-- TODO,luasnip: cancel loading! Maybe unload?
+			require("luasnip.loaders.from_lua").load({lazy_paths = dir .. "/.luasnippets"})
+		end
+	}
+end
+local function register_project_snippets(dir)
+	return mc.register(mdir(dir), project_snippets(dir))
+end
+
 -- takes multiple juwels-configs, each of which consists of 2 strings:
 local cmake_attach = function(opts)
 	opts = opts or {}
@@ -721,7 +733,7 @@ local function tex_project(dirname, pdfname, extra_config)
 				end)
 			}
 		}
-	}
+	}.. project_snippets(dirname)
 
 	if extra_config then
 		config = config .. extra_config
