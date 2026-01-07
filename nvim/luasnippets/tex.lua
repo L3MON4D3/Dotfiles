@@ -64,7 +64,25 @@ s_add({trig = "(s*)sec", wordTrig = true, regTrig = true}, {
 	t({"section{"}), i(1), t({"}", ""}), i(0)
 })
 parse_add({trig = "beg", wordTrig = true}, "\\begin{$1}\n${2:$SELECT_DEDENT}\n\\end{$1}")
-parse_add({trig = "beq", wordTrig = true}, "\\begin{equation*}\n${1:$SELECT_DEDENT}\n\\end{equation*}")
+s_add("beq", {
+	c(1, {
+		fmta([[
+			\begin{equation} \label{eq:<>}
+			<>
+			\end{equation}
+		]], {
+			i(1, "label"),
+			r(2, "eq", i(1))
+		}),
+		fmta([[
+			\begin{equation*}
+			<>
+			\end{equation*}
+		]], {
+			r(1, "eq", i(1))
+		})
+	})
+})
 parse_add({trig = "bal", wordTrig = true}, "\\begin{aligned}\n${1:$SELECT_DEDENT}\n\\end{aligned}")
 parse_add({trig = "bfr", wordTrig = true}, "\\begin{frame}\n\\frametitle{$1}\n$2\n\\end{frame}")
 parse_add({trig = "ab", wordTrig = true}, "\\langle $1 \\rangle")
