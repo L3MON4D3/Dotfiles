@@ -4,6 +4,8 @@ local mc = require("matchconfig")
 local matchers = mc.matchers
 local actions = mc.actions
 
+local lsproto = vim.lsp.protocol
+
 local mft = matchers.filetype
 local mpattern = matchers.pattern
 local mfile = matchers.file
@@ -654,6 +656,27 @@ local function tex_project(dirname, pdfname, extra_config)
 						},
 						latexFormatter = "texlab"
 					},
+				},
+				client_handlegen = {
+					[lsproto.Methods.textDocument_completion] = function(handler_orig)
+						-- blink.cmp auto-inserts brackets!
+						-- This is annoying for latex, where I mostly have
+						-- shorthands for other variables, and not actual
+						-- functions.
+						-- Disable it by setting the completionItemKind to
+						-- Text, blink does not do anything with that.
+						return function(err, result, args)
+							if result then
+								for _, item in ipairs(result.items or {}) do
+									-- if item.detail == "user-defined" then
+										-- item.kind = lsproto.CompletionItemKind.Text
+									-- end
+									item.kind = lsproto.CompletionItemKind.Constant
+								end
+							end
+							handler_orig(err, result, args)
+						end
+					end
 				},
 			},
 			ltex = {
