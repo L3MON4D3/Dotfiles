@@ -629,7 +629,7 @@ local function texlab_buf_search()
 end
 
 local function tex_project(dirname, pdfname, extra_config)
-	local config = c{
+	local tex_config = c{
 		lsp = {
 			texlab = {
 				cmd = { "nix", "develop", dirname .. "#editor-support", "-c", "texlab" },
@@ -695,29 +695,7 @@ local function tex_project(dirname, pdfname, extra_config)
 				},
 			}
 		},
-		repl = {
-			target = project_repl,
-			type = "bash",
-			cmd = {"nix", "develop"},
-			opts = {
-				cwd = dirname
-			},
-			mappings = {
-				["<space>b"] = "latexmk -shell-escape -pdf -interaction=nonstopmode -synctex=1"
-			}
-		},
 		run_buf = function(args)
-			usercommand_buf("Z", function()
-				-- set synctex command here.
-				-- This means there is no synctex when zathura is not started
-				-- from neovim, which seems fine.
-				-- The synctex-editor-command
-				-- * jumps to the correct file via `:edit`
-				-- * moves to the correct line via `%{line}Gk`, where we have to
-				--   correct for 1-based vs 0-based offsets with the `k`
-				-- * centers the buffer on the line with `zz`
-				os.execute(([[zathura '%s/%s' --synctex-editor-command 'nvim --server "%s" --remote-send ":edit %%{input}<Cr>%%{line}Gk<Cr>zz"' --fork >/dev/null 2>&1]]):format(dirname, pdfname, vim.v.servername))
-			end, {})
 			usercommand_buf("TexlabView", texlab_buf_search, { desc = 'TexlabView' })
 			autocmd_buf("BufWritePost", function()
 				local bufnr = args.buf
@@ -759,10 +737,37 @@ local function tex_project(dirname, pdfname, extra_config)
 	}.. project_snippets(dirname)
 
 	if extra_config then
-		config = config .. extra_config
+		tex_config = tex_config .. extra_config
 	end
 
-	return mc.register(mft"tex" * mdir(dirname), config)
+	local project_config = c{
+		repl = {
+			target = project_repl,
+			type = "bash",
+			cmd = {"nix", "develop"},
+			opts = {
+				cwd = dirname
+			},
+			mappings = {
+				["<space>b"] = "latexmk -shell-escape -pdf -interaction=nonstopmode -synctex=1"
+			}
+		},
+		run_buf = function(args)
+			usercommand_buf("Z", function()
+				-- set synctex command here.
+				-- This means there is no synctex when zathura is not started
+				-- from neovim, which seems fine.
+				-- The synctex-editor-command
+				-- * jumps to the correct file via `:edit`
+				-- * moves to the correct line via `%{line}Gk`, where we have to
+				--   correct for 1-based vs 0-based offsets with the `k`
+				-- * centers the buffer on the line with `zz`
+				os.execute(([[zathura '%s/%s' --synctex-editor-command 'nvim --server "%s" --remote-send ":edit %%{input}<Cr>%%{line}Gk<Cr>zz"' --fork >/dev/null 2>&1]]):format(dirname, pdfname, vim.v.servername))
+			end, {})
+		end
+	}
+
+	return mc.register(mft"tex" * mdir(dirname), tex_config), mc.register(mdir(dirname), project_config)
 end
 
 ---
