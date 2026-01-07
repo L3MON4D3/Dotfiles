@@ -23,9 +23,23 @@
 
   programs.git = {
     enable = true;
-    userName = "Simon Katz";
-    userEmail = "simon@l3mon4.de";
-    extraConfig = {
+    settings = {
+      alias = {
+        log1 = "log --pretty='%C(auto)%h: %s'";
+        l    = "log --pretty='%C(auto)%h: %s'";
+        log2 = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
+        g    = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
+        s = "status";
+        rc = "rebase --continue";
+        p = "push";
+        c = "checkout";
+        bg = "bisect good";
+        bb = "bisect bad";
+      };
+      user = {
+        email = "simon@l3mon4.de";
+        name = "Simon Katz";
+      };
       init.defaultBranch = "main";
       github = {
         user = "L3MON4D3";
@@ -36,23 +50,25 @@
       };
     };
     signing.signByDefault = true;
-    aliases = {
-      log1 = "log --pretty='%C(auto)%h: %s'";
-      l    = "log --pretty='%C(auto)%h: %s'";
-      log2 = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
-      g    = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
-      s = "status";
-      rc = "rebase --continue";
-      p = "push";
-      c = "checkout";
-      bg = "bisect good";
-      bb = "bisect bad";
-    };
   };
 
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
     matchBlocks = {
+      # previous default config.
+      "*" = {
+        forwardAgent = false; # bad for security, it seems.
+        addKeysToAgent = "no"; 
+        compression = false;
+        serverAliveInterval = 0;
+        serverAliveCountMax = 3;
+        hashKnownHosts = false;
+        userKnownHostsFile =  "~/.ssh/known_hosts";
+        controlMaster = "no";
+        controlPath = "~/.ssh/master-%r@%n:%p";
+        controlPersist = "no";
+      };
       wildhorn = {
         hostname = "wildhorn.cs.uni-bonn.de";
         identityFile = "~/.ssh/id_rsa";

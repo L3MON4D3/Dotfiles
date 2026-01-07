@@ -10,7 +10,7 @@ in {
     let
       mpdlrc = pkgs.writeShellApplication {
           name = "mpdlrc";
-          runtimeInputs = [ inputs.mpdlrc.defaultPackage.${pkgs.system} ];
+          runtimeInputs = [ inputs.mpdlrc.defaultPackage.${pkgs.stdenv.hostPlatform.system} ];
           text = ''
             mpdlrc --musicdir=${audio_dir}
           '';

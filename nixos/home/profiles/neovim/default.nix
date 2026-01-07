@@ -1,7 +1,7 @@
 { config, lib, pkgs, pkgs-unstable, machine, inputs, data, ... }:
 
 let
-  nvim = inputs.neovim-nightly.packages.${pkgs.system}.default;
+  nvim = inputs.neovim-nightly.packages.${pkgs.stdenv.hostPlatform.system}.default;
   ngram_zip = pkgs.fetchurl {
     url = "https://languagetool.org/download/ngram-data/ngrams-en-20150817.zip";
     hash = "sha256-EOVIcx2fWBifw2pVP39oVwO+MNoNm7QtH3tb9fi7Iyw=";
@@ -38,7 +38,7 @@ in {
       # add tree-sitter from nvim-nightly package.
       # we need tree-sitter for building grammars from nvim-treesitter, and the
       # version in pkgs may be wrong.
-      (builtins.head (builtins.filter (x: x.name == "tree-sitter-bundled") inputs.neovim-nightly.packages.${pkgs.system}.neovim.buildInputs))
+      (builtins.head (builtins.filter (x: x.name == "tree-sitter-bundled") inputs.neovim-nightly.packages.${pkgs.stdenv.hostPlatform.system}.neovim.buildInputs))
       # for building treesitter grammars.
       pkgs.zig
       pkgs.nodejs

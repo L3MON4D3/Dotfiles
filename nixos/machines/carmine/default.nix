@@ -14,6 +14,7 @@
     ../../profiles/home-mpd.nix
 
     ../../profiles/firefox.nix
+    ../../profiles/kimmify.nix
 
     ../../profiles/mxmaster3s.nix
     ../../profiles/unibonn.nix
@@ -30,10 +31,6 @@
   environment.shellAliases = {
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#carmine"'';
   };
-
-  environment.systemPackages = with pkgs; [
-    inputs.dirmap.packages.${system}.default
-  ];
 
   fileSystems."/srv/misc" = {
     device = "indigo:/misc";

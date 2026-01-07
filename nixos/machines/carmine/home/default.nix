@@ -34,8 +34,8 @@
       extensions.packages = with nur.repos.rycee.firefox-addons; [
         ublock-origin
         passff
-        inputs.aa-torrent-dl.packages.${pkgs.system}.extension
-        inputs.nvim-browseredit.packages.${pkgs.system}.extension
+        inputs.aa-torrent-dl.packages.${pkgs.stdenv.hostPlatform.system}.extension
+        inputs.nvim-browseredit.packages.${pkgs.stdenv.hostPlatform.system}.extension
       ];
     };
   };

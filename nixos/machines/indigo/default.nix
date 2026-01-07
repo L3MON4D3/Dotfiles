@@ -129,7 +129,6 @@
   };
   environment.systemPackages = with pkgs; [
     config.l3mon.restic.wrapper
-    inputs.dirmap.packages.${system}.default
   ];
   environment.shellAliases = {
     lr = "l3mon-restic";

@@ -37,7 +37,7 @@ let
   # nerdfonts_symbols_only = (pkgs.nerdfonts.override (old: {fonts = [ "NerdFontsSymbolsOnly" ];}));
   nerdfonts_symbols_only = pkgs.nerd-fonts.symbols-only;
   gen_scaled_font = pkgs.writers.writePython3Bin "gen_scaled_font" {
-    libraries = with pkgs; [ python312Packages.fontforge ];
+    libraries = with pkgs; [ python313Packages.fontforge ];
   } ''
     import fontforge
     import psMat
@@ -244,7 +244,7 @@ in {
           adapta-gtk-theme
           adapta-kde-theme
           sway_float
-          xdragon
+          dragon-drop
 
           wl-clipboard
           pkgs-unstable.legcord
@@ -284,10 +284,9 @@ in {
           enable = true; 
           nativeMessagingHosts = [
             pkgs.passff-host
-            inputs.aa-torrent-dl.packages.${pkgs.system}.native-app
-            inputs.nvim-browseredit.packages.${pkgs.system}.native-app
+            inputs.aa-torrent-dl.packages.${pkgs.stdenv.hostPlatform.system}.native-app
+            inputs.nvim-browseredit.packages.${pkgs.stdenv.hostPlatform.system}.native-app
           ];
-          package = pkgs.firefox-wayland;
           profiles = {
             default = {
               name = "default";
@@ -360,8 +359,8 @@ in {
               extensions.packages = with nur.repos.rycee.firefox-addons; [
                 ublock-origin
                 passff
-                inputs.aa-torrent-dl.packages.${pkgs.system}.extension
-                inputs.nvim-browseredit.packages.${pkgs.system}.extension
+                inputs.aa-torrent-dl.packages.${pkgs.stdenv.hostPlatform.system}.extension
+                inputs.nvim-browseredit.packages.${pkgs.stdenv.hostPlatform.system}.extension
                 linkding-extension
                 single-file
               ];

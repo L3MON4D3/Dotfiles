@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, self, inputs, patched_wpa_supplicant, ... }:
+{ config, lib, pkgs, machine, data, self, inputs, patched_wpa_supplicant, system, ... }:
 
 {
   disabledModules = ["services/networking/wpa_supplicant.nix"];
@@ -51,10 +51,6 @@
       };
     };
   };
-
-  environment.systemPackages = with pkgs; [
-    inputs.dirmap.packages.${system}.default
-  ];
 
   l3mon.network_namespaces = {
     enable = true;

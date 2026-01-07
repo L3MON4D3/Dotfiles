@@ -2,14 +2,14 @@
   description = "My NixOS config.";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
     nixpkgs-yuzu.url = "github:NixOS/nixpkgs?rev=125be29c4ef454788c42c28d49cb048ab0b5b548";
     nixpkgs-suyu.url = "github:NixOS/nixpkgs?rev=3730d8a308f94996a9ba7c7138ede69c1b9ac4ae";
     nixpkgs-ddns-updater-2-7.url = "github:NixOS/nixpkgs?rev=c792c60b8a97daa7efe41a6e4954497ae410e0c1";
     netns-exec.url = "github:L3MON4D3/netns-exec";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       # The `follows` keyword in inputs is used for inheritance.
       # Here, `inputs.nixpkgs` of home-manager is kept consistent with
       # the `inputs.nixpkgs` of the current flake,
@@ -42,8 +42,8 @@
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, microvm, merigold, ... }: {
     nixosConfigurations = let
-      pkgs = import nixpkgs { inherit system; };
       system = "x86_64-linux";
+      pkgs = import nixpkgs { inherit system; };
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;

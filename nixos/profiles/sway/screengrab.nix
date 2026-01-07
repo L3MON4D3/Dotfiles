@@ -85,7 +85,7 @@ in {
     mode "screen" {
       bindsym r exec ${screenrec}/bin/screenrec
       bindsym s exec ${slurpscreen}/bin/slurpscreen
-      bindsym d exec ${pkgs.xdragon}/bin/dragon-drop "/tmp/screen.png"
+      bindsym d exec ${pkgs.dragon-drop}/bin/dragon-drop "/tmp/screen.png"
       bindsym w exec ${windowshot}/bin/windowshot
       bindsym k exec ${pkgs.ksnip}/bin/ksnip -e "/tmp/screen.png"
       bindsym p exec ${popout}/bin/popout

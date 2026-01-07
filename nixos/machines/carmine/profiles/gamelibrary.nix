@@ -76,7 +76,7 @@
       extraLibraries = pkgs: [
         pkgs.vulkan-tools
         pkgs.vulkan-loader
-        pkgs.amdvlk
+        # pkgs.amdvlk
       ];
     })
     # pkgs.vulkan-tools

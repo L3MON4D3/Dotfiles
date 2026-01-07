@@ -12,7 +12,7 @@ in {
     outputs = sway_cfg.outputs;
   in {
     programs.waybar.package = pkgs.waybar.overrideAttrs (final: previous: {
-      patches = previous.patches ++ [
+      patches = (previous.patches or []) ++ [
         ./waybar-workrooms.patch
       ];
       hyprlandSupport = false;

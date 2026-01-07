@@ -208,7 +208,7 @@ in {
           source = "${inputs.netns-exec.defaultPackage.${system}}/bin/netns-exec";
         };
       };
-      environment.systemPackages = with pkgs; [
+      environment.systemPackages = [
         # completions.
         inputs.netns-exec.defaultPackage.${system}
       ];
