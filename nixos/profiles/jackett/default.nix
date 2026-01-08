@@ -7,6 +7,14 @@ let
   wg_machine_conf = wg_network.peers."${machine}";
   port = data.ports.jackett;
   jackett_pkg = pkgs-unstable.jackett.overrideAttrs (old: {
+    # has fix for datetime.
+    version = "0.24.671";
+    src = pkgs.fetchFromGitHub {
+      owner = "jackett";
+      repo = "jackett";
+      rev = "v0.24.671";
+      hash = "sha256-Zzj0JNI2wjMTbuFgxgRnEM87kjrqAcCS0cd++VnLeS4=";
+    };
     postFixup = old.postFixup + ''
       cp ${./1337x_qxr.yml} $out/lib/jackett/Definitions/
     '';

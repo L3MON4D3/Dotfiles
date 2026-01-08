@@ -18,7 +18,7 @@ in {
       # default = [];
     # };
     category_savepaths = mkOption {
-      type = types.attrsOf types.string;
+      type = types.attrsOf types.str;
       description = lib.mdDoc "Map category name to savepath. Set to \"\" for the default-path.";
       default = {};
     };

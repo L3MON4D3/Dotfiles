@@ -3,17 +3,6 @@
 {
   services.mealie = {
     enable = true;
-    package = pkgs.mealie.overrideAttrs (old: rec {
-      version = "3.1.2";
-      src = pkgs.fetchFromGitHub {
-        owner = "mealie-recipes";
-        repo = "mealie";
-        tag = "v3.1.2";
-        hash = "sha256-8ZLXXA4NKR7GaCdgk8XDMjAssQsKP1wZpEZPYWpglwk=";
-        # hash = "sha256-txkHCQ/xTakPXXFki161jNOKwAH9p9z1hCNEEkbqQtM=";
-      };
-      patches = [];
-    });
     port = data.ports.mealie;
   };
 

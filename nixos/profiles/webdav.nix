@@ -7,7 +7,7 @@ in {
   services.caddy.package = pkgs.caddy.withPlugins {
     plugins = ["github.com/mholt/caddy-webdav@v0.0.0-20241008162340-42168ba04c9d"];
     # May have to update this whenever a new nixpkgs is used!
-    hash = "sha256-rrkUDnTPKehdKMBDaZdFbaEL2QOsHb3tn6dst2UclE8=";
+    hash = "sha256-7MdH7K6phG/21yusXR54gUz7VUMAkWOQvfP/Hljw+Pc=";
   };
 
   services.caddy.globalConfig = ''
