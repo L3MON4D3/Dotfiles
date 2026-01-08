@@ -3,13 +3,12 @@
 {
   services.cachefilesd = {
     enable = true;
-    # begin culling at 2% free space, stop at 3%.
+    # begin culling at 2% free space, stop at 6%. I've tried 3%, but that does not work for some reason.
     # Stop adding to the cache when only 1% is free.
-    # when culling, stop when 3% are reached.
     # We don't need the f* limits because this is on btrfs.
     extraConfig = ''
       tag nvme
-      brun  3%
+      brun 6%
       bcull 2%
       bstop 1%
     '';
