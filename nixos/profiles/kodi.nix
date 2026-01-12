@@ -28,7 +28,7 @@ with lib;
     backupDaily = {
       runtimeInputs = [ config.services.mysql.package ];
       text = ''
-        mysqldump MyVideos131 | restic backup --tag=kodi --stdin --stdin-filename=MyVideos131 --skip-if-unchanged=true
+        mariadbdump MyVideos131 | restic backup --tag=kodi --stdin --stdin-filename=MyVideos131 --skip-if-unchanged=true
       '';
     };
     forget = {
