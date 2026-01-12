@@ -3,6 +3,7 @@
 let
   machine_lan_address = data.network.lan.peers.${machine}.address;
   port = data.ports.immich;
+  postgres = config.services.postgresql.package;
 in {
   services.immich = {
     enable = true;
@@ -26,9 +27,9 @@ in {
   };
   # run after immich sets up its database.
   systemd.services.postgresql.postStart = lib.mkAfter ''
-    $PSQL immich -tAc 'GRANT CONNECT ON DATABASE immich TO restic' || true
-    $PSQL immich -tAc 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO restic' || true
-    $PSQL immich -tAc 'GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO restic' || true
+    ${postgres}/bin/psql immich -tAc 'GRANT CONNECT ON DATABASE immich TO restic' || true
+    ${postgres}/bin/psql immich -tAc 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO restic' || true
+    ${postgres}/bin/psql immich -tAc 'GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO restic' || true
   '';
 
   # override settings from service-file.
