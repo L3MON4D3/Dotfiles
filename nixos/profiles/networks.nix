@@ -1,7 +1,7 @@
 { config, l3lib, lib, pkgs, machine, data, ... }:
 
 {
-  l3mon.networks = {
+  l3mon.networks = rec {
     physical.home = rec {
       inherit (data.network.home) address_range ssid;
       dns_peer = peers.indigo;
@@ -54,7 +54,7 @@
           xperia = { route_all = true; };
           carmine = { route_all = true; };
 
-          # indigo = { route_all = false; };
+          indigo = { route_all = false; inherit (physical.home.peers.indigo) network_services; };
           canary = { route_all = false; };
           cobalt = { route_all = false; };
           chromecast = { route_all = false; };
