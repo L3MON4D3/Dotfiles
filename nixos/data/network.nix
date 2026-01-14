@@ -73,7 +73,6 @@ in rec {
           "webdav"
           "restic"
           "cache.indigo"
-          "kk"
           "readeck"
           "mealie"
           "pinchflat"
