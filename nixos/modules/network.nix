@@ -118,8 +118,10 @@ in {
     in {
       name = name;
 
-      host_endpoint = conf.remote_endpoint;
-      host_pubkey = conf.remote_pubkey;
+      host = {
+        endpoint = conf.remote_endpoint;
+        pubkey = conf.remote_pubkey;
+      };
       dns = conf.dns;
 
       peers = {
