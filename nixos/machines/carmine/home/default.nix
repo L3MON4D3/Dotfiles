@@ -10,7 +10,7 @@
     workrooms.enable = true;
     outputs = [ "DP-1" "HDMI-A-1" ];
   };
-  l3mon.sway-netns.wg_home2 = {
+  l3mon.sway-netns.home = {
     enable = true;
     openPrivateWindow = false;
     netnsKey = "h";
@@ -24,7 +24,7 @@
     };
   };
 
-  l3mon.sway-netns.wg_rec_de = {
+  l3mon.sway-netns.rec_de = {
     enable = true;
     openPrivateWindow = true;
     netnsKey = "d";

@@ -15,9 +15,11 @@
     ./modules/peercache.nix
     ./modules/sway-netns.nix
 
+    ./modules/network.nix
     ./modules/paths.nix
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
+    ./profiles/networks.nix
 
     ./profiles/history.nix
     ./profiles/wakeonlan.nix

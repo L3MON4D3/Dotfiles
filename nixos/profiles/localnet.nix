@@ -1,7 +1,7 @@
 { config, lib, pkgs, data, machine, ... }:
 
 let 
-  lan = data.network.lan;
+  lan = config.lib.l3mon.networks.physical.home;
   lan_machine = lan.peers.${machine};
 in
 {
@@ -30,7 +30,7 @@ in
       matchConfig.Name = "${lan.peers.${machine}.interface}";
       linkConfig.RequiredForOnline = "routable";
       networkConfig.Address = lan.peers."${machine}".address + lan.subnet_mask;
-      networkConfig.Gateway = lan.gateway_peer.address;
+      networkConfig.Gateway = lan.gateway_ip;
       networkConfig.DHCP = false;
       networkConfig.IPv6AcceptRA = false;
       networkConfig.LinkLocalAddressing = false;

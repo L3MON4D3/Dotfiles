@@ -65,5 +65,96 @@ with lib; {
       }))
       secgen_completion
     ];
+    lib.l3mon.secgen = let
+      to_abspath = repo_abs_path: if config.l3mon.paths.nixos_config_dir != null then
+          "${config.l3mon.paths.nixos_config_dir}${repo_abs_path}"
+        else
+          null;
+      wireguardSpecKey = prefix: id: "wg-${prefix}-${id}";
+      wireguardSpecKeySingle = prefix: "wg-${prefix}";
+      to_entry = prefix: id: rec {
+        keydir = "${config.l3mon.secgen.secret_dir}/${prefix}";
+        key = "${keydir}/${id}.priv";
+        nix_pubkey_repo = "/data/generated/wg_pub-${prefix}-${id}.nix";
+        nix_pubkey_abs = to_abspath nix_pubkey_repo;
+
+        backup_files = [ key ];
+        gen = pkgs.writeShellApplication {
+          name = "gen";
+          runtimeInputs = [ pkgs.wireguard-tools ];
+          text = ''
+            KEY=$(wg genkey)
+            PUBKEY=$(echo -n "$KEY" | wg pubkey)
+
+            mkdir -p '${keydir}'
+            echo -n "$KEY" > ${key}
+            chown root:root ${key}
+            chmod 400 ${key}
+
+            ${if config.l3mon.paths.nixos_config_dir != null then ''
+              echo -n "\"$PUBKEY\"" > ${nix_pubkey_abs}
+              echo "Added pubkey to nixos config."
+            '' else ''
+              echo "Pubkey is $PUBKEY, add it to the config?"
+            ''}
+          '';
+        };
+      };
+      to_remote_entry = prefix: rec {
+        key = "${config.l3mon.secgen.secret_dir}/wg-${prefix}.priv";
+        nix_data_repo = "/data/generated/wg-${prefix}.nix";
+        nix_data_abs = to_abspath nix_data_repo;
+
+        backup_files = [ key ];
+        gen = pkgs.writeShellApplication {
+          name = "gen";
+          runtimeInputs = [ pkgs.wireguard-tools ];
+          text = ''
+            echo 'Enter Interface.PrivateKey:'
+            read -r KEY
+            echo "Read $KEY from stdin"
+
+            echo 'Enter Interface.Address (v4,aaa.bbb.ccc.ddd):'
+            read -r ADDRESS
+            echo "Read $ADDRESS from stdin"
+
+            echo 'Enter Interface.DNS:'
+            read -r DNS
+            echo "Read $DNS from stdin"
+
+            echo 'Enter Peer.PublicKey:'
+            read -r REMOTE_PUBKEY
+            echo "Read $REMOTE_PUBKEY from stdin"
+
+            echo 'Enter Peer.Endpoint:'
+            read -r ENDPOINT
+            echo "Read $ENDPOINT from stdin"
+
+            PUBKEY=$(echo -n "$KEY" | wg pubkey)
+
+            echo -n "$KEY" > ${key}
+            chown root:root ${key}
+            chmod 400 ${key}
+
+            ${if nix_data_abs != null then ''
+              echo -n "
+              {
+                pubkey = \"$PUBKEY\";
+                address = \"$ADDRESS\";
+                dns = \"$DNS\";
+                remote_pubkey =  \"$REMOTE_PUBKEY\";
+                remote_endpoint =  \"$ENDPOINT\";
+              }" > ${nix_data_abs}
+            '' else ''
+              echo "Please add the data to the config manually!"
+            ''}
+          '';
+        };
+      };
+    in {
+      inherit wireguardSpecKey wireguardSpecKeySingle;
+      mkWireguardSpecs = prefix: list: foldr (id: acc: acc // { "${wireguardSpecKey prefix id}" = (to_entry prefix id); }) {} list;
+      mkRemoteWireguardSpecs = name: { "${wireguardSpecKeySingle name}" = (to_remote_entry name); };
+    };
   };
 }

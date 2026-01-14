@@ -1,7 +1,7 @@
 { config, lib, pkgs, machine, data, ... }:
 
 let
-  lan = data.network.lan;
+  lan = config.lib.l3mon.networks.physical.home;
 in {
   environment.systemPackages = [
     (pkgs.writeShellApplication {
@@ -9,7 +9,7 @@ in {
         runtimeInputs = [ pkgs.wakeonlan ];
         text = ''
           case "$1" in
-        '' + (lib.attrsets.foldlAttrs (acc: k: v: acc + (if v ? "phys_mac" then ''
+        '' + (lib.attrsets.foldlAttrs (acc: k: v: acc + (if v.phys_mac != null then ''
           ${k})
             wakeonlan ${v.phys_mac}
             ;;

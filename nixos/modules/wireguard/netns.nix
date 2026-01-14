@@ -3,6 +3,7 @@
 with lib;
 let
   cfg = config.l3mon.network_namespaces;
+  lan = config.lib.l3mon.networks.physical.home;
 in {
   options.l3mon.network_namespaces = {
     enable = mkEnableOption (lib.mdDoc "Create network-namespaces for passed networks.");
@@ -25,8 +26,8 @@ in {
   };
 
   config = mkIf cfg.enable (let
-    lan_interface = data.network.lan.peers."${machine}".interface;
-    lan_ip = data.network.lan.peers."${machine}".address + data.network.lan.subnet_mask;
+    lan_interface = lan.peers."${machine}".interface;
+    lan_ip = lan.peers."${machine}".address + lan.subnet_mask;
   in {
     systemd.services = builtins.listToAttrs (lib.concatMap (
       wg_network: let
@@ -38,7 +39,7 @@ in {
 
         route_local = machine_conf ? local;
         local_peer = machine_conf.local;
-        local_address = local_peer.address + data.network.lan.subnet_mask;
+        local_address = local_peer.address + lan.subnet_mask;
         route_local_address = "${local_peer.address}/32";
         disallow_local_macvlan = pkgs.writeTextFile {
           name = "rules.conf";
@@ -46,7 +47,7 @@ in {
             table ip my_filter {
                 chain output {
                     type filter hook output priority 0; policy accept;
-                    ip daddr != ${data.network.lan.address_range} oifname "macvlan_netns" drop
+                    ip daddr != ${lan.address_range} oifname "macvlan_netns" drop
                     accept
                 }
             }
@@ -111,8 +112,8 @@ in {
               # send all traffic over connection.
               wg set ${interface_name} \
                 private-key ${machine_conf.privkey_file} \
-                peer ${wg_network.host.pubkey} \
-                endpoint ${wg_network.host.endpoint} \
+                peer ${wg_network.host_pubkey} \
+                endpoint ${wg_network.host_endpoint} \
                 ${optionalString wg_network.keepalive "persistent-keepalive 60"} \
                 allowed-ips 0.0.0.0/0
 
@@ -160,7 +161,7 @@ in {
             value = config.l3mon.network_namespaces.mkNetnsService wg_network (config.lib.l3mon.blocky.mkService {
               conf = config.lib.l3mon.blocky.mkConfig {
                 ports = ["0.0.0.0:53"];
-                network = data.network.lan;
+                network = lan;
                 block = false;
                 upstream = [ dns ];
               };
