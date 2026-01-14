@@ -68,7 +68,7 @@ in {
     }
   )];
 
-  # for opus-fs.
+  # for playlist-fs.
   programs.fuse.userAllowOther = true;
 
   systemd.services.playlist-fs = {

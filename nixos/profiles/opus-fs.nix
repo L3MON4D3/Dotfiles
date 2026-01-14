@@ -8,6 +8,7 @@ in {
 
   systemd.services.opus-fs = {
     enable = true;
+    wantedBy = ["multi-user.target"];
     unitConfig.RequiresMountsFor = [ target_dir ];
     serviceConfig = {
       Type = "exec";
