@@ -75,7 +75,7 @@
     remote = {
       mullvad_de = {
         peer_machine = "indigo";
-        local = config.lib.l3mon.networks.physical.home.peers.indigo;
+        local = config.lib.l3mon.networks.physical.home.peers.indigo_mullvad_de;
       };
     };
   };
