@@ -3,7 +3,7 @@
 with lib;
 let
   statedir = "/var/lib/sonarr";
-  wg_network = data.network.wireguard_mullvad_de;
+  wg_network = config.lib.l3mon.networks.remote.mullvad_de;
   wg_machine_conf = wg_network.peers."${machine}";
   port = data.ports.sonarr;
   conf = pkgs.writeTextFile {

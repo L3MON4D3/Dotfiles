@@ -105,9 +105,7 @@ in {
       # "192.168.178.21/xx" -> /xx
       subnet_mask = "/" + (elemAt (split "/" spec.address_range) 2);
 
-      host_address = spec.host.address;
-      host_endpoint = spec.host.endpoint;
-      host_pubkey = host_mapped.pubkey;
+      host = host_mapped;
       dns = spec.host.address;
 
       keepalive = spec.keepalive;

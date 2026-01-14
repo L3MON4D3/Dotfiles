@@ -2,7 +2,6 @@
 
 with lib;
 let
-  machine_lan_address = data.network.lan.peers.${machine}.address;
   custom-css =
   (
     # hide long video-descriptions.
@@ -75,7 +74,7 @@ in {
   
   services.caddy.extraConfig = ''
     http://jellyfin, http://jellyfin.internal, http://jellyfin.${machine} {
-      reverse_proxy http://${machine_lan_address}:${toString data.ports.jellyfin_web}
+      reverse_proxy http://127.0.0.1:${toString data.ports.jellyfin_web}
     }
   '';
 

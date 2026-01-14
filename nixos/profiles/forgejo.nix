@@ -3,7 +3,6 @@
 let
   cfg = config.services.forgejo;
   srv = cfg.settings.server;
-  machine_lan_address = data.network.lan.peers.${machine}.address;
   port = data.ports.forgejo;
 in {
   services.forgejo = {
@@ -30,7 +29,7 @@ in {
 
   services.caddy.extraConfig = ''
     http://git, http://git.internal, http://git.${machine} {
-      reverse_proxy http://${machine_lan_address}:${toString port}
+      reverse_proxy http://127.0.0.1:${toString port}
     }
   '';
 

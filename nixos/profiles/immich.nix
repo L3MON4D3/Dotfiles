@@ -1,19 +1,18 @@
 { config, lib, pkgs, machine, data, ... }:
 
 let
-  machine_lan_address = data.network.lan.peers.${machine}.address;
   port = data.ports.immich;
   postgres = config.services.postgresql.package;
 in {
   services.immich = {
     enable = true;
     port = port;
-    host = machine_lan_address;
+    host = "127.0.0.1";
   };
 
   services.caddy.extraConfig = ''
     http://immich, http://immich.internal, http://immich.${machine} {
-      reverse_proxy http://${machine_lan_address}:${toString port}
+      reverse_proxy http://127.0.0.1:${toString port}
     }
   '';
 

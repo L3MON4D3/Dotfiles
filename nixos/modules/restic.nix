@@ -247,7 +247,6 @@ in {
     }))
     (mkIf cfg.enable_server (let
       port = data.ports.restic-rest-server;
-      machine_lan_address = data.network.lan.peers.${machine}.address;
     in {
       services.restic.server = {
         enable = true;
@@ -257,7 +256,7 @@ in {
       };
       services.caddy.extraConfig = ''
         http://restic, http://restic.internal, http://restic.${machine} {
-          reverse_proxy http://${machine_lan_address}:${toString port}
+          reverse_proxy http://127.0.0.1:${toString port}
         }
       '';
     }))

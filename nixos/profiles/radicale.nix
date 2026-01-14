@@ -2,7 +2,6 @@
 
 let
   port = data.ports.radicale;
-  machine_lan_address = data.network.lan.peers.${machine}.address;
 in {
   services.radicale = {
     enable = true;
@@ -20,7 +19,7 @@ in {
 
   services.caddy.extraConfig = ''
     http://radicale, http://radicale.internal, http://radicale.${machine} {
-      reverse_proxy http://${machine_lan_address}:5232
+      reverse_proxy http://127.0.0.1:${toString port}
     }
   '';
 

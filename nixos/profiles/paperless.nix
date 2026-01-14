@@ -1,13 +1,12 @@
 { config, lib, l3lib, pkgs, machine, data, ... }:
 
 let
-  machine_lan_address = data.network.lan.peers.${machine}.address;
   port = data.ports.paperless;
 in {
   services.paperless = {
     enable = true;
 
-    address = machine_lan_address;
+    address = "127.0.0.1";
     port = port;
 
     passwordFile = l3lib.secret "paperless_password";
@@ -61,7 +60,7 @@ in {
 
   services.caddy.extraConfig = ''
     http://paperless, http://paperless.internal, http://paperless.${machine} {
-      reverse_proxy http://${machine_lan_address}:${toString port}
+      reverse_proxy http://127.0.0.1:${toString port}
     }
   '';
 }

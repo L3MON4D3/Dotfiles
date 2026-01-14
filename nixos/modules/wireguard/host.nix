@@ -25,7 +25,7 @@ in {
     systemd.services = builtins.listToAttrs (map (spec: let
       wg_network = spec.config;
       wg_name = spec.config.name;
-      wg_if_network = if spec ? netns then spec.netns else data.network.lan;
+      wg_if_network = if spec ? netns then spec.netns else config.lib.l3mon.networks.physical.home;
       host_conf = wg_network.host;
       full_address = machine_conf.address + wg_network.subnet_mask;
       if_netns_do = if spec ? netns then "ip netns exec ${wg_if_network.name}" else "";

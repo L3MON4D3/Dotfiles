@@ -3,15 +3,15 @@
 let
   vmname = "merigold";
   vm_runtimedir = "/var/lib/microvms/${vmname}";
-  lan = data.network.lan;
+  lan = config.lib.l3mon.networks.physical.home;
   mgconf = {
     hostname = "${vmname}";
     address = "${lan.peers.${vmname}.address}/24";
-    mac = "${lan.peers.${vmname}.mac_address}";
+    mac = "${lan.peers.${vmname}.mac}";
     host_if = "${lan.peers.${machine}.phys_interface}";
     host_macvtapname = "macvtap-mg";
-    gateway_ip = "${lan.gateway_peer.address}";
-    gateway_mac = "${lan.gateway_peer.mac}";
+    gateway_ip = "${lan.gateway_ip}";
+    gateway_mac = "${lan.gateway_mac}";
     localnet_allowlist = [
       lan.peers.carmine
       lan.peers.indigo

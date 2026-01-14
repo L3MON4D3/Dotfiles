@@ -68,7 +68,7 @@
   l3mon.network_namespaces = {
     enable = true;
     network_configs = [
-      data.network.wireguard_mullvad_de
+      config.lib.l3mon.networks.remote.mullvad_de
     ];
   };
 
@@ -81,11 +81,11 @@
     enable = true;
     specs = [
       {
-        config = data.network.wireguard_home2;
+        config = config.lib.l3mon.networks.virtual.home;
       }
       {
-        config = data.network.wireguard_rec_de;
-        netns = data.network.wireguard_mullvad_de;
+        config = config.lib.l3mon.networks.virtual.rec_de;
+        netns = config.lib.l3mon.networks.remote.mullvad_de;
       }
     ];
   };
@@ -137,14 +137,14 @@
   systemd.services.blocky_lan = config.lib.l3mon.blocky.mkService {
     conf = config.lib.l3mon.blocky.mkConfig {
       ports = ["127.0.0.1:53" "192.168.178.20:53"];
-      network = data.network.lan;
+      network = config.lib.l3mon.networks.physical.home;
       block = true;
     };
   };
   systemd.services.blocky_wg_home2 = config.lib.l3mon.blocky.mkService {
     conf = config.lib.l3mon.blocky.mkConfig {
       ports = ["10.0.0.1:53"];
-      network = data.network.wireguard_home2;
+      network = config.lib.l3mon.networks.virtual.home;
       block = false;
     };
   };
@@ -346,6 +346,8 @@
       aa-torrent-dl = "";
     };
   };
+
+  l3mon.paths.nixos_config_dir = "/home/simon/projects/dotfiles/nixos";
 
   home-manager.sharedModules = [
     ({ config, lib, pkgs, machine, data, ... }: {

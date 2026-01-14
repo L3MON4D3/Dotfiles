@@ -4,7 +4,6 @@ let
   rmfakecloud = pkgs-unstable.rmfakecloud;
   statedir = "/var/lib/rmfakecloud";
   secret_key_env_file = l3lib.secret "rmfakecloud_env";
-  machine_lan_address = data.network.lan.peers.${machine}.address;
   port = toString data.ports.rmfakecloud;
   userprofile = pkgs.writeTextFile {
     name = "userprofile";
@@ -92,7 +91,7 @@ in {
 
   services.caddy.extraConfig = ''
     http://rmfakecloud, http://rmfakecloud.internal, http://rmfakecloud.${machine} {
-      reverse_proxy http://${machine_lan_address}:${port}
+      reverse_proxy http://127.0.0.1:${port}
     }
   '';
 
