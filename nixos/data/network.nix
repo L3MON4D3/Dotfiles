@@ -212,26 +212,6 @@ in rec {
     dns = "10.64.0.1";
   };
 
-  wireguard_mv_cb_de = rec {
-    subnet_mask = "/32";
-    name = "wg_mv_cb_de";
-    peers = {
-      cobalt = {
-        address = "10.71.102.201";
-        privkey_file = "/var/secrets/wireguard_mullvad/de_bright_mole.private";
-        pubkey = "kOwz+tFnMo1XcM+Qhecln5iyDg3/5TAhS4Yq46ieL00=";
-        interface = name;
-      };
-      mullvad = {
-        endpoint = "169.150.201.15:51820";
-        pubkey = "6/PBbPtoeWpJA+HZc9Iqg/PPQWD7mGVvZdwQlr1vtRk="; 
-      };
-    };
-    host = peers.mullvad;
-    keepalive = false;
-    dns = "10.64.0.1";
-  };
-
   wireguard_rec_de = rec {
     subnet_mask = "/24";
     name = "wg_rec_de";
