@@ -25,3 +25,9 @@ s_add("wsa", fmta([[
 	}),
 	txt = i(4)
 }))
+parse_add("mko", [[
+	mkOption {
+		type = $1;
+		default = $2;
+	};
+]])
