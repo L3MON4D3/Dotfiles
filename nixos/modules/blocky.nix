@@ -116,23 +116,8 @@ let
   };
 in
 {
-  options = {
-    l3mon.blocky.mkService = mkOption {
-      type = types.anything;
-      description = lib.mdDoc ''
-        Call with a attrset with single key `conf` to produce a systemd-service
-        for starting blocky with the provided conf.
-      '';
-      readOnly = true;
-      default = mkBlockyService;
-    };
-    l3mon.blocky.mkConfig = mkOption {
-      type = types.anything;
-      description = lib.mdDoc ''
-        Generates a yaml-config for blocky.
-      '';
-      readOnly = true;
-      default = mkConfigFile;
-    };
+  config.lib.l3mon.blocky = {
+    mkService = mkBlockyService;
+    mkConfig = mkConfigFile;
   };
 }

@@ -70,8 +70,8 @@ in {
     ];
   };
   
-  systemd.services.blocky-wg_home2 = config.l3mon.blocky.mkService {
-    conf = config.l3mon.blocky.mkConfig {
+  systemd.services.blocky-wg_home2 = config.lib.l3mon.blocky.mkService {
+    conf = config.lib.l3mon.blocky.mkConfig {
       ports = [ "${blocky_address}:53" ];
       network = data.network.wireguard_home2;
       block = false;

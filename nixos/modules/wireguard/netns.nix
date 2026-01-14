@@ -157,8 +157,8 @@ in {
       ] ++ (if route_local then
         [{
             name = "blocky-${netns_name}";
-            value = config.l3mon.network_namespaces.mkNetnsService wg_network (config.l3mon.blocky.mkService {
-              conf = config.l3mon.blocky.mkConfig {
+            value = config.l3mon.network_namespaces.mkNetnsService wg_network (config.lib.l3mon.blocky.mkService {
+              conf = config.lib.l3mon.blocky.mkConfig {
                 ports = ["0.0.0.0:53"];
                 network = data.network.lan;
                 block = false;

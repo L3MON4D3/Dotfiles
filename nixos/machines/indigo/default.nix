@@ -134,15 +134,15 @@
     lr = "l3mon-restic";
   };
 
-  systemd.services.blocky_lan = config.l3mon.blocky.mkService {
-    conf = config.l3mon.blocky.mkConfig {
+  systemd.services.blocky_lan = config.lib.l3mon.blocky.mkService {
+    conf = config.lib.l3mon.blocky.mkConfig {
       ports = ["127.0.0.1:53" "192.168.178.20:53"];
       network = data.network.lan;
       block = true;
     };
   };
-  systemd.services.blocky_wg_home2 = config.l3mon.blocky.mkService {
-    conf = config.l3mon.blocky.mkConfig {
+  systemd.services.blocky_wg_home2 = config.lib.l3mon.blocky.mkService {
+    conf = config.lib.l3mon.blocky.mkConfig {
       ports = ["10.0.0.1:53"];
       network = data.network.wireguard_home2;
       block = false;
