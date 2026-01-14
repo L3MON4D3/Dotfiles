@@ -83,6 +83,8 @@
 
   l3mon.zotero.enable_client = true;
 
+  l3mon.paths.nixos_config_dir = "/home/simon/projects/dotfiles/nixos";
+  
   home-manager.sharedModules = [
     ({ config, lib, pkgs, machine, data, ... }: {
       imports = [ ./home ];
