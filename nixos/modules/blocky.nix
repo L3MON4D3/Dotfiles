@@ -64,29 +64,21 @@ let
             "${peername}.internal" = peerconf.address;
           }
           // (
-            if peerconf ? services then
-              (builtins.listToAttrs (
-                lib.concatMap (service_name: [
-                  {
-                    name = "${service_name}.${peerconf.machine_id}";
-                    value = peerconf.address;
-                  }
-                  {
-                    name = service_name;
-                    value = peerconf.address;
-                  }
-                  {
-                    name = "${service_name}.internal";
-                    value = peerconf.address;
-                  }
+              builtins.listToAttrs (
+                (lib.concatMap (service_name: [
                   {
                     name = "${service_name}.${peerconf.machine_id}.internal";
                     value = peerconf.address;
                   }
-                ]) peerconf.services
-              ))
-            else
-              { }
+                ]) peerconf.machine_services)
+                ++
+                (lib.concatMap (service_name: [
+                  {
+                    name = "${service_name}.internal";
+                    value = peerconf.address;
+                  }
+                ]) peerconf.network_services)
+              )
           )
         ) spec.network.peers;
       };
