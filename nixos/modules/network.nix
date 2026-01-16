@@ -35,8 +35,8 @@ let
   physical_network_spec_t = with types; submodule {
     options = {
       address_range = mkOption { example = "192.168.178.0/24"; type = str; };
-      dns_peer = mkOption { type = physical_machine_spec_t; };
-      gateway_peer = mkOption { type = physical_machine_spec_t; };
+      dns_peer_id = mkOption { type = str; };
+      gateway_peer_id = mkOption { type = str; };
       ssid = mkOption { example = "FRITZ!Box XXX"; type = str; };
       
       peers = mkOption { type = attrsOf physical_machine_spec_t; };
@@ -45,7 +45,7 @@ let
   virtual_network_spec_t = with types; submodule {
     options = {
       address_range = mkOption { example = "192.168.178.0/24"; type = str; };
-      host = mkOption { type = virtual_machine_spec_t; };
+      host_id = mkOption { description = "name of a value in the peers attrset."; example = "indigo"; type = str; };
       keepalive = mkOption { type = bool; default = false; };
 
       peers = mkOption { type = attrsOf virtual_machine_spec_t; };
@@ -82,9 +82,9 @@ in {
       address_range = spec.address_range;
       # "192.168.178.21/xx" -> /xx
       subnet_mask = "/" + (elemAt (split "/" spec.address_range) 2);
-      dns = spec.dns_peer.address;
-      gateway_ip = spec.gateway_peer.address;
-      gateway_mac = spec.gateway_peer.mac;
+      dns = spec.peers.${spec.dns_peer_id}.address;
+      gateway_ip = spec.peers.${spec.gateway_peer_id}.address;
+      gateway_mac = spec.peers.${spec.gateway_peer_id}.mac;
       ssid = spec.ssid;
 
       peers = mapAttrs map_phys_peer spec.peers;
@@ -97,20 +97,18 @@ in {
       privkey_file = peer_secgen.key;
       pubkey = import (./.. + "${peer_secgen.nix_pubkey_repo}");
     });
-    map_virt_network = name: spec: let
-      host_mapped = attrsets.foldlAttrs (acc: k: v: if v == spec.host then map_virt_peer name k v else acc) null spec.peers;
-    in {
-      name = name;
+    map_virt_network = peername: spec: rec {
+      name = peername;
       address_range = spec.address_range;
       # "192.168.178.21/xx" -> /xx
       subnet_mask = "/" + (elemAt (split "/" spec.address_range) 2);
 
-      host = host_mapped;
-      dns = spec.host.address;
+      host = peers.${spec.host_id};
+      dns = peers.${spec.host_id}.address;
 
       keepalive = spec.keepalive;
 
-      peers = mapAttrs (map_virt_peer name) spec.peers;
+      peers = mapAttrs (map_virt_peer peername) spec.peers;
     };
     map_remote_network = name: spec: (let
       secgen = config.l3mon.secgen.secrets.${config.lib.l3mon.secgen.wireguardSpecKeySingle name};

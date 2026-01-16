@@ -4,8 +4,8 @@
   l3mon.networks = rec {
     physical.home = rec {
       inherit (data.network.home) address_range ssid;
-      dns_peer = peers.indigo;
-      gateway_peer = peers.fritzbox;
+      dns_peer_id = "indigo";
+      gateway_peer_id = "fritzbox";
       peers = l3lib.deepMerge data.network.home.peers rec {
         indigo.network_services = [
           "mysql"
@@ -48,7 +48,7 @@
       home = rec {
         inherit (data.network.wg_home) address_range;
         keepalive = true;
-        host = peers.indigo;
+        host_id = "indigo";
         peers = l3lib.deepMerge data.network.wg_home.peers {
           teal = { route_all = true; };
           remarkable = { route_all = true; };
@@ -66,7 +66,7 @@
       rec_de = rec {
         inherit (data.network.wg_rec_de) address_range;
         keepalive = true;
-        host = peers.indigo;
+        host_id = "indigo";
         peers = l3lib.deepMerge data.network.wg_rec_de.peers {
           carmine = { route_all = true; };
           cobalt = { route_all = true; };
