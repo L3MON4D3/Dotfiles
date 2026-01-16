@@ -57,6 +57,18 @@ let
         # don't forward queries for these names, even if the query-type (eg.
         # AAAA) is not defined.
         filterUnmappedTypes = true;
+        # TODO: right now DNS works well because I declare all network-wide
+        # services on the machine that also serves dns, but to make this work
+        # properly, I'd have to evaluate the config of other machines (carmine)
+        # as well, and if they have some network-wide services, then handle
+        # these entries as well.
+        # Similar to peercache, but one issue: here we only get the
+        # network-spec to identify the services, and I can't directly go from
+        # the network spec of one machine to that of another.
+        # So, I'd need some search that gives me the keys
+        # (virtual->home->network) from just the network, ie. some D/BFS style
+        # search with a limited depth (or just BFS, i'll find the network
+        # before going too deep).
         mapping = lib.concatMapAttrs (
           peername: peerconf:
           {
