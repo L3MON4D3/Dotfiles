@@ -76,10 +76,12 @@
     ];
   };
 
+  l3mon.services.enable = true;
+
   networking.nftables.enable = true;
   networking.firewall.enable = lib.mkForce true;
   # mpd
-  networking.firewall.allowedTCPPorts = with data.ports; [ mpd http ];
+  networking.firewall.allowedTCPPorts = with data.ports; [ mpd ];
 
   l3mon.zotero.enable_client = true;
 

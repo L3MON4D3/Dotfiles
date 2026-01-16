@@ -1,11 +1,11 @@
-{ config, lib, pkgs, pkgs-unstable, machine, data, ... }:
+{ config, lib, pkgs, pkgs-unstable, machine, data, self, ... }:
 
 {
   environment.systemPackages = with pkgs; [
     pkgs-unstable.rmapi
   ];
   environment.variables = {
-    RMAPI_HOST = config.l3mon.services.defs.rmfakecloud.network_hostname;
+    RMAPI_HOST = self.nixosConfigurations.indigo.config.l3mon.services.defs.rmfakecloud.network_hostname;
   };
 
   # home-manager.sharedModules = [
