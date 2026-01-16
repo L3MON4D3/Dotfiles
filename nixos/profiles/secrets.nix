@@ -106,7 +106,9 @@
         ''
           # https://stackoverflow.com/a/41366949
           # sha256 because firefox thinks sha-1 is outdated, throws SEC_ERROR_CERT_SIGNATURE_ALGORITHM_DISABLED
-          openssl req -x509 -sha256 -newkey ed25519 -days 3650 -noenc -keyout ${key} -out ${cert_impure} -subj "/CN=*.internal" -addext "subjectAltName=DNS:*.internal"
+          # also rsa:4096 because ed25519 is "not prohibited but not supported".
+          # see https://www.mozilla.org/en-US/about/governance/policies/security-group/certs/policy/
+          openssl req -x509 -sha256 -newkey rsa:4096 -days 3650 -noenc -keyout ${key} -out ${cert_impure} -subj "/CN=*.internal" -addext "subjectAltName=DNS:*.internal"
           chown caddy:caddy ${key}
           chmod 400 ${key}
           chmod 444 ${cert_impure}
