@@ -23,6 +23,7 @@
     ./profiles/bash-dircolors.nix
     ./profiles/networks.nix
     ./profiles/secrets.nix
+    ./profiles/custom-cert.nix
 
     ./profiles/history.nix
     ./profiles/wakeonlan.nix
@@ -230,7 +231,6 @@
     # 0.0.0.0 zig.mirror.mschae23.de
     # 0.0.0.0 zigmirror.meox.dev
   # '';
-  security.pki.certificateFiles = [ config.l3mon.secgen.secrets.caddy_ca_root.cert ];
 
   # system.copySystemConfiguration = true;
 

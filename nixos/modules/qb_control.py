@@ -4,8 +4,7 @@ from functools import reduce
 import time
 
 client = qbittorrentapi.Client(
-    host="https://qbittorrent.internal",
-    VERIFY_WEBUI_CERTIFICATE=False)
+    host="https://qbittorrent.internal")
 
 
 class QBTTorrent:
