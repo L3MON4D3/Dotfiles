@@ -20,6 +20,7 @@
     ./profiles/bash-alias-completion.nix
     ./profiles/bash-dircolors.nix
     ./profiles/networks.nix
+    ./profiles/secrets.nix
 
     ./profiles/history.nix
     ./profiles/wakeonlan.nix
@@ -158,31 +159,6 @@
   users.mutableUsers = false;
   users.users.root.hashedPasswordFile = config.l3mon.secgen.secrets.local_root_password.hashed;
 
-  l3mon.secgen.secrets.local_root_password = rec {
-    cleartext = "${config.l3mon.secgen.secret_dir}/local_root_pw";
-    hashed = "${config.l3mon.secgen.secret_dir}/local_root_pw_hashed";
-
-    backup_files = [ cleartext hashed ];
-    gen = pkgs.writeShellApplication {
-      name = "gen";
-      text =
-      ''
-        echo 'Enter new password:'
-        read -r PASSWORD
-        echo "Read password $PASSWORD from stdin"
-        HASHED=$(echo "$PASSWORD" | mkpasswd -s)
-
-        echo -n "$PASSWORD" > ${cleartext}
-        chown root:root ${cleartext}
-        chmod 400 ${cleartext}
-
-        echo -n "$HASHED" > ${hashed}
-        chown root:root ${hashed}
-        chmod 400 ${hashed}
-      '';
-    };
-  };
-
   # common users
   users.users.media = {
     isSystemUser = true;
@@ -244,29 +220,6 @@
     mode = "0444";
   };
 
-  l3mon.secgen.secrets.atproto = rec {
-    key = "${config.l3mon.secgen.secret_dir}/atproto_key";
-    pubkey = "${config.l3mon.secgen.secret_dir}/atproto_pubkey";
-
-    backup_files = [ key pubkey ];
-    gen = pkgs.writeShellApplication {
-      name = "gen";
-      runtimeInputs = [ inputs.didweb.packages.${system}.default ];
-      text = ''
-        KEY=$(bsky-did-web genkey)
-        PUBKEY=$(echo -n "$KEY" | bsky-did-web pubkey)
-
-        echo -n "$KEY" > ${key}
-        chown root:root ${key}
-        chmod 400 ${key}
-
-        echo -n "$PUBKEY" > ${pubkey}
-        chown root:root ${pubkey}
-        chmod 400 ${pubkey}
-      '';
-    };
-  };
-
   # networking.extraHosts = ''
     # 0.0.0.0 pkg.machengine.org
     # 0.0.0.0 zigmirror.hryx.net
@@ -276,49 +229,7 @@
     # 0.0.0.0 zig.mirror.mschae23.de
     # 0.0.0.0 zigmirror.meox.dev
   # '';
-
-  l3mon.secgen.secrets = {
-    mailbox_msmtp = rec {
-      file = "${config.l3mon.secgen.secret_dir}/mailbox_msmtp";
-      microvm_file = "${config.l3mon.secgen.secret_dir}/mailbox_msmtp_microvm";
-
-      backup_files = [ file ];
-      gen = pkgs.writeShellApplication {
-        name = "gen";
-        text = ''
-          echo 'Open mailbox.org and create a new email-app password with SMTP access.'
-          echo 'Enter it here:'
-          read -r PASSWORD
-          echo "Read password $PASSWORD from stdin"
-
-          # passwordfile has to be \n-terminated!
-          echo "$PASSWORD" > ${file}
-          chown root:root ${file}
-          chmod 400 ${file}
-
-          echo "$PASSWORD" > ${microvm_file}
-          chown microvm:kvm ${microvm_file}
-          chmod 440 ${microvm_file}
-        '';
-      };
-    };
-    id_rsa = rec {
-      key = "${config.l3mon.secgen.secret_dir}/id_rsa";
-      pubkey = "${config.l3mon.secgen.secret_dir}/id_rsa.pub";
-
-      backup_files = [ key pubkey ];
-      gen = pkgs.writeShellApplication {
-        name = "gen";
-        runtimeInputs = with pkgs; [ openssh ];
-        text = ''
-          ssh-keygen -N "" -f ${key} -C ""
-
-          chown root:root ${key}
-          chmod 400 ${key}
-        '';
-      };
-    };
-  };
+  security.pki.certificateFiles = [ config.l3mon.secgen.secrets.caddy_ca_root.cert ];
 
   # system.copySystemConfiguration = true;
 

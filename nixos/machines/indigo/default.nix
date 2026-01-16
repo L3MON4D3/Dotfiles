@@ -60,7 +60,7 @@
       ../../profiles/unibonn.nix
 
       ./profiles/nvidia.nix
-
+      ./profiles/caddy.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -74,7 +74,7 @@
 
   networking.nftables.enable = true;
   networking.firewall.enable = lib.mkForce true;
-  networking.firewall.allowedTCPPorts = with data.ports; [ ssh dns http dnstls smb rpcbind nfsv4 statd mountd jellyfin_web ];
+  networking.firewall.allowedTCPPorts = with data.ports; [ ssh dns http https dnstls smb rpcbind nfsv4 statd mountd jellyfin_web ];
   networking.firewall.allowedUDPPorts = with data.ports; [ dns statd mountd rpcbind nbt-ns nbd jellyfin_discovery ];
 
   l3mon.wg-quick-hosts = {
