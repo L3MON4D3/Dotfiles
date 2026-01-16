@@ -32,6 +32,7 @@
           "ddns-updater"
           "zotero-serve"
           "ncps"
+          "silverbullet"
         ];
         merigold.machine_services = [
           "nix-cache"

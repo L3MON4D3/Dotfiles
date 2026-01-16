@@ -11,6 +11,7 @@
       ../../profiles/radarr.nix
       ../../profiles/sonarr.nix
       ../../profiles/jackett
+      ../../profiles/silverbullet.nix
 
       ../../profiles/ncps.nix
 

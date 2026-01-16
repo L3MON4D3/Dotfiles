@@ -52,6 +52,7 @@
     zotero-serve = 7024;
     ncps = 7025;
     harmonia = 7026;
+    silverbullet = 7027;
 
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;
