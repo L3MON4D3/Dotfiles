@@ -3,7 +3,9 @@ from enum import Enum
 from functools import reduce
 import time
 
-client = qbittorrentapi.Client(host="qbittorrent.internal:80")
+client = qbittorrentapi.Client(
+    host="https://qbittorrent.internal",
+    VERIFY_WEBUI_CERTIFICATE=False)
 
 
 class QBTTorrent:
