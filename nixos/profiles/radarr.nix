@@ -86,11 +86,7 @@ in
       "Z ${statedir} 0750 radarr radarr"
     ];
     
-    services.caddy.extraConfig = ''
-      http://radarr, http://radarr.internal, http://radarr.${machine} {
-        reverse_proxy http://${wg_machine_conf.local.address}:${toString port}
-      }
-    '';
+    l3mon.services.defs.radarr.cfg = port;
 
     l3mon.restic.extraGroups = ["radarr"];
     l3mon.restic.specs.radarr = {

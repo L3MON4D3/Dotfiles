@@ -19,11 +19,7 @@
     DynamicUser = lib.mkForce false;
   };
 
-  services.caddy.extraConfig = ''
-    http://mealie, http://mealie.internal, http://mealie.${machine} {
-      reverse_proxy http://127.0.0.1:${toString data.ports.mealie}
-    }
-  '';
+  l3mon.services.defs.mealie.cfg = data.ports.mealie;
 
   l3mon.restic.extraGroups = [ "mealie" ];
   l3mon.restic.specs.mealie = {

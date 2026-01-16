@@ -61,7 +61,6 @@
       ../../profiles/unibonn.nix
 
       ./profiles/nvidia.nix
-      ./profiles/caddy.nix
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -73,9 +72,11 @@
     ];
   };
 
+  l3mon.services.enable = true;
+
   networking.nftables.enable = true;
   networking.firewall.enable = lib.mkForce true;
-  networking.firewall.allowedTCPPorts = with data.ports; [ ssh dns http https dnstls smb rpcbind nfsv4 statd mountd jellyfin_web ];
+  networking.firewall.allowedTCPPorts = with data.ports; [ ssh dns dnstls smb rpcbind nfsv4 statd mountd jellyfin_web ];
   networking.firewall.allowedUDPPorts = with data.ports; [ dns statd mountd rpcbind nbt-ns nbd jellyfin_discovery ];
 
   l3mon.wg-quick-hosts = {
@@ -334,7 +335,7 @@
   };
 
   nix.settings = {
-    substituters = lib.mkOrder (data.ordering.peercache-substituters - 1) ["http://ncps.internal"];
+    substituters = lib.mkOrder (data.ordering.peercache-substituters - 1) ["https://ncps.internal"];
     trusted-public-keys = [
       data.pubkeys.ncps
     ];

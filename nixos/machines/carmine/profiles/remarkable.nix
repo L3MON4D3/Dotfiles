@@ -5,7 +5,7 @@
     pkgs-unstable.rmapi
   ];
   environment.variables = {
-    RMAPI_HOST = "http://rmfakecloud.internal";
+    RMAPI_HOST = config.l3mon.services.defs.rmfakecloud.network_hostname;
   };
 
   # home-manager.sharedModules = [

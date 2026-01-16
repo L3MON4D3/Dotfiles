@@ -434,11 +434,11 @@
         "rev": "e1aed2589b790499c8cb15d09a48ff5707f29086",
         "revCount": 23,
         "type": "git",
-        "url": "http://git.internal/simon/merigold.git"
+        "url": "https://git.internal/simon/merigold.git"
       },
       "original": {
         "type": "git",
-        "url": "http://git.internal/simon/merigold.git"
+        "url": "https://git.internal/simon/merigold.git"
       }
     },
     "microvm": {

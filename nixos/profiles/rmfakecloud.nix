@@ -4,7 +4,7 @@ let
   rmfakecloud = pkgs-unstable.rmfakecloud;
   statedir = "/var/lib/rmfakecloud";
   secret_key_env_file = l3lib.secret "rmfakecloud_env";
-  port = toString data.ports.rmfakecloud;
+  port = data.ports.rmfakecloud;
   userprofile = pkgs.writeTextFile {
     name = "userprofile";
     text = ''
@@ -45,10 +45,10 @@ in {
     after = [ "network-online.target" ];
 
     environment = {
-      PORT = port;
+      PORT = toString port;
       DATADIR = statedir;
       LOGLEVEL = "warn";
-      STORAGE_URL = "http://rmfakecloud.internal";
+      STORAGE_URL = config.l3mon.services.defs.rmfakecloud.network_hostname;
     };
     serviceConfig = {
       Type = "simple";
@@ -89,11 +89,7 @@ in {
     script = "${rmfakecloud}/bin/rmfakecloud";
   };
 
-  services.caddy.extraConfig = ''
-    http://rmfakecloud, http://rmfakecloud.internal, http://rmfakecloud.${machine} {
-      reverse_proxy http://127.0.0.1:${port}
-    }
-  '';
+  l3mon.services.defs.rmfakecloud.cfg = port;
 
   systemd.tmpfiles.rules = [
     "d ${statedir}             0750 rmfakecloud rmfakecloud"

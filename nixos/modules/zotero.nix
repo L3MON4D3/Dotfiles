@@ -60,11 +60,7 @@ in
         '';
       };
 
-      services.caddy.extraConfig = ''
-        http://zotero-serve, http://zotero-serve.internal, http://zotero-serve.${machine} {
-          reverse_proxy http://127.0.0.1:${toString data.ports.zotero-serve}
-        }
-      '';
+      l3mon.services.defs.zotero-serve.cfg = data.ports.zotero-serve;
     })
     (mkIf config.l3mon.zotero.enable_client {
       fileSystems.${client_zotero_data_dir} = {

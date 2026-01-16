@@ -133,7 +133,7 @@ in {
         # -k: no https.
         # --keep 12w: keep old zimfiles for 12 weeks after addition to qbittorrent.
         # --max-storage: maximum of storage to use. I don't really want to use more than a TB for this.
-        kiwix-seeder -C  --keep 12w --max-storage=1000GiB --qbt "http://qbittorrent.internal" -k ${lib.strings.concatMapStrings (s: "--filename '${s}' ") zimglobs}
+        kiwix-seeder -C  --keep 12w --max-storage=1000GiB --qbt "https://qbittorrent.internal" -k ${lib.strings.concatMapStrings (s: "--filename '${s}' ") zimglobs}
       '';
     };
 
@@ -156,12 +156,6 @@ in {
     };
   };
 
-  services.caddy.extraConfig = ''
-    http://kiwix, http://kiwix.internal, http://kiwix.${machine} {
-      reverse_proxy http://localhost:${toString data.ports.kiwix-serve}
-    }
-    http://zimit, http://zimit.internal, http://zimit.${machine} {
-      reverse_proxy http://localhost:${toString data.ports.zimit}
-    }
-  '';
+  l3mon.services.defs.kiwix.cfg = data.ports.kiwix-serve;
+  l3mon.services.defs.zimit.cfg = data.ports.zimit;
 }

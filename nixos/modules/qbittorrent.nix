@@ -155,11 +155,7 @@ in {
       };
     };
 
-    services.caddy.extraConfig = ''
-      http://qbittorrent, http://qbittorrent.internal, http://qbittorrent.${machine} {
-        reverse_proxy http://${wg_machine_conf.local.address}:${toString qb_port}
-      }
-    '';
+    l3mon.services.defs.qbittorrent.cfg = "reverse_proxy http://${wg_machine_conf.local.address}:${toString qb_port}";
 
     systemd = let
       qb_control = (pkgs.writers.writePython3 "qb_control" {

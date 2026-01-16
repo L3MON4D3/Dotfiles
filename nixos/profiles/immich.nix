@@ -10,11 +10,7 @@ in {
     host = "127.0.0.1";
   };
 
-  services.caddy.extraConfig = ''
-    http://immich, http://immich.internal, http://immich.${machine} {
-      reverse_proxy http://127.0.0.1:${toString port}
-    }
-  '';
+  l3mon.services.defs.immich.cfg = port;
 
   services.postgresql = {
     ensureUsers = [ {

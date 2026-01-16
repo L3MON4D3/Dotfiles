@@ -39,9 +39,5 @@ in {
     DynamicUser = lib.mkForce false;
   };
 
-  services.caddy.extraConfig = ''
-    http://pinchflat, http://pinchflat.internal, http://pinchflat.${machine} {
-      reverse_proxy http://127.0.0.1:${toString data.ports.pinchflat}
-    }
-  '';
+  l3mon.services.defs.pinchflat.cfg = data.ports.pinchflat;
 }

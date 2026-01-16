@@ -56,11 +56,7 @@ in {
   };
   systemd.services.linkding.serviceConfig.Environment=["HOME=${linkding_dir}/podman"];
 
-  services.caddy.extraConfig = ''
-    http://linkding, http://linkding.internal, http://linkding.${machine} {
-      reverse_proxy http://localhost:${toString data.ports.linkding}
-    }
-  '';
+  l3mon.services.defs.linkding.cfg = data.ports.linkding;
 
   l3mon.restic.extraGroups = [ "linkding" ];
   l3mon.restic.specs.linkding = {

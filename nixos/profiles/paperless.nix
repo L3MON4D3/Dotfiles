@@ -58,9 +58,5 @@ in {
     };
   };
 
-  services.caddy.extraConfig = ''
-    http://paperless, http://paperless.internal, http://paperless.${machine} {
-      reverse_proxy http://127.0.0.1:${toString port}
-    }
-  '';
+  l3mon.services.defs.paperless.cfg = port;
 }

@@ -7,43 +7,15 @@
       dns_peer_id = "indigo";
       gateway_peer_id = "fritzbox";
       peers = l3lib.deepMerge data.network.home.peers rec {
-        indigo.network_services = [
-          "mysql"
-          "jackett"
-          "radarr"
-          "sonarr"
-          "qbittorrent"
-          "jellyfin"
-          "git"
-          "immich"
-          "paperless"
-          "rmfakecloud"
-          "zotero"
-          "radicale"
-          "webdav"
-          "restic"
-          "cache.indigo"
-          "readeck"
-          "mealie"
-          "pinchflat"
-          "kiwix"
-          "zimit"
-          "linkding"
-          "ddns-updater"
-          "zotero-serve"
-          "ncps"
-          "silverbullet"
-        ];
         merigold.machine_services = [
           "nix-cache"
           "nix-tarballs"
           "pds"
         ];
         merigold-test.machine_services = merigold.machine_services;
-        carmine.machine_services = [ "cache" ];
+        # carmine.machine_services = [ "cache" ];
       };
     };
-
     virtual = {
       home = rec {
         inherit (data.network.wg_home) address_range;
@@ -55,14 +27,14 @@
           xperia = { route_all = true; };
           carmine = { route_all = true; };
 
-          indigo = { route_all = false; inherit (physical.home.peers.indigo) network_services; };
+          indigo = { route_all = false; };
           canary = { route_all = false; };
           cobalt = { route_all = false; };
           chromecast = { route_all = false; };
           kim-laptop = { route_all = false; };
           kim-desktop = { route_all = false; };
         };
-      }; 
+      };
       rec_de = rec {
         inherit (data.network.wg_rec_de) address_range;
         keepalive = true;

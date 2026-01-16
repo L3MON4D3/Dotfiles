@@ -23,7 +23,7 @@ in {
             landingPage = mkOption {
               type = types.str;
               description = "Page to open on startup.";
-              default = "http://google.com";
+              default = "https://google.com";
             };
             firefoxProfileSettings = mkOption {
               type = types.attrs;

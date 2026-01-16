@@ -18,7 +18,7 @@ with lib;
         connect-timeout = 5;
         substituters = lib.mkOrder data.ordering.peercache-substituters (lib.attrsets.foldlAttrs (acc: name: os:
           if os.config.l3mon.peercache.push && name != machine then
-            acc ++ ["http://cache.${name}.internal"]
+            acc ++ ["https://cache.${name}.internal"]
           else acc) [] self.outputs.nixosConfigurations);
         trusted-public-keys = lib.attrsets.foldlAttrs (acc: name: os:
           if os.config.l3mon.peercache.push && name != machine then
@@ -63,13 +63,10 @@ with lib;
         };
       };
 
-      services.caddy = {
-        enable = true;
-        extraConfig = ''
-          http://cache.${machine}.internal {
-            reverse_proxy http://127.0.0.1:${toString data.ports.harmonia}
-          }
-        '';
+
+      l3mon.services.defs.cache = {
+        cfg = data.ports.harmonia;
+        network = false;
       };
     })
   ];

@@ -11,9 +11,5 @@ in {
     };
   };
 
-  services.caddy.extraConfig = ''
-    http://mympd, http://mympd.internal, http://mympd.${machine} {
-      reverse_proxy http://${machine_lan_address}:${port}
-    }
-  '';
+  l3mon.services.defs.mympd.cfg = port;
 }

@@ -14,14 +14,12 @@ in {
     order webdav before file_server
   '';
 
-  services.caddy.extraConfig = ''
-    http://webdav, http://webdav.internal, http://webdav.${machine} {
-      webdav * {
-        root ${dav_root}
-        prefix /
-      }
-      file_server
+  l3mon.services.defs.webdav.cfg = ''
+    webdav * {
+      root ${dav_root}
+      prefix /
     }
+    file_server
   '';
 
   systemd.tmpfiles.rules = [

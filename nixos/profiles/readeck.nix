@@ -30,11 +30,7 @@ in {
     DynamicUser = lib.mkForce false;
   };
 
-  services.caddy.extraConfig = ''
-    http://readeck, http://readeck.internal, http://readeck.${machine} {
-      reverse_proxy http://127.0.0.1:${toString data.ports.readeck}
-    }
-  '';
+  l3mon.services.defs.readeck.cfg = data.ports.readeck;
 
   l3mon.restic.extraGroups = [ "readeck" ];
   l3mon.restic.specs.readeck = {

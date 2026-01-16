@@ -133,11 +133,7 @@ in
       '';
     };
 
-    services.caddy.extraConfig = ''
-      http://jackett, http://jackett.internal, http://jackett.${machine} {
-        reverse_proxy http://${wg_machine_conf.local.address}:${toString port}
-      }
-    '';
+    l3mon.services.defs.jackett.cfg = "reverse_proxy http://${wg_machine_conf.local.address}:${toString port}";
     
     l3mon.restic.extraGroups = ["jackett"];
     l3mon.restic.specs.jackett = {

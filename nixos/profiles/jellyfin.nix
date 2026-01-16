@@ -72,11 +72,7 @@ in {
     };
   };
   
-  services.caddy.extraConfig = ''
-    http://jellyfin, http://jellyfin.internal, http://jellyfin.${machine} {
-      reverse_proxy http://127.0.0.1:${toString data.ports.jellyfin_web}
-    }
-  '';
+  l3mon.services.defs.jellyfin.cfg = data.ports.jellyfin_web;
 
   l3mon.restic.extraGroups = [ "jellyfin" ];
   users.users.jellyfin.extraGroups = [ "media" ];

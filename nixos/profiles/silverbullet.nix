@@ -13,10 +13,5 @@
   };
   users.groups.silverbullet.gid = data.ids.silverbullet;
 
-  services.caddy.extraConfig = ''
-    https://silverbullet.internal http://silverbullet.internal {
-      tls internal
-      reverse_proxy http://127.0.0.1:${toString data.ports.silverbullet}
-    }
-  '';
+  l3mon.services.defs.silverbullet.cfg = data.ports.silverbullet;
 }

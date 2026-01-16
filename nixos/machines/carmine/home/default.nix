@@ -14,7 +14,7 @@
     enable = true;
     openPrivateWindow = false;
     netnsKey = "h";
-    landingPage = "http://git.internal";
+    landingPage = "https://git.internal";
     firefoxProfileSettings = {
       id = 1;
       extensions.packages = with nur.repos.rycee.firefox-addons; [

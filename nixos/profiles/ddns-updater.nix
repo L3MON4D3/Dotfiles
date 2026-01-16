@@ -55,9 +55,5 @@ in {
   };
   systemd.services.ddns-updater.serviceConfig.LoadCredential = "conf:${runtime_conf_file}";
 
-  services.caddy.extraConfig = ''
-    http://ddns-updater, http://ddns-updater.internal, http://ddns-updater.${machine} {
-      reverse_proxy http://localhost:${toString data.ports.ddns-updater}
-    }
-  '';
+  l3mon.services.defs.ddns-updater.cfg = data.ports.ddns-updater;
 }

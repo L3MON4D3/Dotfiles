@@ -14,6 +14,7 @@
     ./modules/blocky.nix
     ./modules/peercache.nix
     ./modules/sway-netns.nix
+    ./modules/services.nix
 
     ./modules/network.nix
     ./modules/paths.nix
@@ -186,8 +187,8 @@
       flake-registry = "";
       keep-derivations = true;
       substituters = [
-        "http://nix-community.cachix.org"
-        "http://cache.nixos.org"
+        "https://nix-community.cachix.org"
+        "https://cache.nixos.org"
       ];
       trusted-public-keys = [
         data.pubkeys.cachix-community
@@ -201,7 +202,7 @@
         };
         to = {
           type = "git";
-          url = "http://git.internal/simon/nix-templates";
+          url = "https://git.internal/simon/nix-templates";
         };
       };
       unstable = {

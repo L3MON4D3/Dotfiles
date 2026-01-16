@@ -12,13 +12,12 @@ in {
     settings = {
       server = {
         DOMAIN = "git.internal";
-        ROOT_URL = "http://${srv.DOMAIN}";
+        ROOT_URL = config.l3mon.services.defs.git.network_hostname;
         HTTP_PORT = port;
       };
       service.DISABLE_REGISTRATION = true;
     };
   };
-
   
   systemd.services.forgejo.preStart = let 
     adminCmd = "${lib.getExe cfg.package} admin user";
@@ -27,17 +26,13 @@ in {
     ${adminCmd} create --admin --email "simon@l3mon4.de" --username ${user} --password "bbbbbbbb" || true
   '';
 
-  services.caddy.extraConfig = ''
-    http://git, http://git.internal, http://git.${machine} {
-      reverse_proxy http://127.0.0.1:${toString port}
-    }
-  '';
-
   # override module-level rules for forgejo (specifically for .ssh).
   systemd.tmpfiles.rules = lib.mkAfter [
     "A ${cfg.stateDir} - - - - g:forgejo:rX"
     "z '${cfg.stateDir}/.ssh' 0750 forgejo forgejo"
   ];
+
+  l3mon.services.defs.git.cfg = port;
 
   l3mon.restic.extraGroups = [ "forgejo" ];
   l3mon.restic.dailyRequiredServices = [ "mysql.service" ];

@@ -17,11 +17,7 @@ in {
     };
   };
 
-  services.caddy.extraConfig = ''
-    http://radicale, http://radicale.internal, http://radicale.${machine} {
-      reverse_proxy http://127.0.0.1:${toString port}
-    }
-  '';
+  l3mon.services.defs.radiacle.cfg = port;
 
   l3mon.restic.extraGroups = [ "radicale" ];
   l3mon.restic = {

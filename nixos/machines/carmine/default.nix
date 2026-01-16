@@ -96,7 +96,7 @@
   l3mon.restic = {
     enable = true;
     repo = {
-      location = "rest:http://restic.internal/simon";
+      location = "rest:https://restic.internal/simon";
       passwordFile = "/var/secrets/restic-l3mon";
     };
   };
@@ -120,7 +120,7 @@
   };
 
   nix.settings = {
-    substituters = lib.mkOrder (data.ordering.peercache-substituters - 1) ["http://ncps.internal"];
+    substituters = lib.mkOrder (data.ordering.peercache-substituters - 1) ["https://ncps.internal"];
     trusted-public-keys = [
       data.pubkeys.ncps
     ];

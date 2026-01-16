@@ -254,11 +254,7 @@ in {
         dataDir = "/srv/restic";
         extraFlags = [ "--no-auth" ];
       };
-      services.caddy.extraConfig = ''
-        http://restic, http://restic.internal, http://restic.${machine} {
-          reverse_proxy http://127.0.0.1:${toString port}
-        }
-      '';
+      l3mon.services.defs.restic.cfg = port;
     }))
   ];
 }

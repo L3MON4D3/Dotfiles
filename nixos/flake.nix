@@ -33,7 +33,7 @@
       url = "github:microvm-nix/microvm.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    merigold.url = "git+http://git.internal/simon/merigold.git";
+    merigold.url = "git+https://git.internal/simon/merigold.git";
     kiwix-seeder.url = "github:l3mon4d3/seeder";
     dirmap.url = "github:l3mon4d3/dirmap";
     didweb.url = "github:l3mon4d3/bsky-did-web";
