@@ -14,6 +14,7 @@
     ./modules/blocky.nix
     ./modules/peercache.nix
     ./modules/sway-netns.nix
+    ./modules/secgen.nix
     ./modules/services.nix
 
     ./modules/network.nix
@@ -25,7 +26,6 @@
 
     ./profiles/history.nix
     ./profiles/wakeonlan.nix
-    ./modules/secgen.nix
   ];
 
   # Set your time zone.
