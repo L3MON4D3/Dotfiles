@@ -118,7 +118,6 @@ in {
                 ExecStart=${wg} set ${wg_network.name} private-key ${peerconf.privkey_file} peer ${wg_network.host.pubkey} endpoint ${wg_network.host.endpoint} allowed-ips ${allowed_ips} ${optionalString wg_network.keepalive "persistent-keepalive 60"}
                 ExecStart=ip addr add ${peerconf.address}${wg_network.subnet_mask} dev ${wg_network.name}
                 ExecStart=ip link set dev ${wg_network.name} up
-                ExecStart=ip route add default dev ${wg_network.name}
                 ExecStart=bash -c 'echo nameserver ${wg_network.dns} > /etc/resolv_${wg_network.name}'
                 # mount as readonly so dhcpcd may not override it!!
                 # It tries to as soon as the wifi-connection drops, which is too
