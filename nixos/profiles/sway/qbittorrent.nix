@@ -25,7 +25,7 @@ let
             '{:6.1f}'.format(float(torr['upspeed'])/1024) + ' ↑    ' + '\n')
 
 
-    client = qbittorrentapi.Client(host="qbittorrent.internal:80")
+    client = qbittorrentapi.Client(host="https://qbittorrent.internal")
     if sys.argv[1] == "addMagnet":
         client.torrents_add(urls=sys.argv[2])
     elif sys.argv[1] == "addFile":
