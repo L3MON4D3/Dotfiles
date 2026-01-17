@@ -3,6 +3,6 @@
 {
   # maybe have to update this?
   xdg.configFile."jellyfin-mpv-shim/cred.json".text = ''
-    [{"address": "https://jellyfin.internal", "Name": "indigo", "Id": "19115077000e43dca1172812a4f96c59", "Version": "10.10.7", "DateLastAccessed": "2025-05-31T23:00:28Z", "UserId": "db65cdf9d37b4d7cb0fdfe39058c5657", "AccessToken": "6f98461806084700b59e58475c2cd698", "Users": [{"Id": "db65cdf9d37b4d7cb0fdfe39058c5657", "IsSignedInOffline": true}], "uuid": "ef4258af-90d9-4f29-9219-f604c9ab6ba7", "username": "simon", "connected": true}]
+    [{"address": "http://jellyfin.internal:8096", "Name": "indigo", "Id": "19115077000e43dca1172812a4f96c59", "Version": "10.11.5", "DateLastAccessed": "2026-01-17T01:25:03Z", "UserId": "db65cdf9d37b4d7cb0fdfe39058c5657", "AccessToken": "173705f4701a433787bb69db0f938be1", "Users": [{"Id": "db65cdf9d37b4d7cb0fdfe39058c5657", "IsSignedInOffline": true}], "uuid": "ec46c23f-29ad-43a8-8fd1-12f26ec59351", "username": "simon", "connected": true}]
   '';
 }
