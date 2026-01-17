@@ -8,10 +8,23 @@ let
     import sys
     from subprocess import Popen
 
+    torr_root = "/var/lib/qbittorrent/qBittorrent/downloads/"
+    glac_root = "/mnt/glacier/downloads/"
+    qbit_api_url = "https://qbittorrent.internal"
+
 
     def torrent_notification_string(torr):
-        # 34 is limit from mako.
         name = torr['name']
+
+        root_path = torr['content_path']
+        if root_path[0:4] == "/mnt":
+            root_path = "glac:" + root_path.replace(glac_root, "")
+        if root_path[0:4] == "/var":
+            root_path = "torr:" + root_path.replace(torr_root, "")
+
+        # 34 is limit from mako.
+        if len(root_path) > 34:
+            root_path = root_path[0:31] + '...'
         if len(name) > 34:
             name = name[0:31] + '...'
 
@@ -20,12 +33,14 @@ let
             name +
             # '</span>' +
             '\n' +
+            root_path +
+            '\n' +
             '{:5.1f}'.format(float(torr['progress']*100))+'%' + '   ' +
             '{:6.1f}'.format(float(torr['dlspeed'])/1024) + ' ↓    ' +
             '{:6.1f}'.format(float(torr['upspeed'])/1024) + ' ↑    ' + '\n')
 
 
-    client = qbittorrentapi.Client(host="https://qbittorrent.internal")
+    client = qbittorrentapi.Client(host=qbit_api_url)
     if sys.argv[1] == "addMagnet":
         client.torrents_add(urls=sys.argv[2])
     elif sys.argv[1] == "addFile":
@@ -41,6 +56,8 @@ let
                       key=lambda item: -item["added_on"]))))])
   '';
 in {
+  lib.l3mon.qbt-manager = qbt-manager;
+
   services.mako = {
     enable = true;
     settings = {
