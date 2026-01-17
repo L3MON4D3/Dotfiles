@@ -1,9 +1,11 @@
 {
   config,
   lib,
+  l3lib,
   pkgs,
   machine,
   data,
+  self,
   ...
 }:
 
@@ -69,30 +71,21 @@ let
         # (virtual->home->network) from just the network, ie. some D/BFS style
         # search with a limited depth (or just BFS, i'll find the network
         # before going too deep).
-        mapping = lib.concatMapAttrs (
-          peername: peerconf:
-          {
-            ${peername} = peerconf.address;
-            "${peername}.internal" = peerconf.address;
-          }
-          // (
-              builtins.listToAttrs (
-                (lib.concatMap (service_name: [
-                  {
-                    name = "${service_name}.${peerconf.machine_id}.internal";
-                    value = peerconf.address;
-                  }
-                ]) peerconf.machine_services)
-                ++
-                (lib.concatMap (service_name: [
-                  {
-                    name = "${service_name}.internal";
-                    value = peerconf.address;
-                  }
-                ]) peerconf.network_services)
-              )
-          )
-        ) spec.network.peers;
+        mapping = let
+          peerconf_to_entries = peerconf:
+            {
+              ${peerconf.machine_id} = peerconf.address;
+              "${peerconf.machine_id}.internal" = peerconf.address;
+            }
+            // l3lib.mergeAttrlist (map (service_name: {
+              "${service_name}.${peerconf.machine_id}.internal" = peerconf.address;
+            }) peerconf.machine_services)
+            // l3lib.mergeAttrlist (map (service_name: {
+              "${service_name}.internal" = peerconf.address;
+            }) peerconf.machine_services);
+          all_peers = lib.attrsets.foldlAttrs (acc: machine_name: nixos_config:
+            acc ++ builtins.attrValues nixos_config.config.lib.l3mon.networks.${spec.network.type}.${spec.network.name}.peers) [] self.nixosConfigurations;
+        in l3lib.mergeAttrlist (map peerconf_to_entries all_peers);
       };
     }
   );

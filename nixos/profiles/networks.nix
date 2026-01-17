@@ -40,7 +40,7 @@
         keepalive = true;
         host_id = "indigo";
         peers = l3lib.deepMerge data.network.wg_rec_de.peers {
-          carmine = { route_all = true; };
+          carmine = { route_all = true; local = config.lib.l3mon.networks.physical.home.peers.carmine_mullvad_de; };
           cobalt = { route_all = true; };
         };
       };

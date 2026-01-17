@@ -46,4 +46,28 @@
     else
       rValue
   ) rhs);
+
+  # return path of some attrset, searches up to some specific depth.
+  # search = with builtins; let
+    # search_attrlist = x: attrlist: depth:
+    # if length attrlist == 0 then
+      # null
+    # else
+      # let
+        # firstval = (head attrlist).value;
+        # firstkey = (head attrlist).name;
+        # can_recurse = isAttrs firstval && depth > 0;
+        # recurse_res = search x firstval (depth - 1);
+        # tail_res = search_attrlist x (tail attrlist) depth;
+      # in
+        # if firstval == x then
+          # [firstkey]
+        # else
+          # if can_recurse && recurse_res != null then
+            # [firstkey] ++ recurse_res
+          # else
+            # tail_res;
+  # in x: attrs: depth: search_attrlist x (pkgs.lib.attrsToList attrs) depth;
+
+  mergeAttrlist = with builtins; attrslist: if length attrslist == 0 then {} else (head attrslist) // mergeAttrlist (tail attrslist);
 }

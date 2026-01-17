@@ -37,7 +37,7 @@ in {
         dns = "${wg_network.dns}";
         address = machine_conf.address + wg_network.subnet_mask;
 
-        route_local = machine_conf ? local;
+        route_local = machine_conf.local != null;
         local_peer = machine_conf.local;
         local_address = local_peer.address + lan.subnet_mask;
         route_local_address = "${local_peer.address}/32";

@@ -26,6 +26,8 @@ let
       endpoint = mkOption { example = "wireguard.l3mon4.de:1234"; type = nullOr str; default = null; };
       route_all = mkOption { type = bool; default = false; };
 
+      local = mkOption { type = nullOr attrs; default = null; };
+
       # register as '<service>.<machine>.internal'.
       machine_services = mkOption { type = listOf str; default = []; };
       # register as '<service>.internal'.
@@ -78,7 +80,9 @@ in {
     map_phys_peer = name: spec: spec // {
       machine_id = name;
     };
-    map_phys_network = spec: {
+    map_phys_network = name: spec: {
+      type = "physical";
+      name = name;
       address_range = spec.address_range;
       # "192.168.178.21/xx" -> /xx
       subnet_mask = "/" + (elemAt (split "/" spec.address_range) 2);
@@ -98,6 +102,7 @@ in {
       pubkey = import (./.. + "${peer_secgen.nix_pubkey_repo}");
     });
     map_virt_network = peername: spec: rec {
+      type = "virtual";
       name = peername;
       address_range = spec.address_range;
       # "192.168.178.21/xx" -> /xx
@@ -114,6 +119,7 @@ in {
       secgen = config.l3mon.secgen.secrets.${config.lib.l3mon.secgen.wireguardSpecKeySingle name};
       conf = import (./.. + "${secgen.nix_data_repo}");
     in {
+      type = "remote";
       name = name;
 
       host = {
@@ -138,7 +144,7 @@ in {
     });
   in {
     lib.l3mon.networks = {
-      physical = mapAttrs (network_name: network_spec: map_phys_network network_spec) cfg.physical;
+      physical = mapAttrs (network_name: network_spec: map_phys_network network_name network_spec) cfg.physical;
       virtual  = mapAttrs (network_name: network_spec: map_virt_network network_name network_spec) cfg.virtual;
       remote   = mapAttrs (network_name: network_spec: map_remote_network network_name network_spec) cfg.remote;
     };
