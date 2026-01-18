@@ -408,11 +408,11 @@
         "nixpkgs-unstable": "nixpkgs-unstable_4"
       },
       "locked": {
-        "lastModified": 1756886125,
-        "narHash": "sha256-TkyGpg30auSB+7vJYDA3HgXmrq4lNkSDDaFZT6zAkJE=",
+        "lastModified": 1768727603,
+        "narHash": "sha256-qx2EuK+zPcEWSn0VpdEdoukaNd5Gs5vYUpdTMknibAk=",
         "owner": "l3mon4d3",
         "repo": "seeder",
-        "rev": "86544f99c550991e80ca33ac3b409418dee0b512",
+        "rev": "b916c4d28b98e2bda189e4120c7133bf8c02ac65",
         "type": "github"
       },
       "original": {
