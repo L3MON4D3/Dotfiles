@@ -56,11 +56,6 @@ let
 in {
   services.jellyfin.enable = true;
   services.jellyfin.package = pkgs-unstable.jellyfin;
-  environment.systemPackages = [
-    pkgs.jellyfin
-    pkgs.jellyfin-web
-    pkgs.jellyfin-ffmpeg
-  ];
 
   system.activationScripts = {
     jellyfin-branding = {
