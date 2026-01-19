@@ -95,7 +95,7 @@ in
       "Z    ${statedir} 0755    sonarr  sonarr"
     ];
     
-    l3mon.services.defs.sonarr.cfg = port;
+    l3mon.services.defs.sonarr.cfg = "reverse_proxy http://${wg_machine_conf.local.address}:${toString port}";
 
     l3mon.restic.extraGroups = ["sonarr"];
     l3mon.restic.specs.sonarr = {
