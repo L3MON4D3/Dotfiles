@@ -98,6 +98,8 @@
     xxd
     bat
     jq
+    pdftk
+    poppler-utils
 
     # networking tools
     dig
