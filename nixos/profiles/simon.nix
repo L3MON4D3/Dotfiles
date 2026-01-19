@@ -64,8 +64,8 @@
     "Z /home/simon/.config 0750 simon simon"
 
     "d /home/simon/.thunderbird/ 0750 simon simon"
-    "z /home/simon/.thunderbird/*.default 0750 simon simon"
-    "A /home/simon/.thunderbird/*.default/ImapMail - - - - g:simon:rX"
+    "z /home/simon/.thunderbird/default 0750 simon simon"
+    "A /home/simon/.thunderbird/default/ImapMail - - - - g:simon:rX"
 
     "A /home/simon/projects/dotfiles/nvim/info - - - - g:simon:r"
   ];
@@ -124,7 +124,7 @@
           -e "/home/simon/.config/VSCodium"
           -e "/home/simon/.config/Code - OSS" )
 
-        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/ Documents/ .thunderbird/*.default/ImapMail ./notes
+        restic backup --tag=userdata-auto-${machine} --exclude-caches "''${PROJECT_EXCLUDE_PATTERNS[@]}" "''${CONFIG_EXCLUDE_PATTERNS[@]}" .config/ projects/ Documents/ .thunderbird/default/ImapMail ./notes
       '';
     };
     forget = {
