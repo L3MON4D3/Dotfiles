@@ -8,6 +8,7 @@ in {
 
     address = "127.0.0.1";
     port = port;
+    domain = "paperless.internal";
 
     passwordFile = l3lib.secret "paperless_password";
     settings = {
@@ -16,6 +17,7 @@ in {
         optimize = 1;
         pdfa_image_compression = "lossless";
       };
+      PAPERLESS_URL = config.l3mon.services.defs.paperless.network_hostname;
     };
   };
 
