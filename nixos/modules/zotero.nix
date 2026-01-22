@@ -61,6 +61,7 @@ in
       };
 
       l3mon.services.defs.zotero-serve.cfg = data.ports.zotero-serve;
+      l3mon.services.defs.zotero.cfg = null;
     })
     (mkIf config.l3mon.zotero.enable_client {
       fileSystems.${client_zotero_data_dir} = {

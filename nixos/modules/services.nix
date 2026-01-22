@@ -15,7 +15,7 @@ in {
               example = ''
                 file_server
               '';
-              type = either str port;
+              type = nullOr (either str port);
               default = null;
               description = lib.mdDoc "Set string to insert into host-clause, or number/port to reverse proxy it on 127.0.0.1.";
             };
@@ -40,21 +40,24 @@ in {
   };
   config = let
     cfg = config.l3mon.services;
-    map_service = name: def: let
+    service_caddy_extraConfig = name: def: let
       network_hostname = if def.network then to_network_hostname name else "";
       machine_hostname = if def.machine then to_machine_hostname name else "";
-      config = if isString def.cfg then def.cfg else "reverse_proxy http://127.0.0.1:${toString def.cfg}";
-    in {
-      caddy_conf = ''
+      config = if def.cfg != null then
+          if isString def.cfg then def.cfg else "reverse_proxy http://127.0.0.1:${toString def.cfg}"
+        else
+          null;
+    in if config != null then
+      [''
         ${toString [network_hostname machine_hostname]} {
           tls internal
           ${config}
         }
-      '';
-    };
-  # in mkIf cfg.enable (map_service "git" cfg.defs.git);
+      '']
+    else
+      [ ];
   in mkIf cfg.enable {
-    services.caddy.extraConfig = mkMerge (attrsets.foldlAttrs (acc: name: def: acc ++ [(map_service name def).caddy_conf]) [ ] cfg.defs);
+    services.caddy.extraConfig = mkMerge (attrsets.foldlAttrs (acc: name: def: acc ++ (service_caddy_extraConfig name def)) [ ] cfg.defs);
     l3mon.networks = let
       peerconf = {
         machine_services = attrsets.foldlAttrs (acc: name: def: acc ++ (if def.machine then [name] else [])) [ ] cfg.defs;
