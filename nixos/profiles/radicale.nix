@@ -17,7 +17,7 @@ in {
     };
   };
 
-  l3mon.services.defs.radiacle.cfg = port;
+  l3mon.services.defs.radicale.cfg = port;
 
   l3mon.restic.extraGroups = [ "radicale" ];
   l3mon.restic = {
