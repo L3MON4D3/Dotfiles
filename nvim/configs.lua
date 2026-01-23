@@ -628,7 +628,10 @@ local function texlab_buf_search()
     end
 end
 
-local function tex_project(dirname, pdfname, extra_config)
+local function tex_project(dirname, basename, extra_config)
+	local pdfname = basename .. ".pdf"
+	local texname = basename .. ".tex"
+
 	local tex_config = c{
 		lsp = {
 			texlab = {
@@ -641,7 +644,7 @@ local function tex_project(dirname, pdfname, extra_config)
 					texlab = {
 						build = {
 							executable = "latexmk",
-							args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", "%f", "-synctex=1" },
+							args = { "-f", "-shell-escape", "-pdf", "-interaction=nonstopmode", texname, "-synctex=1" },
 							onSave = true,
 							onChange = false
 						},
@@ -919,7 +922,7 @@ mc.register(mdir(dotfiles_dir), c{
 ---
 
 local cv_dir = "/home/simon/projects/cv"
-tex_project(cv_dir, "cv.pdf")
+tex_project(cv_dir, "cv")
 
 ---
 --- Sway
@@ -1288,16 +1291,25 @@ local master = mc.register(matchers.dir(proj_master_dir) * mft("julia"), c{
 master:after("filetype(julia)")
 master:blacklist(julia_ft_using)
 
-tex_project("/home/simon/projects/master/proposal", "proposal.pdf")
+tex_project("/home/simon/projects/master/proposal", "proposal")
 
 local thesis_dir = "/home/simon/projects/master/thesis"
-tex_project(thesis_dir, "thesis.pdf")
+tex_project(thesis_dir, "thesis")
 
 mc.register(mdir(thesis_dir), c{
 	run_buf = function()
 		cabbrev_buf("%%", thesis_dir)
 		cabbrev_buf("!!", thesis_dir .. "/tex/chapter")
 		cabbrev_buf("@@", thesis_dir .. "/tex")
+	end,
+})
+
+local thesis_presentation_dir = "/home/simon/projects/master/presentation"
+tex_project(thesis_presentation_dir, "presentation")
+
+mc.register(mdir(thesis_presentation_dir), c{
+	run_buf = function()
+		cabbrev_buf("%%", thesis_presentation_dir)
 	end,
 })
 
