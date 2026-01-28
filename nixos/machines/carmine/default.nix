@@ -47,11 +47,6 @@
     fsType = "nfs";
     options = [ "nfsvers=4.2" "rw" "acl" "noauto" "nofail" "x-systemd.automount" "x-systemd.mount-timeout=10" "x-systemd.idle-timeout=5min" ];
   };
-  fileSystems."/mnt/data" = {
-    label = "DATA";
-    fsType = "btrfs";
-    options = [ "rw" ];
-  };
   fileSystems."/mnt/indigo" = {
     device = "simon@indigo:/";
     fsType = "fuse.sshfs";
@@ -59,7 +54,6 @@
     options = [ "x-systemd.automount" "user" "idmap=user" "noauto" "nodev" "noatime" "allow_other" "rw" "exec" "IdentityFile=/var/secrets/id_rsa" "uid=1000" "gid=1000" "follow_symlinks" "default_permissions" ];
   };
   systemd.tmpfiles.rules = [
-    "d /mnt/data 0750 simon simon"
     "d /mnt/indigo 0755 simon simon"
   ];
 
