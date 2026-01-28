@@ -22,10 +22,12 @@ let
     "xkcd.com_en_all*"
     "explainxkcd_en_all_maxi*"
   ];
+  # To update:
+  # nix-prefetch-docker --image-name ghcr.io/openzim/zimit --final-image-name zimit --final-image-tag system
   zimit_img = pkgs.dockerTools.pullImage {
     imageName = "ghcr.io/openzim/zimit";
-    imageDigest = "sha256:98c2c214c19e3e1530c12463aeb076674b970191a0967cbea4aa1ddd8fe6205e";
-    hash = "sha256-QY80DldwGOYPfAzu+Cpl4CHuRo6TroN68l0hgnmlXgE=";
+    imageDigest = "sha256:af650a7ac1819a5aca96d461085986f66225fd9e5247233e5559594e326b3a1d";
+    hash = "sha256-riP8GEwjXerRHDKyEY7PtB8NTed4Az0LAwRy0Slv4iE=";
     finalImageName = "zimit";
     finalImageTag = "system";
   };
