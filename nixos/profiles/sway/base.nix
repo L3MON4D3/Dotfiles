@@ -181,6 +181,7 @@
     for_window [class="ATCG"] floating enable
     for_window [title="^lstopo"] floating enable
     for_window [class="^Vtk$"] floating enable
+    for_window [class="sweethome3d"] floating enable
     # fontforge does not seem to handle resizing and unfloating too well -> just
     # leave floating.
     for_window [class="fontforge"] floating enable
@@ -202,4 +203,8 @@
     }
     bindsym $mod+p mode "power"
   '';
+  
+  home.sessionVariables = {
+    _JAVA_AWT_WM_NONREPARENTING = 1;
+  };
 }
