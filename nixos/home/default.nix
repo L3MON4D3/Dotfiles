@@ -86,6 +86,11 @@
         identitiesOnly = true;
         user = "root";
       };
+      ivory = {
+        identityFile = "~/.ssh/id_rsa";
+        identitiesOnly = true;
+        user = "root";
+      };
     };
   };
 
