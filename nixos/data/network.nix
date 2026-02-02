@@ -28,6 +28,7 @@ in
       fritzbox = { address = "192.168.178.1"; mac = "0c:72:74:fc:b9:de"; };
       prusamini = { address = "192.168.178.13"; };
       remarkable = { address = "192.168.178.10"; };
+      ivory = { address = "192.168.178.2"; };
     };
   };
 
