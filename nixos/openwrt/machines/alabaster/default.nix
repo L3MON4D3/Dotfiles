@@ -65,6 +65,33 @@ in {
           };
         };
       };
+      system.led = [
+        {
+          name = "Disable amber";
+          sysfs = "amber:status";
+          trigger = "none";
+        }
+        {
+          name = "Disable blue";
+          sysfs = "blue:wlan-5ghz";
+          trigger = "none";
+        }
+        {
+          name = "Disable red";
+          sysfs = "red:wlan-2ghz";
+          trigger = "none";
+        }
+        {
+          name = "Disable phy0";
+          sysfs = "mt76-phy0";
+          trigger = "none";
+        }
+        {
+          name = "Disable phy1";
+          sysfs = "mt76-phy1";
+          trigger = "none";
+        }
+      ];
     };
   };
 }
