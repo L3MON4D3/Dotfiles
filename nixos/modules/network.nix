@@ -80,9 +80,9 @@ in {
     map_phys_peer = name: spec: spec // {
       machine_id = name;
     };
-    map_phys_network = name: spec: rec {
+    map_phys_network = net_name: spec: rec {
       type = "physical";
-      name = name;
+      name = net_name;
       address_range = spec.address_range;
       # "192.168.178.21/xx" -> /xx
       subnet_mask = "/" + (elemAt (split "/" spec.address_range) 2);
