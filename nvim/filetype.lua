@@ -15,6 +15,7 @@ vim.filetype.add({
 	},
 	filename = {
 		PKGBUILD = "PKGBUILD",
+		["nftables.conf"] = "nftables",
 		["/home/simon/.config/waybar/config"] = "json"
 	},
 	pattern = {
