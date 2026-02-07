@@ -7,6 +7,7 @@ in {
   options.rcservices.disableServices = lib.mkOption {
     type = with types; listOf str;
     description = "List of rc-services to disable.";
+    default = [];
   };
 
   config = {
