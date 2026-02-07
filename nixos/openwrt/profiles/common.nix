@@ -23,9 +23,6 @@ in {
           netmask = "255.0.0.0";
           proto = "static";
         };
-        globals.globals = {
-          ula_prefix = "fd5f:e8cc:822c::/48";
-        };
       };
       system = {
         system = [{

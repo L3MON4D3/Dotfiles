@@ -4,6 +4,8 @@
   # tag of the guest network.
   uci.settings = {
     dhcp = {
+      # clear dnsmasq settings; we don't need it.
+      dnsmasq = {};
       odhcpcd.odhcpcd = {
         maindhcp = true;
       };

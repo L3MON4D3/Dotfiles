@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, ... }:
+{ config, lib, pkgs, machine, data, l3lib, ... }:
 
 with lib;
 let
@@ -80,12 +80,13 @@ in {
     map_phys_peer = name: spec: spec // {
       machine_id = name;
     };
-    map_phys_network = name: spec: {
+    map_phys_network = name: spec: rec {
       type = "physical";
       name = name;
       address_range = spec.address_range;
       # "192.168.178.21/xx" -> /xx
       subnet_mask = "/" + (elemAt (split "/" spec.address_range) 2);
+      subnet_mask_long = l3lib.newmask_to_oldmask subnet_mask;
       dns = spec.peers.${spec.dns_peer_id}.address;
       gateway_ip = spec.peers.${spec.gateway_peer_id}.address;
       gateway_mac = spec.peers.${spec.gateway_peer_id}.mac;
@@ -107,6 +108,7 @@ in {
       address_range = spec.address_range;
       # "192.168.178.21/xx" -> /xx
       subnet_mask = "/" + (elemAt (split "/" spec.address_range) 2);
+      subnet_mask_long = l3lib.newmask_to_oldmask subnet_mask;
 
       host = peers.${spec.host_id};
       dns = peers.${spec.host_id}.address;

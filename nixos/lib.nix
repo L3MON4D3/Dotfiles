@@ -1,4 +1,6 @@
-{pkgs}: rec {
+{pkgs}: let
+  lib = pkgs.lib;
+in rec {
   assertSecret = sname: ''
     if [ ! -f /var/secrets/${sname} ]; then
       echo ASSERT FAILED: Secret ${sname} is missing!
@@ -70,4 +72,23 @@
   # in x: attrs: depth: search_attrlist x (pkgs.lib.attrsToList attrs) depth;
 
   mergeAttrlist = with builtins; attrslist: if length attrslist == 0 then {} else (head attrslist) // mergeAttrlist (tail attrslist);
+
+  mod = x: n: x - (n * (x / n));
+  pow = n : i :
+          if i == 1 then n
+          else if i == 0 then 1
+          else n * pow n (i - 1);
+  sum = builtins.foldl' builtins.add 0;
+
+  # turns string like /24 into 255.255.255.0
+  newmask_to_oldmask = newmask: let
+    masklen = newmask: lib.toIntBase10 (lib.substring 1 (-1) newmask);
+    len_to_mask_decbits = masklen: builtins.genList (x: if x < masklen then pow 2 (mod x 8) else 0) 32;
+    get_byte = idx: decbits: lib.sublist (idx*8) 8 decbits;
+    mask_decbits = len_to_mask_decbits (masklen newmask);
+  in
+    toString (sum (get_byte 0 mask_decbits)) + "." +
+    toString (sum (get_byte 1 mask_decbits)) + "." +
+    toString (sum (get_byte 2 mask_decbits)) + "." +
+    toString (sum (get_byte 3 mask_decbits));
 }

@@ -1,5 +1,6 @@
 { networks, name, data, ... }: let
-  phys_peerconf = networks.physical.home.peers.${name};
+  phys_home = networks.physical.home;
+  phys_home_peerconf = phys_home.peers.${name};
   firmware_path = "/lib/firmware/xcpe_8.D.1.C.1.7_8.D.0.E.1.2.bin";
 in {
   imports = [
@@ -9,8 +10,9 @@ in {
     (import ./profiles/dhcp.nix { inherit networks; })
   ];
   rcservices.disableServices = [ "dnsmasq" ];
+  # this device is on the slower side.
+  deploy.rebootAllowance = 120;
   uci = {
-    # luci and rpcd for web-ui.
     settings = {
       network = {
         device = [
@@ -41,7 +43,8 @@ in {
         interface = {
           lan = {
             device = "br-lan";
-            ipaddr = phys_peerconf.address;
+            ipaddr = phys_home_peerconf.address;
+            netmask = phys_home.subnet_mask_long;
             proto = "static";
           };
           wan = {
@@ -56,10 +59,11 @@ in {
             proto = "dhcpv6";
           };
         };
+        globals.globals.ula_prefix = "fd5f:e8cc:822c::/48";
       };
       wireless = {
         wifi-device = {
-          radio0 = {
+          radio0_dev = {
             type = "mac80211";
             path = "platform/soc/a000000.wifi";
             band = "2g";
@@ -67,7 +71,7 @@ in {
             country = "DE";
             cell_density = 0;
           };
-          radio1 = {
+          radio1_dev = {
             type = "mac80211";
             path = "platform/soc/a800000.wifi";
             band = "5g";
@@ -78,10 +82,19 @@ in {
         };
         wifi-iface = {
           radio0 = {
+            device = "radio0_dev";
             mode = "ap";
             ssid = name;
             encryption = "psk2";
-            key = "pw-wlan";
+            key = "pw-wlan123";
+            network = "lan";
+          };
+          radio1 = {
+            device = "radio1_dev";
+            mode = "ap";
+            ssid = name;
+            encryption = "psk2";
+            key = "pw-wlan123";
             network = "lan";
           };
         };
