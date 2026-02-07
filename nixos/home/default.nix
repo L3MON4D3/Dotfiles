@@ -91,6 +91,11 @@
         identitiesOnly = true;
         user = "root";
       };
+      alabaster = {
+        identityFile = "~/.ssh/id_rsa";
+        identitiesOnly = true;
+        user = "root";
+      };
     };
   };
 
