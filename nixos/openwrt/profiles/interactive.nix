@@ -1,5 +1,5 @@
 {
-  packages = ["vim-full" "more" ]
+  packages = ["vim-full" "more" ];
   # replace shinit with a version that does not attempt aliases for more/vim.
   etc.shinit.text =
   # bash

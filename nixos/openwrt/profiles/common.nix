@@ -3,6 +3,7 @@
 in {
   imports = [
     ../modules/rcservices.nix
+    ./interactive.nix
   ];
 
   deploy = {
