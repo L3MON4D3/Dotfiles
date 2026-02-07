@@ -29,6 +29,7 @@ in
       prusamini = { address = "192.168.178.13"; };
       remarkable = { address = "192.168.178.10"; };
       ivory = { address = "192.168.178.2"; };
+      alabaster = { address = "192.168.178.3"; };
     };
   };
 
