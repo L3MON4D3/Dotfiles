@@ -2,7 +2,7 @@
   # TODO: separate dhcp (give 1.1.1.1 as dns) for guest devices!
   # Realise by generating separate dhcp for a "lan.x" where x is the vlan
   # tag of the guest network.
-  dc.uci.settings = {
+  uci.settings = {
     dhcp = {
       # clear dnsmasq settings; we don't need it.
       dnsmasq = {};

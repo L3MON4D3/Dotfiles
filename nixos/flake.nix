@@ -102,39 +102,38 @@
   };
   mkOpenWRT = pkgs: machine_name: {
     ${machine_name} = pkgs.callPackage dewclaw ({
-      configuration = { config, options, pkgs, ... }: {
+      configuration = { config, options, pkgs, lib, ... }: let
+        dewclaw_option_names = [ "uci" "deploy" "deploySteps" "secretsCommand" "etc" "packages" "users" ];
+      in {
         config._module.args = {
-            inherit inputs pkgs self;
-            lib = pkgs.lib;
-            name = machine_name;
-            # arbitrariliy use networks from carmine.
-            networks = self.nixosConfigurations.carmine.config.lib.l3mon.networks;
-            secrets = self.nixosConfigurations.carmine.config.secrets;
-            data = import ./data;
+          inherit inputs pkgs self options config;
+          lib = pkgs.lib;
+          name = machine_name;
+          # arbitrariliy use networks from carmine.
+          networks = self.nixosConfigurations.carmine.config.lib.l3mon.networks;
+          secrets = self.nixosConfigurations.carmine.config.secrets;
+          data = import ./data;
         };
+        imports = 
+          (builtins.map (name: lib.mkAliasOptionModule [name] ["openwrt" machine_name name]) dewclaw_option_names) ++
+          [
+            ./openwrt/configuration.nix
+            ./openwrt/machines/${machine_name}
+            # enable lib config-part.
+            ({ lib, ... }: {
+              options = {
+                lib = lib.mkOption {
+                  default = { };
 
-        # alias config.openwrt.<machine_id> to config.dc.
-        config.openwrt.${machine_name} = config.dc;
-        options.dc = pkgs.lib.mkOption {type = options.openwrt.type.nestedTypes.elemType;};
+                  type = lib.types.attrsOf lib.types.attrs;
 
-        imports = [
-          ./openwrt/configuration.nix
-          ./openwrt/machines/${machine_name}
-          # enable lib config-part.
-          ({lib, ...}: {
-            options = {
-              lib = lib.mkOption {
-                default = { };
-
-                type = lib.types.attrsOf lib.types.attrs;
-
-                description = ''
-                  This option allows modules to define helper functions, constants, etc.
-                '';
+                  description = ''
+                    This option allows modules to define helper functions, constants, etc.
+                  '';
+                };
               };
-            };
-          })
-        ];
+            })
+          ];
       };
     });
   };
