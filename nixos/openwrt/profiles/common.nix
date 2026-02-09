@@ -4,6 +4,7 @@ in {
   imports = [
     ../modules/rcservices.nix
     ./interactive.nix
+    ./secrets.nix
   ];
 
   deploy = {

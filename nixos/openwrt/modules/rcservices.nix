@@ -10,7 +10,7 @@ in {
     default = [];
   };
 
-  config = {
+  config.dc = {
     deploySteps.rcservices = {
       # same as other /etc modifications.
       priority = 20;

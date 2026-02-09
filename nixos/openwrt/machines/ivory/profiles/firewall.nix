@@ -3,7 +3,7 @@ let
   nft_conf_path = "/etc/${nft_conf_path_etc_relative}";
 in {
   rcservices.disableServices = [ "firewall" ];
-  etc = {
+  dc.etc = {
     "rc.local".text = ''
       nft -f ${nft_conf_path}
     ''; 

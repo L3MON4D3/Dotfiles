@@ -155,6 +155,68 @@ with lib; {
       inherit wireguardSpecKey wireguardSpecKeySingle;
       mkWireguardSpecs = prefix: list: foldr (id: acc: acc // { "${wireguardSpecKey prefix id}" = (to_entry prefix id); }) {} list;
       mkRemoteWireguardSpecs = name: { "${wireguardSpecKeySingle name}" = (to_remote_entry name); };
+      wpa2psk = id: rec {
+        key = "${config.l3mon.secgen.secret_dir}/${id}";
+
+        backup_files = [ cleartext ];
+        gen = pkgs.writeShellApplication {
+          name = "gen";
+          text = ''
+            PASSWORD=""
+
+            while : ; do
+              echo 'Enter new password:'
+              read -r PASSWORD
+
+              if [ ''${#PASSWORD} -ge 8 ]; then
+                break
+              else
+                echo "WPA-PSK2 key needs at least 8 characters!"
+              fi
+            done
+            echo "Read password $PASSWORD from stdin"
+
+            echo -n "$PASSWORD" > ${cleartext}
+            chown simon:simon ${cleartext}
+            chmod 400 ${cleartext}
+          '';
+        };
+      };
+      openwrt_pw = id: rec {
+        cleartext = "${config.l3mon.secgen.secret_dir}/${id}";
+        hashed = "${config.l3mon.secgen.secret_dir}/${id}_hashed";
+
+        backup_files = [ cleartext ];
+        gen = pkgs.writeShellApplication {
+          name = "gen";
+          runtimeInputs = with pkgs; [ openssl ];
+          text = ''
+            PASSWORD=""
+
+            while : ; do
+              echo 'Enter new password:'
+              read -r PASSWORD
+
+              if [ ''${#PASSWORD} -ge 8 ]; then
+                break
+              else
+                echo "WPA2-PSK key needs at least 8 characters!"
+              fi
+            done
+
+            echo "Read password $PASSWORD from stdin"
+            HASHED=$(echo "$PASSWORD" | openssl passwd -6 -stdin)
+
+            echo -n "$PASSWORD" > ${cleartext}
+            chown simon:simon ${cleartext}
+            chmod 400 ${cleartext}
+
+            echo -n "$HASHED" > ${hashed}
+            chown simon:simon ${hashed}
+            chmod 400 ${hashed}
+          '';
+        };
+      };
     };
   };
 }
