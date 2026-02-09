@@ -35,15 +35,17 @@ in {
               type = "mac80211";
               path = "platform/soc/18000000.wifi";
               band = "2g";
-              channel = "1";
-              htmode = "HE20";
+              channel = "auto";
+              htmode = "HE40";
+              country = "DE";
             };
             radio1_dev = {
               type = "mac80211";
               path = "platform/soc/18000000.wifi+1";
               band = "5g";
-              channel = "36";
-              htmode = "HE80";
+              channel = "auto";
+              htmode = "HE160";
+              country = "DE";
             };
           };
           wifi-iface = {
