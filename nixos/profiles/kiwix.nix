@@ -21,6 +21,7 @@ let
     "ifixit_en_all*"
     "xkcd.com_en_all*"
     "explainxkcd_en_all_maxi*"
+    "theworldfactbook_en_all*"
   ];
   # To update:
   # nix-prefetch-docker --image-name ghcr.io/openzim/zimit --final-image-name zimit --final-image-tag system
