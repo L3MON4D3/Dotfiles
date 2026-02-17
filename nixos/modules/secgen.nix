@@ -158,7 +158,7 @@ with lib; {
       wpa2psk = id: rec {
         key = "${config.l3mon.secgen.secret_dir}/${id}";
 
-        backup_files = [ cleartext ];
+        backup_files = [ key ];
         gen = pkgs.writeShellApplication {
           name = "gen";
           text = ''
@@ -176,9 +176,9 @@ with lib; {
             done
             echo "Read password $PASSWORD from stdin"
 
-            echo -n "$PASSWORD" > ${cleartext}
-            chown simon:simon ${cleartext}
-            chmod 400 ${cleartext}
+            echo -n "$PASSWORD" > ${key}
+            chown simon:simon ${key}
+            chmod 400 ${key}
           '';
         };
       };
