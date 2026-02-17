@@ -30,6 +30,7 @@ in
       remarkable = { address = "192.168.178.10"; };
       ivory = { address = "192.168.178.2"; mac = "98:9b:cb:7a:00:2e"; };
       alabaster = { address = "192.168.178.3"; };
+      xperia = { address = "192.168.178.8"; mac = "3c:01:ef:aa:1a:92"; };
     };
   };
 
