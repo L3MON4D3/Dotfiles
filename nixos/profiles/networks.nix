@@ -5,7 +5,7 @@
     physical.home = rec {
       inherit (data.network.home) address_range ssid;
       dns_peer_id = "indigo";
-      gateway_peer_id = "fritzbox";
+      gateway_peer_id = "ivory";
       peers = l3lib.deepMerge data.network.home.peers rec {
         merigold.machine_services = [
           "nix-cache"

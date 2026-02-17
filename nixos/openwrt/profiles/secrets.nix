@@ -8,6 +8,8 @@
       ivory_pw_hashed = secrets.pw_ivory.hashed;
       alabaster_pw_hashed = secrets.pw_alabaster.hashed;
       alabaster_wifi_pw = secrets.wifi_pw_alabaster.key;
+      dsl_user = secrets.dsl_user.secret;
+      dsl_pw = secrets.dsl_pw.secret;
     };
   in rec {
     # map internal name to internal name and secret-path.

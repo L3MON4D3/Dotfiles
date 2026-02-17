@@ -49,8 +49,8 @@ in {
           wan = {
             proto = "pppoe";
             device = "dsl0.7";
-            username = "<dsl-username>";
-            password = "<dsl-password>";
+            username._secret = config.lib.secrets.secretmap.dsl_user.id;
+            password._secret = config.lib.secrets.secretmap.dsl_pw.id;
             ipv6 = "auto";
           };
           wan6 = {

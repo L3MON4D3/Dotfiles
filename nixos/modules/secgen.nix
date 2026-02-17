@@ -217,6 +217,27 @@ with lib; {
           '';
         };
       };
+      direct_secret = id: rec {
+        secret = "${config.l3mon.secgen.secret_dir}/${id}";
+
+        backup_files = [ secret ];
+        gen = pkgs.writeShellApplication {
+          name = "gen";
+          runtimeInputs = with pkgs; [ openssl ];
+          text = ''
+            SECRET=""
+
+            echo 'Enter new value for ${id}:'
+            read -r SECRET
+
+            echo "Read secret $SECRET from stdin"
+
+            echo -n "$SECRET" > ${secret}
+            chown simon:simon ${secret}
+            chmod 400 ${secret}
+          '';
+        };
+      };
     };
   };
 }

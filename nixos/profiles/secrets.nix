@@ -119,5 +119,7 @@
     wifi_pw_alabaster = config.lib.l3mon.secgen.wpa2psk "wifi_alabaster";
     pw_alabaster = config.lib.l3mon.secgen.openwrt_pw "rootpw_alabaster";
     pw_ivory = config.lib.l3mon.secgen.openwrt_pw "rootpw_ivory";
+    dsl_user = config.lib.l3mon.secgen.direct_secret "easybell_user";
+    dsl_pw = config.lib.l3mon.secgen.direct_secret "easybell_password";
   };
 }

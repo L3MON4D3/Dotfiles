@@ -4,7 +4,7 @@ in
 {
   home = {
     address_range = "192.168.178.0/24";
-    ssid = "FRITZ!Box 5590 RM";
+    ssid = "alabaster";
     peers = {
       carmine = {
         address = "192.168.178.21";
@@ -28,7 +28,7 @@ in
       fritzbox = { address = "192.168.178.1"; mac = "0c:72:74:fc:b9:de"; };
       prusamini = { address = "192.168.178.13"; };
       remarkable = { address = "192.168.178.10"; };
-      ivory = { address = "192.168.178.2"; };
+      ivory = { address = "192.168.178.2"; mac = "98:9b:cb:7a:00:2e"; };
       alabaster = { address = "192.168.178.3"; };
     };
   };
