@@ -13,7 +13,6 @@
           "pds"
         ];
         merigold-test.machine_services = merigold.machine_services;
-        # carmine.machine_services = [ "cache" ];
       };
     };
     virtual = {
