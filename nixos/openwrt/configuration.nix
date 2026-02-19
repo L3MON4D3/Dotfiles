@@ -15,6 +15,7 @@ in {
     };
     host = phys_peerconf.address;
   };
+  packages = [ "iperf3" ];
   uci = {
     # luci and rpcd for web-ui.
     retain = [ "luci" "rpcd" ];
