@@ -70,8 +70,8 @@ in {
 
         Session\AlternativeGlobalDLSpeedLimit=0
         Session\AlternativeGlobalUPSpeedLimit=200
-        Session\GlobalDLSpeedLimit=2000
-        Session\GlobalUPSpeedLimit=100
+        Session\GlobalDLSpeedLimit=8500
+        Session\GlobalUPSpeedLimit=500
 
         Session\BandwidthSchedulerEnabled=true
 
