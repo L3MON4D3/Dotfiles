@@ -52,7 +52,7 @@
     };
   };
 
-  l3mon.network_namespaces = {
+  l3mon.wg_network_namespaces = {
     enable = true;
     network_configs = [
       data.network.wireguard_rec_de

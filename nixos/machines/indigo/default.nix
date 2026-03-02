@@ -65,7 +65,7 @@
 
   boot.loader.systemd-boot.enable = true;
 
-  l3mon.network_namespaces = {
+  l3mon.wg_network_namespaces = {
     enable = true;
     network_configs = [
       config.lib.l3mon.networks.remote.mullvad_de

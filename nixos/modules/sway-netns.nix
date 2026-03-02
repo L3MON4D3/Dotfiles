@@ -2,7 +2,7 @@
 
 with lib;
 let
-  netns_cfg = config.l3mon.network_namespaces;
+  netns_cfg = config.l3mon.wg_network_namespaces;
 in {
     home-manager.sharedModules = (map
       (wg_network: let
@@ -61,7 +61,7 @@ in {
           });
         }
       ))
-      config.l3mon.network_namespaces.network_configs) ++
+      config.l3mon.wg_network_namespaces.network_configs) ++
       [
         ({ config, lib, pkgs, machine, data, ... }: {
           config = mkIf (any (wg_network: config.l3mon.sway-netns.${wg_network.name}.enable) netns_cfg.network_configs) {

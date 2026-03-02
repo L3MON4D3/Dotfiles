@@ -75,7 +75,7 @@ in
       "dotnet-sdk-wrapped-6.0.428"
     ];
 
-    systemd.services.sonarr_de = config.l3mon.network_namespaces.mkNetnsService wg_network {
+    systemd.services.sonarr_de = config.l3mon.wg_network_namespaces.mkNetnsService wg_network {
       enable = true;
       description = "Run sonarr in network namespace de";
       wantedBy = ["multi-user.target"];

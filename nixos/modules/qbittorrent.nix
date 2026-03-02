@@ -188,7 +188,7 @@ in {
             ${qb_control}
           '';
         };
-        qbittorrent_de = config.l3mon.network_namespaces.mkNetnsService wg_network {
+        qbittorrent_de = config.l3mon.wg_network_namespaces.mkNetnsService wg_network {
           enable = true;
           description = "Run qbittorrent in network namespace de";
           wantedBy = ["multi-user.target"];

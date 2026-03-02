@@ -2,10 +2,10 @@
 
 with lib;
 let
-  cfg = config.l3mon.network_namespaces;
+  cfg = config.l3mon.wg_network_namespaces;
   lan = config.lib.l3mon.networks.physical.home;
 in {
-  options.l3mon.network_namespaces = {
+  options.l3mon.wg_network_namespaces = {
     enable = mkEnableOption (lib.mdDoc "Create network-namespaces for passed networks.");
 
     network_configs = mkOption {
@@ -158,7 +158,7 @@ in {
       ] ++ (if route_local then
         [{
             name = "blocky-${netns_name}";
-            value = config.l3mon.network_namespaces.mkNetnsService wg_network (config.lib.l3mon.blocky.mkService {
+            value = config.l3mon.wg_network_namespaces.mkNetnsService wg_network (config.lib.l3mon.blocky.mkService {
               conf = config.lib.l3mon.blocky.mkConfig {
                 ports = ["0.0.0.0:53"];
                 network = lan;
@@ -214,7 +214,7 @@ in {
         inputs.netns-exec.defaultPackage.${system}
       ];
 
-      l3mon.network_namespaces.mkNetnsService = (wg_network: service: lib.mkMerge [
+      l3mon.wg_network_namespaces.mkNetnsService = (wg_network: service: lib.mkMerge [
         service
         (
           let
