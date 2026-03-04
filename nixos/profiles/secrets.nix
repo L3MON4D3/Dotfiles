@@ -116,11 +116,11 @@
         '';
       };
     };
-    remarkable_ca_root = rec {
-      cert_repo = "/data/generated/remarkable_ca_root";
+    remarkable_cert = rec {
+      cert_repo = "/data/generated/rmfakecloud_cert";
       cert_impure = "${config.l3mon.paths.nixos_config_dir}${cert_repo}";
       cert = ./.. + "${cert_repo}";
-      key = "${config.l3mon.secgen.secret_dir}/remarkable_ca_root";
+      key = "${config.l3mon.secgen.secret_dir}/rmfakecloud_cert_key";
 
       backup_files = [ key ];
       gen = pkgs.writeShellApplication {
@@ -140,6 +140,7 @@
             5. indigo: scp root@10.0.0.5:/opt/var/rmfakecloud-proxy/rmfakecloud-proxy.key ./
             6. cp ./rmfakecloud-proxy.crt ${cert_impure}
             7. sudo cp ./rmfakecloud-proxy.crt ${key}
+            7. sudo chown caddy:caddy ${key}
           "
         '';
       };

@@ -1,6 +1,7 @@
-{ config, lib, l3lib, pkgs, pkgs-unstable, machine, data, ... }:
+{ config, lib, l3lib, pkgs, pkgs-unstable, pkgs-rmfakecloud-23, machine, data, ... }:
 
-let 
+let
+  xochitl_storage_url = "https://local.appspot.com";
   rmfakecloud = pkgs-unstable.rmfakecloud;
   statedir = "/var/lib/rmfakecloud";
   secret_key_env_file = l3lib.secret "rmfakecloud_env";
@@ -48,7 +49,7 @@ in {
       PORT = toString port;
       DATADIR = statedir;
       LOGLEVEL = "warn";
-      STORAGE_URL = config.l3mon.services.defs.rmfakecloud.network_hostname;
+      STORAGE_URL = xochitl_storage_url;
     };
     serviceConfig = {
       Type = "simple";
@@ -89,7 +90,17 @@ in {
     script = "${rmfakecloud}/bin/rmfakecloud";
   };
 
-  l3mon.services.defs.rmfakecloud.cfg = port;
+  l3mon.services.defs.rmfakecloud = {
+    cfg = port;
+  };
+  services.caddy.extraConfig = let
+    remcert = config.l3mon.secgen.secrets.remarkable_cert;
+  in ''
+     hwr-production-dot-remarkable-production.appspot.com service-manager-production-dot-remarkable-production.appspot.com local.appspot.com my.remarkable.com internal.cloud.remarkable.com ping.remarkable.com {
+     tls ${remcert.cert} ${remcert.key}
+     reverse_proxy http://127.0.0.1:${toString port}
+ }
+  '';
 
   systemd.tmpfiles.rules = [
     "d ${statedir}             0750 rmfakecloud rmfakecloud"
