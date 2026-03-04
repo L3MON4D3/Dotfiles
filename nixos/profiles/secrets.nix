@@ -116,6 +116,34 @@
         '';
       };
     };
+    remarkable_ca_root = rec {
+      cert_repo = "/data/generated/remarkable_ca_root";
+      cert_impure = "${config.l3mon.paths.nixos_config_dir}${cert_repo}";
+      cert = ./.. + "${cert_repo}";
+      key = "${config.l3mon.secgen.secret_dir}/remarkable_ca_root";
+
+      backup_files = [ key ];
+      gen = pkgs.writeShellApplication {
+        name = "gen";
+        runtimeInputs = [ pkgs.openssl ];
+        text =
+        if config.l3mon.paths.nixos_config_dir == null then ''
+          echo "Cannot update cert without updating it in config."
+          exit
+        '' else
+        ''
+          echo "
+            1. enable rmfakecloudctl, set upstream to raw port, allow in firewall
+            2. establish connection in xochitl
+            3. rem: systemctl disable --now rmfakecloud-proxy and change entries in /etc/hosts
+            4. indigo: scp root@10.0.0.5:/opt/var/rmfakecloud-proxy/rmfakecloud-proxy.crt ./
+            5. indigo: scp root@10.0.0.5:/opt/var/rmfakecloud-proxy/rmfakecloud-proxy.key ./
+            6. cp ./rmfakecloud-proxy.crt ${cert_impure}
+            7. sudo cp ./rmfakecloud-proxy.crt ${key}
+          "
+        '';
+      };
+    };
     wifi_pw_alabaster = config.lib.l3mon.secgen.wpa2psk "wifi_alabaster";
     pw_alabaster = config.lib.l3mon.secgen.openwrt_pw "rootpw_alabaster";
     pw_ivory = config.lib.l3mon.secgen.openwrt_pw "rootpw_ivory";
