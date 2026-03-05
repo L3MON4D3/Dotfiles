@@ -78,6 +78,12 @@
           TERM = "xterm-256color";
         };
       };
+      jochspitze = {
+        hostname = "jochspitze.cs.uni-bonn.de";
+        identityFile = "~/.ssh/id_rsa";
+        identitiesOnly = true;
+        user = "simon";
+      };
       rem = {
         hostname = "remarkable";
         identityFile = "~/.ssh/id_rsa";
@@ -115,6 +121,7 @@
     vi = "/srv/media/video";
   };
   programs.bash.enable = true;
+
   # make sure profile is loaded (provides sessionVariables).
   # This is not done by default for login-shells, I think.
   programs.bash.bashrcExtra = ''
