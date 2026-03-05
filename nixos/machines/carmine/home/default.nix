@@ -5,6 +5,7 @@
     ./profiles/sway-io.nix
     ./profiles/jellyfin-conf.nix
     ./profiles/store-secrets.nix
+    ./profiles/mattermost.nix
   ];
   l3mon.sway = {
     workrooms.enable = true;
