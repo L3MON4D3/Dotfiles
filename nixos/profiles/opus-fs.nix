@@ -2,6 +2,7 @@
 
 let
   target_dir = "/srv/media/audio/lossy";
+  source_dir = "/srv/media/audio/original";
 in {
   # for opus-fs.
   programs.fuse.userAllowOther = true;
@@ -20,7 +21,7 @@ in {
       mkdir -p ${target_dir}
       chown simon:media ${target_dir}
       # run in foreground, need direct_io due to unknown/incorrect st_size.
-      opus-fs /srv/media/audio/original ${target_dir} -f -o direct_io,ro,allow_other
+      opus-fs ${source_dir} ${target_dir} -f -o direct_io,ro,allow_other
     '';
     preStop = ''
       ${config.security.wrapperDir}/fusermount -u ${target_dir}
