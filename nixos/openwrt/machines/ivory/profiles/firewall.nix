@@ -165,6 +165,7 @@
         option dest_ip '${data.network.home.peers.merigold.address}'
         option dest_port '${toString data.ports.http}'
         option family 'ipv4'
+        option reflection_src 'external'
 
       config redirect
         option dest 'lan'
@@ -176,6 +177,7 @@
         option dest_ip '${data.network.home.peers.merigold.address}'
         option dest_port '${toString data.ports.https}'
         option family 'ipv4'
+        option reflection_src 'external'
     '';
   };
 }
