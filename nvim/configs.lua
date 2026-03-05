@@ -45,6 +45,10 @@ local function register_project_snippets(dir)
 	return mc.register(mdir(dir), project_snippets(dir))
 end
 
+local rtp_base = dofile(vim.fn.stdpath("config") .. "/generated/rtp_base.lua")
+local rtp_plugins = dofile(vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua")
+local jetls_bin = dofile(vim.fn.stdpath("config") .. "/generated/jetls_bin.lua")
+
 -- takes multiple juwels-configs, each of which consists of 2 strings:
 local cmake_attach = function(opts)
 	opts = opts or {}
@@ -161,15 +165,29 @@ mc.register(mft"javascript", c{
 --
 local jl_lsp = mc.register(mft"julia", c{
 	lsp = {
-		julials = {
-			cmd = {"julia-lsp"},
+		jetls = {
+			cmd = {"nix", "develop", "--expr", ([[
+				let
+					flake = builtins.getFlake "%s";
+				in (flake.lib.fhs.override {
+					commandScript = "%s --threads 1,0 -- serve";
+				}).env
+			]]):format(mglintdir, jetls_bin), "-c", "bash"},
 		}
 	}
 } .. lsp_generic)
 
-mc.register(mft"julia" * mdir"/home/simon/projects/master/glint-jl", c{
+local mglintdir = "/home/simon/projects/master/glint-jl"
+mc.register(mft"julia" * mdir(mglintdir), c{
 	lsp = {
-		julials = {
+		jetls = {
+			cmd = {"nix", "develop", "--impure", "--expr", ([[
+				let
+					flake = builtins.getFlake "%s";
+				in (flake.lib.fhs.override {
+					commandScript = "%s --threads 1,0 -- serve";
+				}).env
+			]]):format(mglintdir, jetls_bin), "-c", "bash"},
 			root_dir = "/home/simon/projects/master/glint-jl"
 		}
 	}
@@ -289,7 +307,7 @@ local lsp_lua = mc.register(mft"lua", c{
 					},
 					workspace = {
 						-- Make the server aware of Neovim runtime files.
-						library = dofile(vim.fn.stdpath("config") .. "/generated/rtp_base.lua"),
+						library = rtp_base,
 						ignoreDir = {
 							".cache",
 							"deps",
@@ -301,14 +319,13 @@ local lsp_lua = mc.register(mft"lua", c{
 	},
 } .. lsp_generic)
 
-local rtp_plugin_data = dofile(vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua")
 local full_plugin_luals = c{
 	lsp = {
 		lua_ls = {
 			settings = {
 				Lua = {
 					workspace = {
-						library = merge.list_extend(rtp_plugin_data.all_paths)
+						library = merge.list_extend(rtp_plugins.all_paths)
 					}
 				}
 			},
@@ -329,7 +346,7 @@ local luasnippet_conf = c{
 					workspace = {
 						library = merge.list_extend({
 							vim.fn.stdpath("config") .. "/meta/luasnippets/",
-							rtp_plugin_data.path_by_name.luasnip
+							rtp_plugins.path_by_name.luasnip
 						})
 					},
 					hover = {

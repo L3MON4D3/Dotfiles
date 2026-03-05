@@ -11,6 +11,8 @@ let
     ${pkgs.unzip}/bin/unzip ${ngram_zip} -d $out
     ln -s $out/en $out/en-US
   '';
+  jetls = inputs.jetls.packages.${pkgs.stdenv.hostPlatform.system}.jetls;
+  julia_fhs = config.lib.julia_fhs;
 in {
   home.activation.myNvimRepos = lib.hm.dag.entryAfter ["writeBoundary"] ''
     run mkdir -p ${config.home.homeDirectory}/projects/dotfiles/nvim
@@ -29,6 +31,8 @@ in {
 
     echo 'return {"${nvim}/share/nvim/runtime"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/rtp_base.lua"
     echo 'return "${ngrams}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/ngram_path.lua"
+    echo 'return "${jetls}/bin/jetls"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/jetls_bin.lua"
+    echo 'return "${julia_fhs.drvPath}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/juli_fhs_drvpath.lua"
   '';
 
   programs.neovim = {
@@ -45,14 +49,14 @@ in {
       pkgs.luajit
       pkgs.luarocks
 
+      inputs.jetls.packages.${pkgs.stdenv.hostPlatform.system}.jetls
+
       pkgs-unstable.lua-language-server
       pkgs.pyright
       # make sure to install LanguageServer.jl, Images, Revise
       # clangd
       pkgs.clang-tools
       pkgs.python312Packages.ipython
-
-      (import ./julia-lsp.nix { pkgs = pkgs; })
 
       # lldb-dap
       pkgs.lldb

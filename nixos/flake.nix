@@ -39,6 +39,7 @@
     dirmap.url = "github:l3mon4d3/dirmap";
     didweb.url = "github:l3mon4d3/bsky-did-web";
     zotero-serve.url = "github:l3mon4d3/zotero-serve";
+    jetls.url = "github:l3mon4d3/jetls-nix";
     dewclaw.url = "github:MakiseKurisu/dewclaw";
   };
 
