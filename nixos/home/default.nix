@@ -74,6 +74,9 @@
         identityFile = "~/.ssh/id_rsa";
         identitiesOnly = true;
         user = "katz";
+        setEnv = {
+          TERM = "xterm-256color";
+        };
       };
       rem = {
         hostname = "remarkable";
