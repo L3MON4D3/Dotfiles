@@ -31,6 +31,11 @@ in {
               type = str;
               default = to_machine_hostname name;
             };
+            extraHostnames = mkOption {
+              example = "https://somehost.tld";
+              type = listOf str;
+              default = [];
+            };
           };
         } )];
       });
@@ -38,6 +43,7 @@ in {
       default = {};
     };
   };
+  # TODO: map every used TLD to an entry in the generated cert?
   config = let
     cfg = config.l3mon.services;
     service_caddy_extraConfig = name: def: let
@@ -49,7 +55,7 @@ in {
           null;
     in if config != null then
       [''
-        ${toString [network_hostname machine_hostname]} {
+        ${toString ([ network_hostname machine_hostname ] ++ def.extraHostnames)} {
           tls internal
           ${config}
         }
