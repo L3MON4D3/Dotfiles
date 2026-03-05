@@ -217,6 +217,33 @@
 
       thunderbird.enable = true;
     };
+    accounts."katz@cs.uni-bonn.de" = {
+      realName = "Simon Katz";
+      address = "katz@cs.uni-bonn.de";
+
+      # gpg = {
+        # key = "539486C322FDF9A5204718D66F6AA8BDF1F8BD04";
+        # signByDefault = true;
+      # };
+
+      imap = {
+        host = "mailbox.iai.uni-bonn.de";
+        port = 993;
+        tls.enable = true;
+      };
+
+      smtp = {
+        host = "postfix.iai.uni-bonn.de";
+        port = 587;
+        tls = {
+          enable = true;
+          useStartTls = true;
+        };
+      };
+      userName = "katz";
+
+      thunderbird.enable = true;
+    };
   };
 
   # This value determines the home Manager release that your
