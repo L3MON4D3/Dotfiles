@@ -31,6 +31,8 @@
         install -d -o simon -g simon /home/simon/.ssh
         install -D -o simon -g simon -m 600 ${l3lib.secret "id_rsa"} /home/simon/.ssh/id_rsa
         install -D -o simon -g simon -m 640 ${l3lib.secret "id_rsa.pub"} /home/simon/.ssh/id_rsa.pub
+        install -D -o simon -g simon -m 600 ${l3lib.secret "id_rsa_uni"} /home/simon/.ssh/id_rsa_uni
+        install -D -o simon -g simon -m 640 ${l3lib.secret "id_rsa_uni.pub"} /home/simon/.ssh/id_rsa_uni.pub
       '';
     };
   };
