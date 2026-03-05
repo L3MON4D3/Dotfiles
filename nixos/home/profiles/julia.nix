@@ -1,7 +1,16 @@
 { config, lib, pkgs, machine, data, scientific-fhs, ... }:
 
-{
-  home.file.".julia/config/startup.jl".text = ''
+let
+  fhs = scientific-fhs.override {
+    enableQuarto=true;
+    enableJulia=true;
+    juliaVersion = "1.12.5";
+    commandScript = "julia";
+  };
+in {
+  home.file.".julia/config/startup.jl".text =
+  # julia
+  ''
     using Revise
 
     using Images
@@ -41,8 +50,10 @@
 
   home.packages = with pkgs; [
     (pkgs.writeShellApplication (let
-      # the unsafe is okay here because we want nixos-rebuild to only build the derivation, and then `nix develop ...` will actually build the derivation.
-      fhs_path = (builtins.unsafeDiscardOutputDependency (scientific-fhs.override{ enableQuarto=true; enableJulia=true; juliaVersion = "1.11.6"; commandScript = "julia"; }).env.drvPath);
+      # the unsafe is okay here because we want nixos-rebuild to only build the
+      # derivation, and then `nix develop ...` will actually build the
+      # derivation.
+      fhs_path = (builtins.unsafeDiscardOutputDependency fhs.env.drvPath);
     in {
       name = "julia";
       text = ''
@@ -56,7 +67,5 @@
       ];
     }))
   ];
-  home.shellAliases = {
-    jl = "julia";
-  };
+  lib.julia_fhs = fhs;
 }
