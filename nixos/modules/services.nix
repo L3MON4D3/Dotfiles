@@ -80,6 +80,7 @@ in {
     in {
       physical.home.peers.${machine} = peerconf;
       virtual.home.peers.${machine} = peerconf;
+      virtual.work.peers.${machine} = peerconf;
     };
 
     services.caddy = {

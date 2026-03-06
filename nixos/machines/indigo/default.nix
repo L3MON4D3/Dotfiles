@@ -98,6 +98,34 @@
     ];
   };
 
+  systemd.services.blocky_lan = config.lib.l3mon.blocky.mkService {
+    conf = config.lib.l3mon.blocky.mkConfig {
+      ports = ["127.0.0.1:53" "192.168.178.20:53"];
+      network = config.lib.l3mon.networks.physical.home;
+      block = true;
+    };
+  };
+  systemd.services.blocky_wg_home2 = config.lib.l3mon.blocky.mkService {
+    conf = config.lib.l3mon.blocky.mkConfig (let
+      home = config.lib.l3mon.networks.virtual.home;
+    in {
+      ports = ["${home.peers.${machine}.address}:53"];
+      network = home;
+      block = false;
+    });
+  };
+  systemd.services.blocky_wg_work = config.lib.l3mon.blocky.mkService {
+    conf = config.lib.l3mon.blocky.mkConfig (let
+      work = config.lib.l3mon.networks.virtual.work;
+    in {
+      ports = ["${work.peers.${machine}.address}:53"];
+      network = work;
+      block = false;
+    });
+  };
+
+  
+
   services.caddy = {
     enable = true;
     enableReload = true;
@@ -144,21 +172,6 @@
   ];
   environment.shellAliases = {
     lr = "l3mon-restic";
-  };
-
-  systemd.services.blocky_lan = config.lib.l3mon.blocky.mkService {
-    conf = config.lib.l3mon.blocky.mkConfig {
-      ports = ["127.0.0.1:53" "192.168.178.20:53"];
-      network = config.lib.l3mon.networks.physical.home;
-      block = true;
-    };
-  };
-  systemd.services.blocky_wg_home2 = config.lib.l3mon.blocky.mkService {
-    conf = config.lib.l3mon.blocky.mkConfig {
-      ports = ["10.0.0.1:53"];
-      network = config.lib.l3mon.networks.virtual.home;
-      block = false;
-    };
   };
 
   # mount large storage.
