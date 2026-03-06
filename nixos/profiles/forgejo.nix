@@ -21,10 +21,17 @@ in {
   
   systemd.services.forgejo.preStart = let 
     adminCmd = "${lib.getExe cfg.package} admin user";
-    user = "simon"; # Note, Forgejo doesn't allow creation of an account named "admin"
   in ''
-    ${adminCmd} create --admin --email "simon@l3mon4.de" --username ${user} --password "bbbbbbbb" || true
+    ${adminCmd} create --admin --email "simon@l3mon4.de" --username simon --password "temp" --must-change-password=false || true
+    ${adminCmd} change-password --username simon --password "$(cat ${config.l3mon.secgen.secrets.forgejo_admin.secret})" --must-change-password=false || true
+    ${adminCmd} create --email "katz@cs.uni-bonn.de" --username simon_work --password "temp" --must-change-password=false || true
+    ${adminCmd} change-password --username simon_work --password "$(cat ${config.l3mon.secgen.secrets.forgejo_work.secret})" --must-change-password=false || true
   '';
+
+  l3mon.secgen.secrets = {
+    forgejo_admin = config.lib.l3mon.secgen.direct_secret { owner = "forgejo"; id = "forgejo_admin"; };
+    forgejo_work = config.lib.l3mon.secgen.direct_secret { owner = "forgejo"; id = "forgejo_work"; };
+  };
 
   # override module-level rules for forgejo (specifically for .ssh).
   systemd.tmpfiles.rules = lib.mkAfter [
@@ -32,7 +39,10 @@ in {
     "z '${cfg.stateDir}/.ssh' 0750 forgejo forgejo"
   ];
 
-  l3mon.services.defs.git.cfg = port;
+  l3mon.services.defs.git = {
+    cfg = port;
+    networks = with config.lib.l3mon.networks; [ physical.home virtual.home virtual.work ];
+  };
 
   l3mon.restic.extraGroups = [ "forgejo" ];
   l3mon.restic.dailyRequiredServices = [ "mysql.service" ];
