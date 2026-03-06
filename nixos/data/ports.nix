@@ -54,6 +54,7 @@
     harmonia = 7026;
     silverbullet = 7027;
     wireguard_work = 7028;
+    silverbullet_work = 7029;
 
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;

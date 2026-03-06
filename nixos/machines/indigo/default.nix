@@ -12,6 +12,7 @@
       ../../profiles/sonarr.nix
       ../../profiles/jackett
       ../../profiles/silverbullet.nix
+      ../../profiles/work/silverbullet.nix
 
       ../../profiles/ncps.nix
 
