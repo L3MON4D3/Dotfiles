@@ -217,8 +217,8 @@ with lib; {
           '';
         };
       };
-      direct_secret = id: rec {
-        secret = "${config.l3mon.secgen.secret_dir}/${id}";
+      direct_secret = spec: rec {
+        secret = "${config.l3mon.secgen.secret_dir}/${spec.id}";
 
         backup_files = [ secret ];
         gen = pkgs.writeShellApplication {
@@ -227,13 +227,13 @@ with lib; {
           text = ''
             SECRET=""
 
-            echo 'Enter new value for ${id}:'
+            echo 'Enter new value for ${spec.id}:'
             read -r SECRET
 
             echo "Read secret $SECRET from stdin"
 
             echo -n "$SECRET" > ${secret}
-            chown simon:simon ${secret}
+            chown ${spec.owner}:${spec.owner} ${secret}
             chmod 400 ${secret}
           '';
         };
