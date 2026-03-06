@@ -36,6 +36,10 @@ in {
               type = listOf str;
               default = [];
             };
+            networks = mkOption {
+              type = listOf attrs;
+              default = with config.lib.l3mon.networks; [ physical.home virtual.home ];
+            };
           };
         } )];
       });
@@ -53,9 +57,13 @@ in {
           if isString def.cfg then def.cfg else "reverse_proxy http://127.0.0.1:${toString def.cfg}"
         else
           null;
+      allowed_ip_ranges = toString (map (network: network.address_range) def.networks);
     in if config != null then
       [''
         ${toString ([ network_hostname machine_hostname ] ++ def.extraHostnames)} {
+          @not_allowed not remote_ip ${allowed_ip_ranges}
+          abort @not_allowed
+          log
           tls internal
           ${config}
         }
