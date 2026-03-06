@@ -66,6 +66,7 @@
     enable = true;
     network_configs = [
       config.lib.l3mon.networks.virtual.home
+      config.lib.l3mon.networks.virtual.work
       config.lib.l3mon.networks.virtual.rec_de
     ];
   };
