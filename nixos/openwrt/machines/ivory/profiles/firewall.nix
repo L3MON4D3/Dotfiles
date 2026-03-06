@@ -158,6 +158,17 @@
       config redirect
         option dest 'lan'
         option target 'DNAT'
+        option name 'wg_work'
+        option protop 'udp'
+        option src 'wan'
+        option src_dport '${toString data.ports.wireguard_work}'
+        option dest_ip '${data.network.home.peers.indigo.address}'
+        option dest_port '${toString data.ports.wireguard_work}'
+        option family 'ipv4'
+
+      config redirect
+        option dest 'lan'
+        option target 'DNAT'
         option name 'merigold-http'
         option protop 'tcp'
         option src 'wan'

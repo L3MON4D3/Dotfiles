@@ -34,6 +34,15 @@
           kim-desktop = { route_all = false; };
         };
       };
+      work = {
+        inherit (data.network.wg_work) address_range;
+        keepalive = true;
+        host_id = "indigo";
+        peers = l3lib.deepMerge data.network.wg_work.peers {
+          indigo = { route_all = false; };
+          jochspitze = { route_all = false; };
+        };
+      };
       rec_de = rec {
         inherit (data.network.wg_rec_de) address_range;
         keepalive = true;

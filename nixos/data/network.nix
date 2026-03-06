@@ -58,4 +58,13 @@ in
       cobalt = { address = "10.0.0.10"; };
     };
   };
+
+  wg_work = {
+    address_range = "10.0.2.0/24";
+    peers = {
+      indigo = { address = "10.0.2.1"; endpoint = "wireguard.l3mon4.de:${toString ports.wireguard_work}"; };
+      jochspitze = { address = "10.0.2.2"; };
+      carmine = { address = "10.0.2.3"; };
+    };
+  };
 }
