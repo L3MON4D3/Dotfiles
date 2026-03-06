@@ -3,13 +3,28 @@
 with lib;
 let
   cfg = config.l3mon.wg-quick-hosts;
+  types = lib.types;
 in {
   options.l3mon.wg-quick-hosts = {
     enable = mkEnableOption (lib.mdDoc "Create wireguard-interfaces in global namespace.");
 
     specs = mkOption {
-      type = with types; listOf attrs;
-      description = lib.mdDoc "List of attrset with key config a wireguard-network as defined in ./data/networks, and key netns optionally another wireguard-network, which has to enable a netns.";
+      type = types.listOf (types.submodule {
+        options = {
+          config = mkOption {
+            type = types.attrs;
+            description = lib.mdDoc "The network config.";
+            example = "config.lib.l3mon.networks.virtual.home";
+          };
+          netns = mkOption {
+            type = types.nullOr types.attrs;
+            description = lib.mdDoc "The network-namespace where this wireguard interface should be hosted.";
+            example = lib.literalExpression "config.lib.l3mon.networks.virtual.mullvad_de";
+            default = null;
+          };
+        };
+      });
+      description = lib.mdDoc "List of networks to create a wireguard interface for.";
       default = [];
     };
   };
@@ -23,12 +38,13 @@ in {
 
     networking.firewall.allowedUDPPorts = map (spec: lib.strings.toInt (builtins.elemAt (builtins.split ":" spec.config.host.endpoint) 2 )) cfg.specs;
     systemd.services = builtins.listToAttrs (map (spec: let
+      in_netns = spec.netns != null;
       wg_network = spec.config;
-      wg_name = spec.config.name;
-      wg_if_network = if spec ? netns then spec.netns else config.lib.l3mon.networks.physical.home;
+      wg_name = wg_network.name;
+      wg_if_network = if in_netns then spec.netns else config.lib.l3mon.networks.physical.home;
       host_conf = wg_network.host;
       full_address = machine_conf.address + wg_network.subnet_mask;
-      if_netns_do = if spec ? netns then "ip netns exec ${wg_if_network.name}" else "";
+      if_netns_do = if in_netns then "ip netns exec ${wg_if_network.name}" else "";
       wg_link_name = "${wg_network.name}";
       listen_port = builtins.elemAt (builtins.split ":" host_conf.endpoint) 2;
       peer_spec_to_args = peerconf: " peer ${peerconf.pubkey} allowed-ips ${peerconf.address}/32";
@@ -45,8 +61,8 @@ in {
       name = "host-${wg_network.name}";
       value = {
         description = "Host a wireguard vpn.";
-        bindsTo = [ "network-online.target" ] ++ (if spec ? netns then [ "netns-${wg_if_network.name}.service" ] else []);
-        after = [ "network-online.target" ] ++ (if spec ? netns then [ "netns-${wg_if_network.name}.service" ] else []);
+        bindsTo = [ "network-online.target" ] ++ (if in_netns then [ "netns-${wg_if_network.name}.service" ] else []);
+        after = [ "network-online.target" ] ++ (if in_netns then [ "netns-${wg_if_network.name}.service" ] else []);
         wantedBy = [ "multi-user.target" ];
         serviceConfig = {
           Type = "oneshot";
@@ -59,7 +75,7 @@ in {
         ];
         script = ''
           ip link add ${wg_link_name} type wireguard
-          ${optionalString (spec ? netns) "ip link set ${wg_link_name} netns ${wg_if_network.name}"}
+          ${optionalString in_netns "ip link set ${wg_link_name} netns ${wg_if_network.name}"}
           ${if_netns_do} wg set ${wg_link_name} listen-port ${listen_port} private-key ${host_conf.privkey_file} ${builtins.toString (map peer_spec_to_args peers)}
           ${if_netns_do} ip addr add ${host_conf.address}${wg_network.subnet_mask} dev ${wg_link_name}
           ${if_netns_do} ip link set ${wg_link_name} up
