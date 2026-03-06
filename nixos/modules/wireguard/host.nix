@@ -22,6 +22,12 @@ in {
             example = lib.literalExpression "config.lib.l3mon.networks.virtual.mullvad_de";
             default = null;
           };
+          masquerade = mkOption {
+            type = types.bool;
+            description = lib.mdDoc "Whether to masquerade the traffic arriving over this interface.";
+            example = "false";
+            default = false;
+          };
         };
       });
       description = lib.mdDoc "List of networks to create a wireguard interface for.";
@@ -80,11 +86,11 @@ in {
           ${if_netns_do} ip addr add ${host_conf.address}${wg_network.subnet_mask} dev ${wg_link_name}
           ${if_netns_do} ip link set ${wg_link_name} up
 
-          ${if_netns_do} nft -f ${rules}
+          ${optionalString spec.masquerade "${if_netns_do} nft -f ${rules}"}
         '';
         postStop = ''
           ${if_netns_do} ip link del ${wg_link_name}
-          ${if_netns_do} nft flush table inet ${wg_name}-nat
+          ${optionalString spec.masquerade "${if_netns_do} nft flush table inet ${wg_name}-nat"}
         '';
       };
     }) cfg.specs);

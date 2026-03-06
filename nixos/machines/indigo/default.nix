@@ -84,10 +84,12 @@
     specs = [
       {
         config = config.lib.l3mon.networks.virtual.home;
+        masquerade = true;
       }
       {
         config = config.lib.l3mon.networks.virtual.rec_de;
         netns = config.lib.l3mon.networks.remote.mullvad_de;
+        masquerade = true;
       }
     ];
   };
