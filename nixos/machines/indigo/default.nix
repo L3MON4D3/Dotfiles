@@ -94,8 +94,12 @@
     ];
   };
 
-  services.caddy.enable = true;
-  services.caddy.enableReload = true;
+  services.caddy = {
+    enable = true;
+    enableReload = true;
+    # logFormat = "level INFO";
+  };
+  
 
   services.mysql = {
     enable = true; 
