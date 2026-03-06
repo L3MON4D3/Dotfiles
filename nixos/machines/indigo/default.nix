@@ -89,6 +89,21 @@
       {
         config = config.lib.l3mon.networks.virtual.work;
         masquerade = false;
+        nft_inet_rules = ''
+          chain input {
+            type filter hook input priority filter; policy accept;
+            # allow established connections
+            iifname work ct state established,related accept
+            iifname work ct state invalid drop
+            
+            # allow caddy.
+            iif "work" tcp dport {443, 80} accept
+            # allow dns.
+            iif "work" udp dport 53 accept
+            # drop all other incoming traffic.
+            iif "work" drop
+          }
+        '';
       }
       {
         config = config.lib.l3mon.networks.virtual.rec_de;
