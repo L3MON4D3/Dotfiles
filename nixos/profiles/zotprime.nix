@@ -195,6 +195,8 @@ in {
       # update these environment-variables manually!
       zotprime-zotprime-admin.environment.APP_URL = lib.mkForce "https://${sdefs.zotprime.network_domain}";
       zotprime-zotprime-dataserver.environment.S3_PUBLIC_ENDPOINT = lib.mkForce "https://${sdefs.zotprime-s3.network_domain}";
+      # allow access to mariadb.
+      zotprime-zotprime-db.ports = ["${toString data.ports.zotprime-db}:3306/tcp"];
     }
   ];
   l3mon.services.defs = {

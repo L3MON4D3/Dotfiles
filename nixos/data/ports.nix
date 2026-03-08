@@ -63,6 +63,7 @@
     zotprime-streamserver = 7034;
     zotprime-portal = 7035;
     zotprime-admin = 7036;
+    zotprime-db = 7037;
 
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;
