@@ -44,6 +44,7 @@
       ../../profiles/paperless.nix
 
       ../../profiles/vms.nix
+      ../../profiles/zotprime.nix
 
       # ../../profiles/karakeep.nix
       ../../profiles/readeck.nix

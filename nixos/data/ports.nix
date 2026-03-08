@@ -56,6 +56,14 @@
     wireguard_work = 7028;
     silverbullet_work = 7029;
 
+    zotprime-zotero-api = 7030;
+    zotprime-s3 = 7031;
+    zotprime-phpmyadmin = 7032;
+    zotprime-s3-webui = 7033;
+    zotprime-streamserver = 7034;
+    zotprime-portal = 7035;
+    zotprime-admin = 7036;
+
     jellyfin_web = 8096;
     jellyfin_discovery = 7359;
 }

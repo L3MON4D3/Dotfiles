@@ -133,4 +133,13 @@
     enable = true; 
     # libraries = with pkgs; [ zstd coreutils gtk3 pango cairo atkmm ];
   };
+
+  environment.systemPackages = [
+    (pkgs.writeShellApplication {
+      name = "zotero-zotprime";
+      text = ''
+        ${self.nixosConfigurations.indigo.config.lib.l3mon.zotprime-client}/bin/zotprime
+      '';
+    })
+  ];
 }
