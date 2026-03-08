@@ -12,7 +12,7 @@ in {
     settings = {
       server = {
         DOMAIN = "git.internal";
-        ROOT_URL = config.l3mon.services.defs.git.network_hostname;
+        ROOT_URL = "https://${config.l3mon.services.defs.git.network_domain}";
         HTTP_PORT = port;
       };
       service.DISABLE_REGISTRATION = true;

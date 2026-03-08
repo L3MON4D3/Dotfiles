@@ -17,7 +17,7 @@ in {
         optimize = 1;
         pdfa_image_compression = "lossless";
       };
-      PAPERLESS_URL = config.l3mon.services.defs.paperless.network_hostname;
+      PAPERLESS_URL = "https://${config.l3mon.services.defs.paperless.network_domain}";
     };
   };
 

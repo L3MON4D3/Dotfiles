@@ -5,7 +5,7 @@
     pkgs-unstable.rmapi
   ];
   environment.variables = {
-    RMAPI_HOST = self.nixosConfigurations.indigo.config.l3mon.services.defs.rmfakecloud.network_hostname;
+    RMAPI_HOST = "https://${self.nixosConfigurations.indigo.config.l3mon.services.defs.rmfakecloud.network_domain}";
   };
 
   # home-manager.sharedModules = [
