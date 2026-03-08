@@ -225,7 +225,9 @@ in {
 
   l3mon.secgen.secrets.zotprime = rec {
     envfile = "${config.l3mon.secgen.secret_dir}/zotprime";
-    backup_files = [ envfile ];
+    rclone_conf = "${config.l3mon.secgen.secret_dir}/zotprime-rclone";
+    mariadb_root_pw = "${config.l3mon.secgen.secret_dir}/zotprime-db-pw";
+    backup_files = [ envfile rclone_conf mariadb_root_pw ];
     gen = pkgs.writeShellApplication {
       name = "gen";
       runtimeInputs = with pkgs; [ openssl php ];
@@ -236,13 +238,14 @@ in {
         WEBADMIN_PASSWORD_PLAIN=$(openssl rand -hex 12)
         MINIOROOTUSER=zotprimeminio
         MINIOROOTPASSWORD=$(openssl rand -hex 16)
+        MARIADB_ROOT_PASSWORD=$(openssl rand -hex 16)
 
         echo "
         SERVER_IP=127.0.0.1
         MARIADB_DATABASE=zotprimeprod
         VER=v3.2.0
         
-        MARIADB_ROOT_PASSWORD=$(openssl rand -hex 16)
+        MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD
         MARIADB_USER=zotprimeprod
         MARIADB_PASSWORD=$(openssl rand -hex 16)
         MINIO_ROOT_USER=$MINIOROOTUSER
@@ -266,9 +269,53 @@ in {
         " > ${envfile}
         chown root:root ${envfile}
         chmod 400 ${envfile}
+
+
+        echo "
+        [zotprime]
+        type = s3
+        provider = Minio
+        access_key_id = $MINIOROOTUSER
+        secret_access_key = $MINIOROOTPASSWORD
+        endpoint = https://${sdefs.zotprime-s3.network_domain}
+        " > ${rclone_conf}
+        chown restic:restic ${rclone_conf}
+        chmod 400 ${rclone_conf}
+
+        echo -n "$MARIADB_ROOT_PASSWORD" > ${mariadb_root_pw}
+        chown restic:restic ${mariadb_root_pw}
+        chmod 400 ${mariadb_root_pw}
       '';
     };
   };
+
+  l3mon.restic.specs.rmfakecloud = {
+    backupDaily = {
+      text = ''
+        s3dir="$(mktemp -d)"
+        ${pkgs.rclone}/bin/rclone --config "${config.l3mon.secgen.secrets.zotprime.rclone_conf}" mount --read-only zotprime: "$s3dir" &
+
+        cd "$s3dir"
+        restic backup --tag=zotprime-objects --skip-if-unchanged=true -- ./*
+
+        cd /tmp
+        ${config.security.wrapperDir}/fusermount -u "$s3dir"
+
+        ${pkgs.mariadb}/bin/mariadb-dump \
+          --all-databases \
+          --host=127.0.0.1 --port=${toString data.ports.zotprime-db} \
+          --user=root --password="$(cat ${config.l3mon.secgen.secrets.zotprime.mariadb_root_pw})" \
+          | restic backup --tag=zotprime-db --skip-if-unchanged=true --stdin-filename=zotprime.mysql
+      '';
+    };
+    forget = {
+      text = ''
+        restic forget --tag=zotprime-objects --group-by=tag --keep-daily=7 --keep-monthly=unlimited
+        restic forget --tag=zotprime-db --group-by=tag --keep-daily=7 --keep-monthly=unlimited
+      '';
+    };
+  };
+
   lib.l3mon.zotprime-client = pkgs-unstable.zotero.overrideAttrs (old: {
     postPatch = old.postPatch + ''
       sed -i "s#https://api.zotero.org/#https://${sdefs.zotprime.network_domain}/#g" ./resource/config.mjs; \
