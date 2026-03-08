@@ -1,6 +1,7 @@
 { config, lib, pkgs, pkgs-unstable, machine, data, ... }:
 
 let
+  sdefs = config.l3mon.services.defs;
   map_imagespec = name: spec: pkgs.dockerTools.pullImage {
     inherit (spec) imageDigest hash;
     imageName = "uniuu/${name}";
@@ -192,8 +193,8 @@ in {
     }
     {
       # update these environment-variables manually!
-      zotprime-zotprime-admin.environment.APP_URL = lib.mkForce "https://zotprime.internal";
-      zotprime-zotprime-dataserver.environment.S3_PUBLIC_ENDPOINT = lib.mkForce "https://zotprime-s3.internal";
+      zotprime-zotprime-admin.environment.APP_URL = lib.mkForce "https://${sdefs.zotprime.network_domain}";
+      zotprime-zotprime-dataserver.environment.S3_PUBLIC_ENDPOINT = lib.mkForce "https://${sdefs.zotprime-s3.network_domain}";
     }
   ];
   l3mon.services.defs = {
@@ -267,13 +268,11 @@ in {
     };
   };
   lib.l3mon.zotprime-client = pkgs-unstable.zotero.overrideAttrs (old: {
-    postPatch = old.postPatch + (let
-      sdefs = config.l3mon.services.defs;
-    in ''
-      sed -i "s#https://api.zotero.org/#https://zotprime.internal/#g" ./resource/config.mjs; \
-      sed -i "s#wss://stream.zotero.org/#wss://zotprime-streamserver.internal/#g" ./resource/config.mjs; \
-      ${pkgs.perl}/bin/perl -i -pe 's#https://www\.zotero\.org/(?!start)#https://zotprime.internal/#g' ./resource/config.mjs; \
+    postPatch = old.postPatch + ''
+      sed -i "s#https://api.zotero.org/#https://${sdefs.zotprime.network_domain}/#g" ./resource/config.mjs; \
+      sed -i "s#wss://stream.zotero.org/#wss://${sdefs.zotprime-streamserver.network_domain}/#g" ./resource/config.mjs; \
+      ${pkgs.perl}/bin/perl -i -pe 's#https://www\.zotero\.org/(?!start)#https://${sdefs.zotprime.network_domain}/#g' ./resource/config.mjs; \
       sed -i "s#https://zoteroproxycheck.s3.amazonaws.com/test##g" ./resource/config.mjs
-    '');
+    '';
   });
 }
