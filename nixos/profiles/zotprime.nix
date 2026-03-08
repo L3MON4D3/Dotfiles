@@ -193,12 +193,15 @@ in {
     {
       # update these environment-variables manually!
       zotprime-zotprime-admin.environment.APP_URL = lib.mkForce "https://zotprime.internal";
-      zotprime-zotprime-dataserver.environment.S3_PUBLIC_ENDPOINT = lib.mkForce "http://127.0.0.1:9000";
+      zotprime-zotprime-dataserver.environment.S3_PUBLIC_ENDPOINT = lib.mkForce "https://zotprime-s3.internal";
     }
   ];
   l3mon.services.defs = {
     zotprime = {
       cfg = data.ports.zotprime-zotero-api;
+    };
+    zotprime-s3 = {
+      cfg = data.ports.zotprime-s3;
     };
     zotprime-s3-webui = {
       cfg = data.ports.zotprime-s3-webui;
