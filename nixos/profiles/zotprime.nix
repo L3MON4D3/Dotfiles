@@ -263,4 +263,14 @@ in {
       '';
     };
   };
+  lib.l3mon.zotprime-client = pkgs-unstable.zotero.overrideAttrs (old: {
+    postPatch = old.postPatch + (let
+      sdefs = config.l3mon.services.defs;
+    in ''
+      sed -i "s#https://api.zotero.org/#https://zotprime.internal/#g" ./resource/config.mjs; \
+      sed -i "s#wss://stream.zotero.org/#wss://zotprime-streamserver.internal/#g" ./resource/config.mjs; \
+      ${pkgs.perl}/bin/perl -i -pe 's#https://www\.zotero\.org/(?!start)#https://zotprime.internal/#g' ./resource/config.mjs; \
+      sed -i "s#https://zoteroproxycheck.s3.amazonaws.com/test##g" ./resource/config.mjs
+    '');
+  });
 }

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, machine, data, inputs, ... }:
+{ config, lib, pkgs, machine, data, inputs, self, ... }:
 
 {
   imports = [
@@ -138,7 +138,7 @@
     (pkgs.writeShellApplication {
       name = "zotero-zotprime";
       text = ''
-        ${self.nixosConfigurations.indigo.config.lib.l3mon.zotprime-client}/bin/zotprime
+        ${self.nixosConfigurations.indigo.config.lib.l3mon.zotprime-client}/bin/zotero
       '';
     })
   ];
