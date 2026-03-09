@@ -138,7 +138,7 @@ in {
   # steamcmd uses .local/share/Steam/steamapps as its library and I can't
   # figure out how to change that -> just place library there.
   # symlink is overwritten, use bindmount instead :/
-  fileSystems."/var/lib/steam/cmd/.local/share/Steam/steamapps" = {
+  fileSystems."/var/lib/steam/cmd/.local/share/Steam/Steamapps" = {
     device = "/var/lib/steam/library/steamapps";
     options = [ "bind" ];
   };
