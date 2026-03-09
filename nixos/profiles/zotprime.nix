@@ -144,184 +144,211 @@ in {
   imports = [
     "${compose}"
   ];
-  virtualisation.oci-containers.containers = lib.mkMerge [
+  config = lib.mkMerge [
     {
-      # set correct images!
-      # could almost generate this cleanly, unfortunately zotprime-init needs zotprime-dataserver :(
-      zotprime-zotprime-dataserver.image      = lib.mkForce "docker-archive:${images.zotprime-dataserver}";
-      zotprime-zotprime-db.image              = lib.mkForce "docker-archive:${images.zotprime-db}";
-      zotprime-zotprime-elasticsearch.image   = lib.mkForce "docker-archive:${images.zotprime-elasticsearch}";
-      zotprime-zotprime-init.image            = lib.mkForce "docker-archive:${images.zotprime-dataserver}";
-      zotprime-zotprime-localstack.image      = lib.mkForce "docker-archive:${images.zotprime-localstack}";
-      zotprime-zotprime-memcached.image       = lib.mkForce "docker-archive:${images.zotprime-memcached}";
-      zotprime-zotprime-minio.image           = lib.mkForce "docker-archive:${images.zotprime-minio}";
-      zotprime-zotprime-phpmyadmin.image      = lib.mkForce "docker-archive:${images.zotprime-phpmyadmin}";
-      zotprime-zotprime-redis.image           = lib.mkForce "docker-archive:${images.zotprime-redis}";
-      zotprime-zotprime-streamserver.image    = lib.mkForce "docker-archive:${images.zotprime-streamserver}";
-      zotprime-zotprime-tinymceclean.image    = lib.mkForce "docker-archive:${images.zotprime-tinymceclean}";
-      zotprime-zotprime-portal.image          = lib.mkForce "docker-archive:${images.zotprime-portal}";
-      zotprime-zotprime-admin.image           = lib.mkForce "docker-archive:${images.zotprime-admin}";
+      virtualisation.oci-containers.containers = lib.mkMerge [
+        {
+          # set correct images!
+          # could almost generate this cleanly, unfortunately zotprime-init needs zotprime-dataserver :(
+          zotprime-zotprime-dataserver.image      = lib.mkForce "docker-archive:${images.zotprime-dataserver}";
+          zotprime-zotprime-db.image              = lib.mkForce "docker-archive:${images.zotprime-db}";
+          zotprime-zotprime-elasticsearch.image   = lib.mkForce "docker-archive:${images.zotprime-elasticsearch}";
+          zotprime-zotprime-init.image            = lib.mkForce "docker-archive:${images.zotprime-dataserver}";
+          zotprime-zotprime-localstack.image      = lib.mkForce "docker-archive:${images.zotprime-localstack}";
+          zotprime-zotprime-memcached.image       = lib.mkForce "docker-archive:${images.zotprime-memcached}";
+          zotprime-zotprime-minio.image           = lib.mkForce "docker-archive:${images.zotprime-minio}";
+          zotprime-zotprime-phpmyadmin.image      = lib.mkForce "docker-archive:${images.zotprime-phpmyadmin}";
+          zotprime-zotprime-redis.image           = lib.mkForce "docker-archive:${images.zotprime-redis}";
+          zotprime-zotprime-streamserver.image    = lib.mkForce "docker-archive:${images.zotprime-streamserver}";
+          zotprime-zotprime-tinymceclean.image    = lib.mkForce "docker-archive:${images.zotprime-tinymceclean}";
+          zotprime-zotprime-portal.image          = lib.mkForce "docker-archive:${images.zotprime-portal}";
+          zotprime-zotprime-admin.image           = lib.mkForce "docker-archive:${images.zotprime-admin}";
+        }
+        {
+          # add secret-environmentfiles to all docker units.
+          # TODO: make this more finegrained?
+          zotprime-zotprime-dataserver.environmentFiles     = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-db.environmentFiles             = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-elasticsearch.environmentFiles  = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-init.environmentFiles           = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-localstack.environmentFiles     = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-memcached.environmentFiles      = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-minio.environmentFiles          = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-phpmyadmin.environmentFiles     = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-redis.environmentFiles          = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-streamserver.environmentFiles   = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-tinymceclean.environmentFiles   = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-portal.environmentFiles         = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+          zotprime-zotprime-admin.environmentFiles          = [ config.l3mon.secgen.secrets.zotprime.envfile ];
+        }
+        {
+          # compose2nix does not handle the `links`-directive, so add this manually here.
+          zotprime-zotprime-db.extraOptions             = [ "--network-alias=mariadb" ];
+          zotprime-zotprime-elasticsearch.extraOptions  = [ "--network-alias=elasticsearch" ];
+          zotprime-zotprime-localstack.extraOptions     = [ "--network-alias=localstack" ];
+          zotprime-zotprime-memcached.extraOptions      = [ "--network-alias=memcached" ];
+          zotprime-zotprime-minio.extraOptions          = [ "--network-alias=minio" ];
+          zotprime-zotprime-redis.extraOptions          = [ "--network-alias=redis" ];
+          zotprime-zotprime-streamserver.extraOptions   = [ "--network-alias=streamserver" ];
+          zotprime-zotprime-tinymceclean.extraOptions   = [ "--network-alias=tinymceclean"  ];
+          zotprime-zotprime-dataserver.extraOptions   = [ "--network-alias=dataserver"  ];
+        }
+        {
+          # update these environment-variables manually!
+          zotprime-zotprime-admin.environment.APP_URL = lib.mkForce "https://${sdefs.zotprime.network_domain}";
+          zotprime-zotprime-dataserver.environment.S3_PUBLIC_ENDPOINT = lib.mkForce "https://${sdefs.zotprime-s3.network_domain}";
+          # allow access to mariadb.
+          zotprime-zotprime-db.ports = ["${toString data.ports.zotprime-db}:3306/tcp"];
+        }
+      ];
+      l3mon.services.defs = {
+        zotprime = {
+          cfg = data.ports.zotprime-zotero-api;
+        };
+        zotprime-s3 = {
+          cfg = data.ports.zotprime-s3;
+        };
+        zotprime-s3-webui = {
+          cfg = data.ports.zotprime-s3-webui;
+        };
+        zotprime-phpmyadmin = {
+          cfg = data.ports.zotprime-phpmyadmin;
+        };
+        zotprime-admin = {
+          cfg = data.ports.zotprime-admin;
+        };
+        zotprime-streamserver = {
+          cfg = data.ports.zotprime-streamserver;
+        };
+        zotprime-portal = {
+          cfg = data.ports.zotprime-portal;
+        };
+      };
+
+      l3mon.secgen.secrets.zotprime = rec {
+        envfile = "${config.l3mon.secgen.secret_dir}/zotprime";
+        rclone_conf = "${config.l3mon.secgen.secret_dir}/zotprime-rclone";
+        mariadb_root_pw = "${config.l3mon.secgen.secret_dir}/zotprime-db-pw";
+        backup_files = [ envfile rclone_conf mariadb_root_pw ];
+        gen = pkgs.writeShellApplication {
+          name = "gen";
+          runtimeInputs = with pkgs; [ openssl php ];
+          text =
+          # adapted from ${zotprime_src}/bin/install.sh
+          ''
+            API_SUPER_TOKEN=$(openssl rand -hex 32)
+            WEBADMIN_PASSWORD_PLAIN=$(openssl rand -hex 12)
+            MINIOROOTUSER=zotprimeminio
+            MINIOROOTPASSWORD=$(openssl rand -hex 16)
+            MARIADB_ROOT_PASSWORD=$(openssl rand -hex 16)
+
+            echo "
+            SERVER_IP=127.0.0.1
+            MARIADB_DATABASE=zotprimeprod
+            VER=v3.2.0
+            
+            MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD
+            MARIADB_USER=zotprimeprod
+            MARIADB_PASSWORD=$(openssl rand -hex 16)
+            MINIO_ROOT_USER=$MINIOROOTUSER
+            MINIO_ROOT_PASSWORD=$MINIOROOTPASSWORD
+            AWS_ACCESS_KEY_ID=$MINIOROOTUSER
+            AWS_SECRET_ACCESS_KEY=$MINIOROOTPASSWORD
+            API_SUPER_TOKEN=$API_SUPER_TOKEN
+            API_SUPER_TOKEN_HASH=$(php -r "echo password_hash('$API_SUPER_TOKEN', PASSWORD_BCRYPT);")
+            AUTH_SALT=$(openssl rand -hex 16)
+            ADMIN_USERNAME=admin
+            ADMIN_PASSWORD=$(openssl rand -hex 12)
+            ADMIN_EMAIL=admin@example.tld
+            WEBADMIN_USERNAME=webadmin
+            WEBADMIN_PASSWORD_PLAIN=$WEBADMIN_PASSWORD_PLAIN
+            WEBADMIN_PASSWORD=$(php -r "echo password_hash('$WEBADMIN_PASSWORD_PLAIN', PASSWORD_BCRYPT, ['cost' => 12]);")
+            # this deviates from the instructions in zotprime, those (openssl rand
+            # -hex 32) give an error in laravel about
+            # 'unsupported cipher or incorrect key length'
+            APP_KEY=$(echo -n "base64:"; openssl rand -base64 32)
+            PORTAL_SESSION_SECRET=$(openssl rand -hex 32)
+            " > ${envfile}
+            chown root:root ${envfile}
+            chmod 400 ${envfile}
+
+
+            echo "
+            [zotprime]
+            type = s3
+            provider = Minio
+            access_key_id = $MINIOROOTUSER
+            secret_access_key = $MINIOROOTPASSWORD
+            endpoint = https://${sdefs.zotprime-s3.network_domain}
+            " > ${rclone_conf}
+            chown restic:restic ${rclone_conf}
+            chmod 400 ${rclone_conf}
+
+            echo -n "$MARIADB_ROOT_PASSWORD" > ${mariadb_root_pw}
+            chown restic:restic ${mariadb_root_pw}
+            chmod 400 ${mariadb_root_pw}
+          '';
+        };
+      };
     }
-    {
-      # add secret-environmentfiles to all docker units.
-      # TODO: make this more finegrained?
-      zotprime-zotprime-dataserver.environmentFiles     = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-db.environmentFiles             = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-elasticsearch.environmentFiles  = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-init.environmentFiles           = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-localstack.environmentFiles     = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-memcached.environmentFiles      = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-minio.environmentFiles          = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-phpmyadmin.environmentFiles     = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-redis.environmentFiles          = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-streamserver.environmentFiles   = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-tinymceclean.environmentFiles   = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-portal.environmentFiles         = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-      zotprime-zotprime-admin.environmentFiles          = [ config.l3mon.secgen.secrets.zotprime.envfile ];
-    }
-    {
-      # compose2nix does not handle the `links`-directive, so add this manually here.
-      zotprime-zotprime-db.extraOptions             = [ "--network-alias=mariadb" ];
-      zotprime-zotprime-elasticsearch.extraOptions  = [ "--network-alias=elasticsearch" ];
-      zotprime-zotprime-localstack.extraOptions     = [ "--network-alias=localstack" ];
-      zotprime-zotprime-memcached.extraOptions      = [ "--network-alias=memcached" ];
-      zotprime-zotprime-minio.extraOptions          = [ "--network-alias=minio" ];
-      zotprime-zotprime-redis.extraOptions          = [ "--network-alias=redis" ];
-      zotprime-zotprime-streamserver.extraOptions   = [ "--network-alias=streamserver" ];
-      zotprime-zotprime-tinymceclean.extraOptions   = [ "--network-alias=tinymceclean"  ];
-      zotprime-zotprime-dataserver.extraOptions   = [ "--network-alias=dataserver"  ];
-    }
-    {
-      # update these environment-variables manually!
-      zotprime-zotprime-admin.environment.APP_URL = lib.mkForce "https://${sdefs.zotprime.network_domain}";
-      zotprime-zotprime-dataserver.environment.S3_PUBLIC_ENDPOINT = lib.mkForce "https://${sdefs.zotprime-s3.network_domain}";
-      # allow access to mariadb.
-      zotprime-zotprime-db.ports = ["${toString data.ports.zotprime-db}:3306/tcp"];
-    }
+    (let
+      minio_mountpoint = "/tmp/zotprime-restic";
+      minio_mount_command = "${pkgs.writeShellApplication {
+        name = "mount_minio";
+        runtimeInputs = with pkgs; [rclone];
+        text = ''
+          rclone --config ${config.l3mon.secgen.secrets.zotprime.rclone_conf} mount --allow-other --read-only zotprime: ${minio_mountpoint} --daemon
+        '';
+      }}/bin/mount_minio";
+      minio_unmount_command = "${pkgs.writeShellApplication {
+        name = "unmount_minio";
+        text = ''
+          ${config.security.wrapperDir}/fusermount -u ${minio_mountpoint}
+        '';
+      }}/bin/unmount_minio";
+    in {
+      security.sudo = {
+        extraRules = [{
+          commands = [{
+            command = "${minio_mount_command}, ${minio_unmount_command}";
+            options = [ "NOPASSWD" ];
+          }];
+          groups = [ "restic" ];
+        }];
+      };
+      l3mon.restic.specs.rmfakecloud = {
+        backupDaily = {
+          text = ''
+            mkdir -p ${minio_mountpoint}
+            ${config.security.wrapperDir}/sudo ${minio_mount_command}
+            cd ${minio_mountpoint}
+            restic backup --tag=zotprime-objects --skip-if-unchanged=true -- ./
+
+            cd /
+            ${config.security.wrapperDir}/sudo ${minio_unmount_command}
+
+            ${pkgs.mariadb}/bin/mariadb-dump \
+              --all-databases \
+              --host=127.0.0.1 --port=${toString data.ports.zotprime-db} \
+              --user=root --password="$(cat ${config.l3mon.secgen.secrets.zotprime.mariadb_root_pw})" \
+              | restic backup --tag=zotprime-db --skip-if-unchanged=true --stdin --stdin-filename=zotprime.mysql
+          '';
+        };
+        forget = {
+          text = ''
+            restic forget --tag=zotprime-objects --group-by=tag --keep-daily=7 --keep-monthly=unlimited
+            restic forget --tag=zotprime-db --group-by=tag --keep-daily=7 --keep-monthly=unlimited
+          '';
+        };
+      };
+      lib.l3mon.zotprime-client = pkgs-unstable.zotero.overrideAttrs (old: {
+        postPatch = old.postPatch + ''
+          sed -i "s#https://api.zotero.org/#https://${sdefs.zotprime.network_domain}/#g" ./resource/config.mjs; \
+          sed -i "s#wss://stream.zotero.org/#wss://${sdefs.zotprime-streamserver.network_domain}/#g" ./resource/config.mjs; \
+          ${pkgs.perl}/bin/perl -i -pe 's#https://www\.zotero\.org/(?!start)#https://${sdefs.zotprime.network_domain}/#g' ./resource/config.mjs; \
+          sed -i "s#https://zoteroproxycheck.s3.amazonaws.com/test##g" ./resource/config.mjs
+        '';
+      });
+    })
   ];
-  l3mon.services.defs = {
-    zotprime = {
-      cfg = data.ports.zotprime-zotero-api;
-    };
-    zotprime-s3 = {
-      cfg = data.ports.zotprime-s3;
-    };
-    zotprime-s3-webui = {
-      cfg = data.ports.zotprime-s3-webui;
-    };
-    zotprime-phpmyadmin = {
-      cfg = data.ports.zotprime-phpmyadmin;
-    };
-    zotprime-admin = {
-      cfg = data.ports.zotprime-admin;
-    };
-    zotprime-streamserver = {
-      cfg = data.ports.zotprime-streamserver;
-    };
-    zotprime-portal = {
-      cfg = data.ports.zotprime-portal;
-    };
-  };
-
-  l3mon.secgen.secrets.zotprime = rec {
-    envfile = "${config.l3mon.secgen.secret_dir}/zotprime";
-    rclone_conf = "${config.l3mon.secgen.secret_dir}/zotprime-rclone";
-    mariadb_root_pw = "${config.l3mon.secgen.secret_dir}/zotprime-db-pw";
-    backup_files = [ envfile rclone_conf mariadb_root_pw ];
-    gen = pkgs.writeShellApplication {
-      name = "gen";
-      runtimeInputs = with pkgs; [ openssl php ];
-      text =
-      # adapted from ${zotprime_src}/bin/install.sh
-      ''
-        API_SUPER_TOKEN=$(openssl rand -hex 32)
-        WEBADMIN_PASSWORD_PLAIN=$(openssl rand -hex 12)
-        MINIOROOTUSER=zotprimeminio
-        MINIOROOTPASSWORD=$(openssl rand -hex 16)
-        MARIADB_ROOT_PASSWORD=$(openssl rand -hex 16)
-
-        echo "
-        SERVER_IP=127.0.0.1
-        MARIADB_DATABASE=zotprimeprod
-        VER=v3.2.0
-        
-        MARIADB_ROOT_PASSWORD=$MARIADB_ROOT_PASSWORD
-        MARIADB_USER=zotprimeprod
-        MARIADB_PASSWORD=$(openssl rand -hex 16)
-        MINIO_ROOT_USER=$MINIOROOTUSER
-        MINIO_ROOT_PASSWORD=$MINIOROOTPASSWORD
-        AWS_ACCESS_KEY_ID=$MINIOROOTUSER
-        AWS_SECRET_ACCESS_KEY=$MINIOROOTPASSWORD
-        API_SUPER_TOKEN=$API_SUPER_TOKEN
-        API_SUPER_TOKEN_HASH=$(php -r "echo password_hash('$API_SUPER_TOKEN', PASSWORD_BCRYPT);")
-        AUTH_SALT=$(openssl rand -hex 16)
-        ADMIN_USERNAME=admin
-        ADMIN_PASSWORD=$(openssl rand -hex 12)
-        ADMIN_EMAIL=admin@example.tld
-        WEBADMIN_USERNAME=webadmin
-        WEBADMIN_PASSWORD_PLAIN=$WEBADMIN_PASSWORD_PLAIN
-        WEBADMIN_PASSWORD=$(php -r "echo password_hash('$WEBADMIN_PASSWORD_PLAIN', PASSWORD_BCRYPT, ['cost' => 12]);")
-        # this deviates from the instructions in zotprime, those (openssl rand
-        # -hex 32) give an error in laravel about
-        # 'unsupported cipher or incorrect key length'
-        APP_KEY=$(echo -n "base64:"; openssl rand -base64 32)
-        PORTAL_SESSION_SECRET=$(openssl rand -hex 32)
-        " > ${envfile}
-        chown root:root ${envfile}
-        chmod 400 ${envfile}
-
-
-        echo "
-        [zotprime]
-        type = s3
-        provider = Minio
-        access_key_id = $MINIOROOTUSER
-        secret_access_key = $MINIOROOTPASSWORD
-        endpoint = https://${sdefs.zotprime-s3.network_domain}
-        " > ${rclone_conf}
-        chown restic:restic ${rclone_conf}
-        chmod 400 ${rclone_conf}
-
-        echo -n "$MARIADB_ROOT_PASSWORD" > ${mariadb_root_pw}
-        chown restic:restic ${mariadb_root_pw}
-        chmod 400 ${mariadb_root_pw}
-      '';
-    };
-  };
-
-  l3mon.restic.specs.rmfakecloud = {
-    backupDaily = {
-      text = ''
-        s3dir="$(mktemp -d)"
-        ${pkgs.rclone}/bin/rclone --config "${config.l3mon.secgen.secrets.zotprime.rclone_conf}" mount --read-only zotprime: "$s3dir" &
-
-        cd "$s3dir"
-        restic backup --tag=zotprime-objects --skip-if-unchanged=true -- ./*
-
-        cd /tmp
-        ${config.security.wrapperDir}/fusermount -u "$s3dir"
-
-        ${pkgs.mariadb}/bin/mariadb-dump \
-          --all-databases \
-          --host=127.0.0.1 --port=${toString data.ports.zotprime-db} \
-          --user=root --password="$(cat ${config.l3mon.secgen.secrets.zotprime.mariadb_root_pw})" \
-          | restic backup --tag=zotprime-db --skip-if-unchanged=true --stdin-filename=zotprime.mysql
-      '';
-    };
-    forget = {
-      text = ''
-        restic forget --tag=zotprime-objects --group-by=tag --keep-daily=7 --keep-monthly=unlimited
-        restic forget --tag=zotprime-db --group-by=tag --keep-daily=7 --keep-monthly=unlimited
-      '';
-    };
-  };
-
-  lib.l3mon.zotprime-client = pkgs-unstable.zotero.overrideAttrs (old: {
-    postPatch = old.postPatch + ''
-      sed -i "s#https://api.zotero.org/#https://${sdefs.zotprime.network_domain}/#g" ./resource/config.mjs; \
-      sed -i "s#wss://stream.zotero.org/#wss://${sdefs.zotprime-streamserver.network_domain}/#g" ./resource/config.mjs; \
-      ${pkgs.perl}/bin/perl -i -pe 's#https://www\.zotero\.org/(?!start)#https://${sdefs.zotprime.network_domain}/#g' ./resource/config.mjs; \
-      sed -i "s#https://zoteroproxycheck.s3.amazonaws.com/test##g" ./resource/config.mjs
-    '';
-  });
 }
