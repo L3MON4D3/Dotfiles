@@ -60,7 +60,7 @@
 
       ../../modules/zotero.nix
 
-      ../../profiles/unibonn.nix
+      # ../../profiles/unibonn.nix
 
       ./profiles/nvidia.nix
     ];
