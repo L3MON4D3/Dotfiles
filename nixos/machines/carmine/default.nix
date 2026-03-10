@@ -78,15 +78,11 @@
   # mpd
   networking.firewall.allowedTCPPorts = with data.ports; [ mpd ];
 
-  l3mon.zotero.enable_client = true;
-
   l3mon.paths.nixos_config_dir = "/home/simon/projects/dotfiles/nixos";
   
   home-manager.sharedModules = [
     ({ config, lib, pkgs, machine, data, ... }: {
       imports = [ ./home ];
-
-      l3mon.zotero.enable = true;
     })
   ];
 
@@ -133,13 +129,4 @@
     enable = true; 
     # libraries = with pkgs; [ zstd coreutils gtk3 pango cairo atkmm ];
   };
-
-  environment.systemPackages = [
-    (pkgs.writeShellApplication {
-      name = "zotero-zotprime";
-      text = ''
-        ${self.nixosConfigurations.indigo.config.lib.l3mon.zotprime-client}/bin/zotero
-      '';
-    })
-  ];
 }

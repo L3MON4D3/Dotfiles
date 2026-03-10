@@ -330,10 +330,10 @@
     device = "/mnt/glacier/games";
     options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
   };
-  fileSystems."/srv/zotero" = {
-    device = "/mnt/glacier/misc/zotero/data";
-    options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
-  };
+  # fileSystems."/srv/zotero" = {
+    # device = "/mnt/glacier/misc/zotero/data";
+    # options = [ "bind" "x-systemd.requires=zfs-mount.service" ];
+  # };
 
   fileSystems."/srv/zim" = {
     device = "/mnt/glacier/zim";
@@ -363,7 +363,7 @@
   services.nfs.server.mountdPort = data.ports.mountd;
 
   services.dbus.implementation = "broker";
-  l3mon.zotero.enable_server = true;
+  # l3mon.zotero.enable_server = true;
 
   environment.shellAliases = {
     re = ''sudo ${pkgs.nixos-rebuild}/bin/nixos-rebuild switch --flake "/home/simon/projects/dotfiles/nixos#indigo"'';

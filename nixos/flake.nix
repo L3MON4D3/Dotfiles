@@ -81,7 +81,7 @@
 
           home-manager.users.simon = import ./home;
           home-manager.extraSpecialArgs = {
-            inherit inputs pkgs-unstable;
+            inherit inputs pkgs-unstable self;
             data = import ./data;
             l3lib = import ./lib.nix { inherit pkgs; };
             nur = inputs.nur.legacyPackages.${system};
