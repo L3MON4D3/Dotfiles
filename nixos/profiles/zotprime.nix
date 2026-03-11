@@ -201,11 +201,15 @@ in {
           zotprime-zotprime-db.ports = ["${toString data.ports.zotprime-db}:3306/tcp"];
         }
       ];
-      l3mon.services.defs = {
+      l3mon.services.defs = let
+        networks = with config.lib.l3mon.networks; [ physical.home virtual.home virtual.work ];
+      in {
         zotprime = {
+          inherit networks;
           cfg = data.ports.zotprime-zotero-api;
         };
         zotprime-s3 = {
+          inherit networks;
           cfg = data.ports.zotprime-s3;
         };
         zotprime-s3-webui = {
@@ -218,6 +222,7 @@ in {
           cfg = data.ports.zotprime-admin;
         };
         zotprime-streamserver = {
+          inherit networks;
           cfg = data.ports.zotprime-streamserver;
         };
         zotprime-portal = {
