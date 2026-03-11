@@ -1,5 +1,6 @@
 vim.filetype.add({
 	extension = {
+		wesl = "wesl",
 		alpha = "alpha",
 		comp = "glsl",
 		frag = "glsl",

@@ -13,6 +13,20 @@ let
   '';
   jetls = inputs.jetls.packages.${pkgs.stdenv.hostPlatform.system}.jetls;
   julia_fhs = config.lib.julia_fhs;
+  # add tree-sitter from nvim-nightly package.
+  # we need tree-sitter for building grammars from nvim-treesitter, and the
+  # version in pkgs may be wrong.
+  tree-sitter = (builtins.head (builtins.filter (x: x.name == "tree-sitter-bundled") inputs.neovim-nightly.packages.${pkgs.stdenv.hostPlatform.system}.neovim.buildInputs));
+  wesl_treesitter_parser = "${tree-sitter.buildGrammar {
+    src = pkgs.fetchFromGitHub {
+      owner = "wgsl-tooling-wg";
+      repo = "tree-sitter-wesl";
+      rev = "3fa2b96bf5c217dae9bf663e2051fcdad0762c19";
+      hash = "sha256-O3n65StgGhxfdwYF/QPBTdkXEGjY2ajHeLpF5JWuTc8=";
+    };
+    version = "1.0";
+    language = "wesl";
+  }}/parser";
 in {
   home.activation.myNvimRepos = lib.hm.dag.entryAfter ["writeBoundary"] ''
     run mkdir -p ${config.home.homeDirectory}/projects/dotfiles/nvim
@@ -32,18 +46,16 @@ in {
     echo 'return {"${nvim}/share/nvim/runtime"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/rtp_base.lua"
     echo 'return "${ngrams}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/ngram_path.lua"
     echo 'return "${jetls}/bin/jetls"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/jetls_bin.lua"
-    echo 'return "${julia_fhs.drvPath}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/juli_fhs_drvpath.lua"
+    echo 'return "${julia_fhs.drvPath}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/julia_fhs_drvpath.lua"
+    echo 'return { wesl = "${wesl_treesitter_parser}"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/ts_parsers.lua"
   '';
 
   programs.neovim = {
     enable = true;
     defaultEditor = true;
     extraPackages = [
-      # add tree-sitter from nvim-nightly package.
-      # we need tree-sitter for building grammars from nvim-treesitter, and the
-      # version in pkgs may be wrong.
-      (builtins.head (builtins.filter (x: x.name == "tree-sitter-bundled") inputs.neovim-nightly.packages.${pkgs.stdenv.hostPlatform.system}.neovim.buildInputs))
       # for building treesitter grammars.
+      tree-sitter
       pkgs.zig
       pkgs.nodejs
       pkgs.luajit
