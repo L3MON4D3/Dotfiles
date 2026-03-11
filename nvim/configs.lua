@@ -95,6 +95,16 @@ local cmake_attach = function(opts)
 	}
 end
 
+local diag_mapping = {
+	[true] = {
+		[false] = {false, false},
+		[true] = {false, false} -- this shouldn't happen, but in case it does, just map to the same as true,false.
+	},
+	[false] = {
+		[false] = {false, true},
+		[true] = {true, false}
+	}
+}
 local lsp_generic = c{
 	run_buf = function()
 		nnoremapsilent_buf('K', vim.lsp.buf.hover)
@@ -111,9 +121,10 @@ local lsp_generic = c{
 
 		nnoremapsilent_buf("<space>v", function()
 			local conf = vim.diagnostic.config()
+			local next = diag_mapping[conf.virtual_text][conf.underline]
 			vim.diagnostic.config({
-				virtual_text = not conf.virtual_text,
-				underline = not conf.underline
+				virtual_text = next[1],
+				underline = next[2]
 			})
 		end)
 	end
