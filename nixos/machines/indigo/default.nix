@@ -98,8 +98,8 @@
             iifname work ct state established,related accept
             iifname work ct state invalid drop
             
-            # allow caddy.
-            iif "work" tcp dport {443, 80} accept
+            # allow caddy and ssh (just make sure I don't put my primary ssh key on jochspitze!!).
+            iif "work" tcp dport {443, 80, 22} accept
             # allow dns.
             iif "work" udp dport 53 accept
             # drop all other incoming traffic.
