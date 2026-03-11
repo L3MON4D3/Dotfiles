@@ -191,10 +191,12 @@
       keep-derivations = true;
       substituters = [
         "https://nix-community.cachix.org"
+        "https://cache.flox.dev"
         "https://cache.nixos.org"
       ];
-      trusted-public-keys = [
-        data.pubkeys.cachix-community
+      trusted-public-keys = with data.pubkeys; [
+        cachix-community
+        flox-cache
       ];
     };
     registry = {

@@ -6,4 +6,6 @@ rec {
   cachix-community = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
   nixos-org = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=";
   ncps = "ncps.internal:qgVbbSb3MWw/LPQopde7q8WmU+luM5wSC0hOWiQSp/0=";
+  simon-uni-ssh = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAY4CHUO6SfSML2jm4sH/vzV3VKDlReqaDVDsZ7jwQiN";
+  flox-cache = "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs=";
 }
