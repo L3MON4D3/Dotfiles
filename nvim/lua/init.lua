@@ -73,8 +73,6 @@ require("filejump")
 -- 	return true
 -- end )
 
-vim.treesitter.language.add("xml", {path = "/home/simon/.config/nvim/parsers/xml/libtree-sitter-xml.so"})
-
 -- mappings and commands
 vim.api.nvim_create_user_command("O", function()
 	vim.api.nvim_input(":tabnew<Cr>:e ~/Documents/base<Cr>:normal gh<Cr>")

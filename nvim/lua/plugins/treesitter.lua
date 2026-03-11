@@ -1,5 +1,7 @@
 local extra_parsers = dofile(vim.fn.stdpath("config") .. "/generated/ts_parsers.lua")
+
 vim.treesitter.language.register("bash", "PKGBUILD")
+vim.treesitter.language.add("xml", {path = "/home/simon/.config/nvim/parsers/xml/libtree-sitter-xml.so"})
 vim.treesitter.language.add("wesl", {path = extra_parsers.wesl})
 
 require'nvim-treesitter.configs'.setup {
