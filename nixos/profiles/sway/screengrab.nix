@@ -25,6 +25,30 @@ let
       fi
     '';
   };
+  screenrec_region = pkgs.writeShellApplication {
+    name = "screenrec";
+    runtimeInputs = with pkgs; [
+      # pgrep, pkill
+      procps
+      # date
+      coreutils
+      wf-recorder
+      libnotify
+      sway
+      jq
+      slurp
+    ];
+    text = ''
+      if pgrep -x "wf-recorder" > /dev/null
+      then
+          pkill -SIGINT wf-recorder
+          notify-send -t 5000 Finished recording
+      else
+          # use yuv444-coded and overwrite existing file.
+          wf-recorder -g "$(slurp)" -c libx264rgb -y
+      fi
+    '';
+  };
   windowshot = pkgs.writeShellApplication {
     name = "windowshot";
     runtimeInputs = with pkgs; [
@@ -84,6 +108,7 @@ in {
   wayland.windowManager.sway.extraConfig = ''
     mode "screen" {
       bindsym r exec ${screenrec}/bin/screenrec
+      bindsym c exec ${screenrec_region}/bin/screenrec
       bindsym s exec ${slurpscreen}/bin/slurpscreen
       bindsym d exec ${pkgs.dragon-drop}/bin/dragon-drop "/tmp/screen.png"
       bindsym w exec ${windowshot}/bin/windowshot
