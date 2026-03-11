@@ -1394,3 +1394,58 @@ local grip_conf = c{
 
 mc.register(matchers.pattern("README.md$"), grip_conf)
 mc.register(matchers.pattern("DOC.md$"), grip_conf)
+
+---
+---projects/piggy-web
+---
+local piggy_dir = "/home/simon/projects/piggy-web"
+local piggy_viewer_dir = "/home/simon/projects/piggy-web/piggy-viewer"
+local piggy_fork_dir = "/home/simon/projects/piggy-web/wgpu-3dgs-viewer-fork"
+mc.register(mdir(piggy_dir), c{
+	run_buf = function()
+		cabbrev_buf("%%", piggy_dir)
+		cabbrev_buf("@@", piggy_viewer_dir)
+		cabbrev_buf("!!", piggy_fork_dir)
+	end,
+	repl = {
+		target = project_repl,
+		type = "bash",
+		cmd = {"nix", "develop", piggy_dir},
+		opts = {
+			cwd = piggy_dir
+		},
+		mappings = {
+			["R"] = [[ trunk serve --config piggy-viewer/Trunk.toml -i ../wgpu-3dgs-viewer-fork/ -i ./]],
+		},
+	}
+})
+
+mc.register(mdir(piggy_dir) * mft"rust", c{
+	lsp = {
+		rust_analyzer = {
+			cmd = {
+				"nix",
+				"develop",
+				piggy_dir,
+				"-c",
+				"rust-analyzer"
+			},
+			root_dir = piggy_dir,
+		},
+	},
+} .. lsp_generic)
+
+mc.register(mdir(piggy_fork_dir) * (mft"wgsl" + mft"wesl"), c{
+	lsp = {
+		wgsl_analyzer = {
+			cmd = {
+				"nix",
+				"develop",
+				piggy_dir,
+				"-c",
+				"wgsl-analyzer"
+			},
+			root_dir = piggy_fork_dir,
+		},
+	},
+} .. lsp_generic)
