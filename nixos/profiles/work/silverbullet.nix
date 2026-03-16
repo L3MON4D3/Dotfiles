@@ -49,6 +49,8 @@ in {
     networks = with config.lib.l3mon.networks; [ physical.home virtual.home virtual.work ];
   };
   
+  l3mon.restic.extraGroups = [ "silverbullet-work" ];
+
   systemd.tmpfiles.rules = let
     mainSpaceDir = config.services.silverbullet.spaceDir;
   in lib.mkAfter [
