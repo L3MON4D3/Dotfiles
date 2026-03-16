@@ -84,6 +84,15 @@
         identitiesOnly = true;
         user = "simon";
       };
+      vci-gpu1 = {
+        hostname = "vci-gpu1.cs.uni-bonn.de";
+        identityFile = "~/.ssh/id_rsa_uni";
+        identitiesOnly = true;
+        user = "katz";
+        setEnv = {
+          TERM = "xterm-256color";
+        };
+      };
       rem = {
         hostname = "remarkable";
         identityFile = "~/.ssh/id_rsa";

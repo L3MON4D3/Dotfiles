@@ -26,6 +26,7 @@
     ./profiles/remarkable.nix
     ./profiles/ollama.nix
     ./profiles/cardinal.nix
+    ./profiles/vci1.nix
   ];
 
   environment.shellAliases = {
