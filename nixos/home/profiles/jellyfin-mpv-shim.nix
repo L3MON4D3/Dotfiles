@@ -4,7 +4,7 @@
   # launch mpv on primary screen (should be horizontal).
   xdg.configFile."jellyfin-mpv-shim/mpv.conf".text = ''
     fs=yes
-    fs-screen=0
+    fs-screen-name=DP-1
     vo=gpu-next
     gpu-api=vulkan
     hwdec=yes
