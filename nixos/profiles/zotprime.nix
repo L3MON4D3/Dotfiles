@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-unstable, machine, data, ... }:
+{ config, lib, pkgs, pkgs-unstable, machine, data, inputs, system, ... }:
 
 let
   sdefs = config.l3mon.services.defs;
@@ -228,6 +228,7 @@ in {
         zotprime-portal = {
           cfg = data.ports.zotprime-portal;
         };
+        zotero-serve.cfg = data.ports.zotero-serve;
       };
 
       l3mon.secgen.secrets.zotprime = rec {
@@ -295,6 +296,30 @@ in {
           '';
         };
       };
+      systemd.services."zotero-serve" = {
+        enable = true;
+        wantedBy = ["multi-user.target"];
+        serviceConfig = {
+          Type = "exec";
+          DynamicUser = true;
+          LoadCredential = "zotprime:${config.l3mon.secgen.secrets.zotprime.envfile}";
+        };
+        path = [ inputs.zotero-serve.packages.${system}.default ];
+        environment = {
+          GRANIAN_HOST = "127.0.0.1";
+          GRANIAN_PORT = toString data.ports.zotero-serve;
+          ZOTPRIME_ENV_FILE = "%d/zotprime";
+          ZOTPRIME_DB_HOST = "127.0.0.1";
+          ZOTPRIME_DB_PORT = toString data.ports.zotprime-db;
+          ZOTPRIME_S3_HOST = sdefs.zotprime-s3.network_domain;
+          # hardcode for now, make dynamic later.
+          ZOTPRIME_USER_DB = "zotero_shard_1";
+        };
+        script = ''
+          zotero-serve
+        '';
+      };
+
     }
     (let
       minio_mountpoint = "/tmp/zotprime-restic";

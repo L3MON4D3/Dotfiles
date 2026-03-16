@@ -1414,11 +1414,11 @@
         "nixpkgs-unstable": "nixpkgs-unstable_7"
       },
       "locked": {
-        "lastModified": 1760133668,
-        "narHash": "sha256-zB7k4Fc9H1VZ9UpSCxyKUnkzadu3eK5z/LBeUvmaO+c=",
+        "lastModified": 1773704160,
+        "narHash": "sha256-/7v9HqFwsollgfEmVq1V8NGMBvsWhZr9Jabz4Es2tHs=",
         "owner": "l3mon4d3",
         "repo": "zotero-serve",
-        "rev": "39cb38577cee1f054ac0e19e0c072cfc9e24d2fb",
+        "rev": "01070574099752a5208d107c706ee030c0d1e4af",
         "type": "github"
       },
       "original": {
