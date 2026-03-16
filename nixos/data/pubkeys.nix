@@ -8,4 +8,5 @@ rec {
   ncps = "ncps.internal:qgVbbSb3MWw/LPQopde7q8WmU+luM5wSC0hOWiQSp/0=";
   simon-uni-ssh = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAY4CHUO6SfSML2jm4sH/vzV3VKDlReqaDVDsZ7jwQiN";
   flox-cache = "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs=";
+  nixos-cuda-cache = "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=";
 }

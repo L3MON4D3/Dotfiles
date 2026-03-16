@@ -193,10 +193,12 @@
         "https://nix-community.cachix.org"
         "https://cache.flox.dev"
         "https://cache.nixos.org"
+        "https://cache.nixos-cuda.org"
       ];
       trusted-public-keys = with data.pubkeys; [
         cachix-community
         flox-cache
+        nixos-cuda-cache
       ];
     };
     registry = {
