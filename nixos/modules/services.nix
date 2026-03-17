@@ -102,6 +102,7 @@ in {
             }
           }
         }
+        auto_https disable_redirects
       '';
     };
     networking.firewall.allowedTCPPorts = with data.ports; [ http https ];
