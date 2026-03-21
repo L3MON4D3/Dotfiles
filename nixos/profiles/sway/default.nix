@@ -586,7 +586,7 @@ in {
               resize-by-cells="no";
             };
             cursor.underline-thickness="2px";
-            colors = {
+            colors-dark = {
               foreground=data.gruvbox.fg0;
               background=data.gruvbox.bg0_h;
 
