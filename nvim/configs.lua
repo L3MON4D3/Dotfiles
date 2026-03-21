@@ -431,6 +431,17 @@ mc.register(mft"nix", c{
 	}
 })
 
+--
+-- query
+--
+mc.register(mft"query", c{
+	buf_opts = {
+		expandtab = true,
+		tabstop = 2,
+		shiftwidth = 2,
+	}
+})
+
 
 --
 -- cpp
