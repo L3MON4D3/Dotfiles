@@ -52,6 +52,12 @@
     signing.signByDefault = true;
   };
 
+  programs.mergiraf = {
+    enable = true;
+    # have to enable this in the future!!
+    # enableGitIntegration = true;
+  };
+
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
