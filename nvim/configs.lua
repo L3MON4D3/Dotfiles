@@ -1415,8 +1415,8 @@ local piggy_fork_dir = "/home/simon/projects/piggy-web/wgpu-3dgs-viewer-fork"
 mc.register(mdir(piggy_dir), c{
 	run_buf = function()
 		cabbrev_buf("%%", piggy_dir)
-		cabbrev_buf("@@", piggy_viewer_dir)
-		cabbrev_buf("!!", piggy_fork_dir)
+		cabbrev_buf("@p", piggy_viewer_dir .. "/src")
+		cabbrev_buf("@w", piggy_fork_dir .. "/src")
 	end,
 	repl = {
 		target = project_repl,
