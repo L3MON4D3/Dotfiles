@@ -1475,14 +1475,14 @@ class Zotero_Item extends Zotero_DataObject {
 					}
 					// Note, highlight, and underline supported for PDFs, EPUBs, and snapshots
 					if (in_array($this->annotationType, ["note", "highlight", "underline"])) {
-						if (!in_array($parentItem->attachmentContentType, ['application/pdf', 'application/epub+zip', 'text/html'])) {
-							throw new Exception(
-								// TEMP
-								//"Parent item $parentItem->libraryKey of $this->annotationType annotation must be a PDF, EPUB, or HTML attachment",
-								"Parent item $parentItem->libraryKey of $this->annotationType annotation must be a PDF attachment",
-								Z_ERROR_INVALID_INPUT
-							);
-						}
+						// if (!in_array($parentItem->attachmentContentType, ['application/pdf', 'application/epub+zip', 'text/html'])) {
+						// 	throw new Exception(
+						// 		// TEMP
+						// 		//"Parent item $parentItem->libraryKey of $this->annotationType annotation must be a PDF, EPUB, or HTML attachment",
+						// 		"Parent item $parentItem->libraryKey of $this->annotationType annotation must be a PDF attachment",
+						// 		Z_ERROR_INVALID_INPUT
+						// 	);
+						// }
 					}
 					// For other annotation types, only PDFs
 					else if ($parentItem->attachmentContentType != 'application/pdf') {
