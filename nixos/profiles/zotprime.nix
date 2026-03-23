@@ -61,13 +61,13 @@ let
       hash = "sha256-YpzdMMalkfPUWVrtf0+mVuuWtGNdSRyW3QnUA21yzHI=";
     };
   };
-  dataserver-patched = pkgs.dockerTools.pullImage {
-    imageName = "l3mon4d3/zotprime-dataserver";
-    imageDigest = "sha256:0d0e9e793d84518be71845ff6a7a6a9bf704cfda95a8dbe4c2e35990126dda6c";
-    hash = "sha256-xrQu6rxPYB4673oLIumJmtbkkSzJtK8JPRrxo6VCISo=";
-    finalImageName = "zotprime-dataserver";
-    finalImageTag = "system";
-  };
+  # dataserver-patched = pkgs.dockerTools.pullImage {
+  #   imageName = "l3mon4d3/zotprime-dataserver";
+  #   imageDigest = "sha256:0d0e9e793d84518be71845ff6a7a6a9bf704cfda95a8dbe4c2e35990126dda6c";
+  #   hash = "sha256-xrQu6rxPYB4673oLIumJmtbkkSzJtK8JPRrxo6VCISo=";
+  #   finalImageName = "zotprime-dataserver";
+  #   finalImageTag = "system";
+  # };
   images = lib.attrsets.mapAttrs map_imagespec imagespecs;
   
   zotprime_src = pkgs-unstable.fetchFromGitHub {
