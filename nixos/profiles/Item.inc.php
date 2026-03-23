@@ -3139,26 +3139,36 @@ class Zotero_Item extends Zotero_DataObject {
 		if (!$this->isAttachment()) {
 			trigger_error("attachmentMIMEType can only be retrieved for attachment items", E_USER_ERROR);
 		}
-		
+
 		if ($this->attachmentData['mimeType'] !== null) {
 			return $this->attachmentData['mimeType'];
 		}
-		
+
 		if (!$this->id) {
 			return '';
 		}
-		
+
 		$sql = "SELECT mimeType FROM itemAttachments WHERE itemID=?";
 		$stmt = Zotero_DB::getStatement($sql, true, Zotero_Shards::getByLibraryID($this->libraryID));
 		$mimeType = Zotero_DB::valueQueryFromStatement($stmt, $this->id);
+
 		if (!$mimeType) {
 			$mimeType = '';
+		} else {
+			try {
+				$mimeType = mb_convert_encoding($mimeType, "ASCII", "UTF-8");//fix bug
+			} catch (Exception $e) {
+				error_log("[ERROR] iconv conversion failed for mimeType: $mimeType. Error: " . $e->getMessage());
+			}
+
+			$mimeType = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $mimeType);
+
+			if (!preg_match('/^[a-zA-Z0-9\-\.]+\/[a-zA-Z0-9\-\.]+$/', $mimeType)) {
+				error_log("[ERROR] Invalid mimeType format: $mimeType. Setting to empty.");
+				$mimeType = '';
+			}
 		}
-		
-		// TEMP: Strip some invalid characters
-		$mimeType = iconv("UTF-8", "ASCII//IGNORE", $mimeType);
-		$mimeType = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $mimeType);
-		
+
 		$this->attachmentData['mimeType'] = $mimeType;
 		return $mimeType;
 	}
