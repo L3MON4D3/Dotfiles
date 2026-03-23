@@ -61,6 +61,13 @@ let
       hash = "sha256-YpzdMMalkfPUWVrtf0+mVuuWtGNdSRyW3QnUA21yzHI=";
     };
   };
+  dataserver-patched = pkgs.dockerTools.pullImage {
+    imageName = "l3mon4d3/zotprime-dataserver";
+    imageDigest = "sha256:0d0e9e793d84518be71845ff6a7a6a9bf704cfda95a8dbe4c2e35990126dda6c";
+    hash = "sha256-xrQu6rxPYB4673oLIumJmtbkkSzJtK8JPRrxo6VCISo=";
+    finalImageName = "zotprime-dataserver";
+    finalImageTag = "system";
+  };
   images = lib.attrsets.mapAttrs map_imagespec imagespecs;
   
   zotprime_src = pkgs-unstable.fetchFromGitHub {
@@ -150,10 +157,10 @@ in {
         {
           # set correct images!
           # could almost generate this cleanly, unfortunately zotprime-init needs zotprime-dataserver :(
-          zotprime-zotprime-dataserver.image      = lib.mkForce "docker-archive:${images.zotprime-dataserver}";
+          zotprime-zotprime-dataserver.image      = lib.mkForce "docker-archive:${dataserver-patched}";
           zotprime-zotprime-db.image              = lib.mkForce "docker-archive:${images.zotprime-db}";
           zotprime-zotprime-elasticsearch.image   = lib.mkForce "docker-archive:${images.zotprime-elasticsearch}";
-          zotprime-zotprime-init.image            = lib.mkForce "docker-archive:${images.zotprime-dataserver}";
+          zotprime-zotprime-init.image            = lib.mkForce "docker-archive:${dataserver-patched}";
           zotprime-zotprime-localstack.image      = lib.mkForce "docker-archive:${images.zotprime-localstack}";
           zotprime-zotprime-memcached.image       = lib.mkForce "docker-archive:${images.zotprime-memcached}";
           zotprime-zotprime-minio.image           = lib.mkForce "docker-archive:${images.zotprime-minio}";
