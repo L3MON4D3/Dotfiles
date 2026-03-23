@@ -19,6 +19,7 @@ local plugins = {
 	cmp_buffer = "hrsh7th/cmp-buffer",
 	cmp_emoji = "hrsh7th/cmp-emoji",
 	treesitter = "nvim-treesitter/nvim-treesitter",
+	treesitter_context = "nvim-treesitter/nvim-treesitter-context",
 	treesitter_textobjects = "nvim-treesitter/nvim-treesitter-textobjects",
 	hop = "phaazon/hop.nvim",
 	vim_glsl = "tikhomirov/vim-glsl",
@@ -118,6 +119,9 @@ local plugin_spec = {
 		treesitter,
 		run = ":TSUpdate",
 		lazy = true
+	},
+	conf_use {
+		treesitter_context,
 	},
 	conf_use{
 		luasnip,
