@@ -1417,6 +1417,9 @@ mc.register(mdir(piggy_dir), c{
 		cabbrev_buf("%%", piggy_dir)
 		cabbrev_buf("@p", piggy_viewer_dir .. "/src")
 		cabbrev_buf("@w", piggy_fork_dir .. "/src")
+		usercommand_buf("R", function()
+			os.execute([[systemd-run --user nix-shell -p chromium --run 'chromium --ozone-platform=x11 http://127.0.0.1:8080']])
+		end, {})
 	end,
 	repl = {
 		target = project_repl,
