@@ -55,6 +55,7 @@ in {
     service_caddy_extraConfig = name: def: let
       network_domain = if def.match_network then to_network_domain name else "";
       machine_domain = if def.match_machine then to_machine_domain name else "";
+      prefix_list = prefix: builtins.map (s: prefix + s);
       config = if def.cfg != null then
           if isString def.cfg then def.cfg else "reverse_proxy http://127.0.0.1:${toString def.cfg}"
         else
@@ -62,11 +63,17 @@ in {
       allowed_ip_ranges = toString (map (network: network.address_range) def.networks);
     in if config != null then
       [''
-        ${toString ([ network_domain machine_domain ] ++ def.extraHostnames)} {
+        ${toString (prefix_list "https://" ([ network_domain machine_domain ] ++ def.extraHostnames))} {
           @not_allowed not remote_ip ${allowed_ip_ranges}
           abort @not_allowed
           log
           tls internal
+          ${config}
+        }
+        ${toString (prefix_list "http://" ([ network_domain machine_domain ] ++ def.extraHostnames))} {
+          @not_allowed not remote_ip ${allowed_ip_ranges}
+          abort @not_allowed
+          log
           ${config}
         }
       '']
