@@ -1,5 +1,4 @@
 { config, lib, pkgs, machine, data, ... }:
-
 let
   cfg = {
     spaceDir = "/var/lib/silverbullet-work";
@@ -56,7 +55,9 @@ in {
   in lib.mkAfter [
     # correct permissions on main silverbullet instance.
     "d ${mainSpaceDir}/work 2770 silverbullet-work silverbullet-work - -"
+    "Z ${mainSpaceDir}/work 2770 silverbullet-work silverbullet-work - -"
     "d ${mainSpaceDir}/public 2770 silverbullet-work silverbullet-work - -"
+    "Z ${mainSpaceDir}/public 2770 silverbullet-work silverbullet-work - -"
     "f ${mainSpaceDir}/CONFIG.md 0660 silverbullet-work silverbullet-work - -"
 
     # shared files.
