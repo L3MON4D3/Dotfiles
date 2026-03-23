@@ -157,10 +157,10 @@ in {
         {
           # set correct images!
           # could almost generate this cleanly, unfortunately zotprime-init needs zotprime-dataserver :(
-          zotprime-zotprime-dataserver.image      = lib.mkForce "docker-archive:${dataserver-patched}";
+          zotprime-zotprime-dataserver.image      = lib.mkForce "docker-archive:${images.zotprime-dataserver}";
           zotprime-zotprime-db.image              = lib.mkForce "docker-archive:${images.zotprime-db}";
           zotprime-zotprime-elasticsearch.image   = lib.mkForce "docker-archive:${images.zotprime-elasticsearch}";
-          zotprime-zotprime-init.image            = lib.mkForce "docker-archive:${dataserver-patched}";
+          zotprime-zotprime-init.image            = lib.mkForce "docker-archive:${images.zotprime-dataserver}";
           zotprime-zotprime-localstack.image      = lib.mkForce "docker-archive:${images.zotprime-localstack}";
           zotprime-zotprime-memcached.image       = lib.mkForce "docker-archive:${images.zotprime-memcached}";
           zotprime-zotprime-minio.image           = lib.mkForce "docker-archive:${images.zotprime-minio}";
@@ -200,13 +200,18 @@ in {
           zotprime-zotprime-tinymceclean.extraOptions   = [ "--network-alias=tinymceclean"  ];
           zotprime-zotprime-dataserver.extraOptions   = [ "--network-alias=dataserver"  ];
         }
-        {
+        (let
+          dataserver_volumes = [ "${./Item.inc.php}:/var/www/zotero/model/Item.inc.php" ];
+        in {
           # update these environment-variables manually!
           zotprime-zotprime-admin.environment.APP_URL = lib.mkForce "http://${sdefs.zotprime.network_domain}";
           zotprime-zotprime-dataserver.environment.S3_PUBLIC_ENDPOINT = lib.mkForce "http://${sdefs.zotprime-s3.network_domain}";
           # allow access to mariadb.
           zotprime-zotprime-db.ports = ["${toString data.ports.zotprime-db}:3306/tcp"];
-        }
+          # Override file in dataserver.
+          zotprime-zotprime-dataserver.volumes = dataserver_volumes;
+          zotprime-zotprime-init.volumes = dataserver_volumes;
+        })
       ];
       l3mon.services.defs = let
         networks = with config.lib.l3mon.networks; [ physical.home virtual.home virtual.work ];
