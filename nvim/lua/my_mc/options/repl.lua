@@ -20,12 +20,14 @@ local direncode = vim.base64.encode
 local repl_target = {
 	file = 1,
 	project = 2,
-	all = 3
+	all = 3,
+	project_chat = 4
 }
 
 local target_toggle_keys = {
 	[repl_target.file] = ",i",
-	[repl_target.project] = ",j"
+	[repl_target.project] = ",j",
+	[repl_target.project_chat] = ",c"
 }
 
 local function get_repl_spec(config_raw)
@@ -121,18 +123,20 @@ function ReplApplicator:apply_to_barrier(call_b_idx, args)
 
 	local final = {
 		[repl_target.file] = {},
-		[repl_target.project] = {}
+		[repl_target.project] = {},
+		[repl_target.project_chat] = {},
 	}
 	local last_type = {
 		[repl_target.file] = nil,
-		[repl_target.project] = nil
+		[repl_target.project] = nil,
+		[repl_target.project_chat] = nil,
 	}
 
 	for _, spec in ipairs(specs_no_eval) do
 		assert(spec.type)
 		assert(spec.target)
 
-		for _, target in ipairs({repl_target.file, repl_target.project}) do
+		for _, target in ipairs({repl_target.file, repl_target.project, repl_target.project_chat}) do
 			if spec.target ~= target and spec.target ~= repl_target.all then
 				goto continue
 			end
@@ -186,7 +190,7 @@ function ReplApplicator:apply_to_barrier(call_b_idx, args)
 		end
 	end
 
-	for _, target in ipairs({repl_target.file, repl_target.project}) do
+	for _, target in ipairs({repl_target.file, repl_target.project, repl_target.project_chat}) do
 		if not last_type[target] then
 			goto continue
 		end

@@ -29,6 +29,7 @@ local nop3 = function(_,_,_) end
 local repl_target =require("my_mc.options.repl").repl_target
 local file_repl = repl_target.file
 local project_repl = repl_target.project
+local project_chat_repl = repl_target.project_chat
 local combined_repl = repl_target.all
 
 local eval = mc.eval
@@ -1437,6 +1438,15 @@ mc.register(mdir(piggy_dir), c{
 		},
 		mappings = {
 			["R"] = [[ trunk serve --config piggy-viewer/Trunk.toml -i ../wgpu-3dgs-viewer-fork/ -i ./]],
+		},
+	},
+} .. c{
+	repl = {
+		target = project_chat_repl,
+		type = "bash",
+		cmd = {"nix", "develop", piggy_dir, "-c", binaries.copilot},
+		opts = {
+			cwd = piggy_dir
 		},
 	}
 })

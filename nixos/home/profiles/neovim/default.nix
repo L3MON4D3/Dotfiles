@@ -45,7 +45,10 @@ in {
 
     echo 'return {"${nvim}/share/nvim/runtime"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/rtp_base.lua"
     echo 'return "${ngrams}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/ngram_path.lua"
-    echo 'return "${jetls}/bin/jetls"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/jetls_bin.lua"
+    echo 'return {
+      jetls = "${jetls}/bin/jetls",
+      copilot = "${pkgs.github-copilot-cli}/bin/copilot",
+    }' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/binaries.lua"
     echo 'return "${julia_fhs.drvPath}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/julia_fhs_drvpath.lua"
     echo 'return { wesl = "${wesl_treesitter_parser}"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/ts_parsers.lua"
   '';
