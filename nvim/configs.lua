@@ -48,7 +48,7 @@ end
 
 local rtp_base = dofile(vim.fn.stdpath("config") .. "/generated/rtp_base.lua")
 local rtp_plugins = dofile(vim.fn.stdpath("config") .. "/generated/rtp_plugins.lua")
-local jetls_bin = dofile(vim.fn.stdpath("config") .. "/generated/jetls_bin.lua")
+local binaries = dofile(vim.fn.stdpath("config") .. "/generated/binaries.lua")
 
 -- takes multiple juwels-configs, each of which consists of 2 strings:
 local cmake_attach = function(opts)
@@ -184,7 +184,7 @@ local jl_lsp = mc.register(mft"julia", c{
 				in (flake.lib.fhs.override {
 					commandScript = "%s --threads 1,0 -- serve";
 				}).env
-			]]):format(mglintdir, jetls_bin), "-c", "bash"},
+			]]):format(mglintdir, binaries.jetls), "-c", "bash"},
 		}
 	}
 } .. lsp_generic)
@@ -199,7 +199,7 @@ mc.register(mft"julia" * mdir(mglintdir), c{
 				in (flake.lib.fhs.override {
 					commandScript = "%s --threads 1,0 -- serve";
 				}).env
-			]]):format(mglintdir, jetls_bin), "-c", "bash"},
+			]]):format(mglintdir, binaries.jetls), "-c", "bash"},
 			root_dir = "/home/simon/projects/master/glint-jl"
 		}
 	}
@@ -1480,3 +1480,45 @@ mc.register(mdir(piggy_fork_dir) * (mft"wgsl" + mft"wesl"), c{
 		},
 	},
 } .. lsp_generic)
+
+---
+--- neu-pig-smplx
+---
+local neupig_dir = "/home/simon/projects/neu-pig-smplx"
+mc.register(mdir(neupig_dir), c{
+	run_buf = function()
+		cabbrev_buf("%%", neupig_dir .. "/src")
+	end,
+	repl = {
+		target = project_repl,
+		type = "bash",
+		cmd = {"nix", "develop", neupig_dir},
+		opts = {
+			cwd = neupig_dir
+		},
+	},
+} .. c{
+	repl = {
+		target = project_chat_repl,
+		type = "bash",
+		cmd = {"nix", "develop", neupig_dir, "-c", binaries.copilot},
+		opts = {
+			cwd = neupig_dir
+		},
+	}
+})
+
+mc.register(mft"python" * mdir(neupig_dir), c{
+	lsp = {
+		pyright = {
+			cmd = {"nix", "develop", "--impure", "--expr", ([[
+				let
+					flake = builtins.getFlake "%s";
+				in (flake.lib.fhs.override {
+					commandScript = "pyright-langserver --stdio";
+				}).env
+			]]):format(neupig_dir), "-c", "bash"},
+			root_dir = neupig_dir
+		}
+	}
+}):after(py_lsp)
