@@ -50,6 +50,7 @@
       };
     };
     signing.signByDefault = true;
+    lfs.enable = true;
   };
 
   programs.mergiraf = {
