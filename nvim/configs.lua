@@ -1522,3 +1522,58 @@ mc.register(mft"python" * mdir(neupig_dir), c{
 		}
 	}
 }):after(py_lsp)
+
+---
+--- piggy-python
+---
+local piggyp_dir = "/home/simon/projects/piggy-python"
+mc.register(mdir(piggyp_dir), c{
+	run_buf = function()
+		cabbrev_buf("%%", piggyp_dir .. "/src")
+	end,
+	repl = {
+		target = project_repl,
+		type = "bash",
+		cmd = {"nix", "develop", piggyp_dir},
+		opts = {
+			cwd = piggyp_dir
+		},
+	},
+} .. c{
+	repl = {
+		target = project_chat_repl,
+		type = "bash",
+		cmd = {"nix", "develop", "--impure", "--expr", ([[
+				let
+					flake = builtins.getFlake "%s";
+				in (flake.lib.fhs.override {
+					commandScript = "%s";
+				}).env
+			]]):format(piggyp_dir, binaries.copilot), "-c", "bash"},
+		opts = {
+			cwd = piggyp_dir
+		},
+	}
+}):after(py_repl)
+
+mc.register(mft"python" * mdir(piggyp_dir), c{
+	lsp = {
+		pyright = {
+			cmd = {"nix", "develop", "--impure", "--expr", ([[
+				let
+					flake = builtins.getFlake "%s";
+				in (flake.lib.fhs.override {
+					commandScript = "%s --stdio";
+				}).env
+			]]):format(piggyp_dir, binaries.pyright), "-c", "bash"},
+			root_dir = piggyp_dir,
+			settings = {
+				python = {
+					analysis = {
+						extraPaths = {piggyp_dir .. "/src/pig_64"}
+					}
+				}
+			}
+		}
+	}
+}):after(py_lsp)
