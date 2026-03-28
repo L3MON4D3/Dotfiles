@@ -10,7 +10,7 @@ let
 
     client
     dev tun
-    proto tcp
+    proto udp
     remote bifrost.bit.uni-bonn.de 7073
     resolv-retry infinite
     nobind
