@@ -205,7 +205,7 @@ mc.register(mft"julia" * mdir(mglintdir), c{
 }):after(jl_lsp)
 
 local julia_ft = mc.register(mft"julia", c{
-	dap = {
+	dap = {configs = {
 		launch = function(args)
 			local modulename = vim.fs.basename(args.file).sub(1, -4)
 			local file_directory = vim.fs.dirname(args.file)
@@ -220,8 +220,8 @@ local julia_ft = mc.register(mft"julia", c{
 				debugAutoInterpretAllModules = false,
 				stopOnEntry = false,
 			}
-	end
-	},
+		end
+	}},
 	repl = {
 		target = combined_repl,
 		type = "julia",
@@ -461,7 +461,7 @@ mc.register(mft"cpp" * mdir(qb_dir), c{
 			cmd = { "nix", "develop", qb_dir, "--command", "clangd" }
 		}
 	},
-	dap = {
+	dap = { configs = {
 		launch = {
 			name = "qb",
 			type = "lldb",
@@ -469,7 +469,7 @@ mc.register(mft"cpp" * mdir(qb_dir), c{
 			program = "build/qbittorrent",
 			cwd = '${workspaceFolder}',
 		},
-	}
+	}}
 } .. lsp_generic):after("lsp_typedefault")
 
 --
@@ -1015,7 +1015,7 @@ local cuora = mc.register(mdir(cuora_dir), c{
 		cabbrev_buf("%%", "/home/simon/projects/cuora/src")
 		cabbrev_buf("%m", "/home/simon/projects/cuora/src/main.zig")
 	end,
-	dap = {
+	dap = { configs = {
 		launch = {
 			name = "cuora",
 			type = "lldb",
@@ -1023,7 +1023,7 @@ local cuora = mc.register(mdir(cuora_dir), c{
 			program = "zig-out/bin/cuora",
 			cwd = '${workspaceFolder}',
 		}
-	},
+	}},
 	repl = {
 		target = project_repl,
 		type = "bash",
@@ -1082,7 +1082,7 @@ local lab_mitsuba = mc.register(mdir(mitsuba_lab_dir), cmake_attach({
 	luasnip_ft_extend = {
 		cpp = {"cpp_mitsuba"}
 	},
-	dap = {
+	dap = { configs = {
 		launch = {
 			name = "rgb_rect-scalar",
 			type = "lldb",
@@ -1206,7 +1206,7 @@ local lab_mitsuba = mc.register(mdir(mitsuba_lab_dir), cmake_attach({
 			-- load debug version!! :
 			env = {"PYTHONPATH=/home/simon/Documents/Uni/Kurse/s10/lab/mitsuba3/py_modules:/home/simon/Documents/Uni/Kurse/s10/lab/mitsuba3/build_d/python"}
 		}
-	}
+	}}
 }, {tags = {"project"}})
 
 local mitsuba_py = mc.register(mft"python" * mdir(mitsuba_lab_dir),
@@ -1275,7 +1275,7 @@ pkgbuild_all:before(pkgbuild_local)
 --- zot7fuse
 ---
 mc.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
-	dap = {
+	dap = { configs = {
 		launch = {
 			type = 'python',
 			request = 'launch',
@@ -1285,7 +1285,7 @@ mc.register(mfile"/home/simon/projects/zot7fuse/init.py", c{
 			justMyCode = false,
 			args = {"mnt"}
 		}
-	},
+	}},
 	lsp = {
 		pyright = {
 			root_dir = "/home/simon/projects/zot7fuse"
@@ -1357,17 +1357,24 @@ mc.register(mdir(thesis_presentation_dir), c{
 ---
 local cw_epub = "/home/simon/projects/clarkesworld-epub"
 mc.register(mdir(cw_epub) * mft"python", c{
-	dap = {
+	dap = { configs = {
 		launch = {
 			type = 'python',
 			request = 'launch',
-			name = 'launch',
+			program = '${file}',
+			cwd = '${workspaceFolder}',
+			justMyCode = false,
+			subProcess = false
+		},
+		launch2 = {
+			type = 'python',
+			request = 'launch',
 			program = '${file}',
 			cwd = '${workspaceFolder}',
 			justMyCode = false,
 			subProcess = false
 		}
-	}
+	}}
 })
 
 ---
