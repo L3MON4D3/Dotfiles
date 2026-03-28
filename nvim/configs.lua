@@ -1552,4 +1552,32 @@ mc.register(mft"python" * mdir(piggyp_dir), c{
 			}
 		}
 	},
+	dap = {
+		configs = {
+			launch_file = {
+				type = 'piggy_python',
+				request = 'launch',
+				program = '${file}',
+				cwd = '${workspaceFolder}',
+				justMyCode = false,
+				subProcess = false,
+			}
+		},
+		adapters = {
+			piggy_python = {
+				type = "executable",
+				command = "nix",
+				args = {"develop", "--impure", "--expr", ([[
+					let
+						flake = builtins.getFlake "git+file://%s";
+					in (flake.lib.fhs.override {
+						commandScript = "python -m debugpy.adapter";
+					}).env
+				]]):format("/home/simon/projects/piggy-python"), "-c", "bash"},
+				options = {
+					source_filetype = "python"
+				}
+			}
+		}
+	},
 }):after(piggyp_py)
