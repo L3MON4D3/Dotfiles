@@ -476,7 +476,7 @@ mc.register(mft"cpp" * mdir(qb_dir), c{
 --
 -- python
 --
-mc.register(mft"python", c{
+local py_repl = mc.register(mft"python", c{
 	repl = {
 		target = combined_repl,
 		type = "python",
@@ -510,7 +510,7 @@ mc.register(mft"python", c{
 	}
 })
 
-mc.register(mft"python", c{
+local py_lsp = mc.register(mft"python", c{
 	lsp = {
 		pyright = {
 			cmd = {"pyright-langserver", "--stdio"},
@@ -1554,7 +1554,7 @@ mc.register(mdir(piggyp_dir), c{
 			cwd = piggyp_dir
 		},
 	}
-}):after(py_repl)
+}):after(py_repl):
 
 mc.register(mft"python" * mdir(piggyp_dir), c{
 	lsp = {
