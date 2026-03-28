@@ -1481,92 +1481,68 @@ mc.register(mdir(piggy_fork_dir) * (mft"wgsl" + mft"wesl"), c{
 	},
 } .. lsp_generic)
 
+local function python_fhs_env(dir)
+	local dir_conf = mc.register(mdir(dir), c{
+		run_buf = function()
+			cabbrev_buf("%%", dir .. "/src")
+		end,
+		repl = {
+			target = project_repl,
+			type = "bash",
+			cmd = {"nix", "develop", dir},
+			opts = {
+				cwd = dir
+			},
+		},
+	} .. c{
+		repl = {
+			target = project_chat_repl,
+			type = "bash",
+			cmd = {"nix", "develop", "--impure", "--expr", ([[
+					let
+						flake = builtins.getFlake "%s";
+					in (flake.lib.fhs.override {
+						commandScript = "%s";
+					}).env
+				]]):format(dir, binaries.copilot), "-c", "bash"},
+			opts = {
+				cwd = dir
+			},
+		}
+	}):after(py_repl)
+
+	local py_conf = mc.register(mft"python" * mdir(dir), c{
+		lsp = {
+			pyright = {
+				cmd = {"nix", "develop", "--impure", "--expr", ([[
+					let
+						flake = builtins.getFlake "%s";
+					in (flake.lib.fhs.override {
+						commandScript = "%s --stdio";
+					}).env
+				]]):format(dir, binaries.pyright), "-c", "bash"},
+				root_dir = dir,
+			}
+		}
+	}):after(py_lsp)
+
+	return dir_conf, py_conf
+end
+
 ---
 --- neu-pig-smplx
 ---
 local neupig_dir = "/home/simon/projects/neu-pig-smplx"
-mc.register(mdir(neupig_dir), c{
-	run_buf = function()
-		cabbrev_buf("%%", neupig_dir .. "/src")
-	end,
-	repl = {
-		target = project_repl,
-		type = "bash",
-		cmd = {"nix", "develop", neupig_dir},
-		opts = {
-			cwd = neupig_dir
-		},
-	},
-} .. c{
-	repl = {
-		target = project_chat_repl,
-		type = "bash",
-		cmd = {"nix", "develop", neupig_dir, "-c", binaries.copilot},
-		opts = {
-			cwd = neupig_dir
-		},
-	}
-})
-
-mc.register(mft"python" * mdir(neupig_dir), c{
-	lsp = {
-		pyright = {
-			cmd = {"nix", "develop", "--impure", "--expr", ([[
-				let
-					flake = builtins.getFlake "%s";
-				in (flake.lib.fhs.override {
-					commandScript = "pyright-langserver --stdio";
-				}).env
-			]]):format(neupig_dir), "-c", "bash"},
-			root_dir = neupig_dir
-		}
-	}
-}):after(py_lsp)
+python_fhs_env(neupig_dir)
 
 ---
 --- piggy-python
 ---
 local piggyp_dir = "/home/simon/projects/piggy-python"
-mc.register(mdir(piggyp_dir), c{
-	run_buf = function()
-		cabbrev_buf("%%", piggyp_dir .. "/src")
-	end,
-	repl = {
-		target = project_repl,
-		type = "bash",
-		cmd = {"nix", "develop", piggyp_dir},
-		opts = {
-			cwd = piggyp_dir
-		},
-	},
-} .. c{
-	repl = {
-		target = project_chat_repl,
-		type = "bash",
-		cmd = {"nix", "develop", "--impure", "--expr", ([[
-				let
-					flake = builtins.getFlake "%s";
-				in (flake.lib.fhs.override {
-					commandScript = "%s";
-				}).env
-			]]):format(piggyp_dir, binaries.copilot), "-c", "bash"},
-		opts = {
-			cwd = piggyp_dir
-		},
-	}
-}):after(py_repl):
-
+local _, piggyp_py = python_fhs_env(piggyp_dir)
 mc.register(mft"python" * mdir(piggyp_dir), c{
 	lsp = {
 		pyright = {
-			cmd = {"nix", "develop", "--impure", "--expr", ([[
-				let
-					flake = builtins.getFlake "%s";
-				in (flake.lib.fhs.override {
-					commandScript = "%s --stdio";
-				}).env
-			]]):format(piggyp_dir, binaries.pyright), "-c", "bash"},
-			root_dir = piggyp_dir,
 			settings = {
 				python = {
 					analysis = {
@@ -1575,5 +1551,5 @@ mc.register(mft"python" * mdir(piggyp_dir), c{
 				}
 			}
 		}
-	}
-}):after(py_lsp)
+	},
+}):after(piggyp_py)
