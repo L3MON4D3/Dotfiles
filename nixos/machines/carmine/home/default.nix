@@ -4,6 +4,7 @@
   imports = [
     ./profiles/sway-io.nix
     ../../../home/profiles/zotprime-client.nix
+    ../../../home/profiles/pi.nix
     ./profiles/jellyfin-conf.nix
     ./profiles/store-secrets.nix
     ./profiles/mattermost.nix
