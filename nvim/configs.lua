@@ -1504,7 +1504,7 @@ local function python_fhs_env(dir)
 					in (flake.lib.fhs.override {
 						commandScript = "%s";
 					}).env
-				]]):format(dir, binaries.copilot), "-c", "bash"},
+				]]):format(dir, binaries.pi), "-c", "bash"},
 			opts = {
 				cwd = dir
 			},
