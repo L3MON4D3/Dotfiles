@@ -28,6 +28,7 @@
     ./profiles/cardinal.nix
     ./profiles/vci1.nix
     ./profiles/pipewire.nix
+    ./profiles/worknet.nix
   ];
 
   environment.shellAliases = {
