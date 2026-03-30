@@ -180,7 +180,7 @@ local jl_lsp = mc.register(mft"julia", c{
 		jetls = {
 			cmd = {"nix", "develop", "--expr", ([[
 				let
-					flake = builtins.getFlake "%s";
+					flake = builtins.getFlake "git+file://%s";
 				in (flake.lib.fhs.override {
 					commandScript = "%s --threads 1,0 -- serve";
 				}).env
@@ -195,7 +195,7 @@ mc.register(mft"julia" * mdir(mglintdir), c{
 		jetls = {
 			cmd = {"nix", "develop", "--impure", "--expr", ([[
 				let
-					flake = builtins.getFlake "%s";
+					flake = builtins.getFlake "git+file://%s";
 				in (flake.lib.fhs.override {
 					commandScript = "%s --threads 1,0 -- serve";
 				}).env
@@ -1500,7 +1500,7 @@ local function python_fhs_env(dir)
 			type = "bash",
 			cmd = {"nix", "develop", "--impure", "--expr", ([[
 					let
-						flake = builtins.getFlake "%s";
+						flake = builtins.getFlake "git+file://%s";
 					in (flake.lib.fhs.override {
 						commandScript = "%s";
 					}).env
@@ -1516,7 +1516,7 @@ local function python_fhs_env(dir)
 			pyright = {
 				cmd = {"nix", "develop", "--impure", "--expr", ([[
 					let
-						flake = builtins.getFlake "%s";
+						flake = builtins.getFlake "git+file://%s";
 					in (flake.lib.fhs.override {
 						commandScript = "%s --stdio";
 					}).env
