@@ -1509,7 +1509,7 @@ local function python_fhs_env(dir)
 				cwd = dir
 			},
 		}
-	}):after(py_repl)
+	}):after(py_repl):after(julia_ft)
 
 	local py_conf = mc.register(mft"python" * mdir(dir), c{
 		lsp = {
