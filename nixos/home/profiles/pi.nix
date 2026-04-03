@@ -3,7 +3,7 @@
 let
   carmine_conf = self.nixosConfigurations.carmine.config;
 in {
-  home.file.".pi/models.json" = {
+  home.file.".pi/agent/models.json" = {
     enable = true;
     text = builtins.toJSON {
       providers = {
