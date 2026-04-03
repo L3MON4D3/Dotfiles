@@ -175,6 +175,7 @@ mc.register(mft"javascript", c{
 --
 -- julia
 --
+local mglintdir = "/home/simon/projects/master/glint-jl"
 local jl_lsp = mc.register(mft"julia", c{
 	lsp = {
 		jetls = {
@@ -189,7 +190,6 @@ local jl_lsp = mc.register(mft"julia", c{
 	}
 } .. lsp_generic)
 
-local mglintdir = "/home/simon/projects/master/glint-jl"
 mc.register(mft"julia" * mdir(mglintdir), c{
 	lsp = {
 		jetls = {
@@ -206,23 +206,23 @@ mc.register(mft"julia" * mdir(mglintdir), c{
 }):after(jl_lsp)
 
 local julia_ft = mc.register(mft"julia", c{
-	dap = {configs = {
-		launch = function(args)
-			local modulename = vim.fs.basename(args.file).sub(1, -4)
-			local file_directory = vim.fs.dirname(args.file)
-			-- set up debug-file.
-			util.process_output(([[echo 'push!(LOAD_PATH, "%s"); using %s; %s.main()' > /tmp/%s.jl]]):format(file_directory, modulename, modulename, modulename))
+	-- dap = {configs = {
+		-- launch = function(args)
+			-- local modulename = vim.fs.basename(args.file).sub(1, -4)
+			-- local file_directory = vim.fs.dirname(args.file)
+			-- --[=[  up debug-f ]=]
+			-- util.process_output(([[echo 'push!(LOAD_PATH, "%s"); using %s; %s.main()' > /tmp/%s.jl]]):format(file_directory, modulename, modulename, modulename))
 
-			return {
-				type = "julia",
-				name = "Launch",
-				request = "launch",
-				program = "/tmp/" .. modulename .. ".jl",
-				debugAutoInterpretAllModules = false,
-				stopOnEntry = false,
-			}
-		end
-	}},
+			-- return {
+				-- type = "julia",
+				-- name = "Launch",
+				-- request = "launch",
+				-- program = "/tmp/" .. modulename .. ".jl",
+				-- debugAutoInterpretAllModules = false,
+				-- stopOnEntry = false,
+			-- }
+		-- end
+	-- }},
 	repl = {
 		target = combined_repl,
 		type = "julia",
