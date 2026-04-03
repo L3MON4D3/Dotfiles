@@ -1581,3 +1581,29 @@ mc.register(mft"python" * mdir(piggyp_dir), c{
 		}
 	},
 }):after(piggyp_py)
+
+---
+--- zotero.koplugin
+---
+local zokoplug_dir = "/home/simon/.config/koreader/plugins/zotero.koplugin"
+local zokoplug_lua_lsp = mc.register(mdir(zokoplug_dir) * mft"lua", c{
+	lsp = {
+		lua_ls = {
+			settings = {
+				Lua = {
+					runtime = {
+						path = {
+							"?.lua",
+						}
+					},
+					workspace = {
+						library = merge.list_extend({ zokoplug_dir })
+					}
+				}
+			},
+			root_dir = zokoplug_dir,
+		}
+	},
+})
+
+zokoplug_lua_lsp:after(lsp_lua)
