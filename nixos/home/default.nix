@@ -109,6 +109,15 @@
           TERM = "xterm-256color";
         };
       };
+      vci-gpu2 = {
+        hostname = "vci-gpu2.cs.uni-bonn.de";
+        identityFile = "~/.ssh/id_rsa_uni";
+        identitiesOnly = true;
+        user = "katz";
+        setEnv = {
+          TERM = "xterm-256color";
+        };
+      };
       rem = {
         hostname = "remarkable";
         identityFile = "~/.ssh/id_rsa";
