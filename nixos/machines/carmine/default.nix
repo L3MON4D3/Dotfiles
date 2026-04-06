@@ -25,7 +25,7 @@
     ./profiles/cachefilesd.nix
     ./profiles/remarkable.nix
     ./profiles/ollama.nix
-    ./profiles/cardinal.nix
+    # ./profiles/cardinal.nix
     ./profiles/vci.nix
     ./profiles/pipewire.nix
     ./profiles/worknet.nix
