@@ -26,7 +26,7 @@
     ./profiles/remarkable.nix
     ./profiles/ollama.nix
     ./profiles/cardinal.nix
-    ./profiles/vci1.nix
+    ./profiles/vci.nix
     ./profiles/pipewire.nix
     ./profiles/worknet.nix
   ];
