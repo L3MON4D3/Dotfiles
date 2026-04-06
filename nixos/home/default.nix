@@ -91,6 +91,15 @@
         identitiesOnly = true;
         user = "simon";
       };
+      gamsburg = {
+        hostname = "gamsburg.informatik.uni-bonn.de";
+        identityFile = "~/.ssh/id_rsa_uni";
+        identitiesOnly = true;
+        user = "katz";
+        setEnv = {
+          TERM = "xterm-256color";
+        };
+      };
       vci-gpu1 = {
         hostname = "vci-gpu1.cs.uni-bonn.de";
         identityFile = "~/.ssh/id_rsa_uni";
