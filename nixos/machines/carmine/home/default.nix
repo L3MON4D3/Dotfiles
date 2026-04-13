@@ -27,19 +27,6 @@
         ];
       };
     };
-    work = {
-      enable = true;
-      openPrivateWindow = false;
-      netnsKey = "w";
-      landingPage = "https://git.internal";
-      firefoxProfileSettings = {
-        id = 3;
-        extensions.packages = with nur.repos.rycee.firefox-addons; [
-          ublock-origin
-          passff
-        ];
-      };
-    };
     rec_de = {
       enable = true;
       openPrivateWindow = true;
