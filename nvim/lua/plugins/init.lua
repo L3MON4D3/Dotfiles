@@ -67,7 +67,8 @@ local plugins = {
 	blink = "Saghen/blink.cmp",
 	flatten = "willothy/flatten.nvim",
 	rest = "rest-nvim/rest.nvim",
-	togglecomment = "L3MON4D3/nvim-togglecomment"
+	togglecomment = "L3MON4D3/nvim-togglecomment",
+	conform = "stevearc/conform.nvim",
 }
 
 local plugins_inverse = {}
@@ -222,7 +223,8 @@ local plugin_spec = {
 	-- conf_use(toggleterm),
 	--use(systemd),
 	-- use(eve_snippets)
-	conf_use{togglecomment, dev = true}
+	conf_use{togglecomment, dev = true},
+	conf_use{conform},
 }
 
 -- store plugin paths in a file, so they can be easily loaded into lua-ls

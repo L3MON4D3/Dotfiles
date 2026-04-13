@@ -51,6 +51,7 @@ in {
       opencode = "${pkgs-unstable.opencode}/bin/opencode",
       pi = "${pkgs-unstable.pi-coding-agent}/bin/pi",
       pyright = "${pkgs-unstable.pyright}/bin/pyright-langserver",
+      nixfmt = "${pkgs.nixfmt}/bin/nixfmt",
     }' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/binaries.lua"
     echo 'return "${julia_fhs.drvPath}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/julia_fhs_drvpath.lua"
     echo 'return { wesl = "${wesl_treesitter_parser}"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/ts_parsers.lua"
