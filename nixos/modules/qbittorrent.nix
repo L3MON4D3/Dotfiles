@@ -79,6 +79,7 @@ in
           Session\DisableAutoTMMTriggers\CategorySavePathChanged=false
           Session\DisableAutoTMMTriggers\DefaultSavePathChanged=false
           Session\AnonymousModeEnabled=true
+          Session\QueueingSystemEnabled=false
 
           Session\AlternativeGlobalDLSpeedLimit=0
           Session\AlternativeGlobalUPSpeedLimit=200
@@ -112,10 +113,6 @@ in
           Downloads\PreAllocation=false
           Downloads\ScanDirsV2=@Variant(\0\0\0\x1c\0\0\0\0)
           Downloads\StartInPause=false
-
-          Queueing\MaxActiveDownloads=150
-          Queueing\MaxActiveUploads=150
-          Queueing\MaxActiveTorrents=150
 
           General\UseRandomPort=false
 
