@@ -242,6 +242,7 @@ in {
         };
         zotero-serve.cfg = data.ports.zotero-serve;
       };
+      networking.firewall.allowedTCPPorts = with data.ports; [ data.ports.zotprime-db ];
 
       l3mon.secgen.secrets.zotprime = rec {
         envfile = "${config.l3mon.secgen.secret_dir}/zotprime";
