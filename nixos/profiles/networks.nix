@@ -32,6 +32,7 @@
           chromecast = { route_all = false; };
           kim-laptop = { route_all = false; };
           kim-desktop = { route_all = false; };
+          tv-oldhome = { route_all = false; };
         };
       };
       work = {

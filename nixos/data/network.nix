@@ -56,6 +56,7 @@ in
       kim-laptop = { address = "10.0.0.8"; };
       kim-desktop = { address = "10.0.0.9"; };
       cobalt = { address = "10.0.0.10"; };
+      tv-oldhome = { address = "10.0.0.11"; };
     };
   };
 
