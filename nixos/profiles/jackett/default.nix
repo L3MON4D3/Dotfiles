@@ -50,7 +50,7 @@ let
         "CacheEnabled": true,
         "CacheTtl": 2100,
         "CacheMaxResultsPerIndexer": 1000,
-        "FlareSolverrUrl": null,
+        "FlareSolverrUrl": ${config.l3mon.services.defs.flaresolverr.machine_domain},
         "FlareSolverrMaxTimeout": 55000,
         "OmdbApiKey": null,
         "OmdbApiUrl": null,
@@ -143,6 +143,17 @@ in
 
     l3mon.services.defs.jackett.cfg =
       "reverse_proxy http://${wg_machine_conf.local.address}:${toString port}";
+
+    services.flaresolverr = {
+      enable = true;
+      package = pkgs-unstable.flaresolverr;
+      port = data.ports.flaresolverr;
+    };
+    l3mon.services.defs.flaresolverr.cfg =
+      "reverse_proxy http://${wg_machine_conf.local.address}:${toString data.ports.flaresolverr}";
+
+    # This should extend and override the options set by the service-definition.
+    systemd.services.flaresolverr = config.l3mon.wg_network_namespaces.mkNetnsService wg_network { };
 
     l3mon.restic.extraGroups = [ "jackett" ];
     l3mon.restic.specs.jackett = {
