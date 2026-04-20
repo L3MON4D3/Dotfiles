@@ -50,7 +50,7 @@ let
         "CacheEnabled": true,
         "CacheTtl": 2100,
         "CacheMaxResultsPerIndexer": 1000,
-        "FlareSolverrUrl": ${config.l3mon.services.defs.flaresolverr.machine_domain},
+        "FlareSolverrUrl": "http://${config.l3mon.services.defs.flaresolverr.machine_domain}",
         "FlareSolverrMaxTimeout": 55000,
         "OmdbApiKey": null,
         "OmdbApiUrl": null,
