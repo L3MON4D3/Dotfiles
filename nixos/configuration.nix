@@ -1,7 +1,18 @@
-{ config, lib, l3lib, pkgs, pkgs-unstable, inputs, data, self, system, ... }:
+{
+  config,
+  lib,
+  l3lib,
+  pkgs,
+  pkgs-unstable,
+  inputs,
+  data,
+  self,
+  system,
+  ...
+}:
 
 {
-  disabledModules = ["services/databases/mysql.nix"];
+  disabledModules = [ "services/databases/mysql.nix" ];
 
   imports = [
     # supersede nixpkgs' mysql module.
@@ -32,7 +43,7 @@
   # Set your time zone.
   time.timeZone = "Europe/Amsterdam";
 
-  boot.supportedFilesystems = ["ntfs"];
+  boot.supportedFilesystems = [ "ntfs" ];
 
   # stable neovim for root user.
   programs.neovim = {
@@ -114,14 +125,17 @@
     tree
     dust
     wireguard-tools
-    (ffmpeg.override { withFdkAac = true; withUnfree = true; })
+    (ffmpeg.override {
+      withFdkAac = true;
+      withUnfree = true;
+    })
     just
 
     # nix related
     nix-output-monitor
 
     # monitoring
-    btop  # replacement of htop/nmon
+    btop # replacement of htop/nmon
     iotop # io monitoring
     iftop # network monitoring
 
@@ -186,7 +200,7 @@
       experimental-features = [
         "nix-command"
         "flakes"
-      ]; 
+      ];
       flake-registry = "";
       keep-derivations = true;
       substituters = [
@@ -202,7 +216,7 @@
       ];
     };
     registry = {
-     vorlagen = {
+      vorlagen = {
         from = {
           type = "indirect";
           id = "vorlagen";
@@ -229,13 +243,13 @@
   };
 
   # networking.extraHosts = ''
-    # 0.0.0.0 pkg.machengine.org
-    # 0.0.0.0 zigmirror.hryx.net
-    # 0.0.0.0 zig.linus.dev
-    # 0.0.0.0 zig.squirl.dev
-    # 0.0.0.0 zig.florent.dev
-    # 0.0.0.0 zig.mirror.mschae23.de
-    # 0.0.0.0 zigmirror.meox.dev
+  # 0.0.0.0 pkg.machengine.org
+  # 0.0.0.0 zigmirror.hryx.net
+  # 0.0.0.0 zig.linus.dev
+  # 0.0.0.0 zig.squirl.dev
+  # 0.0.0.0 zig.florent.dev
+  # 0.0.0.0 zig.mirror.mschae23.de
+  # 0.0.0.0 zigmirror.meox.dev
   # '';
 
   # system.copySystemConfiguration = true;
