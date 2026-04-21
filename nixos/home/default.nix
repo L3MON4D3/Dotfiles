@@ -202,7 +202,12 @@
       };
       userName = "simon@l3mon4.de";
 
-      thunderbird.enable = true;
+      thunderbird = {
+        enable = true;
+        settings = id: {
+          "mail.identity.id_${id}.fcc_folder" = "imap://simon%40l3mon4.de@imap.mailbox.org/Sent";
+        };
+      };
     };
     accounts."simljk@outlook.de" = {
       realName = "Simon Katz";
@@ -230,6 +235,7 @@
           # oauth.
           "mail.server.server_${id}.authMethod" = 10;
           "mail.smtpserver.smtp_${id}.authMethod" = 10;
+          "mail.identity.id_${id}.fcc_folder" = "imap://simljk%40outlook.de@outlook.office365.com/Sent";
         };
       };
     };
@@ -255,7 +261,12 @@
       };
       userName = "s6sikatz";
 
-      thunderbird.enable = true;
+      thunderbird = {
+        enable = true;
+        settings = id: {
+          "mail.identity.id_${id}.fcc_folder" = "imap://s6sikatz@email.uni-bonn.de/Sent";
+        };
+      };
     };
     accounts."katz@cs.uni-bonn.de" = {
       realName = "Simon Katz";
@@ -282,7 +293,12 @@
       };
       userName = "katz";
 
-      thunderbird.enable = true;
+      thunderbird = {
+        enable = true;
+        settings = id: {
+          "mail.identity.id_${id}.fcc_folder" = "imap://katz@mailbox.iai.uni-bonn.de/Sent";
+        };
+      };
     };
   };
 
