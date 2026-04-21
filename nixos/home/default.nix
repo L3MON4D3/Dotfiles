@@ -1,7 +1,13 @@
-{ config, pkgs, lib, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 {
-  imports=[
+  imports = [
     ./profiles/neovim/default.nix
     ./profiles/pass.nix
     ./profiles/jellyfin-mpv-shim.nix
@@ -26,9 +32,9 @@
     settings = {
       alias = {
         log1 = "log --pretty='%C(auto)%h: %s'";
-        l    = "log --pretty='%C(auto)%h: %s'";
+        l = "log --pretty='%C(auto)%h: %s'";
         log2 = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
-        g    = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
+        g = "log --pretty='%C(auto)%h: %s%C(dim white) ~%an' --graph";
         s = "status";
         rc = "rebase --continue";
         p = "push";
@@ -66,12 +72,12 @@
       # previous default config.
       "*" = {
         forwardAgent = false; # bad for security, it seems.
-        addKeysToAgent = "no"; 
+        addKeysToAgent = "no";
         compression = false;
         serverAliveInterval = 0;
         serverAliveCountMax = 3;
         hashKnownHosts = false;
-        userKnownHostsFile =  "~/.ssh/known_hosts";
+        userKnownHostsFile = "~/.ssh/known_hosts";
         controlMaster = "no";
         controlPath = "~/.ssh/master-%r@%n:%p";
         controlPersist = "no";
@@ -143,13 +149,13 @@
   };
 
   home.sessionVariables = {
-    np =  "/home/simon/.local/share/nvim/lazy";
-    nc =  "/home/simon/projects/dotfiles/nvim";
-    mc =  "/home/simon/projects/nvim/matchconfig";
-    tc =  "/home/simon/projects/nvim/togglecomment";
+    np = "/home/simon/.local/share/nvim/lazy";
+    nc = "/home/simon/projects/dotfiles/nvim";
+    mc = "/home/simon/projects/nvim/matchconfig";
+    tc = "/home/simon/projects/nvim/togglecomment";
     lsn = "/home/simon/projects/nvim/luasnip";
     lsi = "/home/simon/projects/nvim/luasnip-issues";
-    nx =  "/home/simon/projects/dotfiles/nixos/configuration.nix";
+    nx = "/home/simon/projects/dotfiles/nixos/configuration.nix";
     ms = "/home/simon/projects/master";
     au = "/srv/media/audio/original";
     vi = "/srv/media/video";
@@ -168,9 +174,9 @@
   ];
 
   xdg.configFile."nixpkgs/config.nix".text = ''
-  {
-    allowUnfree = true;
-  }
+    {
+      allowUnfree = true;
+    }
   '';
 
   accounts.email = {
@@ -256,8 +262,8 @@
       address = "katz@cs.uni-bonn.de";
 
       # gpg = {
-        # key = "539486C322FDF9A5204718D66F6AA8BDF1F8BD04";
-        # signByDefault = true;
+      # key = "539486C322FDF9A5204718D66F6AA8BDF1F8BD04";
+      # signByDefault = true;
       # };
 
       imap = {
