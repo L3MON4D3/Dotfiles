@@ -1498,13 +1498,13 @@ local function python_fhs_env(dir)
 		repl = {
 			target = project_chat_repl,
 			type = "bash",
-			cmd = {"nix", "develop", "--impure", "--expr", ([[
-					let
-						flake = builtins.getFlake "git+file://%s";
-					in (flake.lib.fhs.override {
-						commandScript = "%s";
-					}).env
-				]]):format(dir, binaries.pi), "-c", "bash"},
+			cmd = {binaries.agent, ([[
+				{...}:
+				{
+					agent.env = (builtins.getFlake "git+file://%s").lib.fhs;
+					copilot.enable = true;
+				}
+			]]):format(dir)},
 			opts = {
 				cwd = dir
 			},
