@@ -44,6 +44,10 @@ let
       language = "wesl";
     }
   }/parser";
+  nvimAgentConf = {
+    skills.nvim-lsp.enable = true;
+  };
+  agent = config.lib.l3mon.agents.agentFromConfPaths [ "nvim.agentConf" ];
 in
 {
   home.activation.myNvimRepos = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -70,6 +74,7 @@ in
       pi = "${pkgs-unstable.pi-coding-agent}/bin/pi",
       pyright = "${pkgs-unstable.pyright}/bin/pyright-langserver",
       nixfmt = "${pkgs.nixfmt}/bin/nixfmt",
+      agent = "${agent}/bin/agent",
     }' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/binaries.lua"
     echo 'return "${julia_fhs.drvPath}"' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/julia_fhs_drvpath.lua"
     echo 'return { wesl = "${wesl_treesitter_parser}"}' > "${config.home.homeDirectory}/projects/dotfiles/nvim/generated/ts_parsers.lua"
@@ -121,4 +126,6 @@ in
 
   xdg.configFile."nvim".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/projects/dotfiles/nvim";
+
+  lib.l3mon.nvim.agentConf = nvimAgentConf;
 }

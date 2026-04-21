@@ -41,10 +41,13 @@
     zotero-serve.url = "github:l3mon4d3/zotero-serve";
     jetls.url = "github:l3mon4d3/jetls-nix";
     dewclaw.url = "github:MakiseKurisu/dewclaw";
+    agents.url = "git+https://git.internal/simon/agents.nix.git";
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs = inputs@{ self, flake-utils, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, microvm, dewclaw, ... }: let
-    mkSimonConfig = machine_name: system: {${machine_name} = nixpkgs.lib.nixosSystem (let
+    mkSimonConfig = machine_name: system: {
+          ${machine_name} = nixpkgs.lib.nixosSystem (let
       pkgs = import nixpkgs { inherit system; };
       pkgs-unstable = import nixpkgs-unstable {
         inherit system;
@@ -81,7 +84,13 @@
 
           home-manager.users.simon = import ./home;
           home-manager.extraSpecialArgs = {
-            inherit inputs pkgs-unstable self;
+            inherit
+              inputs
+              pkgs-unstable
+              self
+              system
+              ;
+            machine = machine_name;
             data = import ./data;
             l3lib = import ./lib.nix { inherit pkgs; };
             nur = inputs.nur.legacyPackages.${system};
@@ -102,42 +111,42 @@
     });
   };
   mkOpenWRT = pkgs: machine_name: {
-    ${machine_name} = pkgs.callPackage dewclaw ({
-      configuration = { config, options, pkgs, lib, ... }: let
-        dewclaw_option_names = [ "uci" "deploy" "deploySteps" "secretsCommand" "etc" "packages" "users" ];
-      in {
-        config._module.args = {
-          inherit inputs pkgs self options config;
-          lib = pkgs.lib;
-          name = machine_name;
-          # arbitrariliy use networks from carmine.
-          networks = self.nixosConfigurations.carmine.config.lib.l3mon.networks;
-          secrets = self.nixosConfigurations.carmine.config.secrets;
-          data = import ./data;
-        };
-        imports = 
-          (builtins.map (name: lib.mkAliasOptionModule [name] ["openwrt" machine_name name]) dewclaw_option_names) ++
-          [
-            ./openwrt/configuration.nix
-            ./openwrt/machines/${machine_name}
-            # enable lib config-part.
-            ({ lib, ... }: {
-              options = {
-                lib = lib.mkOption {
-                  default = { };
+      ${machine_name} = pkgs.callPackage dewclaw ({
+        configuration = { config, options, pkgs, lib, ... }: let
+          dewclaw_option_names = [ "uci" "deploy" "deploySteps" "secretsCommand" "etc" "packages" "users" ];
+        in {
+          config._module.args = {
+            inherit inputs pkgs self options config;
+            lib = pkgs.lib;
+            name = machine_name;
+            # arbitrariliy use networks from carmine.
+            networks = self.nixosConfigurations.carmine.config.lib.l3mon.networks;
+            secrets = self.nixosConfigurations.carmine.config.secrets;
+            data = import ./data;
+          };
+          imports = 
+            (builtins.map (name: lib.mkAliasOptionModule [name] ["openwrt" machine_name name]) dewclaw_option_names) ++
+            [
+              ./openwrt/configuration.nix
+              ./openwrt/machines/${machine_name}
+              # enable lib config-part.
+              ({ lib, ... }: {
+                options = {
+                  lib = lib.mkOption {
+                    default = { };
 
-                  type = lib.types.attrsOf lib.types.attrs;
+                    type = lib.types.attrsOf lib.types.attrs;
 
-                  description = ''
-                    This option allows modules to define helper functions, constants, etc.
-                  '';
+                    description = ''
+                      This option allows modules to define helper functions, constants, etc.
+                    '';
+                  };
                 };
-              };
-            })
-          ];
-      };
-    });
-  };
+              })
+            ];
+        };
+      });
+    };
   in {
     nixosConfigurations = builtins.foldl' (acc: spec: acc // mkSimonConfig spec.name spec.system) {} [
       { name= "indigo"; system="x86_64-linux"; }

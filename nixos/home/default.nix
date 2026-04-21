@@ -15,6 +15,7 @@
     ./profiles/mpv.nix
     ./profiles/julia.nix
     ./profiles/mime.nix
+    ./profiles/agents.nix
 
     ./modules/sway-workrooms
     ./modules/sway.nix
