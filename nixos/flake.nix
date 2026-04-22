@@ -45,117 +45,180 @@
     llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
-  outputs = inputs@{ self, flake-utils, nixpkgs, nixpkgs-unstable, nixpkgs-yuzu, nixpkgs-suyu, nixpkgs-ddns-updater-2-7, home-manager, microvm, dewclaw, ... }: let
-    mkSimonConfig = machine_name: system: {
-          ${machine_name} = nixpkgs.lib.nixosSystem (let
-      pkgs = import nixpkgs { inherit system; };
-      pkgs-unstable = import nixpkgs-unstable {
-        inherit system;
-        config.allowUnfree = true;
-      };
-    in rec {
-      inherit system;
-      specialArgs = {
-        inherit pkgs-unstable;
-        pkgs-yuzu = import nixpkgs-yuzu {
-          inherit system;
-        };
-        pkgs-suyu = import nixpkgs-suyu {
-          inherit system;
-        };
-        pkgs-ddns-updater-2-7 = import nixpkgs-ddns-updater-2-7 {
-          inherit system;
-        };
-        patched_wpa_supplicant = pkgs.runCommand "patched-wpa-supplicant" {} ''
-          mkdir -p $out
-          echo ${nixpkgs.outPath}
-          cp ${nixpkgs.outPath}/nixos/modules/services/networking/wpa_supplicant.nix $out/wpa_supplicant.nix
-          patch -p1 $out/wpa_supplicant.nix ${./.}/data/patches/mac_hooks.patch
-        '';
-      };
-      modules = [
-        ./configuration.nix
-        ./machines/${machine_name}
-        microvm.nixosModules.host
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
+  outputs =
+    inputs@{
+      self,
+      flake-utils,
+      nixpkgs,
+      nixpkgs-unstable,
+      nixpkgs-yuzu,
+      nixpkgs-suyu,
+      nixpkgs-ddns-updater-2-7,
+      home-manager,
+      microvm,
+      dewclaw,
+      ...
+    }:
+    let
+      mkSimonConfig = machine_name: system: {
+        ${machine_name} = nixpkgs.lib.nixosSystem (
+          let
+            pkgs = import nixpkgs { inherit system; };
+            pkgs-unstable = import nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          in
+          rec {
+            inherit system;
+            specialArgs = {
+              inherit pkgs-unstable;
+              pkgs-yuzu = import nixpkgs-yuzu {
+                inherit system;
+              };
+              pkgs-suyu = import nixpkgs-suyu {
+                inherit system;
+              };
+              pkgs-ddns-updater-2-7 = import nixpkgs-ddns-updater-2-7 {
+                inherit system;
+              };
+              patched_wpa_supplicant = pkgs.runCommand "patched-wpa-supplicant" { } ''
+                mkdir -p $out
+                echo ${nixpkgs.outPath}
+                cp ${nixpkgs.outPath}/nixos/modules/services/networking/wpa_supplicant.nix $out/wpa_supplicant.nix
+                patch -p1 $out/wpa_supplicant.nix ${./.}/data/patches/mac_hooks.patch
+              '';
+            };
+            modules = [
+              ./configuration.nix
+              ./machines/${machine_name}
+              microvm.nixosModules.host
+              home-manager.nixosModules.home-manager
+              {
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
 
-          home-manager.users.simon = import ./home;
-          home-manager.extraSpecialArgs = {
-            inherit
-              inputs
-              pkgs-unstable
-              self
-              system
-              ;
-            machine = machine_name;
-            data = import ./data;
-            l3lib = import ./lib.nix { inherit pkgs; };
-            nur = inputs.nur.legacyPackages.${system};
-            aa-torrent-dl = inputs.aa-torrent-dl.packages.${system};
-            scientific-fhs = inputs.scientific-fhs.packages.${system}.scientific-fhs;
-          };
+                home-manager.users.simon = import ./home;
+                home-manager.extraSpecialArgs = {
+                  inherit
+                    inputs
+                    pkgs-unstable
+                    self
+                    system
+                    ;
+                  machine = machine_name;
+                  data = import ./data;
+                  l3lib = import ./lib.nix { inherit pkgs; };
+                  nur = inputs.nur.legacyPackages.${system};
+                  aa-torrent-dl = inputs.aa-torrent-dl.packages.${system};
+                  scientific-fhs = inputs.scientific-fhs.packages.${system}.scientific-fhs;
+                };
+              }
+              {
+                _module.args = {
+                  inherit inputs system self;
+                  data = import ./data;
+                  machine = machine_name;
+                  l3lib = import ./lib.nix { inherit pkgs; };
+                  nur = inputs.nur.legacyPackages.${system};
+                };
+              }
+            ];
+          }
+        );
+      };
+      mkOpenWRT = pkgs: machine_name: {
+        ${machine_name} = pkgs.callPackage dewclaw ({
+          configuration =
+            {
+              config,
+              options,
+              pkgs,
+              lib,
+              ...
+            }:
+            let
+              dewclaw_option_names = [
+                "uci"
+                "deploy"
+                "deploySteps"
+                "secretsCommand"
+                "etc"
+                "packages"
+                "users"
+              ];
+            in
+            {
+              config._module.args = {
+                inherit
+                  inputs
+                  pkgs
+                  self
+                  options
+                  config
+                  ;
+                lib = pkgs.lib;
+                name = machine_name;
+                # arbitrariliy use networks from carmine.
+                networks = self.nixosConfigurations.carmine.config.lib.l3mon.networks;
+                secrets = self.nixosConfigurations.carmine.config.secrets;
+                data = import ./data;
+              };
+              imports =
+                (builtins.map (
+                  name: lib.mkAliasOptionModule [ name ] [ "openwrt" machine_name name ]
+                ) dewclaw_option_names)
+                ++ [
+                  ./openwrt/configuration.nix
+                  ./openwrt/machines/${machine_name}
+                  # enable lib config-part.
+                  (
+                    { lib, ... }:
+                    {
+                      options = {
+                        lib = lib.mkOption {
+                          default = { };
+
+                          type = lib.types.attrsOf lib.types.attrs;
+
+                          description = ''
+                            This option allows modules to define helper functions, constants, etc.
+                          '';
+                        };
+                      };
+                    }
+                  )
+                ];
+            };
+        });
+      };
+    in
+    {
+      nixosConfigurations = builtins.foldl' (acc: spec: acc // mkSimonConfig spec.name spec.system) { } [
+        {
+          name = "indigo";
+          system = "x86_64-linux";
         }
         {
-          _module.args = {
-            inherit inputs system self;
-            data = import ./data;
-            machine = machine_name;
-            l3lib = import ./lib.nix { inherit pkgs; };
-            nur = inputs.nur.legacyPackages.${system};
-          };
+          name = "carmine";
+          system = "x86_64-linux";
+        }
+        {
+          name = "indigo";
+          system = "x86_64-linux";
         }
       ];
-    });
-  };
-  mkOpenWRT = pkgs: machine_name: {
-      ${machine_name} = pkgs.callPackage dewclaw ({
-        configuration = { config, options, pkgs, lib, ... }: let
-          dewclaw_option_names = [ "uci" "deploy" "deploySteps" "secretsCommand" "etc" "packages" "users" ];
-        in {
-          config._module.args = {
-            inherit inputs pkgs self options config;
-            lib = pkgs.lib;
-            name = machine_name;
-            # arbitrariliy use networks from carmine.
-            networks = self.nixosConfigurations.carmine.config.lib.l3mon.networks;
-            secrets = self.nixosConfigurations.carmine.config.secrets;
-            data = import ./data;
-          };
-          imports = 
-            (builtins.map (name: lib.mkAliasOptionModule [name] ["openwrt" machine_name name]) dewclaw_option_names) ++
-            [
-              ./openwrt/configuration.nix
-              ./openwrt/machines/${machine_name}
-              # enable lib config-part.
-              ({ lib, ... }: {
-                options = {
-                  lib = lib.mkOption {
-                    default = { };
-
-                    type = lib.types.attrsOf lib.types.attrs;
-
-                    description = ''
-                      This option allows modules to define helper functions, constants, etc.
-                    '';
-                  };
-                };
-              })
-            ];
-        };
-      });
-    };
-  in {
-    nixosConfigurations = builtins.foldl' (acc: spec: acc // mkSimonConfig spec.name spec.system) {} [
-      { name= "indigo"; system="x86_64-linux"; }
-      { name="carmine"; system="x86_64-linux"; }
-      { name= "indigo"; system="x86_64-linux"; }
-    ];
-  } // flake-utils.lib.eachDefaultSystem (system: let
-    pkgs = import nixpkgs { inherit system; };
-  in {
-    packages = builtins.foldl' (acc: name: acc // mkOpenWRT pkgs name) {} [ "ivory" "alabaster" ];
-  });
+    }
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+      in
+      {
+        packages = builtins.foldl' (acc: name: acc // mkOpenWRT pkgs name) { } [
+          "ivory"
+          "alabaster"
+        ];
+      }
+    );
 }
