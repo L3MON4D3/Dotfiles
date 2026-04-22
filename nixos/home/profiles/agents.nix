@@ -47,7 +47,16 @@ in
     in
     { pkgs, lib, ... }:
     {
-      agent.protectGit = true;
+      agent = {
+        protectGit = true;
+        hideDirs = {
+          # encrypted, but has metadata.
+          "~/.password-store" = true;
+          # maybe a bit much, but can disable if stuff breaks :)
+          "~/.config" = true;
+          "~/.local" = true;
+        };
+      };
       copilot.package = llm-agents.copilot-cli;
       pi = {
         package = llm-agents.pi;

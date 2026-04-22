@@ -65,11 +65,11 @@
         "nixpkgs-unstable": "nixpkgs-unstable_2"
       },
       "locked": {
-        "lastModified": 1776856620,
-        "narHash": "sha256-LEXCIEnsndRxEoDggkgQt26apK56oXO0Fu6kjU2FkHI=",
+        "lastModified": 1776892605,
+        "narHash": "sha256-2HcC8ZgjSFGUSRSoX1QEMZWxBKYl0n/RCCFLVq3VAaw=",
         "ref": "refs/heads/main",
-        "rev": "b3853f89adfc2609d01b5e91ec03b1701ae84ee9",
-        "revCount": 30,
+        "rev": "3b4cbc60a901990551af7f0a5d38dbbdd34884e1",
+        "revCount": 32,
         "type": "git",
         "url": "https://git.internal/simon/agents.nix.git"
       },
