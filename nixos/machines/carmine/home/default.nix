@@ -1,4 +1,13 @@
-{ config, lib, pkgs, machine, data, nur, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  machine,
+  data,
+  nur,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -10,7 +19,10 @@
   ];
   l3mon.sway = {
     workrooms.enable = true;
-    outputs = [ "DP-1" "HDMI-A-1" ];
+    outputs = [
+      "DP-1"
+      "HDMI-A-1"
+    ];
   };
   l3mon.sway-netns = {
     home = {
