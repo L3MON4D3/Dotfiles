@@ -43,6 +43,7 @@
     dewclaw.url = "github:MakiseKurisu/dewclaw";
     agents.url = "git+https://git.internal/simon/agents.nix.git";
     llm-agents.url = "github:numtide/llm-agents.nix";
+    work-dotfiles.url = "git+https://git.internal/simon/dotfiles.git?dir=nixos&ref=bonn";
   };
 
   outputs =

@@ -11,6 +11,7 @@
 }:
 
 let
+  work-config = inputs.work-dotfiles.nixosConfigurations.jochspitze.config;
   llm-agents = inputs.llm-agents.packages.${system};
   mkAgent =
     configs:
@@ -41,8 +42,8 @@ in
 {
   lib.l3mon.agents.defaultConf =
     let
-      wg_work = inputs.home-dotfiles.nixosConfigurations.indigo.config.lib.l3mon.networks.virtual.work;
-      wg_work_peerconf = wg_work.peers.${machine};
+      wg_work = self.nixosConfigurations.indigo.config.lib.l3mon.networks.virtual.work;
+      wg_work_peerconf = wg_work.peers.jochspitze;
     in
     { pkgs, lib, ... }:
     {
@@ -54,15 +55,14 @@ in
           baseUrl = "http://${wg_work_peerconf.address}:${toString data.ports.llama-cpp}/v1";
           api = "openai-completions";
           apiKey = "none";
-          models = [
-            {
-              id = "Qwen3.5-35B-A3B";
-            }
-          ];
+          models = lib.attrsets.foldlAttrs (
+            acc: name: value:
+            acc ++ [ { id = name; } ]
+          ) [ ] work-config.lib.l3mon.llama.models;
         };
         settings = {
           defaultProvider = "llama";
-          defaultModel = "Qwen3.5-35B-A3B";
+          defaultModel = "Qwen3.5-35B-A3B-Q6_K-thinking-general";
         };
       };
     };
