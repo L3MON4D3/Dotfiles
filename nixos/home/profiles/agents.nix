@@ -27,15 +27,22 @@ let
     pkgs.writeShellApplication {
       name = "agent";
       text = ''
+        confliststr='[ '
+        for arg in "$@"
+        do
+          confliststr="''${confliststr}(''${arg}) "
+        done
+        confliststr="''${confliststr}]"
+
         # impure necessary despite flake-reference in store.
         nix run --impure --expr '
-          {conf}:
+          {confs}:
           let
             userLib = (builtins.getFlake "${self}").nixosConfigurations.${machine}.config.home-manager.users.simon.lib.l3mon;
           in {
-            res = userLib.agents.mkAgent [ userLib.agents.defaultConf ${extraConfItems} conf ];
+            res = userLib.agents.mkAgent ([ userLib.agents.defaultConf ${extraConfItems} ] ++ confs);
           }' res \
-          --arg conf "$1" \
+          --arg confs "$confliststr" \
       '';
     };
 in
