@@ -129,7 +129,3 @@ vim.treesitter.query.add_directive("make-range2!", function(match, pattern, sour
 	local r2 = {match[pred[4]][1]:range()}
 	metadata[pred[2]] = {r1[1], r1[2], r2[3], r2[4]}
 end, {})
-
-vim.api.nvim_create_autocmd('FileType', {
-  callback = function() vim.treesitter.start() end,
-})

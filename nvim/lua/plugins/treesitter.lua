@@ -4,7 +4,7 @@ vim.treesitter.language.register("bash", "PKGBUILD")
 vim.treesitter.language.add("xml", {path = "/home/simon/.config/nvim/parsers/xml/libtree-sitter-xml.so"})
 vim.treesitter.language.add("wesl", {path = extra_parsers.wesl})
 
-require('nvim-treesitter').install {
+local langs = {
 	"rust",
 	"hlsl",
 	"bibtex",
@@ -38,6 +38,18 @@ require('nvim-treesitter').install {
 	"just",
 	"wgsl"
 }
+
+require('nvim-treesitter').install(langs)
+
+local ts_filetypes = {}
+for _, lang in ipairs(langs) do
+	vim.list_extend(ts_filetypes, vim.treesitter.language.get_filetypes(lang))
+end
+
+vim.api.nvim_create_autocmd('FileType', {
+	pattern = ts_filetypes,
+	callback = function() vim.treesitter.start() end,
+})
 
 require'nvim-treesitter-textobjects'.setup {
 	select = {
