@@ -120,7 +120,7 @@ hi Folded guibg= cterm=none gui=none
 
 hi FloatBorder guibg=#1d2021 guifg=#504945
 
-set laststatus=2
+set laststatus=4
 set showtabline=2
 
 let g:branches=BranchClean()
