@@ -86,14 +86,14 @@ end, {})
 
 -- predicate used by lua/togglecomment.scm
 vim.treesitter.query.add_predicate("root-child", function(match, _, _, predicate)
-	local node = match[predicate[2]]
+	local node = match[predicate[2]][1]
 	return node[#node]:parent():parent() == nil
 end, {})
 
 -- #set-from-nodetext! target node [[pattern replacement] [pattern replacement] ... ]
 -- (gsubs are optional)
 vim.treesitter.query.add_directive("set-from-nodetext-gsub!", function(match, pattern, source, predicate, metadata)
-	local node = match[predicate[3]]
+	local node = match[predicate[3]][1]
 	local text = vim.treesitter.get_node_text(node, source, metadata)
 
 	-- apply all gsubs
@@ -108,8 +108,8 @@ end, {})
 
 vim.treesitter.query.add_directive("make-range-extended!", function(match, pattern, source, pred, metadata)
 	-- extract node-ranges
-	local r1 = {match[pred[3]]:range()}
-	local r2 = {match[pred[7]]:range()}
+	local r1 = {match[pred[3]][1]:range()}
+	local r2 = {match[pred[7]][1]:range()}
 
 	-- extract correct positions
 	local p1 = pred[4] == "end" and {r1[3], r1[4]} or {r1[1], r1[2]}
@@ -125,7 +125,11 @@ vim.treesitter.query.add_directive("make-range-extended!", function(match, patte
 end, {})
 
 vim.treesitter.query.add_directive("make-range2!", function(match, pattern, source, pred, metadata)
-	local r1 = {match[pred[3]]:range()}
-	local r2 = {match[pred[4]]:range()}
+	local r1 = {match[pred[3]][1]:range()}
+	local r2 = {match[pred[4]][1]:range()}
 	metadata[pred[2]] = {r1[1], r1[2], r2[3], r2[4]}
 end, {})
+
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function() vim.treesitter.start() end,
+})

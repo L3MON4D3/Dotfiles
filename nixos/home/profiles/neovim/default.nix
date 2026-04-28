@@ -83,6 +83,11 @@ in
   programs.neovim = {
     enable = true;
     defaultEditor = true;
+    extraWrapperArgs = [
+      "--set"
+      "CC"
+      "${pkgs.clang}/bin/clang"
+    ];
     extraPackages = [
       # for building treesitter grammars.
       tree-sitter
